@@ -1,0 +1,164 @@
+﻿<controls:WindowBase 
+    xmlns:controls="clr-namespace:Playnite.Controls;assembly=Playnite" x:Class="IsThereAnyDeal.Views.IsThereAnyDealView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:IsThereAnyDeal.Views"
+             mc:Ignorable="d" Height="740" Width="1080" Background="{DynamicResource WindowBackgourndBrush}"
+             Title="Is There Any Deal"              
+             d:DesignStyle="{StaticResource WindowDesignStyle}"
+             Style="{DynamicResource StandardWindowStyle}"
+             ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
+
+    <DockPanel Margin="10">
+        
+        <Grid>
+            <ListBox Name="lbWishlist" Loaded="LbWishlist_Loaded"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <!-- Force the style because HorizontalContentAlignment not work. -->
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="SnapsToDevicePixels" Value="True" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                        <Setter Property="OverridesDefaultStyle" Value="True" />
+                        <Setter Property="Padding" Value="3" />
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                    <Grid>
+                                        <Border x:Name="HoverRectangle" IsHitTestVisible="False" Visibility="Collapsed"
+                                    Background="{DynamicResource HoverBrush}" CornerRadius="{DynamicResource ControlCornerRadius}" />
+                                        <Border x:Name="SelectedRectangle" IsHitTestVisible="False" Visibility="Collapsed"
+                                    Background="{DynamicResource GlyphBrush}" CornerRadius="{DynamicResource ControlCornerRadius}"/>
+                                        <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Margin="3,0,0,0" />
+                                        </Border>
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsFocused" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" TargetName="SelectedRectangle" />
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="true">
+                                            <Setter Property="Visibility" Value="Visible" TargetName="SelectedRectangle" />
+                                        </Trigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsMouseOver" Value="True" />
+                                                <Condition Property="Selector.IsSelected" Value="False" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible" TargetName="HoverRectangle" />
+                                        </MultiTrigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="Selector.IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource TextBrushDark}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="6" />
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Height="100" Width="200">
+                                <Image x:Name="HltbImage" Source="{Binding Capsule}" Stretch="UniformToFill" Height="100" Width="200"></Image>
+                                <Label Content="{Binding StoreNameIcon}" Foreground="{DynamicResource GlyphBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="20" FontFamily="/IsThereAnyDeal;component/Resources/#font" Margin="-20,-20,0,0" />
+                            </StackPanel>
+                            
+
+                            <Grid Grid.Column="21">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="6" />
+                                    <ColumnDefinition Width="100" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="6" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Column="0" Grid.Row="0" Content="{Binding Name}" FontWeight="Bold" FontSize="20" />
+
+                                <Grid Grid.Column="0" Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="6" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid Grid.Column="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="auto" SharedSizeGroup="B"/>
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="auto" SharedSizeGroup="C"/>
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentBest}" />
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <TextBlock Text="{Binding ItadBestPrice.price_new}" />
+                                            <TextBlock Text="{Binding ItadBestPrice.currency_sign}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal">
+                                            <TextBlock Text="{Binding ItadBestPrice.price_cut}" />
+                                            <TextBlock Text="%" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="6" Text="{Binding ItadBestPrice.shop_name}" Foreground="{Binding ItadBestPrice.shop_color}"/>
+                                    </Grid>
+
+                                    <Grid Grid.Column="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="auto" SharedSizeGroup="B"/>
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="auto" SharedSizeGroup="C"/>
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}" />
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <TextBlock Text="{Binding ItadPriceForWishlistStore.price_new}" />
+                                            <TextBlock Text="{Binding ItadPriceForWishlistStore.currency_sign}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal">
+                                            <TextBlock Text="{Binding ItadPriceForWishlistStore.price_cut}" />
+                                            <TextBlock Text="%" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="6" Text="{Binding ItadPriceForWishlistStore.shop_name}" Foreground="{Binding ItadPriceForWishlistStore.shop_color}"/>
+                                    </Grid>
+                                </Grid>
+
+                                <Button Height="30" Grid.Column="2" Grid.Row="0" Tag="{Binding ItadBestPrice.url_game}" Content="{DynamicResource LOCItadWeb}" Click="ButtonWeb_Click"/>
+                                <Button Height="30"  Grid.Column="2" Grid.Row="2" Tag="{Binding ItadBestPrice.url_buy}" Content="{DynamicResource LOCItadBuy}" Click="ButtonDelete_Click"/>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </DockPanel>
+
+</controls:WindowBase>

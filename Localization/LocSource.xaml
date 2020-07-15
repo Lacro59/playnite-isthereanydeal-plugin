@@ -1,0 +1,38 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--  
+    IsThereAnyDealSettingsView
+    -->
+
+    <sys:String x:Key="LOCItadSettingWishlist">Whislist</sys:String>
+    <sys:String x:Key="LOCItadEnableSteam">Enable Steam</sys:String>
+    <sys:String x:Key="LOCItadEnableGog">Enable GOG</sys:String>
+    <sys:String x:Key="LOCItadEnableHumble">Enable Humble</sys:String>
+    <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
+    
+    <sys:String x:Key="LOCItadSettingItad">Is There Any Deal</sys:String>
+    <sys:String x:Key="LOCItadRegion">Region</sys:String>
+    <sys:String x:Key="LOCItadCountry">Country</sys:String>
+    <sys:String x:Key="LOCItadStores">Stores</sys:String>
+    
+    <sys:String x:Key="LOCItadEnableNotification">Enable notification</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Percentage</sys:String>
+
+    <!--  
+    IsThereAnyDealView
+    -->
+
+    <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">Current store wishlist</sys:String>
+    <sys:String x:Key="LOCItadWeb">Web</sys:String>
+    <sys:String x:Key="LOCItadBuy">Buy</sys:String>
+
+    <!--  
+    IsThereAnyDeal
+    -->
+
+    <sys:String x:Key="LOCItadNotification">Price notification for {0}</sys:String>
+
+</ResourceDictionary>
