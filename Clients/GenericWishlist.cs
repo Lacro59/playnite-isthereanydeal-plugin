@@ -61,6 +61,5 @@ namespace IsThereAnyDeal.Clients
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             return isThereAnyDealApi.GetCurrentPrice(ListWishlist, settings, PlayniteApi);
         }
-
     }
 }

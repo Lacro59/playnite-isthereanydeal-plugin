@@ -34,7 +34,7 @@ namespace IsThereAnyDeal.Clients
         }
 
 
-        public List<Wishlist> LoadWishlist(IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, string PluginUserDataPath)
+        public List<Wishlist> LoadWishlist(IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false, bool Force = false)
         {
             Guid SteamId = new Guid();
             Guid GogId = new Guid();
@@ -68,14 +68,14 @@ namespace IsThereAnyDeal.Clients
             if (settings.EnableSteam)
             {
                 SteamWishlist steamWishlist = new SteamWishlist();
-                ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings);
+                ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings, CacheOnly, Force);
             }
 
             List<Wishlist> ListWishlistGog = new List<Wishlist>();
             if (settings.EnableGog)
             {
                 GogWishlist gogWishlist = new GogWishlist(PlayniteApi);
-                ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings);
+                ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly, Force);
             }
 
             //EpicWishlist epicWishlist = new EpicWishlist();
@@ -86,7 +86,7 @@ namespace IsThereAnyDeal.Clients
             if (settings.EnableHumble)
             {
                 HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
-                ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings);
+                ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly, Force);
             }
 
             List<Wishlist> ListWishlist = ListWishlistSteam.Concat(ListWishlistGog).Concat(ListWishlistHumble).ToList();

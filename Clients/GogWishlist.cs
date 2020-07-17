@@ -37,7 +37,7 @@ namespace IsThereAnyDeal.Clients
             }
         }
 
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool Force = false)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool Force = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
@@ -47,6 +47,11 @@ namespace IsThereAnyDeal.Clients
                 ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                 SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
+            }
+
+            if (CacheOnly)
+            {
+                return Result;
             }
 
             if (gogAPI != null && gogAPI.GetIsUserLoggedIn())

@@ -17,10 +17,16 @@
         <pcon:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <pcon:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
     </Window.Resources>
-    
-    <DockPanel Margin="10">
-        
-        <Grid>
+
+    <Grid Margin="10">
+        <Grid Name="DataLoadWishlist">
+            <ProgressBar IsIndeterminate="True" Width="350" Height="40" />
+            <TextBlock Text="{DynamicResource LOCDownloadingLabel}"
+                       Style="{DynamicResource BaseTextBlockStyle}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Grid>
+
+        <Grid Name="DataLoaded">
             <ListBox Name="lbWishlist" Loaded="LbWishlist_Loaded"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <!-- Force the style because HorizontalContentAlignment not work. -->
@@ -422,6 +428,6 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
-    </DockPanel>
+    </Grid>
 
 </controls:WindowBase>

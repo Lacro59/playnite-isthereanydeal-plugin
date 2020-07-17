@@ -18,7 +18,7 @@ namespace IsThereAnyDeal.Clients
         private static IResourceProvider resources = new ResourceProvider();
 
 
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string HumbleBundleId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool Force = false)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string HumbleBundleId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool Force = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
@@ -28,6 +28,11 @@ namespace IsThereAnyDeal.Clients
                 ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                 SaveWishlist("HumbleBundle", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
+            }
+
+            if (CacheOnly)
+            {
+                return Result;
             }
 
             if (HumbleBundleId.IsNullOrEmpty())

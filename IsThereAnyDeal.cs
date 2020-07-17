@@ -87,7 +87,7 @@ namespace IsThereAnyDeal
             if (settings.EnableNotification)
             {
                 IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(PlayniteApi, settings, this.GetPluginUserDataPath());
+                List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(PlayniteApi, settings, this.GetPluginUserDataPath(), true);
 
                 foreach (Wishlist wishlist in ListWishlist)
                 {

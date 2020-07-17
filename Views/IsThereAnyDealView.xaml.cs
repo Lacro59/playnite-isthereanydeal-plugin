@@ -6,18 +6,9 @@ using PluginCommon;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace IsThereAnyDeal.Views
 {
@@ -29,30 +20,47 @@ namespace IsThereAnyDeal.Views
         private static readonly ILogger logger = LogManager.GetLogger();
 
         public string CurrencySign { get; set; }
+        public string PlainSelected { get; set; }
 
         public IsThereAnyDealView(IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
             InitializeComponent();
+            this.PlainSelected = PlainSelected;
 
-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-            List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(PlayniteApi, settings, PluginUserDataPath);
-            lbWishlist.ItemsSource = ListWishlist;
-
-            if (!PlainSelected.IsNullOrEmpty())
-            {
-                int index = 0;
-                foreach (Wishlist wishlist in ListWishlist)
+            // Load data
+            var task = Task.Run(() => LoadData(PlayniteApi, PluginUserDataPath, settings, PluginUserDataPath))
+                .ContinueWith(antecedent => 
                 {
-                    if (wishlist.Plain == PlainSelected)
-                    {
-                        lbWishlist.SelectedIndex = index;
-                        lbWishlist.UpdateLayout();
-                    }
-                    index += 1;
-                }
-            }
+                    Application.Current.Dispatcher.Invoke(new Action(() => {
+                        lbWishlist.ItemsSource = antecedent.Result;
+                        if (!PlainSelected.IsNullOrEmpty())
+                        {
+                            int index = 0;
+                            foreach (Wishlist wishlist in antecedent.Result)
+                            {
+                                if (wishlist.Plain == PlainSelected)
+                                {
+                                    lbWishlist.SelectedIndex = index;
+                                    lbWishlist.UpdateLayout();
+                                    break;
+                                }
+                                index += 1;
+                            }
+                        }
+                        DataLoadWishlist.Visibility = Visibility.Collapsed;
+                    }));
+                });
 
             DataContext = this;
+        }
+
+
+        private async Task<List<Wishlist>> LoadData (IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
+        {
+            logger.Debug("LoadData");
+            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+            List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(PlayniteApi, settings, PluginUserDataPath);
+            return ListWishlist;
         }
 
 
