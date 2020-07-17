@@ -96,7 +96,8 @@ namespace IsThereAnyDeal
                     {
                         PlayniteApi.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-{wishlist.Plain}",
-                            string.Format(resources.GetString("LOCItadNotification"), wishlist.Name),
+                            string.Format(resources.GetString("LOCItadNotification"), 
+                                wishlist.Name, wishlist.ItadBestPrice.price_new, wishlist.ItadBestPrice.currency_sign, wishlist.ItadBestPrice.price_cut),
                             NotificationType.Info,
                             () => new IsThereAnyDealView(PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain).ShowDialog()
                         ));

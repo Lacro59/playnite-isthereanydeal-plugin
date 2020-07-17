@@ -34,6 +34,6 @@
     IsThereAnyDeal
     -->
 
-    <sys:String x:Key="LOCItadNotification">Price notification for {0}</sys:String>
+    <sys:String x:Key="LOCItadNotification">Price notification for {0} - {1}{2} ({3}%)</sys:String>
 
 </ResourceDictionary>
