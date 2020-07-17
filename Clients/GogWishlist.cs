@@ -44,7 +44,7 @@ namespace IsThereAnyDeal.Clients
             List<Wishlist> ResultLoad = LoadWishlists("Gog", PluginUserDataPath);
             if (ResultLoad != null && !Force)
             {
-                ResultLoad = SetCurrentPrice(ResultLoad, settings);
+                ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                 SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
             }
@@ -118,7 +118,7 @@ namespace IsThereAnyDeal.Clients
                 }
             }
             
-            Result = SetCurrentPrice(Result, settings);
+            Result = SetCurrentPrice(Result, settings, PlayniteApi);
             SaveWishlist("Gog", PluginUserDataPath, Result);
             return Result;
         }

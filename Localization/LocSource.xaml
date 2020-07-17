@@ -6,7 +6,7 @@
     IsThereAnyDealSettingsView
     -->
 
-    <sys:String x:Key="LOCItadSettingWishlist">Whislist</sys:String>
+    <sys:String x:Key="LOCItadSettingWishlist">Wish list</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Enable Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Enable GOG</sys:String>
     <sys:String x:Key="LOCItadEnableHumble">Enable Humble</sys:String>
@@ -28,7 +28,9 @@
     <sys:String x:Key="LOCItadCurrentStore">Current store wishlist</sys:String>
     <sys:String x:Key="LOCItadWeb">Web</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy</sys:String>
+    <sys:String x:Key="LOCItadStore">Store</sys:String>
     <sys:String x:Key="LOCItadNoData">No data</sys:String>
+    <sys:String x:Key="LOCItadInLibrary">In Library</sys:String>
 
     <!--  
     IsThereAnyDeal

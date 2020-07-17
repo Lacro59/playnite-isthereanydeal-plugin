@@ -14,6 +14,8 @@
 
     <Window.Resources>
         <pcon:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
+        <pcon:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <pcon:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
     </Window.Resources>
     
     <DockPanel Margin="10">
@@ -82,6 +84,23 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Height="100" Width="200">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                <Setter Property="IsEnabled" Value="False"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                <Setter Property="IsEnabled" Value="False"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                
                                 <Image x:Name="HltbImage" Source="{Binding Capsule}" Stretch="UniformToFill" Height="100" Width="200"></Image>
                                 <Label Content="{Binding StoreNameIcon}" Foreground="{DynamicResource GlyphBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="20" FontFamily="/IsThereAnyDeal;component/Resources/#font" Margin="-20,-20,0,0" />
                             </StackPanel>
@@ -98,11 +117,30 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="6" />
                                     <RowDefinition Height="*" />
+                                    <RowDefinition Height="6" />
+                                    <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
 
-                                <Label Grid.Column="0" Grid.Row="0" Content="{Binding Name}" FontWeight="Bold" FontSize="20" />
+                                <Label Grid.Column="0" Grid.Row="0" Content="{Binding Name}" FontWeight="Bold" FontSize="20">
+                                    <!--Label.Style>
+                                        <Style TargetType="Label">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Label.Style-->
+                                </Label>
 
-                                <Grid Grid.Column="0" Grid.Row="2">
+                                <Grid Grid.Column="0" Grid.Row="2" Grid.RowSpan="3">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="6" />
@@ -120,18 +158,121 @@
                                             <ColumnDefinition Width="150"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentBest}" HorizontalAlignment="Right" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />
-                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}">
+                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentBest}" HorizontalAlignment="Right">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+
                                             <TextBlock Text="{Binding ItadBestPrice.price_new}" />
                                             <TextBlock Text="{Binding ItadBestPrice.currency_sign}" />
                                         </StackPanel>
-                                        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}">
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+                                            
                                             <TextBlock Text="{Binding ItadBestPrice.price_cut}" />
                                             <TextBlock Text="%" />
                                         </StackPanel>
-                                        <TextBlock Grid.Column="6" Text="{Binding ItadBestPrice.shop_name}" Foreground="{Binding ItadBestPrice.shop_color}" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}"/>
+                                        <TextBlock Grid.Column="6" Text="{Binding ItadBestPrice.shop_name}" Foreground="{Binding ItadBestPrice.shop_color}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
 
-                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadNoData}" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}, ConverterParameter=Inverted}" HorizontalAlignment="Right"/>
+                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadNoData}" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}, ConverterParameter=Inverted}" HorizontalAlignment="Right">
+                                            <!--TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="IsEnabled" Value="True"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style-->
+                                        </TextBlock>
+                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadInLibrary}" Visibility="{Binding InLibrary, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
+                                            <!--TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="IsEnabled" Value="True"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style-->
+                                        </TextBlock>
                                     </Grid>
 
                                     <Grid Grid.Column="2">
@@ -145,21 +286,136 @@
                                             <ColumnDefinition Width="150"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}" HorizontalAlignment="Right" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />
-                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}">
+                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}" HorizontalAlignment="Right">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+                                            
                                             <TextBlock Text="{Binding ItadPriceForWishlistStore.price_new}" />
                                             <TextBlock Text="{Binding ItadPriceForWishlistStore.currency_sign}" />
                                         </StackPanel>
-                                        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}">
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+                                            
                                             <TextBlock Text="{Binding ItadPriceForWishlistStore.price_cut}" />
                                             <TextBlock Text="%" />
                                         </StackPanel>
-                                        <TextBlock Grid.Column="6" Text="{Binding ItadPriceForWishlistStore.shop_name}" Foreground="{Binding ItadPriceForWishlistStore.shop_color}" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}"/>
+                                        <TextBlock Grid.Column="6" Text="{Binding ItadPriceForWishlistStore.shop_name}" Foreground="{Binding ItadPriceForWishlistStore.shop_color}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
                                     </Grid>
                                 </Grid>
 
-                                <Button Height="30" Grid.Column="2" Grid.Row="0" Tag="{Binding ItadBestPrice.url_game}" Content="{DynamicResource LOCItadWeb}" Click="ButtonWeb_Click"/>
-                                <Button Height="30"  Grid.Column="2" Grid.Row="2" Tag="{Binding ItadBestPrice.url_buy}" Content="{DynamicResource LOCItadBuy}" Click="ButtonDelete_Click"/>
+                                <Button Height="30" Grid.Column="2" Grid.Row="0" Tag="{Binding ItadBestPrice.url_game}" Content="{DynamicResource LOCItadWeb}" 
+                                        Click="ButtonWeb_Click" />
+                                <Button Height="30"  Grid.Column="2" Grid.Row="2" Tag="{Binding ItadBestPrice.url_buy}" Content="{DynamicResource LOCItadBuy}" 
+                                        Click="ButtonDelete_Click">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+                                            <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}" />
+                                            <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
+                                            <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
+                                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                                            <Setter Property="Padding" Value="10,5,10,5" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                        <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"
+                            CornerRadius="{DynamicResource ControlCornerRadius}" Style="{DynamicResource HighlightBorder}">
+                                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" />
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsFocused" Value="True">
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" TargetName="Border" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                                                </Trigger>
+                                                <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                                <Button Height="30"  Grid.Column="2" Grid.Row="4" Tag="{Binding StoreUrl}" Content="{DynamicResource LOCItadStore}" 
+                                        Click="ButtonDelete_Click" />
                             </Grid>
                         </Grid>
                     </DataTemplate>

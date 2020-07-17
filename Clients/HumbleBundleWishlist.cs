@@ -25,7 +25,7 @@ namespace IsThereAnyDeal.Clients
             List<Wishlist> ResultLoad = LoadWishlists("HumbleBundle", PluginUserDataPath);
             if (ResultLoad != null && !Force)
             {
-                ResultLoad = SetCurrentPrice(ResultLoad, settings);
+                ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                 SaveWishlist("HumbleBundle", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
             }
@@ -86,7 +86,7 @@ namespace IsThereAnyDeal.Clients
                 }
             }
 
-            Result = SetCurrentPrice(Result, settings);
+            Result = SetCurrentPrice(Result, settings, PlayniteApi);
             SaveWishlist("HumbleBundle", PluginUserDataPath, Result);
             return Result;
         }

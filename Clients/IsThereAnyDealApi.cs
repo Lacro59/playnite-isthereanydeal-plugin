@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Playnite.SDK;
+using Playnite.SDK.Models;
 using PluginCommon;
 using System;
 using System.Collections.Concurrent;
@@ -222,7 +223,7 @@ namespace IsThereAnyDeal.Clients
         }
 
 
-        public List<Wishlist> GetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings)
+        public List<Wishlist> GetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings, IPlayniteAPI PlayniteApi)
         {
             // IS allready load?
             if (wishlists.Count > 0)
@@ -280,6 +281,16 @@ namespace IsThereAnyDeal.Clients
                     ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
                     List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
                     JObject datasObj = JObject.Parse(responseData);
+
+                    // Check if in library
+                    bool InLibrary = false;
+                    foreach (var game in PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower()))
+                    {
+                        InLibrary = true;
+                    }
+                    wishlist.InLibrary = InLibrary;
+
+
                     if (((JArray)datasObj["data"][wishlist.Plain]["list"]).Count > 0)
                     {
                         foreach (JObject dataObj in ((JArray)datasObj["data"][wishlist.Plain]["list"]))

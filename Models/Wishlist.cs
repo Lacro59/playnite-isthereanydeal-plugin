@@ -17,6 +17,7 @@ namespace IsThereAnyDeal.Models
         public DateTime ReleaseDate { get; set; }
         public string Capsule { get; set; }
         public string Plain { get; set; }
+        public bool InLibrary { get; set; }
         public ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos { get; set; }
 
         [JsonIgnore]
