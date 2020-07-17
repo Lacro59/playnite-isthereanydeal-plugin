@@ -289,8 +289,8 @@ namespace IsThereAnyDeal.Clients
                             {
                                 plain = wishlist.Plain,
                                 //title = (string)dataObj["title"],
-                                price_new = (double)dataObj["price_new"],
-                                price_old = (double)dataObj["price_old"],
+                                price_new = Math.Round((double)dataObj["price_new"], 2),
+                                price_old = Math.Round((double)dataObj["price_old"], 2),
                                 price_cut = (double)dataObj["price_cut"],
                                 currency_sign = settings.CurrencySign,
                                 //added = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)dataObj["added"]),

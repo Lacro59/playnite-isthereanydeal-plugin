@@ -106,21 +106,21 @@
 
                                     <Grid Grid.Column="0">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
+                                            <ColumnDefinition Width="150"/>
                                             <ColumnDefinition Width="10"/>
-                                            <ColumnDefinition Width="auto" SharedSizeGroup="B"/>
+                                            <ColumnDefinition Width="50"/>
                                             <ColumnDefinition Width="10"/>
-                                            <ColumnDefinition Width="auto" SharedSizeGroup="C"/>
+                                            <ColumnDefinition Width="30"/>
                                             <ColumnDefinition Width="10"/>
-                                            <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
+                                            <ColumnDefinition Width="150"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentBest}" />
-                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentBest}" HorizontalAlignment="Right" />
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
                                             <TextBlock Text="{Binding ItadBestPrice.price_new}" />
                                             <TextBlock Text="{Binding ItadBestPrice.currency_sign}" />
                                         </StackPanel>
-                                        <StackPanel Grid.Column="4" Orientation="Horizontal">
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center">
                                             <TextBlock Text="{Binding ItadBestPrice.price_cut}" />
                                             <TextBlock Text="%" />
                                         </StackPanel>
@@ -129,21 +129,21 @@
 
                                     <Grid Grid.Column="2">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
+                                            <ColumnDefinition Width="150"/>
                                             <ColumnDefinition Width="10"/>
-                                            <ColumnDefinition Width="auto" SharedSizeGroup="B"/>
+                                            <ColumnDefinition Width="50"/>
                                             <ColumnDefinition Width="10"/>
-                                            <ColumnDefinition Width="auto" SharedSizeGroup="C"/>
+                                            <ColumnDefinition Width="30"/>
                                             <ColumnDefinition Width="10"/>
-                                            <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
+                                            <ColumnDefinition Width="150"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}" />
-                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}" HorizontalAlignment="Right" />
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
                                             <TextBlock Text="{Binding ItadPriceForWishlistStore.price_new}" />
                                             <TextBlock Text="{Binding ItadPriceForWishlistStore.currency_sign}" />
                                         </StackPanel>
-                                        <StackPanel Grid.Column="4" Orientation="Horizontal">
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center">
                                             <TextBlock Text="{Binding ItadPriceForWishlistStore.price_cut}" />
                                             <TextBlock Text="%" />
                                         </StackPanel>
