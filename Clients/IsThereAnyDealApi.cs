@@ -229,7 +229,7 @@ namespace IsThereAnyDeal.Clients
             {
                 foreach(Wishlist wishlist in wishlists)
                 {
-                    if (wishlist.itadGameInfos != null && wishlist.itadGameInfos[DateTime.Now.ToString("yyyy-MM-dd")] != null)
+                    if (wishlist.itadGameInfos != null && wishlist.itadGameInfos.Keys.Contains(DateTime.Now.ToString("yyyy-MM-dd")))
                     {
                         logger.Info("IsThereAnyDeal - Current price is allready load");
                         return wishlists;
