@@ -28,6 +28,7 @@
     <sys:String x:Key="LOCItadCurrentStore">Current store wishlist</sys:String>
     <sys:String x:Key="LOCItadWeb">Web</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy</sys:String>
+    <sys:String x:Key="LOCItadNoData">No data</sys:String>
 
     <!--  
     IsThereAnyDeal

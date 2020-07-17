@@ -5,12 +5,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IsThereAnyDeal.Views"
+             xmlns:pcon="clr-namespace:Playnite.Converters;assembly=Playnite"
              mc:Ignorable="d" Height="740" Width="1080" Background="{DynamicResource WindowBackgourndBrush}"
              Title="Is There Any Deal"              
              d:DesignStyle="{StaticResource WindowDesignStyle}"
              Style="{DynamicResource StandardWindowStyle}"
              ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
 
+    <Window.Resources>
+        <pcon:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
+    </Window.Resources>
+    
     <DockPanel Margin="10">
         
         <Grid>
@@ -115,16 +120,18 @@
                                             <ColumnDefinition Width="150"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentBest}" HorizontalAlignment="Right" />
-                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentBest}" HorizontalAlignment="Right" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}">
                                             <TextBlock Text="{Binding ItadBestPrice.price_new}" />
                                             <TextBlock Text="{Binding ItadBestPrice.currency_sign}" />
                                         </StackPanel>
-                                        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}">
                                             <TextBlock Text="{Binding ItadBestPrice.price_cut}" />
                                             <TextBlock Text="%" />
                                         </StackPanel>
-                                        <TextBlock Grid.Column="6" Text="{Binding ItadBestPrice.shop_name}" Foreground="{Binding ItadBestPrice.shop_color}"/>
+                                        <TextBlock Grid.Column="6" Text="{Binding ItadBestPrice.shop_name}" Foreground="{Binding ItadBestPrice.shop_color}" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}"/>
+
+                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadNoData}" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}, ConverterParameter=Inverted}" HorizontalAlignment="Right"/>
                                     </Grid>
 
                                     <Grid Grid.Column="2">
@@ -138,16 +145,16 @@
                                             <ColumnDefinition Width="150"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}" HorizontalAlignment="Right" />
-                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}" HorizontalAlignment="Right" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}">
                                             <TextBlock Text="{Binding ItadPriceForWishlistStore.price_new}" />
                                             <TextBlock Text="{Binding ItadPriceForWishlistStore.currency_sign}" />
                                         </StackPanel>
-                                        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}">
                                             <TextBlock Text="{Binding ItadPriceForWishlistStore.price_cut}" />
                                             <TextBlock Text="%" />
                                         </StackPanel>
-                                        <TextBlock Grid.Column="6" Text="{Binding ItadPriceForWishlistStore.shop_name}" Foreground="{Binding ItadPriceForWishlistStore.shop_color}"/>
+                                        <TextBlock Grid.Column="6" Text="{Binding ItadPriceForWishlistStore.shop_name}" Foreground="{Binding ItadPriceForWishlistStore.shop_color}" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}"/>
                                     </Grid>
                                 </Grid>
 
