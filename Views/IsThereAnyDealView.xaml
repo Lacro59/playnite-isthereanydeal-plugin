@@ -84,7 +84,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Height="100" Width="200">
-                                <StackPanel.Style>
+                                <!--StackPanel.Style>
                                     <Style TargetType="StackPanel">
                                         <Setter Property="IsEnabled" Value="True"/>
                                         <Style.Triggers>
@@ -99,7 +99,7 @@
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
-                                </StackPanel.Style>
+                                </StackPanel.Style-->
                                 
                                 <Image x:Name="HltbImage" Source="{Binding Capsule}" Stretch="UniformToFill" Height="100" Width="200"></Image>
                                 <Label Content="{Binding StoreNameIcon}" Foreground="{DynamicResource GlyphBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="20" FontFamily="/IsThereAnyDeal;component/Resources/#font" Margin="-20,-20,0,0" />

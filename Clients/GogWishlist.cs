@@ -87,7 +87,7 @@ namespace IsThereAnyDeal.Clients
                                             {
                                                 StoreId = StoreId,
                                                 StoreName = "GOG",
-                                                StoreUrl = url,
+                                                StoreUrl = (string)resultObjGame["links"]["product_card"],
                                                 Name = Name,
                                                 SourceId = SourceId,
                                                 ReleaseDate = ReleaseDate.ToUniversalTime(),
