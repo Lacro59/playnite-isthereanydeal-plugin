@@ -162,24 +162,7 @@
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
 
-                                    <Label Grid.Column="0" Grid.Row="0" Content="{Binding Name}" FontWeight="Bold" FontSize="20">
-                                        <!--Label.Style>
-                                        <Style TargetType="Label">
-                                            <Setter Property="IsEnabled" Value="True"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
-                                                    <Setter Property="IsEnabled" Value="False"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
-                                                    <Setter Property="IsEnabled" Value="False"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                    <Setter Property="IsEnabled" Value="False"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Label.Style-->
-                                    </Label>
+                                    <Label Grid.Column="0" Grid.Row="0" Content="{Binding Name}" FontWeight="Bold" FontSize="20" />
 
                                     <Grid Grid.Column="0" Grid.Row="2" Grid.RowSpan="3">
                                         <Grid.ColumnDefinitions>
@@ -278,42 +261,12 @@
                                                 </TextBlock.Style>
                                             </TextBlock>
 
-                                            <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadNoData}" Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}, ConverterParameter=Inverted}" HorizontalAlignment="Right">
-                                            <!--TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="IsEnabled" Value="True"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
-                                                            <Setter Property="IsEnabled" Value="False"/>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
-                                                            <Setter Property="IsEnabled" Value="False"/>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                            <Setter Property="IsEnabled" Value="False"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style-->
-                                            </TextBlock>
-                                            <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadInLibrary}" Visibility="{Binding InLibrary, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
-                                            <!--TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="IsEnabled" Value="True"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="">
-                                                            <Setter Property="IsEnabled" Value="False"/>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.currency_sign}" Value="{x:Null}">
-                                                            <Setter Property="IsEnabled" Value="False"/>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                            <Setter Property="IsEnabled" Value="False"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style-->
-                                            </TextBlock>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{DynamicResource LOCItadNoData}" 
+                                                           Visibility="{Binding ItadPriceForWishlistStore.currency_sign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}, ConverterParameter=Inverted}" />
+                                                <TextBlock Text="{DynamicResource LOCItadInLibrary}" 
+                                                           Visibility="{Binding InLibrary, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                            </StackPanel>
                                         </Grid>
 
                                         <Grid Grid.Column="2">
