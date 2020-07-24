@@ -56,8 +56,11 @@
                     </ComboBox>
 
                     <Label Grid.Column="8" Content="{DynamicResource LOCITADPercentage}" FontSize="16" />
-                    <Slider Grid.Column="10" Minimum="0" Maximum="100" Value="0" VerticalAlignment="Center" IsSnapToTickEnabled="True" TickFrequency="1"
-                            ValueChanged="Slider_ValueChanged" AutoToolTipPlacement="BottomRight" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
+                    <StackPanel Grid.Column="10" Orientation="Horizontal">
+                        <Slider Width="200" Minimum="0" Maximum="100" Value="0" VerticalAlignment="Center" IsSnapToTickEnabled="True" TickFrequency="1" Name="sPercentage"
+                            ValueChanged="Slider_ValueChanged" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
+                        <Label Name="lPercentage" Content="50%" Margin="5,0,0,0" />
+                    </StackPanel>
                 </Grid>
             </Border>
 
