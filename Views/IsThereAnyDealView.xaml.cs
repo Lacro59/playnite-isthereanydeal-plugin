@@ -81,6 +81,11 @@ namespace IsThereAnyDeal.Views
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "Humble", IsCheck = false });
             }
+            if (settings.EnableEpic)
+            {
+                FilterStoreItems.Add(new ListStore { StoreName = "Epic", IsCheck = false });
+            }
+            FilterStoreItems.Sort((x, y) => string.Compare(x.StoreName, y.StoreName));
             FilterStore.ItemsSource = FilterStoreItems;
         }
 

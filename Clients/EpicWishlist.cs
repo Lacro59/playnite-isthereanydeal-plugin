@@ -6,52 +6,132 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
+using Newtonsoft.Json.Linq;
+using System.IO;
+using Playnite.Common;
+using Newtonsoft.Json;
+using PluginCommon;
 
 namespace IsThereAnyDeal.Clients
 {
-    class EpicWishlist
+    class EpicWishlist : GenericWishlist
     {
         private static readonly ILogger logger = LogManager.GetLogger();
         private static IResourceProvider resources = new ResourceProvider();
 
+        public const string GraphQLEndpoint = @"https://graphql.epicgames.com/graphql";
 
-        public EpicWishlist()
+
+
+        public async Task<string> QuerySearchWishList(string token)
         {
-            
+            string query = @"query wishlistQuery { Wishlist { wishlistItems { elements { offer { title keyImages { type url width height } } } } } }";
 
-
-
-        }
-
-
-        internal async Task<string> DonwloadStringData()
-        {
-            using (var client = new HttpClient())
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                
+            var queryObject = new
             {
-                string token = "";
-                client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
-                await client.GetStringAsync("https://account-public-service-prod03.ol.epicgames.com/account/api/public/account/f1d782253c2e438a94d9f9fa5acf6ab5").ConfigureAwait(false);
+                query = query,
+                variables = new { }
+            };
+            var content = new StringContent(JsonConvert.SerializeObject(queryObject), Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(GraphQLEndpoint, content).ConfigureAwait(false);
+            var str = await response.Content.ReadAsStringAsync();
 
-                string result = await client.GetStringAsync("https://www.epicgames.com/store/fr/wishlist").ConfigureAwait(false);
-
-                return result;
-            }
+            return str;
         }
 
 
-
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool Force = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
+            List<Wishlist> ResultLoad = LoadWishlists("Epic", PluginUserDataPath);
+            if (ResultLoad != null && !Force)
+            {
+                ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                SaveWishlist("Epic", PluginUserDataPath, ResultLoad);
+                return ResultLoad;
+            }
 
-            var view = PlayniteApi.WebViews.CreateOffscreenView();
+            if (CacheOnly)
+            {
+                return Result;
+            }
 
+            // Get Epic configuration if exist.
+            string access_token = "";
+            try
+            {
+                JObject EpicConfig = JObject.Parse(File.ReadAllText(PluginUserDataPath + "\\..\\00000002-DBD1-46C6-B5D0-B1BA559D10E4\\tokens.json"));
+                access_token = (string)EpicConfig["access_token"];
+            }
+            catch
+            {
+            }
 
+            if (access_token.IsNullOrEmpty())
+            {
+                logger.Error($"ISThereAnyDeal - No Epic configuration.");
+                return Result;
+            }
+
+            // Get wishlist
+            string ResultWeb = "";
+            ResultWeb = QuerySearchWishList(access_token).GetAwaiter().GetResult();
+
+            if (ResultWeb != "")
+            {
+                JObject resultObj = new JObject();
+
+                try
+                {
+                    resultObj = JObject.Parse(ResultWeb);
+
+                    if (resultObj["data"]["Wishlist"]["wishlistItems"]["elements"] != null) {
+
+                        IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                        foreach (JObject gameWishlist in resultObj["data"]["Wishlist"]["wishlistItems"]["elements"])
+                        {
+                            int StoreId = 0;
+                            string Name = "";
+                            DateTime ReleaseDate = default(DateTime);
+                            string Capsule = "";
+
+                            Name = (string)gameWishlist["offer"]["title"];
+                            foreach (var keyImages in gameWishlist["offer"]["keyImages"])
+                            {
+                                if ((string)keyImages["type"] == "Thumbnail")
+                                {
+                                    Capsule = (string)keyImages["url"];
+                                }
+                            }
+
+                            Result.Add(new Wishlist
+                            {
+                                StoreId = StoreId,
+                                StoreName = "Epic",
+                                StoreUrl = "",
+                                Name = Name,
+                                SourceId = SourceId,
+                                ReleaseDate = ReleaseDate.ToUniversalTime(),
+                                Capsule = Capsule,
+                                Plain = isThereAnyDealApi.GetPlain(Name)
+                            });
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, "IsThereAnyDeal", "Error io parse Epic wishlist");
+                    return Result;
+                }
+            }
+
+            Result = SetCurrentPrice(Result, settings, PlayniteApi);
+            SaveWishlist("Epic", PluginUserDataPath, Result);
             return Result;
         }
-
-
-
     }
 }

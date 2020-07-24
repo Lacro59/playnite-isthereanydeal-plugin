@@ -78,9 +78,12 @@ namespace IsThereAnyDeal.Clients
                 ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly, Force);
             }
 
-            //EpicWishlist epicWishlist = new EpicWishlist();
-            //ListWishlist = epicWishlist.GetWishlist(PlayniteApi, EpicId ,this.GetPluginUserDataPath());
-            //logger.Debug("IsTherAnyDeal - Epic: " + JsonConvert.SerializeObject(ListWishlist));
+            List<Wishlist> ListWishlistEpic = new List<Wishlist>();
+            if (settings.EnableEpic)
+            {
+                EpicWishlist epicWishlist = new EpicWishlist();
+                ListWishlistEpic = epicWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly, Force);
+            }
 
             List<Wishlist> ListWishlistHumble = new List<Wishlist>();
             if (settings.EnableHumble)
@@ -89,7 +92,7 @@ namespace IsThereAnyDeal.Clients
                 ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly, Force);
             }
 
-            List<Wishlist> ListWishlist = ListWishlistSteam.Concat(ListWishlistGog).Concat(ListWishlistHumble).ToList();
+            List<Wishlist> ListWishlist = ListWishlistSteam.Concat(ListWishlistGog).Concat(ListWishlistHumble).Concat(ListWishlistEpic).ToList();
             return ListWishlist.OrderBy(wishlist => wishlist.Name).ToList();
         }
 

@@ -49,7 +49,7 @@ namespace IsThereAnyDeal.Clients
             {
             }
 
-            if (userId == "" || apiKey == "")
+            if (userId.IsNullOrEmpty() || apiKey.IsNullOrEmpty())
             {
                 logger.Error($"ISThereAnyDeal - No Steam configuration.");
                 return Result;

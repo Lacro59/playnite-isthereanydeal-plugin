@@ -9,6 +9,7 @@
     <sys:String x:Key="LOCItadSettingWishlist">Liste de souhaits</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Activer Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Activer GOG</sys:String>
+    <sys:String x:Key="LOCItadEnableEpic">Activer Epic</sys:String>
     <sys:String x:Key="LOCItadEnableHumble">Activer Humble</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
 

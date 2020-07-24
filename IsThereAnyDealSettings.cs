@@ -18,6 +18,7 @@ namespace IsThereAnyDeal
         public bool EnableSteam { get; set; } = false;
         public bool EnableGog { get; set; } = false;
         public bool EnableHumble { get; set; } = false;
+        public bool EnableEpic { get; set; } = false;
 
         public bool EnableNotification { get; set; } = false;
         public int LimitNotification { get; set; } = 50;
@@ -54,6 +55,7 @@ namespace IsThereAnyDeal
                 EnableSteam = savedSettings.EnableSteam;
                 EnableGog = savedSettings.EnableGog;
                 EnableHumble = savedSettings.EnableHumble;
+                EnableEpic = savedSettings.EnableEpic;
 
                 EnableNotification = savedSettings.EnableNotification;
                 LimitNotification = savedSettings.LimitNotification;

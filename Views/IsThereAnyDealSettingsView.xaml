@@ -28,6 +28,7 @@
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
 
                 <CheckBox Grid.Row="0" Grid.ColumnSpan="5" IsChecked="{Binding EnableSteam}" VerticalAlignment="Center">
@@ -38,11 +39,15 @@
                     <Label Content="{DynamicResource LOCItadEnableGog}" />
                 </CheckBox>
 
-                <CheckBox Name="chk_Humble" Grid.Column="0" Grid.Row="2" IsChecked="{Binding EnableHumble}" VerticalAlignment="Center">
+                <CheckBox Grid.Row="2" Grid.ColumnSpan="5" IsChecked="{Binding EnableEpic}" VerticalAlignment="Center">
+                    <Label Content="{DynamicResource LOCItadEnableEpic}" />
+                </CheckBox>
+
+                <CheckBox Name="chk_Humble" Grid.Column="0" Grid.Row="3" IsChecked="{Binding EnableHumble}" VerticalAlignment="Center">
                     <Label Content="{DynamicResource LOCItadEnableHumble}" />
                 </CheckBox>
-                <Label Grid.Column="2" Grid.Row="2" Content="{DynamicResource LOCItadHumbleKey}" IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}" />
-                <TextBox Grid.Column="4" Grid.Row="2" Text="{Binding HumbleKey}" IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}" VerticalAlignment="Center" />
+                <Label Grid.Column="2" Grid.Row="3" Content="{DynamicResource LOCItadHumbleKey}" IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}" />
+                <TextBox Grid.Column="4" Grid.Row="3" Text="{Binding HumbleKey}" IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}" VerticalAlignment="Center" />
                 
             </Grid>
         </StackPanel>
