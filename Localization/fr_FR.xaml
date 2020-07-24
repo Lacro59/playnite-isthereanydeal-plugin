@@ -1,0 +1,41 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--  
+    IsThereAnyDealSettingsView
+    -->
+
+    <sys:String x:Key="LOCItadSettingWishlist">Liste de souhaits</sys:String>
+    <sys:String x:Key="LOCItadEnableSteam">Activer Steam</sys:String>
+    <sys:String x:Key="LOCItadEnableGog">Activer GOG</sys:String>
+    <sys:String x:Key="LOCItadEnableHumble">Activer Humble</sys:String>
+    <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
+
+    <sys:String x:Key="LOCItadSettingItad">Is There Any Deal</sys:String>
+    <sys:String x:Key="LOCItadRegion">Région</sys:String>
+    <sys:String x:Key="LOCItadCountry">Pays</sys:String>
+    <sys:String x:Key="LOCItadStores">Magasin(s)</sys:String>
+
+    <sys:String x:Key="LOCItadEnableNotification">Actier notification(s)</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Pourcentage</sys:String>
+
+    <!--  
+    IsThereAnyDealView
+    -->
+
+    <sys:String x:Key="LOCItadCurrentBest">Meilleur actuel</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">Meilleur magasin (liste souhaits)</sys:String>
+    <sys:String x:Key="LOCItadWeb">Site</sys:String>
+    <sys:String x:Key="LOCItadBuy">Acheter</sys:String>
+    <sys:String x:Key="LOCItadStore">MAgasin</sys:String>
+    <sys:String x:Key="LOCItadNoData">Aucune données</sys:String>
+    <sys:String x:Key="LOCItadInLibrary">Dans la bibliothèque</sys:String>
+
+    <!--  
+    IsThereAnyDeal
+    -->
+
+    <sys:String x:Key="LOCItadNotification">Notification prix pour {0} - {1}{2} ({3}%)</sys:String>
+
+</ResourceDictionary>

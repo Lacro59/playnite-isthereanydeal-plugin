@@ -15,9 +15,9 @@
     <sys:String x:Key="LOCItadSettingItad">Is There Any Deal</sys:String>
     <sys:String x:Key="LOCItadRegion">Region</sys:String>
     <sys:String x:Key="LOCItadCountry">Country</sys:String>
-    <sys:String x:Key="LOCItadStores">Stores</sys:String>
+    <sys:String x:Key="LOCItadStores">Store(s)</sys:String>
     
-    <sys:String x:Key="LOCItadEnableNotification">Enable notification</sys:String>
+    <sys:String x:Key="LOCItadEnableNotification">Enable notification(s)</sys:String>
     <sys:String x:Key="LOCItadLimitNotification">Percentage</sys:String>
 
     <!--  
@@ -25,12 +25,12 @@
     -->
 
     <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
-    <sys:String x:Key="LOCItadCurrentStore">Current store wishlist</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">Current store wish list</sys:String>
     <sys:String x:Key="LOCItadWeb">Web</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy</sys:String>
     <sys:String x:Key="LOCItadStore">Store</sys:String>
     <sys:String x:Key="LOCItadNoData">No data</sys:String>
-    <sys:String x:Key="LOCItadInLibrary">In Library</sys:String>
+    <sys:String x:Key="LOCItadInLibrary">In library</sys:String>
 
     <!--  
     IsThereAnyDeal
