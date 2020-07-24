@@ -24,6 +24,11 @@
     IsThereAnyDealView
     -->
 
+    <sys:String x:Key="LOCITADSearch">Search</sys:String>
+    <sys:String x:Key="LOCITADFilterSource">Filter by store</sys:String>
+    <sys:String x:Key="LOCITADPercentage">Percentage</sys:String>
+
+
     <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Current store wish list</sys:String>
     <sys:String x:Key="LOCItadWeb">Web</sys:String>
