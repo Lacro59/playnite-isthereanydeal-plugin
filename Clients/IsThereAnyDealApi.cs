@@ -23,7 +23,7 @@ namespace IsThereAnyDeal.Clients
         private string key = "fa49308286edcaf76fea58926fd2ea2d216a17ff";
 
 
-        internal async Task<string> DonwloadStringData(string url)
+        internal async Task<string> DownloadStringData(string url)
         {
             //logger.Info($"IsTherAnyDeal - Download {url}");
             using (var client = new HttpClient())
@@ -103,7 +103,7 @@ namespace IsThereAnyDeal.Clients
             List<ItadRegion> itadRegions = new List<ItadRegion>();
             try
             {
-                string responseData = DonwloadStringData(baseAddress + "v01/web/regions/").GetAwaiter().GetResult();
+                string responseData = DownloadStringData(baseAddress + "v01/web/regions/").GetAwaiter().GetResult();
 
                 JObject datasObj = JObject.Parse(responseData);
                 if (((JObject)datasObj["data"]).Count > 0)
@@ -142,7 +142,7 @@ namespace IsThereAnyDeal.Clients
             try
             {
                 string url = baseAddress + $"v02/web/stores/?region={region}&country={country}";
-                string responseData = DonwloadStringData(url).GetAwaiter().GetResult();
+                string responseData = DownloadStringData(url).GetAwaiter().GetResult();
 
                 JObject datasObj = JObject.Parse(responseData);
                 if (((JArray)datasObj["data"]).Count > 0)
@@ -165,7 +165,7 @@ namespace IsThereAnyDeal.Clients
             try
             {
                 string url = baseAddress + $"v02/game/plain/?key={key}&title={WebUtility.UrlEncode(WebUtility.HtmlDecode(title))}";
-                string responseData = DonwloadStringData(url).GetAwaiter().GetResult();
+                string responseData = DownloadStringData(url).GetAwaiter().GetResult();
 
                 JObject datasObj = JObject.Parse(responseData);
                 if ((string)datasObj[".meta"]["match"] != "false")
@@ -194,7 +194,7 @@ namespace IsThereAnyDeal.Clients
             try
             {
                 string url = baseAddress + $"v01/search/search/?key={key}&q={q}&region{region}&country={country}";
-                string responseData = DonwloadStringData(url).GetAwaiter().GetResult();
+                string responseData = DownloadStringData(url).GetAwaiter().GetResult();
 
                 JObject datasObj = JObject.Parse(responseData);
                 if (((JArray)datasObj["data"]["list"]).Count > 0)
@@ -277,7 +277,7 @@ namespace IsThereAnyDeal.Clients
             try
             {
                 string url = baseAddress + $"v01/game/prices/?key={key}&plains={plains}&region{settings.Region}&country={settings.Country}&shops={shops}";
-                string responseData = DonwloadStringData(url).GetAwaiter().GetResult();
+                string responseData = DownloadStringData(url).GetAwaiter().GetResult();
 
                 foreach (Wishlist wishlist in wishlists)
                 {

@@ -25,6 +25,8 @@ namespace IsThereAnyDeal
 
         public string HumbleKey { get; set; } = "";
 
+        public bool EnableCheckVersion { get; set; } = true;
+
 
         // Playnite serializes settings object to a JSON object and saves it as text file.
         // If you want to exclude some property from being saved then use `JsonIgnore` ignore attribute.
@@ -61,6 +63,8 @@ namespace IsThereAnyDeal
                 LimitNotification = savedSettings.LimitNotification;
 
                 HumbleKey = savedSettings.HumbleKey;
+
+                EnableCheckVersion = savedSettings.EnableCheckVersion;
             }
         }
 

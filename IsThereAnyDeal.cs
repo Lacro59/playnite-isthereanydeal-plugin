@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Playnite.SDK;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
+using PluginCommon;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,6 +39,17 @@ namespace IsThereAnyDeal
             PluginCommon.Localization.SetPluginLanguage(pluginFolder, api.Paths.ConfigurationPath);
             // Add common in application ressource.
             PluginCommon.Common.Load(pluginFolder);
+
+            // Check version
+            if (settings.EnableCheckVersion)
+            {
+                CheckVersion cv = new CheckVersion();
+
+                if (cv.Check("IsThereAnyDeal", pluginFolder))
+                {
+                    cv.ShowNotification(api, "IsThereAnyDeal - " + resources.GetString("LOCUpdaterWindowTitle"));
+                }
+            }
         }
 
         public override IEnumerable<ExtensionFunction> GetFunctions()
@@ -103,7 +115,6 @@ namespace IsThereAnyDeal
                         ));
                     }
                 }
-
             }
         }
 
