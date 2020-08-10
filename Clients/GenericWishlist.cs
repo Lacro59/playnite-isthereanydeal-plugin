@@ -27,6 +27,10 @@ namespace IsThereAnyDeal.Clients
                 {
                     return null;
                 }
+                else if (File.GetLastWriteTime(PluginUserDataPath + $"\\IsThereAnyDeal\\{clientName}.json").AddDays(1) > DateTime.Now)
+                {
+                    return null;
+                }
 
                 string fileData = File.ReadAllText(PluginUserDataPath + $"\\IsThereAnyDeal\\{clientName}.json");
                 logger.Info($"IsThereAnyDeal - Load from local for {clientName}");

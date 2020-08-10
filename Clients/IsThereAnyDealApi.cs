@@ -274,57 +274,64 @@ namespace IsThereAnyDeal.Clients
                 }
             }
 
-            try
+            if (!plains.IsNullOrEmpty())
             {
-                string url = baseAddress + $"v01/game/prices/?key={key}&plains={plains}&region{settings.Region}&country={settings.Country}&shops={shops}";
-                string responseData = DownloadStringData(url).GetAwaiter().GetResult();
-
-                foreach (Wishlist wishlist in wishlists)
+                try
                 {
-                    ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
-                    List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
-                    JObject datasObj = JObject.Parse(responseData);
+                    string url = baseAddress + $"v01/game/prices/?key={key}&plains={plains}&region{settings.Region}&country={settings.Country}&shops={shops}";
+                    string responseData = DownloadStringData(url).GetAwaiter().GetResult();
 
-                    // Check if in library
-                    bool InLibrary = false;
-                    foreach (var game in PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower()))
+                    foreach (Wishlist wishlist in wishlists)
                     {
-                        InLibrary = true;
-                    }
-                    wishlist.InLibrary = InLibrary;
+                        ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
+                        List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
+                        JObject datasObj = JObject.Parse(responseData);
 
-
-                    if (((JArray)datasObj["data"][wishlist.Plain]["list"]).Count > 0)
-                    {
-                        foreach (JObject dataObj in ((JArray)datasObj["data"][wishlist.Plain]["list"]))
+                        // Check if in library
+                        bool InLibrary = false;
+                        foreach (var game in PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower()))
                         {
-                            //logger.Debug(JsonConvert.SerializeObject(dataObj));
-                            dataCurrentPrice.Add(new ItadGameInfo
-                            {
-                                plain = wishlist.Plain,
-                                //title = (string)dataObj["title"],
-                                price_new = Math.Round((double)dataObj["price_new"], 2),
-                                price_old = Math.Round((double)dataObj["price_old"], 2),
-                                price_cut = (double)dataObj["price_cut"],
-                                currency_sign = settings.CurrencySign,
-                                //added = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)dataObj["added"]),
-                                //added = DateTime.Now,
-                                shop_name = (string)dataObj["shop"]["name"],
-                                shop_color = GetShopColor((string)dataObj["shop"]["name"], settings.Stores),
-                                url_buy = (string)dataObj["url"]
-                                //url_game = (string)dataObj["urls"]["game"],
-                            });
+                            InLibrary = true;
                         }
-                    }
-                    itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
+                        wishlist.InLibrary = InLibrary;
 
-                    wishlist.itadGameInfos = itadGameInfos;
-                    Result.Add(wishlist);
+
+                        if (((JArray)datasObj["data"][wishlist.Plain]["list"]).Count > 0)
+                        {
+                            foreach (JObject dataObj in ((JArray)datasObj["data"][wishlist.Plain]["list"]))
+                            {
+                                //logger.Debug(JsonConvert.SerializeObject(dataObj));
+                                dataCurrentPrice.Add(new ItadGameInfo
+                                {
+                                    plain = wishlist.Plain,
+                                    //title = (string)dataObj["title"],
+                                    price_new = Math.Round((double)dataObj["price_new"], 2),
+                                    price_old = Math.Round((double)dataObj["price_old"], 2),
+                                    price_cut = (double)dataObj["price_cut"],
+                                    currency_sign = settings.CurrencySign,
+                                    //added = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)dataObj["added"]),
+                                    //added = DateTime.Now,
+                                    shop_name = (string)dataObj["shop"]["name"],
+                                    shop_color = GetShopColor((string)dataObj["shop"]["name"], settings.Stores),
+                                    url_buy = (string)dataObj["url"]
+                                    //url_game = (string)dataObj["urls"]["game"],
+                                });
+                            }
+                        }
+                        itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
+
+                        wishlist.itadGameInfos = itadGameInfos;
+                        Result.Add(wishlist);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, "IsThereAnyDeal", $"Error in GetCurrentPrice({plains})");
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Common.LogError(ex, "IsThereAnyDeal", $"Error in GetCurrentPrice({plains})");
+                logger.Info("IsThereAnyDeal - No plain");
             }
 
             return Result;
