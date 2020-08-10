@@ -1,5 +1,4 @@
 ﻿using IsThereAnyDeal.Models;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Playnite.Common.Web;
 using Playnite.SDK;
@@ -9,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-
 
 namespace IsThereAnyDeal.Clients
 {
@@ -97,7 +95,7 @@ namespace IsThereAnyDeal.Clients
                             StoreId = StoreId,
                             StoreName = "Steam",
                             StoreUrl = "https://store.steampowered.com/app/" + StoreId,
-                            Name = Name,
+                            Name = WebUtility.HtmlDecode(Name),
                             SourceId = SourceId,
                             ReleaseDate = ReleaseDate.ToUniversalTime(),
                             Capsule = Capsule,

@@ -2,15 +2,14 @@
 using IsThereAnyDeal.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.IO;
-using Playnite.Common;
 using Newtonsoft.Json;
 using PluginCommon;
+using System.Net;
 
 namespace IsThereAnyDeal.Clients
 {
@@ -113,7 +112,7 @@ namespace IsThereAnyDeal.Clients
                                 StoreId = StoreId,
                                 StoreName = "Epic",
                                 StoreUrl = "",
-                                Name = Name,
+                                Name = WebUtility.HtmlDecode(Name),
                                 SourceId = SourceId,
                                 ReleaseDate = ReleaseDate.ToUniversalTime(),
                                 Capsule = Capsule,

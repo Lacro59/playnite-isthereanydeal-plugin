@@ -7,8 +7,6 @@ using Playnite.Common.Web;
 using System.Net;
 using PluginCommon;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.IO;
 
 namespace IsThereAnyDeal.Clients
 {
@@ -73,7 +71,7 @@ namespace IsThereAnyDeal.Clients
                             StoreId = StoreId,
                             StoreName = "Humble",
                             StoreUrl = StoreUrl,
-                            Name = Name,
+                            Name = WebUtility.HtmlDecode(Name),
                             SourceId = SourceId,
                             ReleaseDate = ReleaseDate.ToUniversalTime(),
                             Capsule = Capsule,

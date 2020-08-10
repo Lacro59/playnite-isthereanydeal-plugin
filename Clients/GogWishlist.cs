@@ -1,17 +1,13 @@
 ﻿using GogLibrary.Services;
 using IsThereAnyDeal.Models;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Playnite.Common.Web;
 using Playnite.SDK;
 using PluginCommon;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 
 namespace IsThereAnyDeal.Clients
@@ -93,7 +89,7 @@ namespace IsThereAnyDeal.Clients
                                                 StoreId = StoreId,
                                                 StoreName = "GOG",
                                                 StoreUrl = (string)resultObjGame["links"]["product_card"],
-                                                Name = Name,
+                                                Name = WebUtility.HtmlDecode(Name),
                                                 SourceId = SourceId,
                                                 ReleaseDate = ReleaseDate.ToUniversalTime(),
                                                 Capsule = Capsule,
