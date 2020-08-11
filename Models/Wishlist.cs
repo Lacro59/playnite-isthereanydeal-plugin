@@ -4,7 +4,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-
 namespace IsThereAnyDeal.Models
 {
     public class Wishlist
@@ -25,7 +24,15 @@ namespace IsThereAnyDeal.Models
         {
             get
             {
-                return TransformIcon.Get(StoreName);
+                string storeNameIcon = TransformIcon.Get(StoreName);
+                if (hasDuplicates)
+                {
+                    foreach (var duplicate in Duplicates)
+                    {
+                        storeNameIcon += " " + TransformIcon.Get(duplicate.StoreName);
+                    }
+                }
+                return storeNameIcon;
             }
         }
         [JsonIgnore]
@@ -80,6 +87,27 @@ namespace IsThereAnyDeal.Models
             }
         }
 
+        [JsonIgnore]
+        public List<Wishlist> Duplicates = new List<Wishlist>();
+        [JsonIgnore]
+        public bool hasDuplicates = false;
+        [JsonIgnore]
+        public List<ItadGameInfo> ListItadPriceForWishlistStore
+        {
+            get
+            {
+                List<ItadGameInfo> list = new List<ItadGameInfo>();
+                list.Add(ItadPriceForWishlistStore);
+                if (hasDuplicates)
+                {
+                    foreach(var duplicate in Duplicates)
+                    {
+                        list.Add(duplicate.ItadPriceForWishlistStore);
+                    }
+                }
+                return list;
+            }
+        }
 
         public bool GetNotification(int LimitNotification)
         {

@@ -93,6 +93,34 @@ namespace IsThereAnyDeal.Clients
             }
 
             List<Wishlist> ListWishlist = ListWishlistSteam.Concat(ListWishlistGog).Concat(ListWishlistHumble).Concat(ListWishlistEpic).ToList();
+
+
+            // Group same game
+            var listDuplicates = ListWishlist.GroupBy(c => c.Name.ToLower()).Where(g => g.Skip(1).Any());
+            foreach (var duplicates in listDuplicates)
+            {
+                bool isFirst = true;
+                Wishlist keep = new Wishlist();
+                foreach(var wish in duplicates)
+                {
+                    if (isFirst)
+                    {
+                        keep = wish;
+                        isFirst = false;
+                    }
+                    else
+                    {
+                        List<Wishlist> keepDuplicates = keep.Duplicates;
+                        keepDuplicates.Add(wish);
+                        keep.Duplicates = keepDuplicates;
+
+                        ListWishlist.Find(x => x == keep).Duplicates = keepDuplicates;
+                        ListWishlist.Find(x => x == keep).hasDuplicates = true;
+                        ListWishlist.Remove(wish);
+                    }
+                }
+            }
+
             return ListWishlist.OrderBy(wishlist => wishlist.Name).ToList();
         }
 

@@ -27,7 +27,7 @@ namespace IsThereAnyDeal.Clients
                 {
                     return null;
                 }
-                else if (File.GetLastWriteTime(PluginUserDataPath + $"\\IsThereAnyDeal\\{clientName}.json").AddDays(1) > DateTime.Now)
+                else if (File.GetLastWriteTime(PluginUserDataPath + $"\\IsThereAnyDeal\\{clientName}.json").AddDays(1) < DateTime.Now)
                 {
                     return null;
                 }

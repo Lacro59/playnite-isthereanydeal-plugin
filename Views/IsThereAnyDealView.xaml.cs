@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace IsThereAnyDeal.Views
 {
@@ -107,15 +108,6 @@ namespace IsThereAnyDeal.Views
                 Process.Start(Tag);
             }
         }
-
-        private void ButtonDelete_Click(object sender, RoutedEventArgs e)
-        {
-            string Tag = (string)((Button)sender).Tag;
-            if (!Tag.IsNullOrEmpty())
-            {
-                Process.Start(Tag);
-            }
-        }
         #endregion
 
 
@@ -198,8 +190,23 @@ namespace IsThereAnyDeal.Views
             lPercentage.Content = SearchPercentage + "%";
             GetListGame();
         }
-    }
 
+        // Active store button
+        private void LbStorePrice_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                ItadGameInfo itemSelected = (ItadGameInfo)((ListBox)sender).SelectedItem;
+                Button bt = (Button)((Grid)((Grid)((ListBox)sender).Parent).Parent).FindName("btStore");
+                bt.IsEnabled = true;
+                bt.Tag = itemSelected.url_buy;
+            }
+            catch(Exception ex)
+            {
+
+            }
+        }
+    }
 
     public class ListStore
     {
