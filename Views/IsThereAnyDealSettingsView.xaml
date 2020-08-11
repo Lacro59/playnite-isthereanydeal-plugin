@@ -119,15 +119,21 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
-                <CheckBox Name="chk_Notification" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" IsChecked="{Binding EnableNotification}" VerticalAlignment="Center">
+                <CheckBox Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" IsChecked="{Binding EnableNotificationGiveaways}" VerticalAlignment="Center">
+                    <Label Content="{DynamicResource LOCItadEnableNotificationGiveaways}" />
+                </CheckBox>
+                
+                <CheckBox Name="chk_Notification" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" IsChecked="{Binding EnableNotification}" VerticalAlignment="Center">
                     <Label Content="{DynamicResource LOCItadEnableNotification}" />
                 </CheckBox>
 
-                <Label Grid.Column="1" Grid.Row="2" Content="{DynamicResource LOCItadLimitNotification}" IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
-                <Slider Grid.Column="3" Grid.Row="2" Minimum="0" Maximum="100" ValueChanged="Slider_ValueChanged" Value="{Binding LimitNotification}" IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" IsSnapToTickEnabled="True" TickFrequency="1" />
-                <Label Grid.Column="5" Grid.Row="2" Name="lLimitNotification" Content="50%" IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
+                <Label Grid.Column="1" Grid.Row="4" Content="{DynamicResource LOCItadLimitNotification}" IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
+                <Slider Grid.Column="3" Grid.Row="4" Minimum="0" Maximum="100" ValueChanged="Slider_ValueChanged" Value="{Binding LimitNotification}" IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" IsSnapToTickEnabled="True" TickFrequency="1" />
+                <Label Grid.Column="5" Grid.Row="4" Name="lLimitNotification" Content="50%" IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
             </Grid>
         </StackPanel>
     </StackPanel>

@@ -21,6 +21,7 @@ namespace IsThereAnyDeal
         public bool EnableEpic { get; set; } = false;
 
         public bool EnableNotification { get; set; } = false;
+        public bool EnableNotificationGiveaways { get; set; } = false;
         public int LimitNotification { get; set; } = 50;
 
         public string HumbleKey { get; set; } = "";
@@ -60,6 +61,7 @@ namespace IsThereAnyDeal
                 EnableEpic = savedSettings.EnableEpic;
 
                 EnableNotification = savedSettings.EnableNotification;
+                EnableNotificationGiveaways = savedSettings.EnableNotificationGiveaways;
                 LimitNotification = savedSettings.LimitNotification;
 
                 HumbleKey = savedSettings.HumbleKey;

@@ -8,6 +8,7 @@ using Playnite.SDK.Plugins;
 using PluginCommon;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -96,26 +97,45 @@ namespace IsThereAnyDeal
         {
             // Add code to be executed when Playnite is initialized.
 
-            if (settings.EnableNotification)
+            Task taskNotifications = Task.Run(() => 
             {
                 IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(PlayniteApi, settings, this.GetPluginUserDataPath(), true);
 
-                foreach (Wishlist wishlist in ListWishlist)
+                if (settings.EnableNotification)
                 {
-                    //logger.Info($"IsTherAnyDeal - CheckNotification({wishlist.Name})");
-                    if (wishlist.GetNotification(settings.LimitNotification))
+                    List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(PlayniteApi, settings, this.GetPluginUserDataPath(), true);
+                    foreach (Wishlist wishlist in ListWishlist)
                     {
-                        PlayniteApi.Notifications.Add(new NotificationMessage(
-                            $"IsThereAnyDeal-{wishlist.Plain}",
-                            string.Format(resources.GetString("LOCItadNotification"), 
-                                wishlist.Name, wishlist.ItadBestPrice.price_new, wishlist.ItadBestPrice.currency_sign, wishlist.ItadBestPrice.price_cut),
-                            NotificationType.Info,
-                            () => new IsThereAnyDealView(PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain).ShowDialog()
-                        ));
+                        if (wishlist.GetNotification(settings.LimitNotification))
+                        {
+                            PlayniteApi.Notifications.Add(new NotificationMessage(
+                                $"IsThereAnyDeal-{wishlist.Plain}",
+                                string.Format(resources.GetString("LOCItadNotification"), 
+                                    wishlist.Name, wishlist.ItadBestPrice.price_new, wishlist.ItadBestPrice.currency_sign, wishlist.ItadBestPrice.price_cut),
+                                NotificationType.Info,
+                                () => new IsThereAnyDealView(PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain).ShowDialog()
+                            ));
+                        }
                     }
                 }
-            }
+
+                if (settings.EnableNotificationGiveaways)
+                {
+                    List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PlayniteApi, this.GetPluginUserDataPath());
+                    foreach (ItadGiveaway itadGiveaway in itadGiveaways)
+                    {
+                        if (!itadGiveaway.HasSeen)
+                        {
+                            PlayniteApi.Notifications.Add(new NotificationMessage(
+                                $"IsThereAnyDeal-{itadGiveaway.Title}",
+                                string.Format(resources.GetString("LOCItadNotificationGiveaway"), itadGiveaway.TitleAll, itadGiveaway.Count),
+                                NotificationType.Info,
+                                () => Process.Start(itadGiveaway.Link)
+                            ));
+                        }
+                    }
+                }
+            });
         }
 
         public override void OnApplicationStopped()

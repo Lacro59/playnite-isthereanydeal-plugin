@@ -1,12 +1,14 @@
-﻿using IsThereAnyDeal.Models;
+﻿using AngleSharp.Dom.Html;
+using AngleSharp.Parser.Html;
+using IsThereAnyDeal.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Playnite.SDK;
-using Playnite.SDK.Models;
 using PluginCommon;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -23,7 +25,7 @@ namespace IsThereAnyDeal.Clients
         private string key = "fa49308286edcaf76fea58926fd2ea2d216a17ff";
 
 
-        internal async Task<string> DownloadStringData(string url)
+        private async Task<string> DownloadStringData(string url)
         {
             //logger.Info($"IsTherAnyDeal - Download {url}");
             using (var client = new HttpClient())
@@ -125,7 +127,6 @@ namespace IsThereAnyDeal.Clients
         }
 
 
-
         public List<ItadRegion> GetCoveredRegions()
         {
             List<ItadRegion> itadRegions = new List<ItadRegion>();
@@ -163,7 +164,6 @@ namespace IsThereAnyDeal.Clients
             return itadRegions;
         }
 
-
         public List<ItadStore> GetRegionStores(string region, string country)
         {
             List<ItadStore> RegionStores = new List<ItadStore>();
@@ -185,7 +185,6 @@ namespace IsThereAnyDeal.Clients
 
             return RegionStores;
         }
-
 
         public string GetPlain(string title)
         {
@@ -212,7 +211,6 @@ namespace IsThereAnyDeal.Clients
 
             return Plain;
         }
-
 
         public List<ItadGameInfo> SearchGame(string q, string region, string country)
         {
@@ -252,7 +250,6 @@ namespace IsThereAnyDeal.Clients
 
             return itadGameInfos;
         }
-
 
         public List<Wishlist> GetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings, IPlayniteAPI PlayniteApi)
         {
@@ -378,27 +375,123 @@ namespace IsThereAnyDeal.Clients
         }
 
 
+        public List<ItadGiveaway> GetGiveaways(IPlayniteAPI PlayniteApi, string PluginUserDataPath, bool CacheOnly = false)
+        {
+            // Load previous
+            string PluginDirectoryCache = PluginUserDataPath + "\\cache";
+            string PluginFileCache = PluginDirectoryCache + "\\giveways.json";
+            List<ItadGiveaway> itadGiveawaysCache = new List<ItadGiveaway>();
+            try
+            {
+                if (!Directory.Exists(PluginDirectoryCache))
+                {
+                    Directory.CreateDirectory(PluginDirectoryCache);
+                }
+                
+                if (File.Exists(PluginFileCache))
+                {
+                    string fileData = File.ReadAllText(PluginFileCache);
+                    itadGiveawaysCache = JsonConvert.DeserializeObject<List<ItadGiveaway>>(fileData);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, "IsThereAnyDeal", "Error in GetGiveAway() with cache data");
+            }
 
-        // TODO Have a price history
-        //private bool VerifDataDifferent(Wishlist wishlist, JObject dataObj)
-        //{
-        //    if (wishlist.itadGameInfos.Count != 0)
-        //    {
-        //        ItadGameInfo dataPrice = wishlist.itadGameInfos[(wishlist.itadGameInfos.Count - 1)];
-        //        if (dataPrice.price_new != (double)dataObj["price_new"] || dataPrice.price_old != (double)dataObj["price_old"] || dataPrice.price_cut != (double)dataObj["price_cut"])
-        //        {
-        //            logger.Info("IsTherAnyDeal - Data is different");
-        //            return true;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        logger.Info("IsTherAnyDeal - Data is different");
-        //        return true;
-        //    }
-        //
-        //    logger.Info("IsTherAnyDeal - Data is not different");
-        //    return false;
-        //}
+
+            // Load on web
+            List<ItadGiveaway> itadGiveaways = new List<ItadGiveaway>();
+            if (!CacheOnly && itadGiveawaysCache != new List<ItadGiveaway>())
+            {
+                string url = @"https://isthereanydeal.com/specials/#/filter:&giveaway,&active";
+                try
+                {
+                    string responseData = DownloadStringData(url).GetAwaiter().GetResult();
+
+                    if (responseData != "")
+                    {
+                        HtmlParser parser = new HtmlParser();
+                        IHtmlDocument htmlDocument = parser.Parse(responseData);
+                        foreach (var SearchElement in htmlDocument.QuerySelectorAll("div.giveaway"))
+                        {
+                            bool HasSeen = (SearchElement.ClassName.IndexOf("Seen") > -1);
+
+                            var row1 = SearchElement.QuerySelector("div.bundle-row1");
+
+                            DateTime? bundleTime = null;
+                            if (!row1.QuerySelector("div.bundle-time").GetAttribute("title").IsNullOrEmpty())
+                            {
+                                bundleTime = Convert.ToDateTime(row1.QuerySelector("div.bundle-time").GetAttribute("title"));
+                            }
+
+                            string TitleAll = row1.QuerySelector("div.bundle-title a").InnerHtml.Trim();
+
+                            List<string> arrBundleTitle = TitleAll.Split('-').ToList();
+
+                            string bundleShop = arrBundleTitle[arrBundleTitle.Count - 1].Trim();
+                            bundleShop = bundleShop.Replace("FREE Games on", "").Replace("Always FREE For", "")
+                                .Replace("FREE For", "").Replace("FREE on", "");
+
+                            string bundleTitle = "";
+                            arrBundleTitle.RemoveAt(arrBundleTitle.Count - 1);
+                            bundleTitle = String.Join("-", arrBundleTitle.ToArray()).Trim();
+
+                            string bundleLink = row1.QuerySelector("div.bundle-title a").GetAttribute("href");
+
+                            var row2 = SearchElement.QuerySelector("div.bundle-row2");
+
+                            string bundleDescCount = row2.QuerySelector("div.bundle-desc span.lg").InnerHtml;
+
+                            itadGiveaways.Add(new ItadGiveaway
+                            {
+                                TitleAll = TitleAll,
+                                Title = bundleTitle,
+                                Time = bundleTime,
+                                Link = bundleLink,
+                                ShopName = bundleShop,
+                                Count = bundleDescCount,
+                                HasSeen = HasSeen
+                            });
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, "IsThereAnyDeal", "Error in GetGiveAway() with web data");
+                }
+            }
+
+            // Compare new with cache
+            if (itadGiveaways.Count != 0)
+            {
+                logger.Info("IsThereAnyDeal - Compare with cache");
+                foreach (ItadGiveaway itadGiveaway in itadGiveawaysCache)
+                {
+                    if (itadGiveaways.Find(x => x.TitleAll == itadGiveaway.TitleAll) != null)
+                    {
+                        itadGiveaways.Find(x => x.TitleAll == itadGiveaway.TitleAll).HasSeen = true;
+                    }
+                }
+            }
+            // No data
+            else
+            {
+                logger.Info("IsThereAnyDeal - No data");
+                itadGiveaways = itadGiveawaysCache;
+            }
+
+            // Save new
+            try
+            {
+                File.WriteAllText(PluginFileCache, JsonConvert.SerializeObject(itadGiveaways));
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, "IsThereAnyDeal", "Error in GetGiveAway() with save data");
+            }
+
+            return itadGiveaways;
+        }
     }
 }

@@ -85,6 +85,7 @@
     <Compile Include="IsThereAnyDeal.cs" />
     <Compile Include="IsThereAnyDealSettings.cs" />
     <Compile Include="Models\ItadGameInfo.cs" />
+    <Compile Include="Models\ItadGiveaway.cs" />
     <Compile Include="Models\ItadStore.cs" />
     <Compile Include="Views\IsThereAnyDealSettingsView.xaml.cs">
       <DependentUpon>IsThereAnyDealSettingsView.xaml</DependentUpon>

@@ -20,6 +20,7 @@ namespace IsThereAnyDeal.Views
     public partial class IsThereAnyDealView : WindowBase
     {
         private static readonly ILogger logger = LogManager.GetLogger();
+        private static IResourceProvider resources = new ResourceProvider();
         private readonly IsThereAnyDealSettings settings;
 
         public string CurrencySign { get; set; }
@@ -62,6 +63,8 @@ namespace IsThereAnyDeal.Views
                     }));
                 });
 
+            GetListGiveaways(PlayniteApi, PluginUserDataPath);
+
             SetFilterStore();
 
             DataContext = this;
@@ -92,10 +95,65 @@ namespace IsThereAnyDeal.Views
 
         private async Task<List<Wishlist>> LoadData (IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
-            logger.Debug("LoadData");
+            //logger.Debug("LoadData");
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(PlayniteApi, settings, PluginUserDataPath);
             return ListWishlist;
+        }
+
+
+
+        private void GetListGiveaways(IPlayniteAPI PlayniteApi, string PluginUserDataPath)
+        {
+            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+            List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PlayniteApi, PluginUserDataPath, true);
+
+            int row = 0;
+            int col = 0;
+            foreach (ItadGiveaway itadGiveaway in itadGiveaways)
+            {
+                if (col > 3)
+                {
+                    col = 0;
+                    row += 2;
+                    var rowAuto = new RowDefinition();
+                    var rowSep = new RowDefinition();
+                    rowAuto.Height = GridLength.Auto;
+                    rowSep.Height = new GridLength(20);
+                    gGiveaways.RowDefinitions.Add(rowAuto);
+                    gGiveaways.RowDefinitions.Add(rowSep);
+                }
+
+                var dp = new DockPanel();
+                dp.Width = 540;
+
+                var tb = new TextBlock();
+                tb.Text = itadGiveaway.TitleAll;
+                tb.VerticalAlignment = VerticalAlignment.Center;
+                tb.Width = 440;
+
+                var bt = new Button();
+                bt.Content = resources.GetString("LOCItadWeb");
+                bt.Tag = itadGiveaway.Link;
+                bt.Click += new RoutedEventHandler(webGiveaway);
+                bt.Height = 30;
+                bt.Width = 100;
+                DockPanel.SetDock(bt, Dock.Right);
+
+                dp.Children.Add(tb);
+                dp.Children.Add(bt);
+
+                Grid.SetRow(dp, row);
+                Grid.SetColumn(dp, col);
+
+                col += 2;
+
+                gGiveaways.Children.Add(dp);
+            }
+        }
+        private void webGiveaway(object sender, RoutedEventArgs e)
+        {
+            Process.Start((string)((Button)sender).Tag);
         }
 
 
