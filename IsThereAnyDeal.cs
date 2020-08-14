@@ -1,7 +1,6 @@
 ﻿using IsThereAnyDeal.Clients;
 using IsThereAnyDeal.Models;
 using IsThereAnyDeal.Views;
-using Newtonsoft.Json;
 using Playnite.SDK;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
@@ -10,13 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-
 
 namespace IsThereAnyDeal
 {
