@@ -84,6 +84,8 @@ namespace IsThereAnyDeal.Clients
             {
                 JObject resultObj = new JObject();
 
+                logger.Debug(ResultWeb);
+
                 try
                 {
                     resultObj = JObject.Parse(ResultWeb);
