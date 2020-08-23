@@ -35,13 +35,8 @@
       <HintPath>packages\AngleSharp.0.9.9\lib\net45\AngleSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="GogLibrary, Version=1.0.0.26791, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Resources\GogLibrary.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Playnite, Version=7.7.0.26797, Culture=neutral, processorArchitecture=x86">
@@ -78,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Clients\EpicWishlist.cs" />
     <Compile Include="Clients\GenericWishlist.cs" />
+    <Compile Include="Clients\GogAccountClientExtand.cs" />
     <Compile Include="Clients\GogWishlist.cs" />
     <Compile Include="Clients\HumbleBundleWishlist.cs" />
     <Compile Include="Clients\IsThereAnyDealApi.cs" />
@@ -286,7 +282,6 @@
     <None Include="Resources\PlayniteResources\Playnite.dll" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\GogLibrary.dll" />
     <Content Include="Resources\PluginCommon.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

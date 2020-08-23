@@ -1,5 +1,4 @@
-﻿using GogLibrary.Services;
-using IsThereAnyDeal.Models;
+﻿using IsThereAnyDeal.Models;
 using Newtonsoft.Json.Linq;
 using Playnite.Common.Web;
 using Playnite.SDK;
@@ -8,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-
 
 namespace IsThereAnyDeal.Clients
 {
@@ -123,23 +121,5 @@ namespace IsThereAnyDeal.Clients
             SaveWishlist("Gog", PluginUserDataPath, Result);
             return Result;
         }
-    }
-
-    public class GogAccountClientExtand : GogAccountClient
-    {
-        private IWebView webView;
-
-        public GogAccountClientExtand(IWebView webView) : base(webView)
-        {
-            this.webView = webView;
-        }
-
-        public string GetWishList()
-        {
-            string url = string.Format(@"https://embed.gog.com/user/wishlist.json");
-            webView.NavigateAndWait(url);
-            return webView.GetPageText();
-        }
-
     }
 }

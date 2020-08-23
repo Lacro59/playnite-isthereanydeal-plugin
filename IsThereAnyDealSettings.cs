@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using Playnite.SDK;
 using System.Collections.Generic;
 
-
 namespace IsThereAnyDeal
 {
     public class IsThereAnyDealSettings : ISettings

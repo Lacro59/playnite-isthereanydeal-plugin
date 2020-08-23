@@ -106,7 +106,7 @@ namespace IsThereAnyDeal.Views
         private void GetListGiveaways(IPlayniteAPI PlayniteApi, string PluginUserDataPath)
         {
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-            List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PlayniteApi, PluginUserDataPath, true);
+            List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PlayniteApi, PluginUserDataPath);
 
             int row = 0;
             int col = 0;

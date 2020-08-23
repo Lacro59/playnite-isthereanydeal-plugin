@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 
-
 namespace IsThereAnyDeal.Models
 {
     public class ItadGameInfo

@@ -1,11 +1,9 @@
 ﻿using IsThereAnyDeal.Clients;
 using IsThereAnyDeal.Models;
-using Newtonsoft.Json;
 using Playnite.SDK;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-
 
 namespace IsThereAnyDeal.Views
 {
