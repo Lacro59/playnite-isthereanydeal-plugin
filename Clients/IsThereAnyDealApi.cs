@@ -34,6 +34,34 @@ namespace IsThereAnyDeal.Clients
             }
         }
 
+        public static bool IsDisabledPlaynitePlugins(string PluginName, string PluginUserDataPath)
+        {
+            JArray DisabledPlugins = new JArray();
+            JObject PlayniteConfig = new JObject();
+            try
+            {
+                PlayniteConfig = JObject.Parse(File.ReadAllText(PluginUserDataPath + "\\..\\..\\config.json"));
+                DisabledPlugins = (JArray)PlayniteConfig["DisabledPlugins"];
+
+                if (DisabledPlugins != null)
+                {
+                    foreach (string name in DisabledPlugins)
+                    {
+                        if (name.ToLower() == PluginName.ToLower())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, "PluginCommon", "Error on IsDisabledPlaynitePlugins()");
+                return false;
+            }
+
+            return false;
+        }
 
         public List<Wishlist> LoadWishlist(IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false, bool Force = false)
         {
@@ -68,7 +96,7 @@ namespace IsThereAnyDeal.Clients
             List<Wishlist> ListWishlistSteam = new List<Wishlist>();
             if (settings.EnableSteam)
             {
-                if (!Tools.IsDisabledPlaynitePlugins("SteamLibrary", PluginUserDataPath))
+                if (!IsDisabledPlaynitePlugins("SteamLibrary", PluginUserDataPath))
                 {
                     SteamWishlist steamWishlist = new SteamWishlist();
                     ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings, CacheOnly, Force);
@@ -82,7 +110,7 @@ namespace IsThereAnyDeal.Clients
             List<Wishlist> ListWishlistGog = new List<Wishlist>();
             if (settings.EnableGog)
             {
-                if (!Tools.IsDisabledPlaynitePlugins("GogLibrary", PluginUserDataPath))
+                if (!IsDisabledPlaynitePlugins("GogLibrary", PluginUserDataPath))
                 {
                     GogWishlist gogWishlist = new GogWishlist(PlayniteApi);
                     ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly, Force);
@@ -96,7 +124,7 @@ namespace IsThereAnyDeal.Clients
             List<Wishlist> ListWishlistEpic = new List<Wishlist>();
             if (settings.EnableEpic)
             {
-                if (!Tools.IsDisabledPlaynitePlugins("EpicLibrary", PluginUserDataPath))
+                if (!IsDisabledPlaynitePlugins("EpicLibrary", PluginUserDataPath))
                 {
                     EpicWishlist epicWishlist = new EpicWishlist();
                     ListWishlistEpic = epicWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly, Force);
@@ -110,7 +138,7 @@ namespace IsThereAnyDeal.Clients
             List<Wishlist> ListWishlistHumble = new List<Wishlist>();
             if (settings.EnableHumble)
             {
-                if (!Tools.IsDisabledPlaynitePlugins("HumbleLibrary", PluginUserDataPath))
+                if (!IsDisabledPlaynitePlugins("HumbleLibrary", PluginUserDataPath))
                 {
                     HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
                     ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly, Force);
