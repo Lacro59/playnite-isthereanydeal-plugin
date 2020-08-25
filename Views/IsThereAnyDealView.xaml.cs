@@ -52,7 +52,7 @@ namespace IsThereAnyDeal.Views
                                 if (wishlist.Plain == PlainSelected)
                                 {
                                     lbWishlist.SelectedIndex = index;
-                                    lbWishlist.UpdateLayout();
+                                    lbWishlist.ScrollIntoView(lbWishlist.SelectedItem);
                                     break;
                                 }
                                 index += 1;
@@ -186,22 +186,27 @@ namespace IsThereAnyDeal.Views
             if (!TextboxSearch.Text.IsNullOrEmpty() && SearchStores.Count != 0)
             {
                 lbWishlist.ItemsSource = lbWishlistItems.FindAll(
-                    x => x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1 && SearchStores.Contains(x.StoreName)
+                    x => x.ItadBestPrice.price_cut >= SearchPercentage && x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1 &&
+                    (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
                 );
+                return;
             }
 
             if (!TextboxSearch.Text.IsNullOrEmpty())
             {
                 lbWishlist.ItemsSource = lbWishlistItems.FindAll(
-                    x => x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1
+                    x => x.ItadBestPrice.price_cut >= SearchPercentage && x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1
                 );
+                return;
             }
 
             if (SearchStores.Count != 0)
             {
                 lbWishlist.ItemsSource = lbWishlistItems.FindAll(
-                    x => SearchStores.Contains(x.StoreName)
+                    x => x.ItadBestPrice.price_cut >= SearchPercentage && 
+                    (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
                 );
+                return;
             }
         }
 

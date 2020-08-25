@@ -34,7 +34,7 @@
     <sys:String x:Key="LOCItadCurrentStore">Meilleur magasin (liste souhaits)</sys:String>
     <sys:String x:Key="LOCItadWeb">Site</sys:String>
     <sys:String x:Key="LOCItadBuy">Acheter</sys:String>
-    <sys:String x:Key="LOCItadStore">MAgasin</sys:String>
+    <sys:String x:Key="LOCItadStore">Magasin</sys:String>
     <sys:String x:Key="LOCItadNoData">Aucune données</sys:String>
     <sys:String x:Key="LOCItadInLibrary">Dans la bibliothèque</sys:String>
 
