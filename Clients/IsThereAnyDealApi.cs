@@ -339,11 +339,24 @@ namespace IsThereAnyDeal.Clients
                         List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
                         JObject datasObj = JObject.Parse(responseData);
 
-                        // Check if in library
+                        // Check if in library (exclude game emulated)
+                        List<Guid> ListEmulators = new List<Guid>();
+                        foreach (var item in PlayniteApi.Database.Emulators)
+                        {
+                            ListEmulators.Add(item.Id);
+                        }
+
                         bool InLibrary = false;
                         foreach (var game in PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower()))
                         {
-                            InLibrary = true;
+                            if (game.PlayAction != null && game.PlayAction.EmulatorId != null && ListEmulators.Contains(game.PlayAction.EmulatorId))
+                            {
+                                InLibrary = false;
+                            }
+                            else
+                            {
+                                InLibrary = true;
+                            }        
                         }
                         wishlist.InLibrary = InLibrary;
 
