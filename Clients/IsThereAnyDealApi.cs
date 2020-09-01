@@ -1,6 +1,7 @@
 ﻿using AngleSharp.Dom.Html;
 using AngleSharp.Parser.Html;
 using IsThereAnyDeal.Models;
+using IsThereAnyDeal.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Playnite.SDK;
@@ -35,7 +36,7 @@ namespace IsThereAnyDeal.Clients
         }
 
 
-        public List<Wishlist> LoadWishlist(IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false, bool Force = false)
+        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false, bool Force = false)
         {
             Guid SteamId = new Guid();
             Guid GogId = new Guid();
@@ -76,6 +77,12 @@ namespace IsThereAnyDeal.Clients
                 else
                 {
                     logger.Warn("IsThereAnyDeal - Steam is enable then disabled");
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-Steam-disabled",
+                        "Steam is enable then disabled",
+                        NotificationType.Error,
+                        () => plugin.OpenSettingsView()
+                    ));
                 }
             }
 
@@ -90,6 +97,12 @@ namespace IsThereAnyDeal.Clients
                 else
                 {
                     logger.Warn("IsThereAnyDeal - GOG is enable then disabled");
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-GOG-disabled",
+                        "GOG is enable then disabled",
+                        NotificationType.Error,
+                        () => plugin.OpenSettingsView()
+                    ));
                 }
             }
 
@@ -104,6 +117,12 @@ namespace IsThereAnyDeal.Clients
                 else
                 {
                     logger.Warn("IsThereAnyDeal - Epic Game Store is enable then disabled");
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-EpicGameStore-disabled",
+                        "Epic Game Store is enable then disabled",
+                        NotificationType.Error,
+                        () => plugin.OpenSettingsView()
+                    ));
                 }
             }
 
@@ -118,6 +137,12 @@ namespace IsThereAnyDeal.Clients
                 else
                 {
                     logger.Warn("IsThereAnyDeal - Humble Bundle is enable then disabled");
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-HumbleBundle-disabled",
+                        "Humble Bundle is enable then disabled",
+                        NotificationType.Error,
+                        () => plugin.OpenSettingsView()
+                    ));
                 }
             }
 

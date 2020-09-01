@@ -58,7 +58,7 @@ namespace IsThereAnyDeal
                     {
                         // Add code to be execute when user invokes this menu entry.
 
-                        new IsThereAnyDealView(PlayniteApi, this.GetPluginUserDataPath(), settings).ShowDialog();
+                        new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings).ShowDialog();
                     })
             };
         }
@@ -98,7 +98,7 @@ namespace IsThereAnyDeal
 
                 if (settings.EnableNotification)
                 {
-                    List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(PlayniteApi, settings, this.GetPluginUserDataPath(), true);
+                    List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(this, PlayniteApi, settings, this.GetPluginUserDataPath(), true);
                     foreach (Wishlist wishlist in ListWishlist)
                     {
                         if (wishlist.GetNotification(settings.LimitNotification))
@@ -108,7 +108,7 @@ namespace IsThereAnyDeal
                                 string.Format(resources.GetString("LOCItadNotification"), 
                                     wishlist.Name, wishlist.ItadBestPrice.price_new, wishlist.ItadBestPrice.currency_sign, wishlist.ItadBestPrice.price_cut),
                                 NotificationType.Info,
-                                () => new IsThereAnyDealView(PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain).ShowDialog()
+                                () => new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain).ShowDialog()
                             ));
                         }
                     }

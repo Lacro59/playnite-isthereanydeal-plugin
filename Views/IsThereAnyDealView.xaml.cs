@@ -23,6 +23,8 @@ namespace IsThereAnyDeal.Views
         private static IResourceProvider resources = new ResourceProvider();
         private readonly IsThereAnyDealSettings settings;
 
+        private readonly IsThereAnyDeal plugin;
+
         public string CurrencySign { get; set; }
         public string PlainSelected { get; set; }
 
@@ -30,11 +32,12 @@ namespace IsThereAnyDeal.Views
         private List<string> SearchStores = new List<string>();
         private int SearchPercentage = 0;
 
-        public IsThereAnyDealView(IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
+        public IsThereAnyDealView(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
             InitializeComponent();
             this.PlainSelected = PlainSelected;
             this.settings = settings;
+            this.plugin = plugin;
 
             // Load data
             dpData.IsEnabled = false;
@@ -97,7 +100,7 @@ namespace IsThereAnyDeal.Views
         {
             //logger.Debug("LoadData");
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-            List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(PlayniteApi, settings, PluginUserDataPath);
+            List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, PlayniteApi, settings, PluginUserDataPath);
             return ListWishlist;
         }
 
