@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace IsThereAnyDeal.Views
 {
@@ -35,6 +36,9 @@ namespace IsThereAnyDeal.Views
         public IsThereAnyDealView(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
             InitializeComponent();
+
+            this.PreviewKeyDown += new KeyEventHandler(HandleEsc);
+
             this.PlainSelected = PlainSelected;
             this.settings = settings;
             this.plugin = plugin;
@@ -71,6 +75,14 @@ namespace IsThereAnyDeal.Views
             SetFilterStore();
 
             DataContext = this;
+        }
+
+        private void HandleEsc(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                Close();
+            }
         }
 
         private void SetFilterStore()
