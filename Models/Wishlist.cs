@@ -61,9 +61,9 @@ namespace IsThereAnyDeal.Models
                 double last = 5000;
                 foreach (var item in ItadLastPrice)
                 {
-                    if (item.price_new < last)
+                    if (item.PriceNew < last)
                     {
-                        last = item.price_new;
+                        last = item.PriceNew;
                         Result = item;
                     }
                 }
@@ -78,7 +78,7 @@ namespace IsThereAnyDeal.Models
                 ItadGameInfo Result = new ItadGameInfo();
                 foreach (var item in ItadLastPrice)
                 {
-                    if (item.shop_name.ToLower().IndexOf(StoreName.ToLower()) > -1)
+                    if (item.ShopName.ToLower().IndexOf(StoreName.ToLower()) > -1)
                     {
                         Result = item;
                     }
@@ -114,7 +114,7 @@ namespace IsThereAnyDeal.Models
             List<ItadGameInfo> Result = new List<ItadGameInfo>();
             foreach (var item in ItadLastPrice)
             {
-                if (item.price_cut >= LimitNotification)
+                if (item.PriceCut >= LimitNotification)
                 {
                     return true;
                 }

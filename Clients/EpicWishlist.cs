@@ -11,13 +11,10 @@ using Newtonsoft.Json;
 using PluginCommon;
 using System.Net;
 
-namespace IsThereAnyDeal.Clients
+namespace IsThereAnyDeal.Services
 {
     class EpicWishlist : GenericWishlist
     {
-        private static readonly ILogger logger = LogManager.GetLogger();
-        private static IResourceProvider resources = new ResourceProvider();
-
         public const string GraphQLEndpoint = @"https://graphql.epicgames.com/graphql";
 
 

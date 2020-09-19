@@ -6,15 +6,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace IsThereAnyDeal.Clients
+namespace IsThereAnyDeal.Services
 {
     public class GenericWishlist
     {
-        private static readonly ILogger logger = LogManager.GetLogger();
+        internal static readonly ILogger logger = LogManager.GetLogger();
+        internal static readonly IResourceProvider resources = new ResourceProvider();
 
 
         public List<Wishlist> LoadWishlists(string clientName, string PluginUserDataPath)
         {
+            logger.Info($"IsThereAnyDeal - Load from local for {clientName}");
             try
             {
                 if (!Directory.Exists(PluginUserDataPath + "\\IsThereAnyDeal"))
@@ -33,7 +35,6 @@ namespace IsThereAnyDeal.Clients
                 }
 
                 string fileData = File.ReadAllText(PluginUserDataPath + $"\\IsThereAnyDeal\\{clientName}.json");
-                logger.Info($"IsThereAnyDeal - Load from local for {clientName}");
                 return JsonConvert.DeserializeObject<List<Wishlist>>(fileData);
             }
             catch (Exception ex)

@@ -2,9 +2,9 @@
 {
     public class ItadStore
     {
-        public string id { get; set; }
-        public string title { get; set; }
-        public string color { get; set; }
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string Color { get; set; }
         public bool IsCheck { get; set; } = false;
     }
 }

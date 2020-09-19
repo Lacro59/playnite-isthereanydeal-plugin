@@ -1,4 +1,4 @@
-﻿using IsThereAnyDeal.Clients;
+﻿using IsThereAnyDeal.Services;
 using IsThereAnyDeal.Models;
 using Newtonsoft.Json;
 using Playnite.Controls;
@@ -206,13 +206,13 @@ namespace IsThereAnyDeal.Views
         private void GetListGame()
         {
             lbWishlist.ItemsSource = lbWishlistItems.FindAll(
-                x => x.ItadBestPrice.price_cut >= SearchPercentage
+                x => x.ItadBestPrice.PriceCut >= SearchPercentage
             );
 
             if (!TextboxSearch.Text.IsNullOrEmpty() && SearchStores.Count != 0)
             {
                 lbWishlist.ItemsSource = lbWishlistItems.FindAll(
-                    x => x.ItadBestPrice.price_cut >= SearchPercentage && x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1 &&
+                    x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1 &&
                     (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
                 );
                 return;
@@ -221,7 +221,7 @@ namespace IsThereAnyDeal.Views
             if (!TextboxSearch.Text.IsNullOrEmpty())
             {
                 lbWishlist.ItemsSource = lbWishlistItems.FindAll(
-                    x => x.ItadBestPrice.price_cut >= SearchPercentage && x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1
+                    x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1
                 );
                 return;
             }
@@ -229,7 +229,7 @@ namespace IsThereAnyDeal.Views
             if (SearchStores.Count != 0)
             {
                 lbWishlist.ItemsSource = lbWishlistItems.FindAll(
-                    x => x.ItadBestPrice.price_cut >= SearchPercentage && 
+                    x => x.ItadBestPrice.PriceCut >= SearchPercentage && 
                     (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
                 );
                 return;
@@ -288,7 +288,7 @@ namespace IsThereAnyDeal.Views
                 ItadGameInfo itemSelected = (ItadGameInfo)((ListBox)sender).SelectedItem;
                 Button bt = (Button)((Grid)((Grid)((ListBox)sender).Parent).Parent).FindName("btStore");
                 bt.IsEnabled = true;
-                bt.Tag = itemSelected.url_buy;
+                bt.Tag = itemSelected.UrlBuy;
             }
             catch(Exception ex)
             {

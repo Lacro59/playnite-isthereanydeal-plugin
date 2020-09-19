@@ -1,4 +1,4 @@
-﻿using IsThereAnyDeal.Clients;
+﻿using IsThereAnyDeal.Services;
 using IsThereAnyDeal.Models;
 using IsThereAnyDeal.Views;
 using Playnite.SDK;
@@ -106,7 +106,7 @@ namespace IsThereAnyDeal
                             PlayniteApi.Notifications.Add(new NotificationMessage(
                                 $"IsThereAnyDeal-{wishlist.Plain}",
                                 string.Format(resources.GetString("LOCItadNotification"), 
-                                    wishlist.Name, wishlist.ItadBestPrice.price_new, wishlist.ItadBestPrice.currency_sign, wishlist.ItadBestPrice.price_cut),
+                                    wishlist.Name, wishlist.ItadBestPrice.PriceNew, wishlist.ItadBestPrice.CurrencySign, wishlist.ItadBestPrice.PriceCut),
                                 NotificationType.Info,
                                 () => new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain).ShowDialog()
                             ));
