@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--  
+    IsThereAnyDealSettingsView
+    -->
+
+    <sys:String x:Key="LOCItadSettingWishlist">Lista desideri</sys:String>
+    <sys:String x:Key="LOCItadEnableSteam">Abilita Steam</sys:String>
+    <sys:String x:Key="LOCItadEnableGog">Abilita GOG</sys:String>
+    <sys:String x:Key="LOCItadEnableEpic">Abilita Epic Game Store</sys:String>
+    <sys:String x:Key="LOCItadEnableHumble">Abilita Humble</sys:String>
+    <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
+    
+    <sys:String x:Key="LOCItadSettingItad">Is There Any Deal</sys:String>
+    <sys:String x:Key="LOCItadRegion">Regione</sys:String>
+    <sys:String x:Key="LOCItadCountry">Paese</sys:String>
+    <sys:String x:Key="LOCItadStores">Negozio/zi</sys:String>
+
+    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Abilita notifica/che giveaway</sys:String>
+    <sys:String x:Key="LOCItadEnableNotification">Abilita notifica/che</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Percentuale</sys:String>
+
+    <!--  
+    IsThereAnyDealView
+    -->
+
+    <sys:String x:Key="LOCITADSearch">Cerca</sys:String>
+    <sys:String x:Key="LOCITADFilterSource">Filtra per negozio/zi</sys:String>
+    <sys:String x:Key="LOCITADPercentage">Percentuale</sys:String>
+
+    <sys:String x:Key="LOCItadCurrentBest">Migliore del momento</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">Migliore per negozio (lista desideri)</sys:String>
+    <sys:String x:Key="LOCItadWeb">Sito</sys:String>
+    <sys:String x:Key="LOCItadBuy">Compra</sys:String>
+    <sys:String x:Key="LOCItadStore">Negozio</sys:String>
+    <sys:String x:Key="LOCItadNoData">Nessuna informazione</sys:String>
+    <sys:String x:Key="LOCItadInLibrary">In libreria</sys:String>
+
+    <!--  
+    IsThereAnyDeal
+    -->
+
+    <sys:String x:Key="LOCItadNotificationGiveaway">Notifica di giveaway per {0} ({1} gioco/chi)</sys:String>
+    <sys:String x:Key="LOCItadNotification">Notifica di presso per {0} - {1}{2} ({3}%)</sys:String>
+
+</ResourceDictionary>
