@@ -1,4 +1,4 @@
-﻿using IsThereAnyDeal.Clients;
+﻿using IsThereAnyDeal.Services;
 using IsThereAnyDeal.Models;
 using Playnite.SDK;
 using System.Collections.Generic;
@@ -35,11 +35,11 @@ namespace IsThereAnyDeal.Views
                 {
                     if (ListStores.Text == "")
                     {
-                        ListStores.Text += store.title;
+                        ListStores.Text += store.Title;
                     }
                     else
                     {
-                        ListStores.Text += ", " + store.title;
+                        ListStores.Text += ", " + store.Title;
                     }
                 }
             }
@@ -54,10 +54,10 @@ namespace IsThereAnyDeal.Views
         {
             if (ItadSelectRegion.SelectedItem != null)
             {
-                string regionSelected = ((ItadRegion)ItadSelectRegion.SelectedItem).region;
+                string regionSelected = ((ItadRegion)ItadSelectRegion.SelectedItem).Region;
                 settings.Region = regionSelected;
 
-                ItadSelectCountry.ItemsSource = ((ItadRegion)ItadSelectRegion.SelectedItem).countries;
+                ItadSelectCountry.ItemsSource = ((ItadRegion)ItadSelectRegion.SelectedItem).Countries;
 
                 ListStores.Text = "";
             }
@@ -68,10 +68,10 @@ namespace IsThereAnyDeal.Views
         {
             for (int i = 0; i < RegionsData.Count; i++)
             {
-                if (RegionName == RegionsData[i].region)
+                if (RegionName == RegionsData[i].Region)
                 {
-                    settings.CurrencySign = RegionsData[i].currencySign;
-                    return RegionsData[i].region + " - " + RegionsData[i].currencyName + " - " + RegionsData[i].currencySign;
+                    settings.CurrencySign = RegionsData[i].CurrencySign;
+                    return RegionsData[i].Region + " - " + RegionsData[i].CurrencyName + " - " + RegionsData[i].CurrencySign;
                 }
             }
 
@@ -103,7 +103,7 @@ namespace IsThereAnyDeal.Views
             ListStores.Text = "";
             for (int i = 0; i < StoresItems.Count; i++)
             {
-                if ((string)((CheckBox)sender).Content == StoresItems[i].title)
+                if ((string)((CheckBox)sender).Content == StoresItems[i].Title)
                 {
                     StoresItems[i].IsCheck = (bool)((CheckBox)sender).IsChecked;
 
@@ -111,11 +111,11 @@ namespace IsThereAnyDeal.Views
                     {
                         if (ListStores.Text == "")
                         {
-                            ListStores.Text = StoresItems[i].title;
+                            ListStores.Text = StoresItems[i].Title;
                         }
                         else
                         {
-                            ListStores.Text += ", " + StoresItems[i].title;
+                            ListStores.Text += ", " + StoresItems[i].Title;
                         }
                     }
                 }
@@ -125,11 +125,11 @@ namespace IsThereAnyDeal.Views
                     {
                         if (ListStores.Text == "")
                         {
-                            ListStores.Text = StoresItems[i].title;
+                            ListStores.Text = StoresItems[i].Title;
                         }
                         else
                         {
-                            ListStores.Text += ", " + StoresItems[i].title;
+                            ListStores.Text += ", " + StoresItems[i].Title;
                         }
                     }
                 }
@@ -142,7 +142,7 @@ namespace IsThereAnyDeal.Views
             ListStores.Text = "";
             for (int i = 0; i < StoresItems.Count; i++)
             {
-                if ((string)((CheckBox)sender).Content == StoresItems[i].title)
+                if ((string)((CheckBox)sender).Content == StoresItems[i].Title)
                 {
                     StoresItems[i].IsCheck = (bool)((CheckBox)sender).IsChecked;
 
@@ -150,11 +150,11 @@ namespace IsThereAnyDeal.Views
                     {
                         if (ListStores.Text == "")
                         {
-                            ListStores.Text = StoresItems[i].title;
+                            ListStores.Text = StoresItems[i].Title;
                         }
                         else
                         {
-                            ListStores.Text += ", " + StoresItems[i].title;
+                            ListStores.Text += ", " + StoresItems[i].Title;
                         }
                     }
                 }
@@ -164,11 +164,11 @@ namespace IsThereAnyDeal.Views
                     {
                         if (ListStores.Text == "")
                         {
-                            ListStores.Text = StoresItems[i].title;
+                            ListStores.Text = StoresItems[i].Title;
                         }
                         else
                         {
-                            ListStores.Text += ", " + StoresItems[i].title;
+                            ListStores.Text += ", " + StoresItems[i].Title;
                         }
                     }
                 }

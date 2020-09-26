@@ -8,13 +8,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace IsThereAnyDeal.Clients
+namespace IsThereAnyDeal.Services
 {
     public class GogWishlist : GenericWishlist
     {
-        private static readonly ILogger logger = LogManager.GetLogger();
-        private static IResourceProvider resources = new ResourceProvider();
-
         private GogAccountClientExtand gogAPI;
 
 
@@ -27,7 +24,7 @@ namespace IsThereAnyDeal.Clients
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", $"GOG not defined");
+                Common.LogError(ex, "IsThereAnyDeal", $"GOG is not defined");
             }
         }
 

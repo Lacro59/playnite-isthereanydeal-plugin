@@ -9,14 +9,10 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace IsThereAnyDeal.Clients
+namespace IsThereAnyDeal.Services
 {
     class SteamWishlist : GenericWishlist
     {
-        private static readonly ILogger logger = LogManager.GetLogger();
-        private static IResourceProvider resources = new ResourceProvider();
-
-
         public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool Force = false)
         {
             List<Wishlist> Result = new List<Wishlist>();

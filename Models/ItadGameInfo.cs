@@ -4,24 +4,21 @@ namespace IsThereAnyDeal.Models
 {
     public class ItadGameInfo
     {
-        public string plain { get; set; }
-        //public string title { get; set; }
-        public double price_new { get; set; }
-        public double price_old { get; set; }
-        public double price_cut { get; set; }
-        public string currency_sign { get; set; }
-        //public DateTime added { get; set; }
-        public string shop_name { get; set; }
-        public string shop_color { get; set; }
-        public string url_buy { get; set; }
-        //public string url_game { get; set; }
+        public string Plain { get; set; }
+        public double PriceNew { get; set; }
+        public double PriceOld { get; set; }
+        public double PriceCut { get; set; }
+        public string CurrencySign { get; set; }
+        public string ShopName { get; set; }
+        public string ShopColor { get; set; }
+        public string UrlBuy { get; set; }
 
         [JsonIgnore]
-        public string url_game
+        public string UrlGame
         {
             get
             {
-                return string.Format("https://isthereanydeal.com/game/{0}/info/", plain);
+                return string.Format("https://isthereanydeal.com/game/{0}/info/", Plain);
             }
         }
     }

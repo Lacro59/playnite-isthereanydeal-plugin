@@ -76,7 +76,7 @@
     <Compile Include="Clients\GogAccountClientExtand.cs" />
     <Compile Include="Clients\GogWishlist.cs" />
     <Compile Include="Clients\HumbleBundleWishlist.cs" />
-    <Compile Include="Clients\IsThereAnyDealApi.cs" />
+    <Compile Include="Services\IsThereAnyDealApi.cs" />
     <Compile Include="Clients\SteamWishlist.cs" />
     <Compile Include="IsThereAnyDeal.cs" />
     <Compile Include="IsThereAnyDealSettings.cs" />

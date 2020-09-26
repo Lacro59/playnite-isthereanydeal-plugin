@@ -1,7 +1,6 @@
 ﻿using AngleSharp.Dom.Html;
 using AngleSharp.Parser.Html;
 using IsThereAnyDeal.Models;
-using IsThereAnyDeal.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Playnite.SDK;
@@ -15,24 +14,33 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace IsThereAnyDeal.Clients
+namespace IsThereAnyDeal.Services
 {
     class IsThereAnyDealApi
     {
         private static readonly ILogger logger = LogManager.GetLogger();
 
-        private string baseAddress = "https://api.isthereanydeal.com/";
-        private string key = "fa49308286edcaf76fea58926fd2ea2d216a17ff";
+        private readonly string baseAddress = "https://api.isthereanydeal.com/";
+        private readonly string key = "fa49308286edcaf76fea58926fd2ea2d216a17ff";
 
 
         private async Task<string> DownloadStringData(string url)
         {
-            //logger.Info($"IsTherAnyDeal - Download {url}");
-            using (var client = new HttpClient())
+            string responseData = string.Empty;
+
+            try
             {
-                string responseData = await client.GetStringAsync(url).ConfigureAwait(false);
-                return responseData;
+                using (var client = new HttpClient())
+                {
+                    responseData = await client.GetStringAsync(url).ConfigureAwait(false);
+                }
             }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+            }
+
+            return responseData;
         }
 
 
@@ -42,6 +50,7 @@ namespace IsThereAnyDeal.Clients
             Guid GogId = new Guid();
             Guid EpicId = new Guid();
             Guid HumbleId = new Guid();
+
             foreach (var Source in PlayniteApi.Database.Sources)
             {
                 if (Source.Name.ToLower() == "steam")
@@ -146,7 +155,8 @@ namespace IsThereAnyDeal.Clients
                 }
             }
 
-            List<Wishlist> ListWishlist = ListWishlistSteam.Concat(ListWishlistGog).Concat(ListWishlistHumble).Concat(ListWishlistEpic).ToList();
+            List<Wishlist> ListWishlist = ListWishlistSteam.Concat(ListWishlistGog).Concat(ListWishlistHumble)
+                .Concat(ListWishlistEpic).ToList();
 
 
             // Group same game
@@ -199,11 +209,11 @@ namespace IsThereAnyDeal.Clients
 
                         itadRegions.Add(new ItadRegion
                         {
-                            region = dataObj.Key,
-                            currencyName = (string)dataObj.Value["currency"]["name"],
-                            currencyCode = (string)dataObj.Value["currency"]["code"],
-                            currencySign = (string)dataObj.Value["currency"]["sign"],
-                            countries = countries
+                            Region = dataObj.Key,
+                            CurrencyName = (string)dataObj.Value["currency"]["name"],
+                            CurrencyCode = (string)dataObj.Value["currency"]["code"],
+                            CurrencySign = (string)dataObj.Value["currency"]["sign"],
+                            Countries = countries
                         });
                     }
                 }
@@ -240,7 +250,7 @@ namespace IsThereAnyDeal.Clients
 
         public string GetPlain(string title)
         {
-            string Plain = "";
+            string Plain = string.Empty;
             try
             {
                 string url = baseAddress + $"v02/game/plain/?key={key}&title={WebUtility.UrlEncode(WebUtility.HtmlDecode(title))}";
@@ -253,7 +263,7 @@ namespace IsThereAnyDeal.Clients
                 }
                 else
                 {
-                    logger.Info($"IsThereAnyDeal - not find for {WebUtility.HtmlDecode(title)}");
+                    logger.Warn($"IsThereAnyDeal - not find for {WebUtility.HtmlDecode(title)}");
                 }
             }
             catch (Exception ex)
@@ -266,7 +276,9 @@ namespace IsThereAnyDeal.Clients
 
         public List<ItadGameInfo> SearchGame(string q, string region, string country)
         {
-            logger.Info($"IsThereAnyDeal - SearchGame({q})");
+#if DEBUG
+            logger.Debug($"IsThereAnyDeal - SearchGame({q})");
+#endif
 
             List<ItadGameInfo> itadGameInfos = new List<ItadGameInfo>();
             try
@@ -281,15 +293,15 @@ namespace IsThereAnyDeal.Clients
                     {
                         itadGameInfos.Add(new ItadGameInfo
                         {
-                            plain = (string)dataObj["plain"],
+                            Plain = (string)dataObj["plain"],
                             //title = (string)dataObj["title"],
-                            price_new = (double)dataObj["price_new"],
-                            price_old = (double)dataObj["price_old"],
-                            price_cut = (double)dataObj["price_cut"],
+                            PriceNew = (double)dataObj["price_new"],
+                            PriceOld = (double)dataObj["price_old"],
+                            PriceCut = (double)dataObj["price_cut"],
                             //added = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)dataObj["added"]),
-                            shop_name = (string)dataObj["shop"]["name"],
+                            ShopName = (string)dataObj["shop"]["name"],
                             //shop_color = GetShopColor((string)dataObj["shop"]["name"], settings.Stores),
-                            url_buy = (string)dataObj["urls"]["buy"]
+                            UrlBuy = (string)dataObj["urls"]["buy"]
                             //url_game = (string)dataObj["urls"]["game"],
                         });
                     }
@@ -312,7 +324,10 @@ namespace IsThereAnyDeal.Clients
                 {
                     if (wishlist.itadGameInfos != null && wishlist.itadGameInfos.Keys.Contains(DateTime.Now.ToString("yyyy-MM-dd")))
                     {
-                        logger.Info("IsThereAnyDeal - Current price is allready load");
+#if DEBUG
+                        logger.Debug("IsThereAnyDeal - Current price is allready load");
+#endif
+
                         return wishlists;
                     }
                 }
@@ -321,10 +336,10 @@ namespace IsThereAnyDeal.Clients
 
             List<Wishlist> Result = new List<Wishlist>();
 
-            string plains = "";
+            string plains = string.Empty;
             foreach (Wishlist wishlist in wishlists)
             {
-                if (plains == "")
+                if (plains == string.Empty)
                 {
                     plains += wishlist.Plain;
                 }
@@ -333,20 +348,22 @@ namespace IsThereAnyDeal.Clients
                     plains += "," + wishlist.Plain;
                 }
             }
-            logger.Info($"IsThereAnyDeal - GetCurrentPrice({plains})");
+#if DEBUG
+            logger.Debug($"IsThereAnyDeal - GetCurrentPrice({plains})");
+#endif
 
-            string shops = "";
+            string shops = string.Empty;
             foreach (ItadStore Store in settings.Stores)
             {
                 if (Store.IsCheck)
                 {
-                    if (shops == "")
+                    if (shops == string.Empty)
                     {
-                        shops += Store.id;
+                        shops += Store.Id;
                     }
                     else
                     {
-                        shops += "," + Store.id;
+                        shops += "," + Store.Id;
                     }
                 }
             }
@@ -390,21 +407,16 @@ namespace IsThereAnyDeal.Clients
                         {
                             foreach (JObject dataObj in ((JArray)datasObj["data"][wishlist.Plain]["list"]))
                             {
-                                //logger.Debug(JsonConvert.SerializeObject(dataObj));
                                 dataCurrentPrice.Add(new ItadGameInfo
                                 {
-                                    plain = wishlist.Plain,
-                                    //title = (string)dataObj["title"],
-                                    price_new = Math.Round((double)dataObj["price_new"], 2),
-                                    price_old = Math.Round((double)dataObj["price_old"], 2),
-                                    price_cut = (double)dataObj["price_cut"],
-                                    currency_sign = settings.CurrencySign,
-                                    //added = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)dataObj["added"]),
-                                    //added = DateTime.Now,
-                                    shop_name = (string)dataObj["shop"]["name"],
-                                    shop_color = GetShopColor((string)dataObj["shop"]["name"], settings.Stores),
-                                    url_buy = (string)dataObj["url"]
-                                    //url_game = (string)dataObj["urls"]["game"],
+                                    Plain = wishlist.Plain,
+                                    PriceNew = Math.Round((double)dataObj["price_new"], 2),
+                                    PriceOld = Math.Round((double)dataObj["price_old"], 2),
+                                    PriceCut = (double)dataObj["price_cut"],
+                                    CurrencySign = settings.CurrencySign,
+                                    ShopName = (string)dataObj["shop"]["name"],
+                                    ShopColor = GetShopColor((string)dataObj["shop"]["name"], settings.Stores),
+                                    UrlBuy = (string)dataObj["url"]
                                 });
                             }
                         }
@@ -421,7 +433,9 @@ namespace IsThereAnyDeal.Clients
             }
             else
             {
-                logger.Info("IsThereAnyDeal - No plain");
+#if DEBUG
+                logger.Debug("IsThereAnyDeal - No plain");
+#endif
             }
 
             return Result;
@@ -431,9 +445,9 @@ namespace IsThereAnyDeal.Clients
         {
             foreach (ItadStore store in itadStores)
             {
-                if (ShopName == store.title)
+                if (ShopName == store.Title)
                 {
-                    return store.color;
+                    return store.Color;
                 }
             }
             return null;
@@ -474,7 +488,7 @@ namespace IsThereAnyDeal.Clients
                 {
                     string responseData = DownloadStringData(url).GetAwaiter().GetResult();
 
-                    if (responseData != "")
+                    if (responseData != string.Empty)
                     {
                         HtmlParser parser = new HtmlParser();
                         IHtmlDocument htmlDocument = parser.Parse(responseData);
@@ -495,10 +509,10 @@ namespace IsThereAnyDeal.Clients
                             List<string> arrBundleTitle = TitleAll.Split('-').ToList();
 
                             string bundleShop = arrBundleTitle[arrBundleTitle.Count - 1].Trim();
-                            bundleShop = bundleShop.Replace("FREE Games on", "").Replace("Always FREE For", "")
-                                .Replace("FREE For", "").Replace("FREE on", "");
+                            bundleShop = bundleShop.Replace("FREE Games on", string.Empty).Replace("Always FREE For", string.Empty)
+                                .Replace("FREE For", string.Empty).Replace("FREE on", string.Empty);
 
-                            string bundleTitle = "";
+                            string bundleTitle = string.Empty;
                             arrBundleTitle.RemoveAt(arrBundleTitle.Count - 1);
                             bundleTitle = String.Join("-", arrBundleTitle.ToArray()).Trim();
 
@@ -530,7 +544,9 @@ namespace IsThereAnyDeal.Clients
             // Compare new with cache
             if (itadGiveaways.Count != 0)
             {
-                logger.Info("IsThereAnyDeal - Compare with cache");
+#if DEBUG
+                logger.Debug("IsThereAnyDeal - Compare with cache");
+#endif
                 foreach (ItadGiveaway itadGiveaway in itadGiveawaysCache)
                 {
                     if (itadGiveaways.Find(x => x.TitleAll == itadGiveaway.TitleAll) != null)
@@ -542,7 +558,7 @@ namespace IsThereAnyDeal.Clients
             // No data
             else
             {
-                logger.Info("IsThereAnyDeal - No data for GetGiveaways()");
+                logger.Warn("IsThereAnyDeal - No new data for GetGiveaways()");
                 itadGiveaways = itadGiveawaysCache;
             }
 

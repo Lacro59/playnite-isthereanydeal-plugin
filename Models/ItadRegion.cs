@@ -4,15 +4,15 @@ namespace IsThereAnyDeal.Models
 {
     public class ItadRegion
     {
-        public string region { get; set; }
-        public string currencyName { get; set; }
-        public string currencyCode { get; set; }
-        public string currencySign { get; set; }
-        public List<string> countries { get; set; }
+        public string Region { get; set; }
+        public string CurrencyName { get; set; }
+        public string CurrencyCode { get; set; }
+        public string CurrencySign { get; set; }
+        public List<string> Countries { get; set; }
 
         public override string ToString()
         {
-            return region + " - " + currencyName + " - " + currencySign;
+            return Region + " - " + CurrencyName + " - " + CurrencySign;
         }
     }
 }
