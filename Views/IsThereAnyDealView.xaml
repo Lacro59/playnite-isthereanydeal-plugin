@@ -52,7 +52,8 @@
                             <ComboBox Grid.Column="6" Name="FilterStore" IsEditable="True" IsReadOnly="True">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <CheckBox Name="chkStore" Checked="ChkStore_Checked" Unchecked="ChkStore_Unchecked" Content="{Binding StoreName}" IsChecked="{Binding isCheck}" />
+                                        <CheckBox Name="chkStore" Checked="ChkStore_Checked" Unchecked="ChkStore_Unchecked" Tag="{Binding StoreName}" 
+                                                  Content="{Binding StoreNameDisplay}" IsChecked="{Binding isCheck}" FontFamily="/IsThereAnyDeal;component/Resources/#font" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>

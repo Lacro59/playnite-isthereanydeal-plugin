@@ -45,4 +45,7 @@
     <sys:String x:Key="LOCItadNotificationGiveaway">Giveaway notification for {0} ({1} game(s))</sys:String>
     <sys:String x:Key="LOCItadNotification">Price notification for {0} - {1}{2} ({3}%)</sys:String>
 
+    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">An error occurred while retrieving the wishlist.
+Try to identify yourself to your account.</sys:String>
+
 </ResourceDictionary>

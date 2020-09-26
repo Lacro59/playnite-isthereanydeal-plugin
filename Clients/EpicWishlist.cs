@@ -55,6 +55,8 @@ namespace IsThereAnyDeal.Services
                 return Result;
             }
 
+            logger.Info($"IsThereAnyDeal - Load from web for Epic");
+
             // Get Epic configuration if exist.
             string access_token = string.Empty;
             try
@@ -77,8 +79,6 @@ namespace IsThereAnyDeal.Services
             if (!ResultWeb.IsNullOrEmpty())
             {
                 JObject resultObj = new JObject();
-
-                logger.Debug(ResultWeb);
 
                 try
                 {
@@ -120,6 +120,13 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, "IsThereAnyDeal", "Error io parse Epic wishlist");
+
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-Epic-Error",
+                        resources.GetString("LOCItadNotificationError"),
+                        NotificationType.Error
+                    ));
+
                     return Result;
                 }
             }

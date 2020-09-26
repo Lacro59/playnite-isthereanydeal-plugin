@@ -48,6 +48,8 @@ namespace IsThereAnyDeal.Services
                 return Result;
             }
 
+            logger.Info($"IsThereAnyDeal - Load from web for GOG");
+
             if (gogAPI != null && gogAPI.GetIsUserLoggedIn())
             {
                 string ResultWeb = "";
@@ -106,6 +108,13 @@ namespace IsThereAnyDeal.Services
                         catch (Exception ex)
                         {
                             Common.LogError(ex, "IsThereAnyDeal", $"Error io parse GOG wishlist");
+
+                            PlayniteApi.Notifications.Add(new NotificationMessage(
+                                $"IsThereAnyDeal-Gog-Error",
+                                resources.GetString("LOCItadNotificationError"),
+                                NotificationType.Error
+                            ));
+
                             return Result;
                         }
                     }

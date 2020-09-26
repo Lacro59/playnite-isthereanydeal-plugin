@@ -33,6 +33,8 @@ namespace IsThereAnyDeal.Services
                 return Result;
             }
 
+            logger.Info($"IsThereAnyDeal - Load from web for Steam");
+
             // Get Steam configuration if exist.
             string userId = string.Empty;
             string apiKey = string.Empty;
@@ -103,6 +105,13 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, "IsThereAnyDeal", "Error io parse Steam wishlist");
+
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-Steam-Error",
+                        resources.GetString("LOCItadNotificationError"),
+                        NotificationType.Error
+                    ));
+
                     return Result;
                 }
             }

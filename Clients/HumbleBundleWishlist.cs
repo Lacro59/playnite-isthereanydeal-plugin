@@ -37,6 +37,8 @@ namespace IsThereAnyDeal.Services
                 return Result;
             }
 
+            logger.Info($"IsThereAnyDeal - Load from web for HumbleBundle");
+
             string ResultWeb = string.Empty;
             string url = string.Format(@"https://www.humblebundle.com/store/wishlist/{0}", HumbleBundleId);
 
@@ -83,6 +85,13 @@ namespace IsThereAnyDeal.Services
                 if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                 {
                     Common.LogError(ex, "IsThereAnyDeal", "Error in download HumbleBundle wishlist");
+
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-Humble-Error",
+                        resources.GetString("LOCItadNotificationError"),
+                        NotificationType.Error
+                    ));
+
                     return Result;
                 }
             }
