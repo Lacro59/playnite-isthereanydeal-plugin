@@ -110,7 +110,6 @@ namespace IsThereAnyDeal.Views
 
         private async Task<List<Wishlist>> LoadData (IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
-            //logger.Debug("LoadData");
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, PlayniteApi, settings, PluginUserDataPath);
             return ListWishlist;
@@ -118,7 +117,6 @@ namespace IsThereAnyDeal.Views
 
         private async Task<List<ItadGiveaway>> LoadDatatGiveaways(IPlayniteAPI PlayniteApi, string PluginUserDataPath)
         {
-            //logger.Debug("LoadData");
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PlayniteApi, PluginUserDataPath);
             return itadGiveaways;
@@ -253,7 +251,7 @@ namespace IsThereAnyDeal.Views
         }
         private void FilterCbStore(CheckBox sender)
         {
-            FilterStore.Text = "";
+            FilterStore.Text = string.Empty;
 
             if ((bool)sender.IsChecked)
             {
