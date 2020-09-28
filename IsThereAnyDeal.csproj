@@ -113,9 +113,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Resource Include="Resources\font.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    <None Include="Resources\font.ttf" />
     <None Include="Resources\PlayniteResources\DefaultControls\Border.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
