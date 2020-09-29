@@ -1,7 +1,7 @@
 ﻿Id: playnite-isthereanydeal-plugin
 Name: IsThereAnyDeal
 Author: Lacro59 based on bburky's plugin
-Version: 0.2.3
+Version: 1.0
 Module: IsThereAnyDeal.dll
 Type: GenericPlugin
 Icon: icon.png

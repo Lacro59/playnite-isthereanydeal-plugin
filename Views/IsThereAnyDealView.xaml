@@ -16,6 +16,7 @@
         <pcon:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
         <pcon:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <pcon:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
+        <FontFamily x:Key="font">pack://application:,,,/PluginCommon;component/Resources/font.ttf#font</FontFamily>
     </Window.Resources>
 
     <TabControl Margin="10">
@@ -53,7 +54,7 @@
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <CheckBox Name="chkStore" Checked="ChkStore_Checked" Unchecked="ChkStore_Unchecked" Tag="{Binding StoreName}" 
-                                                  Content="{Binding StoreNameDisplay}" IsChecked="{Binding isCheck}" FontFamily="/IsThereAnyDeal;component/Resources/#font" />
+                                                  Content="{Binding StoreNameDisplay}" IsChecked="{Binding isCheck}" FontFamily="{StaticResource font}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -133,7 +134,9 @@
                                         <!-- Image -->
                                         <StackPanel Grid.Column="0" Height="100" Width="200">
                                             <Image x:Name="HltbImage" Source="{Binding Capsule}" Stretch="UniformToFill" Height="100" Width="200"></Image>
-                                            <Label Content="{Binding StoreNameIcon}" Foreground="{DynamicResource GlyphBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="20" FontFamily="/IsThereAnyDeal;component/Resources/#font" Margin="-20,-20,0,0" />
+                                            <Label Content="{Binding StoreNameIcon}" Foreground="{DynamicResource GlyphBrush}" HorizontalAlignment="Right" 
+                                                   VerticalAlignment="Bottom" FontSize="20" FontFamily="{StaticResource font}" 
+                                                   Margin="-20,-20,0,0" />
                                         </StackPanel>
 
                                         <!-- Infos & actions -->
