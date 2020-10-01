@@ -4,6 +4,7 @@ using Playnite.SDK;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Newtonsoft.Json;
 
 namespace IsThereAnyDeal.Views
 {
@@ -21,11 +22,16 @@ namespace IsThereAnyDeal.Views
         public IsThereAnyDealSettingsView(IsThereAnyDealSettings settings)
         {
             _settings = settings;
+            
+            InitializeComponent();
 
             RegionsData = isThereAnyDealApi.GetCoveredRegions();
-            InitializeComponent();
+#if DEBUG
+            logger.Debug($"IsThereAnyDeal - RegionsData: {JsonConvert.SerializeObject(RegionsData)}");
+#endif
             ItadSelectRegion.ItemsSource = RegionsData;
             ItadSelectRegion.Text = GetInfosRegion(settings.Region);
+
             ItadSelectCountry.Text = settings.Country;
             StoresItems = settings.Stores;
             ListStores.ItemsSource = StoresItems;
@@ -89,6 +95,9 @@ namespace IsThereAnyDeal.Views
                 {
                     ListStores.Text = string.Empty;
                     StoresItems = isThereAnyDealApi.GetRegionStores(_settings.Region, _settings.Country);
+#if DEBUG 
+                    logger.Debug($"IsThereAnyDeal - StoresItems: {JsonConvert.SerializeObject(StoresItems)}");
+#endif
                     ListStores.ItemsSource = StoresItems;
                     ListStores.UpdateLayout();
                 }

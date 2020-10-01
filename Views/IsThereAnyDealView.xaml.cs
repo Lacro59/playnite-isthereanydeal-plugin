@@ -50,6 +50,11 @@ namespace IsThereAnyDeal.Views
                     Application.Current.Dispatcher.Invoke(new Action(() => {
                         lbWishlistItems = antecedent.Result;
                         lbWishlist.ItemsSource = lbWishlistItems;
+
+#if DEBUG
+                        logger.Debug($"IsThereAnyDeal - lbWishlistItems: {JsonConvert.SerializeObject(lbWishlistItems)}");
+#endif
+
                         if (!PlainSelected.IsNullOrEmpty())
                         {
                             int index = 0;
@@ -199,6 +204,7 @@ namespace IsThereAnyDeal.Views
         }
 
 
+        #region Search
         // Get list
         private void GetListGame()
         {
@@ -292,6 +298,7 @@ namespace IsThereAnyDeal.Views
 
             }
         }
+        #endregion
     }
 
     public class ListStore

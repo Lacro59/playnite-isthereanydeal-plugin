@@ -84,7 +84,8 @@ namespace IsThereAnyDeal.Services
                 {
                     resultObj = JObject.Parse(ResultWeb);
 
-                    if (resultObj["data"]["Wishlist"]["wishlistItems"]["elements"] != null) {
+                    if (resultObj != null && resultObj["data"] != null && resultObj["data"]["Wishlist"] != null 
+                        && resultObj["data"]["Wishlist"]["wishlistItems"] != null && resultObj["data"]["Wishlist"]["wishlistItems"]["elements"] != null) {
 
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                         foreach (JObject gameWishlist in resultObj["data"]["Wishlist"]["wishlistItems"]["elements"])
