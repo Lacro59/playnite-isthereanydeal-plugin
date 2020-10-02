@@ -1,7 +1,6 @@
 ﻿using IsThereAnyDeal.Services;
 using IsThereAnyDeal.Models;
 using Newtonsoft.Json;
-using Playnite.Controls;
 using Playnite.SDK;
 using PluginCommon;
 using System;
@@ -18,7 +17,7 @@ namespace IsThereAnyDeal.Views
     /// <summary>
     /// Logique d'interaction pour IsThereAnyDealView.xaml
     /// </summary>
-    public partial class IsThereAnyDealView : WindowBase
+    public partial class IsThereAnyDealView : Window
     {
         private static readonly ILogger logger = LogManager.GetLogger();
         private static IResourceProvider resources = new ResourceProvider();
