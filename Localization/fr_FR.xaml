@@ -45,4 +45,7 @@
     <sys:String x:Key="LOCItadNotificationGiveaway">Notification giveaway pour {0} ({1} jeu(x))</sys:String>
     <sys:String x:Key="LOCItadNotification">Notification prix pour {0} - {1}{2} ({3}%)</sys:String>
 
+    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Une erreur s'est produite lors de la récupération de la liste de souhaits.
+Essayez de vous identifier à votre compte.</sys:String>
+
 </ResourceDictionary>

@@ -1,7 +1,6 @@
 ﻿using IsThereAnyDeal.Services;
 using IsThereAnyDeal.Models;
 using Newtonsoft.Json;
-using Playnite.Controls;
 using Playnite.SDK;
 using PluginCommon;
 using System;
@@ -18,13 +17,12 @@ namespace IsThereAnyDeal.Views
     /// <summary>
     /// Logique d'interaction pour IsThereAnyDealView.xaml
     /// </summary>
-    public partial class IsThereAnyDealView : WindowBase
+    public partial class IsThereAnyDealView : Window
     {
         private static readonly ILogger logger = LogManager.GetLogger();
         private static IResourceProvider resources = new ResourceProvider();
-        private readonly IsThereAnyDealSettings settings;
-
-        private readonly IsThereAnyDeal plugin;
+        private readonly IsThereAnyDealSettings _settings;
+        private readonly IsThereAnyDeal _plugin;
 
         public string CurrencySign { get; set; }
         public string PlainSelected { get; set; }
@@ -40,8 +38,8 @@ namespace IsThereAnyDeal.Views
             this.PreviewKeyDown += new KeyEventHandler(HandleEsc);
 
             this.PlainSelected = PlainSelected;
-            this.settings = settings;
-            this.plugin = plugin;
+            _settings = settings;
+            _plugin = plugin;
 
             // Load data
             dpData.IsEnabled = false;
@@ -51,6 +49,11 @@ namespace IsThereAnyDeal.Views
                     Application.Current.Dispatcher.Invoke(new Action(() => {
                         lbWishlistItems = antecedent.Result;
                         lbWishlist.ItemsSource = lbWishlistItems;
+
+#if DEBUG
+                        logger.Debug($"IsThereAnyDeal - lbWishlistItems: {JsonConvert.SerializeObject(lbWishlistItems)}");
+#endif
+
                         if (!PlainSelected.IsNullOrEmpty())
                         {
                             int index = 0;
@@ -88,21 +91,21 @@ namespace IsThereAnyDeal.Views
         private void SetFilterStore()
         {
             List<ListStore> FilterStoreItems = new List<ListStore>();
-            if (settings.EnableSteam)
+            if (_settings.EnableSteam)
             {
-                FilterStoreItems.Add(new ListStore { StoreName = "Steam", IsCheck = false });
+                FilterStoreItems.Add(new ListStore { StoreName = "Steam", StoreNameDisplay = (TransformIcon.Get("Steam") + " Steam").Trim(), IsCheck = false });
+                }
+            if (_settings.EnableGog)
+            {
+                FilterStoreItems.Add(new ListStore { StoreName = "GOG", StoreNameDisplay = (TransformIcon.Get("GOG") + " GOG").Trim(), IsCheck = false });
             }
-            if (settings.EnableGog)
+            if (_settings.EnableHumble)
             {
-                FilterStoreItems.Add(new ListStore { StoreName = "GOG", IsCheck = false });
+                FilterStoreItems.Add(new ListStore { StoreName = "Humble", StoreNameDisplay = (TransformIcon.Get("Humble") + " Humble").Trim(), IsCheck = false });
             }
-            if (settings.EnableHumble)
+            if (_settings.EnableEpic)
             {
-                FilterStoreItems.Add(new ListStore { StoreName = "Humble", IsCheck = false });
-            }
-            if (settings.EnableEpic)
-            {
-                FilterStoreItems.Add(new ListStore { StoreName = "Epic", IsCheck = false });
+                FilterStoreItems.Add(new ListStore { StoreName = "Epic", StoreNameDisplay = (TransformIcon.Get("Epic") + " Epic").Trim(), IsCheck = false });
             }
             FilterStoreItems.Sort((x, y) => string.Compare(x.StoreName, y.StoreName));
             FilterStore.ItemsSource = FilterStoreItems;
@@ -111,7 +114,7 @@ namespace IsThereAnyDeal.Views
         private async Task<List<Wishlist>> LoadData (IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-            List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, PlayniteApi, settings, PluginUserDataPath);
+            List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(_plugin, PlayniteApi, settings, PluginUserDataPath);
             return ListWishlist;
         }
 
@@ -200,6 +203,7 @@ namespace IsThereAnyDeal.Views
         }
 
 
+        #region Search
         // Get list
         private void GetListGame()
         {
@@ -255,11 +259,11 @@ namespace IsThereAnyDeal.Views
 
             if ((bool)sender.IsChecked)
             {
-                SearchStores.Add((string)sender.Content);
+                SearchStores.Add((string)sender.Tag);
             }
             else
             {
-                SearchStores.Remove((string)sender.Content);
+                SearchStores.Remove((string)sender.Tag);
             }
 
             if (SearchStores.Count != 0)
@@ -293,11 +297,13 @@ namespace IsThereAnyDeal.Views
 
             }
         }
+        #endregion
     }
 
     public class ListStore
     {
         public string StoreName { get; set; }
+        public string StoreNameDisplay { get; set; }
         public bool IsCheck { get; set; }
     }
 }

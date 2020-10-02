@@ -3,9 +3,12 @@ using IsThereAnyDeal.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Playnite.Common.Web;
 using System.Net;
 using PluginCommon;
+using PluginCommon.PlayniteResources;
+using PluginCommon.PlayniteResources.API;
+using PluginCommon.PlayniteResources.Common;
+using PluginCommon.PlayniteResources.Converters;
 using Newtonsoft.Json.Linq;
 
 namespace IsThereAnyDeal.Services
@@ -34,14 +37,15 @@ namespace IsThereAnyDeal.Services
                 return Result;
             }
 
-            string ResultWeb = "";
+            logger.Info($"IsThereAnyDeal - Load from web for HumbleBundle");
+
+            string ResultWeb = string.Empty;
             string url = string.Format(@"https://www.humblebundle.com/store/wishlist/{0}", HumbleBundleId);
 
             try
             {
-                ResultWeb = HttpDownloader.DownloadString(url, Encoding.UTF8);
-
-                if (ResultWeb != "")
+                ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
+                if (!ResultWeb.IsNullOrEmpty())
                 {
                     int startSub = ResultWeb.IndexOf("<script id=\"storefront-webpack-json-data\" type=\"application/json\">");
                     ResultWeb = ResultWeb.Substring(startSub, (ResultWeb.Length - startSub));
@@ -49,7 +53,7 @@ namespace IsThereAnyDeal.Services
                     int endSub = ResultWeb.IndexOf("</script>");
                     ResultWeb = ResultWeb.Substring(0, endSub);
 
-                    ResultWeb = ResultWeb.Replace("<script id=\"storefront-webpack-json-data\" type=\"application/json\">", "");
+                    ResultWeb = ResultWeb.Replace("<script id=\"storefront-webpack-json-data\" type=\"application/json\">", string.Empty);
 
                     JObject dataObj = JObject.Parse(ResultWeb);
 
@@ -81,6 +85,13 @@ namespace IsThereAnyDeal.Services
                 if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                 {
                     Common.LogError(ex, "IsThereAnyDeal", "Error in download HumbleBundle wishlist");
+
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-Humble-Error",
+                        resources.GetString("LOCItadNotificationError"),
+                        NotificationType.Error
+                    ));
+
                     return Result;
                 }
             }

@@ -81,9 +81,9 @@
                                     <ColumnDefinition Width="10" />
                                     <ColumnDefinition Width="30" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding region}" />
-                                <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding currencyName}" />
-                                <TextBlock Grid.Column="4" Grid.Row="0" Text="{Binding currencySign}" />
+                                <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Region}" />
+                                <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding CurrencyName}" />
+                                <TextBlock Grid.Column="4" Grid.Row="0" Text="{Binding CurrencySign}" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -96,7 +96,7 @@
                 <ComboBox Name="ListStores" Grid.Column="2" Grid.Row="4" IsEditable="True" IsReadOnly="True" IsEnabled="{Binding ElementName=ItadSelectCountry, Path=Text, Converter={StaticResource StringToBooleanConverter}}" >
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <CheckBox Name="chkStore" Content="{Binding title}" IsChecked="{Binding IsCheck}" Checked="ChkStore_Checked" Unchecked="ChkStore_Unchecked" />
+                            <CheckBox Name="chkStore" Content="{Binding Title}" IsChecked="{Binding IsCheck}" Checked="ChkStore_Checked" Unchecked="ChkStore_Unchecked" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ComboBox>

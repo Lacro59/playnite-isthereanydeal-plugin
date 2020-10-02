@@ -16,7 +16,6 @@ namespace IsThereAnyDeal.Services
 
         public List<Wishlist> LoadWishlists(string clientName, string PluginUserDataPath)
         {
-            logger.Info($"IsThereAnyDeal - Load from local for {clientName}");
             try
             {
                 if (!Directory.Exists(PluginUserDataPath + "\\IsThereAnyDeal"))
@@ -33,6 +32,8 @@ namespace IsThereAnyDeal.Services
                 {
                     return null;
                 }
+
+                logger.Info($"IsThereAnyDeal - Load from local for {clientName}");
 
                 string fileData = File.ReadAllText(PluginUserDataPath + $"\\IsThereAnyDeal\\{clientName}.json");
                 return JsonConvert.DeserializeObject<List<Wishlist>>(fileData);

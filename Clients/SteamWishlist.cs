@@ -1,8 +1,11 @@
 ﻿using IsThereAnyDeal.Models;
 using Newtonsoft.Json.Linq;
-using Playnite.Common.Web;
 using Playnite.SDK;
 using PluginCommon;
+using PluginCommon.PlayniteResources;
+using PluginCommon.PlayniteResources.API;
+using PluginCommon.PlayniteResources.Common;
+using PluginCommon.PlayniteResources.Converters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,9 +33,11 @@ namespace IsThereAnyDeal.Services
                 return Result;
             }
 
+            logger.Info($"IsThereAnyDeal - Load from web for Steam");
+
             // Get Steam configuration if exist.
-            string userId = "";
-            string apiKey = "";
+            string userId = string.Empty;
+            string apiKey = string.Empty;
             try
             {
                 JObject SteamConfig = JObject.Parse(File.ReadAllText(PluginUserDataPath + "\\..\\CB91DFC9-B977-43BF-8E70-55F46E410FAB\\config.json"));
@@ -50,13 +55,11 @@ namespace IsThereAnyDeal.Services
             }
 
 
-            string ResultWeb = "";
+            string ResultWeb = string.Empty;
             string url = string.Format(@"https://store.steampowered.com/wishlist/profiles/{0}/wishlistdata/", userId);
-
-            ResultWeb = "";
             try
             {
-                ResultWeb = HttpDownloader.DownloadString(url, Encoding.UTF8);
+                ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
             }
             catch (WebException ex)
             {
@@ -67,7 +70,7 @@ namespace IsThereAnyDeal.Services
                 }
             }
 
-            if (ResultWeb != "")
+            if (!ResultWeb.IsNullOrEmpty())
             {
                 JObject resultObj = new JObject();
                 JArray resultItems = new JArray();
@@ -102,6 +105,13 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, "IsThereAnyDeal", "Error io parse Steam wishlist");
+
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-Steam-Error",
+                        resources.GetString("LOCItadNotificationError"),
+                        NotificationType.Error
+                    ));
+
                     return Result;
                 }
             }

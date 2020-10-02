@@ -4,36 +4,43 @@ using Playnite.SDK;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Newtonsoft.Json;
 
 namespace IsThereAnyDeal.Views
 {
     public partial class IsThereAnyDealSettingsView : UserControl
     {
         private static readonly ILogger logger = LogManager.GetLogger();
+        private IsThereAnyDealSettings _settings;
 
         private List<ItadRegion> RegionsData;
-        private IsThereAnyDealSettings settings;
-
+        private List<ItadStore> StoresItems = new List<ItadStore>();
         private IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
         private bool IsFirst = true;
 
 
         public IsThereAnyDealSettingsView(IsThereAnyDealSettings settings)
         {
-            this.settings = settings;
-            RegionsData = isThereAnyDealApi.GetCoveredRegions();
+            _settings = settings;
+            
             InitializeComponent();
+
+            RegionsData = isThereAnyDealApi.GetCoveredRegions();
+#if DEBUG
+            logger.Debug($"IsThereAnyDeal - RegionsData: {JsonConvert.SerializeObject(RegionsData)}");
+#endif
             ItadSelectRegion.ItemsSource = RegionsData;
             ItadSelectRegion.Text = GetInfosRegion(settings.Region);
+
             ItadSelectCountry.Text = settings.Country;
             StoresItems = settings.Stores;
-            //logger.Debug(JsonConvert.SerializeObject((object)settings.Stores));
             ListStores.ItemsSource = StoresItems;
+
             foreach (ItadStore store in StoresItems)
             {
                 if (store.IsCheck)
                 {
-                    if (ListStores.Text == "")
+                    if (ListStores.Text == string.Empty)
                     {
                         ListStores.Text += store.Title;
                     }
@@ -55,11 +62,11 @@ namespace IsThereAnyDeal.Views
             if (ItadSelectRegion.SelectedItem != null)
             {
                 string regionSelected = ((ItadRegion)ItadSelectRegion.SelectedItem).Region;
-                settings.Region = regionSelected;
+                _settings.Region = regionSelected;
 
                 ItadSelectCountry.ItemsSource = ((ItadRegion)ItadSelectRegion.SelectedItem).Countries;
 
-                ListStores.Text = "";
+                ListStores.Text = string.Empty;
             }
         }
 
@@ -70,24 +77,27 @@ namespace IsThereAnyDeal.Views
             {
                 if (RegionName == RegionsData[i].Region)
                 {
-                    settings.CurrencySign = RegionsData[i].CurrencySign;
+                    _settings.CurrencySign = RegionsData[i].CurrencySign;
                     return RegionsData[i].Region + " - " + RegionsData[i].CurrencyName + " - " + RegionsData[i].CurrencySign;
                 }
             }
 
-            return "";
+            return string.Empty;
         }
 
         private void ItadSelectCountry_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ItadSelectCountry.SelectedItem != null)
             {
-                settings.Country = (string)ItadSelectCountry.SelectedItem;
-                GetInfosRegion(settings.Region);
+                _settings.Country = (string)ItadSelectCountry.SelectedItem;
+                GetInfosRegion(_settings.Region);
                 if (!IsFirst)
                 {
-                    ListStores.Text = "";
-                    StoresItems = isThereAnyDealApi.GetRegionStores(settings.Region, settings.Country);
+                    ListStores.Text = string.Empty;
+                    StoresItems = isThereAnyDealApi.GetRegionStores(_settings.Region, _settings.Country);
+#if DEBUG 
+                    logger.Debug($"IsThereAnyDeal - StoresItems: {JsonConvert.SerializeObject(StoresItems)}");
+#endif
                     ListStores.ItemsSource = StoresItems;
                     ListStores.UpdateLayout();
                 }
@@ -95,12 +105,9 @@ namespace IsThereAnyDeal.Views
         }
 
 
-
-        List<ItadStore> StoresItems = new List<ItadStore>();
-
         private void ChkStore_Checked(object sender, RoutedEventArgs e)
         {
-            ListStores.Text = "";
+            ListStores.Text = string.Empty;
             for (int i = 0; i < StoresItems.Count; i++)
             {
                 if ((string)((CheckBox)sender).Content == StoresItems[i].Title)
@@ -109,7 +116,7 @@ namespace IsThereAnyDeal.Views
 
                     if (StoresItems[i].IsCheck)
                     {
-                        if (ListStores.Text == "")
+                        if (ListStores.Text == string.Empty)
                         {
                             ListStores.Text = StoresItems[i].Title;
                         }
@@ -123,7 +130,7 @@ namespace IsThereAnyDeal.Views
                 {
                     if (StoresItems[i].IsCheck)
                     {
-                        if (ListStores.Text == "")
+                        if (ListStores.Text == string.Empty)
                         {
                             ListStores.Text = StoresItems[i].Title;
                         }
@@ -134,12 +141,12 @@ namespace IsThereAnyDeal.Views
                     }
                 }
             }
-            settings.Stores = StoresItems;
+            _settings.Stores = StoresItems;
         }
 
         private void ChkStore_Unchecked(object sender, RoutedEventArgs e)
         {
-            ListStores.Text = "";
+            ListStores.Text = string.Empty;
             for (int i = 0; i < StoresItems.Count; i++)
             {
                 if ((string)((CheckBox)sender).Content == StoresItems[i].Title)
@@ -148,7 +155,7 @@ namespace IsThereAnyDeal.Views
 
                     if (StoresItems[i].IsCheck)
                     {
-                        if (ListStores.Text == "")
+                        if (ListStores.Text == string.Empty)
                         {
                             ListStores.Text = StoresItems[i].Title;
                         }
@@ -162,7 +169,7 @@ namespace IsThereAnyDeal.Views
                 {
                     if (StoresItems[i].IsCheck)
                     {
-                        if (ListStores.Text == "")
+                        if (ListStores.Text == string.Empty)
                         {
                             ListStores.Text = StoresItems[i].Title;
                         }
@@ -173,7 +180,7 @@ namespace IsThereAnyDeal.Views
                     }
                 }
             }
-            settings.Stores = StoresItems;
+            _settings.Stores = StoresItems;
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

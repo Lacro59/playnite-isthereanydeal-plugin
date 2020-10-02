@@ -18,7 +18,6 @@ namespace IsThereAnyDeal.Services
         public const string GraphQLEndpoint = @"https://graphql.epicgames.com/graphql";
 
 
-
         public async Task<string> QuerySearchWishList(string token)
         {
             string query = @"query wishlistQuery { Wishlist { wishlistItems { elements { offer { title keyImages { type url width height } } } } } }";
@@ -56,8 +55,10 @@ namespace IsThereAnyDeal.Services
                 return Result;
             }
 
+            logger.Info($"IsThereAnyDeal - Load from web for Epic");
+
             // Get Epic configuration if exist.
-            string access_token = "";
+            string access_token = string.Empty;
             try
             {
                 JObject EpicConfig = JObject.Parse(File.ReadAllText(PluginUserDataPath + "\\..\\00000002-DBD1-46C6-B5D0-B1BA559D10E4\\tokens.json"));
@@ -74,28 +75,25 @@ namespace IsThereAnyDeal.Services
             }
 
             // Get wishlist
-            string ResultWeb = "";
-            ResultWeb = QuerySearchWishList(access_token).GetAwaiter().GetResult();
-
-            if (ResultWeb != "")
+            string ResultWeb = QuerySearchWishList(access_token).GetAwaiter().GetResult();
+            if (!ResultWeb.IsNullOrEmpty())
             {
                 JObject resultObj = new JObject();
-
-                logger.Debug(ResultWeb);
 
                 try
                 {
                     resultObj = JObject.Parse(ResultWeb);
 
-                    if (resultObj["data"]["Wishlist"]["wishlistItems"]["elements"] != null) {
+                    if (resultObj != null && resultObj["data"] != null && resultObj["data"]["Wishlist"] != null 
+                        && resultObj["data"]["Wishlist"]["wishlistItems"] != null && resultObj["data"]["Wishlist"]["wishlistItems"]["elements"] != null) {
 
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                         foreach (JObject gameWishlist in resultObj["data"]["Wishlist"]["wishlistItems"]["elements"])
                         {
                             int StoreId = 0;
-                            string Name = "";
+                            string Name = string.Empty;
                             DateTime ReleaseDate = default(DateTime);
-                            string Capsule = "";
+                            string Capsule = string.Empty;
 
                             Name = (string)gameWishlist["offer"]["title"];
                             foreach (var keyImages in gameWishlist["offer"]["keyImages"])
@@ -110,7 +108,7 @@ namespace IsThereAnyDeal.Services
                             {
                                 StoreId = StoreId,
                                 StoreName = "Epic",
-                                StoreUrl = "",
+                                StoreUrl = string.Empty,
                                 Name = WebUtility.HtmlDecode(Name),
                                 SourceId = SourceId,
                                 ReleaseDate = ReleaseDate.ToUniversalTime(),
@@ -123,6 +121,13 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, "IsThereAnyDeal", "Error io parse Epic wishlist");
+
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-Epic-Error",
+                        resources.GetString("LOCItadNotificationError"),
+                        NotificationType.Error
+                    ));
+
                     return Result;
                 }
             }

@@ -1,8 +1,11 @@
 ﻿using IsThereAnyDeal.Models;
 using Newtonsoft.Json.Linq;
-using Playnite.Common.Web;
 using Playnite.SDK;
 using PluginCommon;
+using PluginCommon.PlayniteResources;
+using PluginCommon.PlayniteResources.API;
+using PluginCommon.PlayniteResources.Common;
+using PluginCommon.PlayniteResources.Converters;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -45,6 +48,8 @@ namespace IsThereAnyDeal.Services
                 return Result;
             }
 
+            logger.Info($"IsThereAnyDeal - Load from web for GOG");
+
             if (gogAPI != null && gogAPI.GetIsUserLoggedIn())
             {
                 string ResultWeb = "";
@@ -71,7 +76,7 @@ namespace IsThereAnyDeal.Services
 
                                         //Download game information
                                         string url = string.Format(@"https://api.gog.com/products/{0}", StoreId);
-                                        ResultWeb = HttpDownloader.DownloadString(url, Encoding.UTF8);
+                                        ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
                                         try
                                         {
                                             JObject resultObjGame = JObject.Parse(ResultWeb);
@@ -103,6 +108,13 @@ namespace IsThereAnyDeal.Services
                         catch (Exception ex)
                         {
                             Common.LogError(ex, "IsThereAnyDeal", $"Error io parse GOG wishlist");
+
+                            PlayniteApi.Notifications.Add(new NotificationMessage(
+                                $"IsThereAnyDeal-Gog-Error",
+                                resources.GetString("LOCItadNotificationError"),
+                                NotificationType.Error
+                            ));
+
                             return Result;
                         }
                     }

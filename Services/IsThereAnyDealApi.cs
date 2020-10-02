@@ -24,26 +24,6 @@ namespace IsThereAnyDeal.Services
         private readonly string key = "fa49308286edcaf76fea58926fd2ea2d216a17ff";
 
 
-        private async Task<string> DownloadStringData(string url)
-        {
-            string responseData = string.Empty;
-
-            try
-            {
-                using (var client = new HttpClient())
-                {
-                    responseData = await client.GetStringAsync(url).ConfigureAwait(false);
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
-            }
-
-            return responseData;
-        }
-
-
         public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false, bool Force = false)
         {
             Guid SteamId = new Guid();
@@ -78,7 +58,7 @@ namespace IsThereAnyDeal.Services
             List<Wishlist> ListWishlistSteam = new List<Wishlist>();
             if (settings.EnableSteam)
             {
-                if (!Tools.IsDisabledPlaynitePlugins("SteamLibrary", PluginUserDataPath))
+                if (!Tools.IsDisabledPlaynitePlugins("SteamLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     SteamWishlist steamWishlist = new SteamWishlist();
                     ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings, CacheOnly, Force);
@@ -98,7 +78,7 @@ namespace IsThereAnyDeal.Services
             List<Wishlist> ListWishlistGog = new List<Wishlist>();
             if (settings.EnableGog)
             {
-                if (!Tools.IsDisabledPlaynitePlugins("GogLibrary", PluginUserDataPath))
+                if (!Tools.IsDisabledPlaynitePlugins("GogLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     GogWishlist gogWishlist = new GogWishlist(PlayniteApi);
                     ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly, Force);
@@ -118,7 +98,7 @@ namespace IsThereAnyDeal.Services
             List<Wishlist> ListWishlistEpic = new List<Wishlist>();
             if (settings.EnableEpic)
             {
-                if (!Tools.IsDisabledPlaynitePlugins("EpicLibrary", PluginUserDataPath))
+                if (!Tools.IsDisabledPlaynitePlugins("EpicLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     EpicWishlist epicWishlist = new EpicWishlist();
                     ListWishlistEpic = epicWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly, Force);
@@ -138,7 +118,7 @@ namespace IsThereAnyDeal.Services
             List<Wishlist> ListWishlistHumble = new List<Wishlist>();
             if (settings.EnableHumble)
             {
-                if (!Tools.IsDisabledPlaynitePlugins("HumbleLibrary", PluginUserDataPath))
+                if (!Tools.IsDisabledPlaynitePlugins("HumbleLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
                     ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly, Force);
@@ -194,7 +174,15 @@ namespace IsThereAnyDeal.Services
             List<ItadRegion> itadRegions = new List<ItadRegion>();
             try
             {
-                string responseData = DownloadStringData(baseAddress + "v01/web/regions/").GetAwaiter().GetResult();
+                string responseData = string.Empty;
+                string url = baseAddress + "v01/web/regions/";
+                try { 
+                    responseData = Web.DownloadStringData(url).GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                }
 
                 JObject datasObj = JObject.Parse(responseData);
                 if (((JObject)datasObj["data"]).Count > 0)
@@ -232,7 +220,15 @@ namespace IsThereAnyDeal.Services
             try
             {
                 string url = baseAddress + $"v02/web/stores/?region={region}&country={country}";
-                string responseData = DownloadStringData(url).GetAwaiter().GetResult();
+                string responseData = string.Empty;
+                try
+                {
+                    responseData = Web.DownloadStringData(url).GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                }
 
                 JObject datasObj = JObject.Parse(responseData);
                 if (((JArray)datasObj["data"]).Count > 0)
@@ -254,7 +250,15 @@ namespace IsThereAnyDeal.Services
             try
             {
                 string url = baseAddress + $"v02/game/plain/?key={key}&title={WebUtility.UrlEncode(WebUtility.HtmlDecode(title))}";
-                string responseData = DownloadStringData(url).GetAwaiter().GetResult();
+                string responseData = string.Empty;
+                try
+                {
+                    responseData = Web.DownloadStringData(url).GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                }
 
                 JObject datasObj = JObject.Parse(responseData);
                 if ((string)datasObj[".meta"]["match"] != "false")
@@ -284,7 +288,15 @@ namespace IsThereAnyDeal.Services
             try
             {
                 string url = baseAddress + $"v01/search/search/?key={key}&q={q}&region{region}&country={country}";
-                string responseData = DownloadStringData(url).GetAwaiter().GetResult();
+                string responseData = string.Empty;
+                try
+                {
+                    responseData = Web.DownloadStringData(url).GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                }
 
                 JObject datasObj = JObject.Parse(responseData);
                 if (((JArray)datasObj["data"]["list"]).Count > 0)
@@ -373,7 +385,15 @@ namespace IsThereAnyDeal.Services
                 try
                 {
                     string url = baseAddress + $"v01/game/prices/?key={key}&plains={plains}&region{settings.Region}&country={settings.Country}&shops={shops}";
-                    string responseData = DownloadStringData(url).GetAwaiter().GetResult();
+                    string responseData = string.Empty;
+                    try
+                    {
+                        responseData = Web.DownloadStringData(url).GetAwaiter().GetResult();
+                    }
+                    catch (Exception ex)
+                    {
+                        Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                    }
 
                     foreach (Wishlist wishlist in wishlists)
                     {
@@ -483,10 +503,18 @@ namespace IsThereAnyDeal.Services
             List<ItadGiveaway> itadGiveaways = new List<ItadGiveaway>();
             if (!CacheOnly && itadGiveawaysCache != new List<ItadGiveaway>())
             {
-                string url = @"https://isthereanydeal.com/specials/#/filter:&giveaway,&active";
                 try
                 {
-                    string responseData = DownloadStringData(url).GetAwaiter().GetResult();
+                    string url = @"https://isthereanydeal.com/specials/#/filter:&giveaway,&active";
+                    string responseData = string.Empty;
+                    try
+                    {
+                        responseData = Web.DownloadStringData(url).GetAwaiter().GetResult();
+                    }
+                    catch (Exception ex)
+                    {
+                        Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                    }
 
                     if (responseData != string.Empty)
                     {
