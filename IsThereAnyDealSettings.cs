@@ -19,9 +19,12 @@ namespace IsThereAnyDeal
         public bool EnableHumble { get; set; } = false;
         public bool EnableEpic { get; set; } = false;
 
-        public bool EnableNotification { get; set; } = false;
         public bool EnableNotificationGiveaways { get; set; } = false;
+        public bool EnableNotification { get; set; } = false;
+        public bool EnableNotificationPercentage { get; set; } = false;
         public int LimitNotification { get; set; } = 50;
+        public bool EnableNotificationPrice { get; set; } = false;
+        public int LimitNotificationPrice { get; set; } = 5;
 
         public string HumbleKey { get; set; } = "";
 
@@ -59,9 +62,12 @@ namespace IsThereAnyDeal
                 EnableHumble = savedSettings.EnableHumble;
                 EnableEpic = savedSettings.EnableEpic;
 
-                EnableNotification = savedSettings.EnableNotification;
                 EnableNotificationGiveaways = savedSettings.EnableNotificationGiveaways;
+                EnableNotification = savedSettings.EnableNotification;
+                EnableNotificationPercentage = savedSettings.EnableNotificationPercentage;
                 LimitNotification = savedSettings.LimitNotification;
+                EnableNotificationPrice = savedSettings.EnableNotificationPrice;
+                LimitNotificationPrice = savedSettings.LimitNotificationPrice;
 
                 HumbleKey = savedSettings.HumbleKey;
 

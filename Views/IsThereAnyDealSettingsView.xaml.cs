@@ -52,6 +52,7 @@ namespace IsThereAnyDeal.Views
             }
 
             lLimitNotification.Content = settings.LimitNotification + "%";
+            lLimitNotificationPrice.Content = settings.LimitNotificationPrice + GetInfosRegion(settings.Region, true);
 
             DataContext = this;
             IsFirst = false;
@@ -67,18 +68,29 @@ namespace IsThereAnyDeal.Views
                 ItadSelectCountry.ItemsSource = ((ItadRegion)ItadSelectRegion.SelectedItem).Countries;
 
                 ListStores.Text = string.Empty;
+
+
+                lLimitNotificationPrice.Content = sLimitNotificationPrice.Value + GetInfosRegion(_settings.Region, true);
             }
         }
 
 
-        private string GetInfosRegion(string RegionName)
+        private string GetInfosRegion(string RegionName, bool CurrencySignOnly = false)
         {
             for (int i = 0; i < RegionsData.Count; i++)
             {
                 if (RegionName == RegionsData[i].Region)
                 {
                     _settings.CurrencySign = RegionsData[i].CurrencySign;
-                    return RegionsData[i].Region + " - " + RegionsData[i].CurrencyName + " - " + RegionsData[i].CurrencySign;
+
+                    if (!CurrencySignOnly)
+                    {
+                        return RegionsData[i].Region + " - " + RegionsData[i].CurrencyName + " - " + RegionsData[i].CurrencySign;
+                    }
+                    else
+                    {
+                        return RegionsData[i].CurrencySign;
+                    }
                 }
             }
 
@@ -185,7 +197,24 @@ namespace IsThereAnyDeal.Views
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            lLimitNotification.Content = ((Slider)sender).Value + "%";
+            try
+            {
+                lLimitNotification.Content = ((Slider)sender).Value + "%";
+            }
+            catch
+            {
+            }
+        }
+
+        private void Slider_ValueChangedPrice(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            try
+            {
+                lLimitNotificationPrice.Content = ((Slider)sender).Value + GetInfosRegion(_settings.Region, true);
+            }
+            catch
+            {
+            }
         }
     }
 }

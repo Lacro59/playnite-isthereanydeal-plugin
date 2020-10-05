@@ -98,18 +98,39 @@ namespace IsThereAnyDeal
 
                 if (settings.EnableNotification)
                 {
-                    List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(this, PlayniteApi, settings, this.GetPluginUserDataPath(), true);
-                    foreach (Wishlist wishlist in ListWishlist)
+                    if (settings.EnableNotificationPercentage)
                     {
-                        if (wishlist.GetNotification(settings.LimitNotification))
+                        List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(this, PlayniteApi, settings, this.GetPluginUserDataPath(), true);
+                        foreach (Wishlist wishlist in ListWishlist)
                         {
-                            PlayniteApi.Notifications.Add(new NotificationMessage(
-                                $"IsThereAnyDeal-{wishlist.Plain}",
-                                string.Format(resources.GetString("LOCItadNotification"), 
-                                    wishlist.Name, wishlist.ItadBestPrice.PriceNew, wishlist.ItadBestPrice.CurrencySign, wishlist.ItadBestPrice.PriceCut),
-                                NotificationType.Info,
-                                () => new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain).ShowDialog()
-                            ));
+                            if (wishlist.GetNotification(settings.LimitNotification))
+                            {
+                                PlayniteApi.Notifications.Add(new NotificationMessage(
+                                    $"IsThereAnyDeal-{wishlist.Plain}",
+                                    string.Format(resources.GetString("LOCItadNotification"),
+                                        wishlist.Name, wishlist.ItadBestPrice.PriceNew, wishlist.ItadBestPrice.CurrencySign, wishlist.ItadBestPrice.PriceCut),
+                                    NotificationType.Info,
+                                    () => new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain).ShowDialog()
+                                ));
+                            }
+                        }
+                    }
+
+                    if (settings.EnableNotificationPrice)
+                    {
+                        List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(this, PlayniteApi, settings, this.GetPluginUserDataPath(), true);
+                        foreach (Wishlist wishlist in ListWishlist)
+                        {
+                            if (wishlist.GetNotificationPrice(settings.LimitNotificationPrice))
+                            {
+                                PlayniteApi.Notifications.Add(new NotificationMessage(
+                                    $"IsThereAnyDeal-{wishlist.Plain}",
+                                    string.Format(resources.GetString("LOCItadNotification"),
+                                        wishlist.Name, wishlist.ItadBestPrice.PriceNew, wishlist.ItadBestPrice.CurrencySign, wishlist.ItadBestPrice.PriceCut),
+                                    NotificationType.Info,
+                                    () => new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain).ShowDialog()
+                                ));
+                            }
                         }
                     }
                 }

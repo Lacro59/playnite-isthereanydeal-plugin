@@ -121,5 +121,18 @@ namespace IsThereAnyDeal.Models
             }
             return false;
         }
+
+        public bool GetNotificationPrice(int LimitNotificationPrice)
+        {
+            List<ItadGameInfo> Result = new List<ItadGameInfo>();
+            foreach (var item in ItadLastPrice)
+            {
+                if (item.PriceNew <= LimitNotificationPrice)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
