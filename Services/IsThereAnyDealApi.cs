@@ -11,8 +11,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace IsThereAnyDeal.Services
 {
@@ -244,9 +242,9 @@ namespace IsThereAnyDeal.Services
             return RegionStores;
         }
 
-        public string GetPlain(string title)
+        public PlainData GetPlain(string title)
         {
-            string Plain = string.Empty;
+            PlainData PlainData = new PlainData();
             try
             {
                 string url = baseAddress + $"v02/game/plain/?key={key}&title={WebUtility.UrlEncode(WebUtility.HtmlDecode(title))}";
@@ -260,10 +258,11 @@ namespace IsThereAnyDeal.Services
                     Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
                 }
 
-                JObject datasObj = JObject.Parse(responseData);
-                if ((string)datasObj[".meta"]["match"] != "false")
+                ItadPlain itadPlain = JsonConvert.DeserializeObject<ItadPlain>(responseData);
+                if (itadPlain.Meta.Match != "false")
                 {
-                    Plain = (string)datasObj["data"]["plain"];
+                    PlainData.Plain = itadPlain.Data.Plain;
+                    PlainData.IsActive = itadPlain.Meta.Active;
                 }
                 else
                 {
@@ -275,19 +274,20 @@ namespace IsThereAnyDeal.Services
                 Common.LogError(ex, "IsThereAnyDeal", $"Error in GetPlain({WebUtility.HtmlDecode(title)})");
             }
 
-            return Plain;
+            return PlainData;
         }
 
+
+        // TODO Use for add data
         public List<ItadGameInfo> SearchGame(string q, string region, string country)
         {
-#if DEBUG
-            logger.Debug($"IsThereAnyDeal - SearchGame({q})");
-#endif
-
             List<ItadGameInfo> itadGameInfos = new List<ItadGameInfo>();
             try
             {
                 string url = baseAddress + $"v01/search/search/?key={key}&q={q}&region{region}&country={country}";
+#if DEBUG
+                logger.Debug($"IsThereAnyDeal - SearchGame({q}) - {url}");
+#endif
                 string responseData = string.Empty;
                 try
                 {
@@ -409,7 +409,7 @@ namespace IsThereAnyDeal.Services
                         }
 
                         bool InLibrary = false;
-                        foreach (var game in PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower()))
+                        foreach (var game in PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower() && a.Hidden == false))
                         {
                             if (game.PlayAction != null && game.PlayAction.EmulatorId != null && ListEmulators.Contains(game.PlayAction.EmulatorId))
                             {
@@ -602,5 +602,11 @@ namespace IsThereAnyDeal.Services
 
             return itadGiveaways;
         }
+    }
+
+    public class PlainData
+    {
+        public string Plain { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = false;
     }
 }

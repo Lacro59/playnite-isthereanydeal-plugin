@@ -188,6 +188,9 @@
                                                                     <DataTrigger Binding="{Binding InLibrary}" Value="True">
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </TextBlock.Style>
@@ -204,6 +207,9 @@
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding IsActive}" Value="False">
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
@@ -227,6 +233,9 @@
                                                                     <DataTrigger Binding="{Binding InLibrary}" Value="True">
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </StackPanel.Style>
@@ -248,22 +257,50 @@
                                                                     <DataTrigger Binding="{Binding InLibrary}" Value="True">
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </TextBlock.Style>
                                                     </TextBlock>
 
                                                     <StackPanel Grid.Column="0">
-                                                        <TextBlock Text="{DynamicResource LOCItadNoData}" 
-                                                           Visibility="{Binding ItadPriceForWishlistStore.CurrencySign, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}, ConverterParameter=Inverted}" />
+                                                        <TextBlock Text="{DynamicResource LOCItadNotActive}" 
+                                                           Visibility="{Binding IsActive, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+
+                                                        <TextBlock Text="{DynamicResource LOCItadNotFind}" 
+                                                           Visibility="{Binding Plain, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}, ConverterParameter=Inverted}" />
                                                         <TextBlock Text="{DynamicResource LOCItadInLibrary}" 
                                                            Visibility="{Binding InLibrary, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                                                        <TextBlock Text="{DynamicResource LOCItadNoData}">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="{x:Null}">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+
                                                     </StackPanel>
                                                 </Grid>
 
                                                 <!-- Store price -->
                                                 <ListBox  Grid.Column="3" ItemsSource="{Binding ListItadPriceForWishlistStore}" 
-                                                  Visibility="{Binding InLibrary, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
                                                   Name="lbStorePrice" SelectionChanged="LbStorePrice_SelectionChanged"
                                                   BorderThickness="0" Padding="0" Margin="0"
                                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
@@ -280,24 +317,7 @@
                                                                     <ColumnDefinition Width="auto"/>
                                                                 </Grid.ColumnDefinitions>
 
-                                                                <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}">
-                                                                    <TextBlock.Style>
-                                                                        <Style TargetType="TextBlock">
-                                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                                            <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding CurrencySign}" Value="">
-                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding CurrencySign}" Value="{x:Null}">
-                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                </DataTrigger>
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </TextBlock.Style>
-                                                                </TextBlock>
+                                                                <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}" />
                                                                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                                                                     <StackPanel.Style>
                                                                         <Style TargetType="StackPanel">
@@ -310,6 +330,9 @@
                                                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                                                 </DataTrigger>
                                                                                 <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding IsActive}" Value="False">
                                                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>
@@ -333,6 +356,9 @@
                                                                                 <DataTrigger Binding="{Binding InLibrary}" Value="True">
                                                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                                                 </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                </DataTrigger>
                                                                             </Style.Triggers>
                                                                         </Style>
                                                                     </StackPanel.Style>
@@ -340,24 +366,7 @@
                                                                     <TextBlock Text="{Binding PriceCut}" />
                                                                     <TextBlock Text="%" />
                                                                 </StackPanel>
-                                                                <TextBlock Grid.Column="6" Text="{Binding ShopName}" Foreground="{Binding ShopColor}">
-                                                                    <TextBlock.Style>
-                                                                        <Style TargetType="TextBlock">
-                                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                                            <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding CurrencySign}" Value="">
-                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding CurrencySign}" Value="{x:Null}">
-                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                </DataTrigger>
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </TextBlock.Style>
-                                                                </TextBlock>
+                                                                <TextBlock Grid.Column="6" Text="{Binding ShopName}" Foreground="{Binding ShopColor}" />
                                                             </Grid>
                                                         </DataTemplate>
                                                     </ListBox.ItemTemplate>
@@ -365,7 +374,7 @@
                                             </Grid>
 
                                             <!-- actions buttons -->
-                                            <Button Height="30" Grid.Column="2" Grid.Row="0" Tag="{Binding ItadBestPrice.UrlGame}" Content="{DynamicResource LOCItadWeb}" 
+                                            <Button Height="30" Grid.Column="2" Grid.Row="0" Tag="{Binding UrlGame}" Content="{DynamicResource LOCItadWeb}" 
                                         Click="ButtonWeb_Click" />
                                             <Button Height="30"  Grid.Column="2" Grid.Row="2" Tag="{Binding ItadBestPrice.UrlBuy}" Content="{DynamicResource LOCItadBuy}" 
                                         Click="ButtonWeb_Click">
@@ -408,6 +417,9 @@
                                                             <DataTrigger Binding="{Binding InLibrary}" Value="True">
                                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                                             </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Button.Style>
@@ -443,9 +455,9 @@
                                                             <Trigger Property="IsMouseOver" Value="True">
                                                                 <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
                                                             </Trigger>
-                                                            <DataTrigger Binding="{Binding StoreUrl}" Value="">
+                                                            <!--DataTrigger Binding="{Binding StoreUrl}" Value="">
                                                                 <Setter Property="Visibility" Value="Collapsed"/>
-                                                            </DataTrigger>
+                                                            </>
                                                             <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
                                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                                             </DataTrigger>
@@ -455,6 +467,9 @@
                                                             <DataTrigger Binding="{Binding InLibrary}" Value="True">
                                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                                             </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger-->
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Button.Style>

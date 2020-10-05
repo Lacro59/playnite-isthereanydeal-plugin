@@ -84,16 +84,20 @@ namespace IsThereAnyDeal.Services
                                             string Name = (string)resultObjGame["title"];
                                             string Capsule = "http:" + (string)resultObjGame["images"]["logo2x"];
 
+                                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
                                             Result.Add(new Wishlist
                                             {
                                                 StoreId = StoreId,
                                                 StoreName = "GOG",
+                                                ShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("gog") > -1).Color,
                                                 StoreUrl = (string)resultObjGame["links"]["product_card"],
                                                 Name = WebUtility.HtmlDecode(Name),
                                                 SourceId = SourceId,
                                                 ReleaseDate = ReleaseDate.ToUniversalTime(),
                                                 Capsule = Capsule,
-                                                Plain = isThereAnyDealApi.GetPlain(Name)
+                                                Plain = plainData.Plain,
+                                                IsActive = plainData.IsActive
                                             });
                                         }
                                         catch (Exception ex)

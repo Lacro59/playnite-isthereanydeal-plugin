@@ -65,17 +65,21 @@ namespace IsThereAnyDeal.Services
                         string Name = (string)gameWish["human_name"];
                         DateTime ReleaseDate = default(DateTime);
                         string Capsule = (string)gameWish["standard_carousel_image"];
-                        
+
+                        PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
                         Result.Add(new Wishlist
                         {
                             StoreId = StoreId,
                             StoreName = "Humble",
+                            ShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("humble") > -1).Color,
                             StoreUrl = StoreUrl,
                             Name = WebUtility.HtmlDecode(Name),
                             SourceId = SourceId,
                             ReleaseDate = ReleaseDate.ToUniversalTime(),
                             Capsule = Capsule,
-                            Plain = isThereAnyDealApi.GetPlain(Name)
+                            Plain = plainData.Plain,
+                            IsActive = plainData.IsActive
                         });
                     }
                 }

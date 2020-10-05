@@ -104,16 +104,20 @@ namespace IsThereAnyDeal.Services
                                 }
                             }
 
+                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
                             Result.Add(new Wishlist
                             {
                                 StoreId = StoreId,
                                 StoreName = "Epic",
+                                ShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("epic") > -1).Color,
                                 StoreUrl = string.Empty,
                                 Name = WebUtility.HtmlDecode(Name),
                                 SourceId = SourceId,
                                 ReleaseDate = ReleaseDate.ToUniversalTime(),
                                 Capsule = Capsule,
-                                Plain = isThereAnyDealApi.GetPlain(Name)
+                                Plain = plainData.Plain,
+                                IsActive = plainData.IsActive
                             });
                         }
                     }

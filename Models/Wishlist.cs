@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Playnite.SDK;
 using PluginCommon;
 using System;
 using System.Collections.Concurrent;
@@ -8,8 +9,11 @@ namespace IsThereAnyDeal.Models
 {
     public class Wishlist
     {
+        private static readonly ILogger logger = LogManager.GetLogger();
+
         public int StoreId { get; set; }
         public string StoreName { get; set; }
+        public string ShopColor { get; set; }
         public string StoreUrl { get; set; }
         public string Name { get; set; }
         public Guid SourceId { get; set; }
@@ -17,6 +21,7 @@ namespace IsThereAnyDeal.Models
         public string Capsule { get; set; }
         public string Plain { get; set; }
         public bool InLibrary { get; set; }
+        public bool IsActive { get; set; }
         public ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos { get; set; }
 
         [JsonIgnore]
@@ -88,6 +93,15 @@ namespace IsThereAnyDeal.Models
         }
 
         [JsonIgnore]
+        public string UrlGame
+        {
+            get
+            {
+                return string.Format("https://isthereanydeal.com/game/{0}/info/", Plain);
+            }
+        }
+
+        [JsonIgnore]
         public List<Wishlist> Duplicates = new List<Wishlist>();
         [JsonIgnore]
         public bool hasDuplicates = false;
@@ -103,6 +117,34 @@ namespace IsThereAnyDeal.Models
                     foreach(var duplicate in Duplicates)
                     {
                         list.Add(duplicate.ItadPriceForWishlistStore);
+                    }
+                }
+
+                //When no data or not active
+                if (list.Count == 0 || list[0].ShopName.IsNullOrEmpty())
+                {
+                    list = new List<ItadGameInfo>();
+
+                    // Store
+                    list.Add(new ItadGameInfo
+                    {
+                        ShopName = StoreName,
+                        ShopColor = ShopColor,
+                        UrlBuy = StoreUrl
+                    });
+
+                    // Duplicate
+                    if (hasDuplicates)
+                    {
+                        foreach (var duplicate in Duplicates)
+                        {
+                            list.Add(new ItadGameInfo
+                            {
+                                ShopName = duplicate.StoreName,
+                                ShopColor = duplicate.ShopColor,
+                                UrlBuy = duplicate.StoreUrl
+                            });
+                        }
                     }
                 }
                 return list;

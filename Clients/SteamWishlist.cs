@@ -89,16 +89,20 @@ namespace IsThereAnyDeal.Services
                         DateTime ReleaseDate = ((int)gameWishlistData["release_date"] == 0) ? default(DateTime) : new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)gameWishlistData["release_date"]);
                         string Capsule = (string)gameWishlistData["capsule"];
 
+                        PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
                         Result.Add(new Wishlist
                         {
                             StoreId = StoreId,
                             StoreName = "Steam",
+                            ShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1).Color,
                             StoreUrl = "https://store.steampowered.com/app/" + StoreId,
                             Name = WebUtility.HtmlDecode(Name),
                             SourceId = SourceId,
                             ReleaseDate = ReleaseDate.ToUniversalTime(),
                             Capsule = Capsule,
-                            Plain = isThereAnyDealApi.GetPlain(Name)
+                            Plain = plainData.Plain,
+                            IsActive = plainData.IsActive
                         });
                     }
                 }
