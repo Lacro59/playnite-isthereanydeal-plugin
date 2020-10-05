@@ -32,15 +32,21 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
                                 <ColumnDefinition Width="6" />
-                                <ColumnDefinition Width="200" />
-                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="140" />
+                                <ColumnDefinition Width="15" />
                                 <ColumnDefinition Width="auto" />
                                 <ColumnDefinition Width="6" />
-                                <ColumnDefinition Width="180" />
-                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="140" />
+                                <ColumnDefinition Width="15" />
                                 <ColumnDefinition Width="auto" />
                                 <ColumnDefinition Width="6" />
                                 <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="45" />
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="6" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="45" />
                             </Grid.ColumnDefinitions>
 
                             <Label Grid.Column="0" Content="{DynamicResource LOCITADSearch}" FontSize="16" />
@@ -57,11 +63,16 @@
                             </ComboBox>
 
                             <Label Grid.Column="8" Content="{DynamicResource LOCITADPercentage}" FontSize="16" />
-                            <StackPanel Grid.Column="10" Orientation="Horizontal">
-                                <Slider Width="200" Minimum="0" Maximum="100" Value="0" VerticalAlignment="Center" IsSnapToTickEnabled="True" TickFrequency="1" Name="sPercentage"
-                            ValueChanged="Slider_ValueChanged" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
-                                <Label Name="lPercentage" Content="0%" Margin="5,0,0,0" />
-                            </StackPanel>
+                            <Slider Grid.Column="10" Minimum="0" Maximum="100" Value="0" VerticalAlignment="Center" IsSnapToTickEnabled="True" 
+                                    TickFrequency="1" Name="sPercentage"
+                                    ValueChanged="Slider_ValueChanged" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
+                            <Label Grid.Column="11" Name="lPercentage" Content="0%" Margin="5,0,0,0" HorizontalAlignment="Center" />
+
+                            <Label Grid.Column="13" Content="{DynamicResource LOCITADPrice}" FontSize="16" />
+                            <Slider Grid.Column="15" Minimum="0" Maximum="100" Value="100" VerticalAlignment="Center" IsSnapToTickEnabled="True" 
+                                    TickFrequency="1" Name="sPrice"
+                                    ValueChanged="Slider_ValueChangedPrice" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
+                            <Label Grid.Column="16" Name="lPrice" Content="100€" Margin="5,0,0,0" HorizontalAlignment="Center" />
                         </Grid>
                     </Border>
 
@@ -295,15 +306,14 @@
                                                                 </Style>
                                                             </TextBlock.Style>
                                                         </TextBlock>
-
                                                     </StackPanel>
                                                 </Grid>
 
                                                 <!-- Store price -->
                                                 <ListBox  Grid.Column="3" ItemsSource="{Binding ListItadPriceForWishlistStore}" 
-                                                  Name="lbStorePrice" SelectionChanged="LbStorePrice_SelectionChanged"
-                                                  BorderThickness="0" Padding="0" Margin="0"
-                                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                          Name="lbStorePrice" SelectionChanged="LbStorePrice_SelectionChanged"
+                                                          BorderThickness="0" Padding="0" Margin="0"
+                                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                                     <ListBox.ItemTemplate>
                                                         <DataTemplate>
                                                             <Grid>

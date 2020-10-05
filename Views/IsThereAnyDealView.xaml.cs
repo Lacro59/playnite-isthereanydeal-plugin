@@ -29,6 +29,7 @@ namespace IsThereAnyDeal.Views
         private List<Wishlist> lbWishlistItems = new List<Wishlist>();
         private List<string> SearchStores = new List<string>();
         private int SearchPercentage = 0;
+        private int SearchPrice = 100;
 
         public IsThereAnyDealView(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
@@ -75,6 +76,8 @@ namespace IsThereAnyDeal.Views
             GetListGiveaways(PlayniteApi, PluginUserDataPath);
 
             SetFilterStore();
+
+            lPrice.Content = 100 + _settings.CurrencySign;
 
             DataContext = this;
         }
@@ -210,6 +213,10 @@ namespace IsThereAnyDeal.Views
                 x => x.ItadBestPrice.PriceCut >= SearchPercentage
             );
 
+            lbWishlist.ItemsSource = lbWishlistItems.FindAll(
+                x => x.ItadBestPrice.PriceNew <= SearchPrice
+            );
+
             if (!TextboxSearch.Text.IsNullOrEmpty() && SearchStores.Count != 0)
             {
                 lbWishlist.ItemsSource = lbWishlistItems.FindAll(
@@ -276,9 +283,29 @@ namespace IsThereAnyDeal.Views
         // Search percentage
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            SearchPercentage = (int)((Slider)sender).Value;
-            lPercentage.Content = SearchPercentage + "%";
-            GetListGame();
+            try
+            {
+                SearchPercentage = (int)((Slider)sender).Value;
+                lPercentage.Content = SearchPercentage + "%";
+                GetListGame();
+            }
+            catch
+            {
+            }
+        }
+
+        // Search price
+        private void Slider_ValueChangedPrice(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            try
+            {
+                SearchPrice = (int)((Slider)sender).Value;
+                lPrice.Content = SearchPrice + _settings.CurrencySign;
+                GetListGame();
+            }
+            catch
+            {
+            }
         }
 
         // Active store button
