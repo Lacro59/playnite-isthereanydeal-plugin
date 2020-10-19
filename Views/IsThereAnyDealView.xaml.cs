@@ -16,7 +16,7 @@ namespace IsThereAnyDeal.Views
     /// <summary>
     /// Logique d'interaction pour IsThereAnyDealView.xaml
     /// </summary>
-    public partial class IsThereAnyDealView : Window
+    public partial class IsThereAnyDealView : UserControl
     {
         private static readonly ILogger logger = LogManager.GetLogger();
         private static IResourceProvider resources = new ResourceProvider();
@@ -34,8 +34,6 @@ namespace IsThereAnyDeal.Views
         public IsThereAnyDealView(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
             InitializeComponent();
-
-            this.PreviewKeyDown += new KeyEventHandler(HandleEsc);
 
             this.PlainSelected = PlainSelected;
             _settings = settings;
@@ -80,14 +78,6 @@ namespace IsThereAnyDeal.Views
             lPrice.Content = 100 + _settings.CurrencySign;
 
             DataContext = this;
-        }
-
-        private void HandleEsc(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Escape)
-            {
-                Close();
-            }
         }
 
         private void SetFilterStore()
@@ -196,13 +186,6 @@ namespace IsThereAnyDeal.Views
             }
         }
         #endregion
-
-
-        private void LbWishlist_Loaded(object sender, RoutedEventArgs e)
-        {
-            Tools.DesactivePlayniteWindowControl(this);
-            lbWishlist.ScrollIntoView(lbWishlist.SelectedItem);
-        }
 
 
         #region Search

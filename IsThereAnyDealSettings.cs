@@ -26,9 +26,10 @@ namespace IsThereAnyDeal
         public bool EnableNotificationPrice { get; set; } = false;
         public int LimitNotificationPrice { get; set; } = 5;
 
-        public string HumbleKey { get; set; } = "";
+        public string HumbleKey { get; set; } = string.Empty;
 
         public bool EnableCheckVersion { get; set; } = true;
+        public bool MenuInExtensions { get; set; } = true;
 
 
         // Playnite serializes settings object to a JSON object and saves it as text file.
@@ -72,6 +73,7 @@ namespace IsThereAnyDeal
                 HumbleKey = savedSettings.HumbleKey;
 
                 EnableCheckVersion = savedSettings.EnableCheckVersion;
+                MenuInExtensions = savedSettings.MenuInExtensions;
             }
         }
 
