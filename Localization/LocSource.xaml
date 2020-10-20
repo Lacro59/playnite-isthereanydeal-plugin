@@ -38,6 +38,8 @@
     <sys:String x:Key="LOCItadInLibrary">In library</sys:String>
     <sys:String x:Key="LOCItadNotActive">Not active on IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadNotFind">Not find on IsThereAnyDeal</sys:String>
+    
+    <sys:String x:Key="LOCItadDeleteOnStoreWishList">Delete {0} on {1}?</sys:String>
 
     <!-- IsThereAnyDeal -->
 

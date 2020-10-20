@@ -11,7 +11,7 @@ namespace IsThereAnyDeal.Models
     {
         private static readonly ILogger logger = LogManager.GetLogger();
 
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
         public string StoreName { get; set; }
         public string ShopColor { get; set; }
         public string StoreUrl { get; set; }
@@ -128,6 +128,9 @@ namespace IsThereAnyDeal.Models
                     // Store
                     list.Add(new ItadGameInfo
                     {
+                        Name = Name,
+                        StoreId = StoreId,
+                        SourceId = SourceId,
                         ShopName = StoreName,
                         ShopColor = ShopColor,
                         UrlBuy = StoreUrl
@@ -140,6 +143,9 @@ namespace IsThereAnyDeal.Models
                         {
                             list.Add(new ItadGameInfo
                             {
+                                Name = duplicate.Name,
+                                StoreId = duplicate.StoreId,
+                                SourceId = duplicate.SourceId,
                                 ShopName = duplicate.StoreName,
                                 ShopColor = duplicate.ShopColor,
                                 UrlBuy = duplicate.StoreUrl

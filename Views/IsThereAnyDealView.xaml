@@ -5,13 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IsThereAnyDeal.Views"
              xmlns:pcon="clr-namespace:PluginCommon.PlayniteResources.Converters;assembly=PluginCommon"
-             mc:Ignorable="d" Height="740" Width="1150" Background="{DynamicResource WindowBackgourndBrush}">
+             xmlns:pccon="clr-namespace:PluginCommon;assembly=PluginCommon"
+             mc:Ignorable="d" Height="740" Width="1200" Background="{DynamicResource WindowBackgourndBrush}">
 
     <UserControl.Resources>
         <pcon:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <pcon:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
         <FontFamily x:Key="font">pack://application:,,,/PluginCommon;component/Resources/font.ttf#font</FontFamily>
+        <pccon:IndexConverter x:Key="IndexConverter"/>
     </UserControl.Resources>
 
     <TabControl Margin="10">
@@ -323,10 +325,12 @@
                                                                     <ColumnDefinition Width="auto"/>
                                                                     <ColumnDefinition Width="10"/>
                                                                     <ColumnDefinition Width="auto"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="*"/>
                                                                 </Grid.ColumnDefinitions>
 
-                                                                <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}" />
-                                                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                                <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}" VerticalAlignment="Center" />
+                                                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" >
                                                                     <StackPanel.Style>
                                                                         <Style TargetType="StackPanel">
                                                                             <Setter Property="Visibility" Value="Visible"/>
@@ -350,7 +354,7 @@
                                                                     <TextBlock Text="{Binding PriceNew}" />
                                                                     <TextBlock Text="{Binding CurrencySign}" />
                                                                 </StackPanel>
-                                                                <StackPanel Grid.Column="4" Orientation="Horizontal">
+                                                                <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" >
                                                                     <StackPanel.Style>
                                                                         <Style TargetType="StackPanel">
                                                                             <Setter Property="Visibility" Value="Visible"/>
@@ -374,7 +378,12 @@
                                                                     <TextBlock Text="{Binding PriceCut}" />
                                                                     <TextBlock Text="%" />
                                                                 </StackPanel>
-                                                                <TextBlock Grid.Column="6" Text="{Binding ShopName}" Foreground="{Binding ShopColor}" />
+                                                                <TextBlock Grid.Column="6" Text="{Binding ShopName}"
+                                                                           Foreground="{Binding ShopColor}" VerticalAlignment="Center" />
+                                                                <Button Grid.Column="8" Click="BtRemoveWishList_Click" HorizontalAlignment="Right"
+                                                                        Content="" FontFamily="{StaticResource font}"
+                                                                        Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Mode=OneWay, Converter={StaticResource IndexConverter}}"
+                                                                        Name="BtRemoveWishList" VerticalAlignment="Center" />
                                                             </Grid>
                                                         </DataTemplate>
                                                     </ListBox.ItemTemplate>

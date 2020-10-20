@@ -15,7 +15,7 @@ namespace IsThereAnyDeal.Services
 {
     class HumbleBundleWishlist : GenericWishlist
     {
-       public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string HumbleBundleId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool Force = false)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string HumbleBundleId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool Force = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
@@ -60,7 +60,7 @@ namespace IsThereAnyDeal.Services
                     IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                     foreach (JObject gameWish in dataObj["products_json"])
                     {
-                        int StoreId = 0;
+                        string StoreId = (string)gameWish["machine_name"];
                         string StoreUrl = "https://www.humblebundle.com/store/" + gameWish["human_url"];
                         string Name = (string)gameWish["human_name"];
                         DateTime ReleaseDate = default(DateTime);
@@ -103,6 +103,13 @@ namespace IsThereAnyDeal.Services
             Result = SetCurrentPrice(Result, settings, PlayniteApi);
             SaveWishlist("HumbleBundle", PluginUserDataPath, Result);
             return Result;
+        }
+
+        public bool RemoveWishlist(string StoreId)
+        {
+            string Url = string.Format(@"https://www.humblebundle.com/wishlist/remove/{0}", StoreId);
+            // TODO With post method
+            return false;
         }
     }
 }

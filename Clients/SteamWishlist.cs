@@ -84,7 +84,7 @@ namespace IsThereAnyDeal.Services
                     {
                         JObject gameWishlistData = (JObject)gameWishlist.Value;
 
-                        int StoreId = int.Parse(gameWishlist.Key);
+                        string StoreId = gameWishlist.Key;
                         string Name = (string)gameWishlistData["name"];
                         DateTime ReleaseDate = ((int)gameWishlistData["release_date"] == 0) ? default(DateTime) : new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)gameWishlistData["release_date"]);
                         string Capsule = (string)gameWishlistData["capsule"];
@@ -123,6 +123,13 @@ namespace IsThereAnyDeal.Services
             Result = SetCurrentPrice(Result, settings, PlayniteApi);
             SaveWishlist("Steam", PluginUserDataPath, Result);
             return Result;
+        }
+
+        public bool RemoveWishlist(string StoreId)
+        {
+            string Url = @"https://store.steampowered.com/wishlist/profiles/76561198003215440/remove/";
+            // formfata : appid=632470&sessionid=8e1207c6343129ee6b8098a2
+            return false;
         }
     }
 }

@@ -1,10 +1,14 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace IsThereAnyDeal.Models
 {
     public class ItadGameInfo
     {
+        public string Name { get; set; }
         public string Plain { get; set; }
+        public string StoreId { get; set; }
+        public Guid SourceId { get; set; }
         public double PriceNew { get; set; }
         public double PriceOld { get; set; }
         public double PriceCut { get; set; }

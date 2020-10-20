@@ -90,7 +90,7 @@ namespace IsThereAnyDeal.Services
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                         foreach (JObject gameWishlist in resultObj["data"]["Wishlist"]["wishlistItems"]["elements"])
                         {
-                            int StoreId = 0;
+                            string StoreId = string.Empty;
                             string Name = string.Empty;
                             DateTime ReleaseDate = default(DateTime);
                             string Capsule = string.Empty;
