@@ -17,6 +17,7 @@ namespace IsThereAnyDeal.Services
     class IsThereAnyDealApi
     {
         private static readonly ILogger logger = LogManager.GetLogger();
+        private static IResourceProvider resources = new ResourceProvider();
 
         private readonly string baseAddress = "https://api.isthereanydeal.com/";
         private readonly string key = "fa49308286edcaf76fea58926fd2ea2d216a17ff";
@@ -66,7 +67,7 @@ namespace IsThereAnyDeal.Services
                     logger.Warn("IsThereAnyDeal - Steam is enable then disabled");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Steam-disabled",
-                        "Steam is enable then disabled",
+                        resources.GetString("LOCItadNotificationErrorSteam"),
                         NotificationType.Error,
                         () => plugin.OpenSettingsView()
                     ));
@@ -86,7 +87,7 @@ namespace IsThereAnyDeal.Services
                     logger.Warn("IsThereAnyDeal - GOG is enable then disabled");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-GOG-disabled",
-                        "GOG is enable then disabled",
+                        resources.GetString("LOCItadNotificationErrorGog"),
                         NotificationType.Error,
                         () => plugin.OpenSettingsView()
                     ));
@@ -106,7 +107,7 @@ namespace IsThereAnyDeal.Services
                     logger.Warn("IsThereAnyDeal - Epic Game Store is enable then disabled");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-EpicGameStore-disabled",
-                        "Epic Game Store is enable then disabled",
+                        resources.GetString("LOCItadNotificationErrorEpic"),
                         NotificationType.Error,
                         () => plugin.OpenSettingsView()
                     ));
@@ -126,7 +127,7 @@ namespace IsThereAnyDeal.Services
                     logger.Warn("IsThereAnyDeal - Humble Bundle is enable then disabled");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-HumbleBundle-disabled",
-                        "Humble Bundle is enable then disabled",
+                        resources.GetString("LOCItadNotificationErrorHumble"),
                         NotificationType.Error,
                         () => plugin.OpenSettingsView()
                     ));

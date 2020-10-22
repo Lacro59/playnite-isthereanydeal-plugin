@@ -6,11 +6,11 @@
              xmlns:plugin="clr-namespace:PluginCommon;assembly=PluginCommon" 
              xmlns:views="clr-namespace:IsThereAnyDeal.Views;assembly=IsThereAnyDeal">
 
-    <FrameworkElement.Resources>
+    <UserControl.Resources>
         <ResourceDictionary>
             <plugin:StringToBooleanConverter x:Key="StringToBooleanConverter" />
         </ResourceDictionary>
-    </FrameworkElement.Resources>
+    </UserControl.Resources>
 
     <StackPanel Margin="20">
         <StackPanel>

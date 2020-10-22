@@ -60,7 +60,7 @@ namespace IsThereAnyDeal
 #if DEBUG
             gameMenuItems.Add(new GameMenuItem
             {
-                MenuSection = "IsThereAnyDeal",
+                MenuSection = resources.GetString("LOCItad"),
                 Description = "Test",
                 Action = (mainMenuItem) => { }
             });
@@ -82,12 +82,12 @@ namespace IsThereAnyDeal
             {
                 new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + "IsThereAnyDeal",
-                    Description = resources.GetString("LOCItadViewWishlist"),
+                    MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
+                    Description = resources.GetString("LOCItadViewPluginView"),
                     Action = (mainMenuItem) =>
                     {
                         var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings);
-                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, "IsThereAnyDeal", ViewExtension);
+                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
                         windowExtension.ShowDialog();
                     }
                 }
@@ -96,7 +96,7 @@ namespace IsThereAnyDeal
 #if DEBUG
             mainMenuItems.Add(new MainMenuItem
             {
-                MenuSection = MenuInExtensions + "IsThereAnyDeal",
+                MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
                 Description = "Test",
                 Action = (mainMenuItem) => { }
             });
@@ -155,7 +155,7 @@ namespace IsThereAnyDeal
                                     () => 
                                         {
                                             var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain);
-                                            Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, "IsThereAnyDeal", ViewExtension);
+                                            Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
                                             windowExtension.ShowDialog();
                                         }
                                 ));
@@ -178,7 +178,7 @@ namespace IsThereAnyDeal
                                     () =>
                                     {
                                         var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain);
-                                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, "IsThereAnyDeal", ViewExtension);
+                                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
                                         windowExtension.ShowDialog();
                                     }
                                 ));
