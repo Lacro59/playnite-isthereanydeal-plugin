@@ -510,10 +510,8 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
-                    <RowDefinition Height="20" />
                 </Grid.RowDefinitions>
             </Grid>
         </TabItem>
     </TabControl>
-
 </UserControl>

@@ -143,13 +143,10 @@ namespace IsThereAnyDeal.Views
                             if (col > 3)
                             {
                                 col = 0;
-                                row += 2;
+                                row += 1;
                                 var rowAuto = new RowDefinition();
-                                var rowSep = new RowDefinition();
-                                rowAuto.Height = GridLength.Auto;
-                                rowSep.Height = new GridLength(20);
+                                rowAuto.Height = new GridLength(40);
                                 gGiveaways.RowDefinitions.Add(rowAuto);
-                                gGiveaways.RowDefinitions.Add(rowSep);
                             }
 
                             var dp = new DockPanel();
@@ -159,6 +156,7 @@ namespace IsThereAnyDeal.Views
                             tb.Text = itadGiveaway.TitleAll;
                             tb.VerticalAlignment = VerticalAlignment.Center;
                             tb.Width = 440;
+                            tb.VerticalAlignment = VerticalAlignment.Center;
 
                             var bt = new Button();
                             bt.Content = resources.GetString("LOCItadWeb");
@@ -166,6 +164,7 @@ namespace IsThereAnyDeal.Views
                             bt.Click += new RoutedEventHandler(webGiveaway);
                             bt.Height = 30;
                             bt.Width = 100;
+                            bt.VerticalAlignment = VerticalAlignment.Center;
                             DockPanel.SetDock(bt, Dock.Right);
 
                             dp.Children.Add(tb);
