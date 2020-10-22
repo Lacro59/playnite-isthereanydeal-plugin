@@ -2,9 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <!--  
-    IsThereAnyDealSettingsView
-    -->
+    <!-- IsThereAnyDealSettingsView -->
 
     <sys:String x:Key="LOCItadSettingWishlist">Wish list</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Enable Steam</sys:String>
@@ -18,14 +16,13 @@
     <sys:String x:Key="LOCItadCountry">Country</sys:String>
     <sys:String x:Key="LOCItadStores">Store(s)</sys:String>
 
+    <sys:String x:Key="LOCItadMenuInExtensions">Plugin menus in extensions menu *</sys:String>
     <sys:String x:Key="LOCItadEnableNotificationGiveaways">Enable notification(s) giveaways</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">Enable notification(s)</sys:String>
     <sys:String x:Key="LOCItadLimitNotification">Price cut</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">Price inferior</sys:String>
 
-    <!--  
-    IsThereAnyDealView
-    -->
+    <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADSearch">Search</sys:String>
     <sys:String x:Key="LOCITADFilterSource">Filter by store(s)</sys:String>
@@ -41,11 +38,13 @@
     <sys:String x:Key="LOCItadInLibrary">In library</sys:String>
     <sys:String x:Key="LOCItadNotActive">Not active on IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadNotFind">Not find on IsThereAnyDeal</sys:String>
+    
+    <sys:String x:Key="LOCItadDeleteOnStoreWishList">Delete {0} on {1}?</sys:String>
 
-    <!--  
-    IsThereAnyDeal
-    -->
+    <!-- IsThereAnyDeal -->
 
+    <sys:String x:Key="LOCItadViewWishlist">View wishlist</sys:String>
+    
     <sys:String x:Key="LOCItadNotificationGiveaway">Giveaway notification for {0} ({1} game(s))</sys:String>
     <sys:String x:Key="LOCItadNotification">Price notification for {0} - {1}{2} ({3}%)</sys:String>
 

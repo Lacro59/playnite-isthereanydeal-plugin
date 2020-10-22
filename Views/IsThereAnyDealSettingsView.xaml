@@ -21,6 +21,8 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />
@@ -120,36 +122,43 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
-                <CheckBox Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" IsChecked="{Binding EnableNotificationGiveaways}" VerticalAlignment="Center">
+                <CheckBox Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" IsChecked="{Binding MenuInExtensions}" Margin="0,0,0,0" 
+                          VerticalAlignment="Center">
+                    <Label Content="{DynamicResource LOCItadMenuInExtensions}" />
+                </CheckBox>
+
+                <CheckBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" IsChecked="{Binding EnableNotificationGiveaways}" VerticalAlignment="Center">
                     <Label Content="{DynamicResource LOCItadEnableNotificationGiveaways}" />
                 </CheckBox>
                 
-                <CheckBox Name="chk_Notification" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" IsChecked="{Binding EnableNotification}" VerticalAlignment="Center">
+                <CheckBox Name="chk_Notification" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" IsChecked="{Binding EnableNotification}" VerticalAlignment="Center">
                     <Label Content="{DynamicResource LOCItadEnableNotification}" />
                 </CheckBox>
 
 
-                <CheckBox Grid.Column="1" Grid.Row="4" IsChecked="{Binding EnableNotificationPercentage}" VerticalAlignment="Center"
+                <CheckBox Grid.Column="1" Grid.Row="6" IsChecked="{Binding EnableNotificationPercentage}" VerticalAlignment="Center"
                           IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
-                <Label Grid.Column="1" Grid.Row="4" Margin="25,0,0,0" Content="{DynamicResource LOCItadLimitNotification}" 
+                <Label Grid.Column="1" Grid.Row="6" Margin="25,0,0,0" Content="{DynamicResource LOCItadLimitNotification}" 
                        IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
-                <Slider Grid.Column="3" Grid.Row="4" Minimum="0" Maximum="100" ValueChanged="Slider_ValueChanged" 
+                <Slider Grid.Column="3" Grid.Row="6" Minimum="0" Maximum="100" ValueChanged="Slider_ValueChanged" 
                         Value="{Binding LimitNotification}" IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" 
                         IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" />
-                <Label Grid.Column="5" Grid.Row="4" Name="lLimitNotification" Content="50%" HorizontalAlignment="Center"
+                <Label Grid.Column="5" Grid.Row="6" Name="lLimitNotification" Content="50%" HorizontalAlignment="Center"
                        IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
 
 
-                <CheckBox Grid.Column="1" Grid.Row="6" IsChecked="{Binding EnableNotificationPrice}" VerticalAlignment="Center"
+                <CheckBox Grid.Column="1" Grid.Row="8" IsChecked="{Binding EnableNotificationPrice}" VerticalAlignment="Center"
                           IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
-                <Label Grid.Column="1" Grid.Row="6" Margin="25,0,0,0" Content="{DynamicResource LOCItadLimitNotificationPrice}" 
+                <Label Grid.Column="1" Grid.Row="8" Margin="25,0,0,0" Content="{DynamicResource LOCItadLimitNotificationPrice}" 
                        IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
-                <Slider Grid.Column="3" Grid.Row="6" Minimum="1" Maximum="100" ValueChanged="Slider_ValueChangedPrice" SmallChange="0.1"
+                <Slider Grid.Column="3" Grid.Row="8" Minimum="1" Maximum="100" ValueChanged="Slider_ValueChangedPrice" SmallChange="0.1"
                         Value="{Binding LimitNotificationPrice}" IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" 
                         IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" Name="sLimitNotificationPrice" />
-                <Label Grid.Column="5" Grid.Row="6" Name="lLimitNotificationPrice" Content="5" HorizontalAlignment="Center"
+                <Label Grid.Column="5" Grid.Row="8" Name="lLimitNotificationPrice" Content="5" HorizontalAlignment="Center"
                        IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
             </Grid>
         </StackPanel>

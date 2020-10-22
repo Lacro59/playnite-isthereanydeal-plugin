@@ -52,7 +52,7 @@ namespace IsThereAnyDeal.Services
 
             if (gogAPI != null && gogAPI.GetIsUserLoggedIn())
             {
-                string ResultWeb = "";
+                string ResultWeb = string.Empty;
 
                 try
                 {
@@ -60,7 +60,7 @@ namespace IsThereAnyDeal.Services
                     ResultWeb = gogAPI.GetWishList();
 
                     // Get game information for wishlist
-                    if (ResultWeb != "")
+                    if (!ResultWeb.IsNullOrEmpty())
                     {
                         JObject resultObj = JObject.Parse(ResultWeb);
                         try
@@ -72,7 +72,7 @@ namespace IsThereAnyDeal.Services
                                 {
                                     if (((bool)gameWishlist.Value))
                                     {
-                                        int StoreId = int.Parse(gameWishlist.Key);
+                                        string StoreId = gameWishlist.Key;
 
                                         //Download game information
                                         string url = string.Format(@"https://api.gog.com/products/{0}", StoreId);
@@ -133,6 +133,11 @@ namespace IsThereAnyDeal.Services
             Result = SetCurrentPrice(Result, settings, PlayniteApi);
             SaveWishlist("Gog", PluginUserDataPath, Result);
             return Result;
+        }
+
+        public bool RemoveWishlist(string StoreId)
+        {
+            return gogAPI.RemoveWishList(StoreId);
         }
     }
 }

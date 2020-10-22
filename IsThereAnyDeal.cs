@@ -12,6 +12,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows;
 
 namespace IsThereAnyDeal
 {
@@ -48,19 +49,60 @@ namespace IsThereAnyDeal
             }
         }
 
-        public override IEnumerable<ExtensionFunction> GetFunctions()
+        // To add new game menu items override GetGameMenuItems
+        public override List<GameMenuItem> GetGameMenuItems(GetGameMenuItemsArgs args)
         {
-            return new List<ExtensionFunction>
+            List<GameMenuItem> gameMenuItems = new List<GameMenuItem>
             {
-                new ExtensionFunction(
-                    "IsThereAnyDeal",
-                    () =>
-                    {
-                        // Add code to be execute when user invokes this menu entry.
 
-                        new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings).ShowDialog();
-                    })
             };
+
+#if DEBUG
+            gameMenuItems.Add(new GameMenuItem
+            {
+                MenuSection = "IsThereAnyDeal",
+                Description = "Test",
+                Action = (mainMenuItem) => { }
+            });
+#endif
+
+            return gameMenuItems;
+        }
+
+        // To add new main menu items override GetMainMenuItems
+        public override List<MainMenuItem> GetMainMenuItems(GetMainMenuItemsArgs args)
+        {
+            string MenuInExtensions = string.Empty;
+            if (settings.MenuInExtensions)
+            {
+                MenuInExtensions = "@";
+            }
+
+            List<MainMenuItem> mainMenuItems = new List<MainMenuItem>
+            {
+                new MainMenuItem
+                {
+                    MenuSection = MenuInExtensions + "IsThereAnyDeal",
+                    Description = resources.GetString("LOCItadViewWishlist"),
+                    Action = (mainMenuItem) =>
+                    {
+                        var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings);
+                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, "IsThereAnyDeal", ViewExtension);
+                        windowExtension.ShowDialog();
+                    }
+                }
+            };
+
+#if DEBUG
+            mainMenuItems.Add(new MainMenuItem
+            {
+                MenuSection = MenuInExtensions + "IsThereAnyDeal",
+                Description = "Test",
+                Action = (mainMenuItem) => { }
+            });
+#endif
+
+            return mainMenuItems;
         }
 
         public override void OnGameInstalled(Game game)
@@ -110,7 +152,12 @@ namespace IsThereAnyDeal
                                     string.Format(resources.GetString("LOCItadNotification"),
                                         wishlist.Name, wishlist.ItadBestPrice.PriceNew, wishlist.ItadBestPrice.CurrencySign, wishlist.ItadBestPrice.PriceCut),
                                     NotificationType.Info,
-                                    () => new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain).ShowDialog()
+                                    () => 
+                                        {
+                                            var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain);
+                                            Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, "IsThereAnyDeal", ViewExtension);
+                                            windowExtension.ShowDialog();
+                                        }
                                 ));
                             }
                         }
@@ -128,7 +175,12 @@ namespace IsThereAnyDeal
                                     string.Format(resources.GetString("LOCItadNotification"),
                                         wishlist.Name, wishlist.ItadBestPrice.PriceNew, wishlist.ItadBestPrice.CurrencySign, wishlist.ItadBestPrice.PriceCut),
                                     NotificationType.Info,
-                                    () => new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain).ShowDialog()
+                                    () =>
+                                    {
+                                        var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain);
+                                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, "IsThereAnyDeal", ViewExtension);
+                                        windowExtension.ShowDialog();
+                                    }
                                 ));
                             }
                         }

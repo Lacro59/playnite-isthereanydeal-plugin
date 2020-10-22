@@ -4,7 +4,7 @@ namespace IsThereAnyDeal.Services
 {
     public class GogAccountClientExtand
     {
-        private ILogger logger = LogManager.GetLogger();
+        private readonly ILogger logger = LogManager.GetLogger();
         private IWebView webView;
 
         public GogAccountClientExtand(IWebView webView)
@@ -17,6 +17,13 @@ namespace IsThereAnyDeal.Services
             string url = string.Format(@"https://embed.gog.com/user/wishlist.json");
             webView.NavigateAndWait(url);
             return webView.GetPageText();
+        }
+
+        public bool RemoveWishList(string StoreId)
+        {
+            string url = string.Format(@"https://embed.gog.com/user/wishlist/remove/{0}", StoreId);
+            webView.NavigateAndWait(url);
+            return webView.GetPageSource().ToLower().IndexOf("unable to remove product from wishlist") == -1;
         }
 
         public bool GetIsUserLoggedIn()

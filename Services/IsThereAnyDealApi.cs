@@ -56,7 +56,7 @@ namespace IsThereAnyDeal.Services
             List<Wishlist> ListWishlistSteam = new List<Wishlist>();
             if (settings.EnableSteam)
             {
-                if (!Tools.IsDisabledPlaynitePlugins("SteamLibrary", PlayniteApi.Paths.ConfigurationPath))
+                if (!PlayniteTools.IsDisabledPlaynitePlugins("SteamLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     SteamWishlist steamWishlist = new SteamWishlist();
                     ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings, CacheOnly, Force);
@@ -76,7 +76,7 @@ namespace IsThereAnyDeal.Services
             List<Wishlist> ListWishlistGog = new List<Wishlist>();
             if (settings.EnableGog)
             {
-                if (!Tools.IsDisabledPlaynitePlugins("GogLibrary", PlayniteApi.Paths.ConfigurationPath))
+                if (!PlayniteTools.IsDisabledPlaynitePlugins("GogLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     GogWishlist gogWishlist = new GogWishlist(PlayniteApi);
                     ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly, Force);
@@ -96,7 +96,7 @@ namespace IsThereAnyDeal.Services
             List<Wishlist> ListWishlistEpic = new List<Wishlist>();
             if (settings.EnableEpic)
             {
-                if (!Tools.IsDisabledPlaynitePlugins("EpicLibrary", PlayniteApi.Paths.ConfigurationPath))
+                if (!PlayniteTools.IsDisabledPlaynitePlugins("EpicLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     EpicWishlist epicWishlist = new EpicWishlist();
                     ListWishlistEpic = epicWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly, Force);
@@ -116,7 +116,7 @@ namespace IsThereAnyDeal.Services
             List<Wishlist> ListWishlistHumble = new List<Wishlist>();
             if (settings.EnableHumble)
             {
-                if (!Tools.IsDisabledPlaynitePlugins("HumbleLibrary", PlayniteApi.Paths.ConfigurationPath))
+                if (!PlayniteTools.IsDisabledPlaynitePlugins("HumbleLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
                     ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly, Force);
@@ -429,6 +429,9 @@ namespace IsThereAnyDeal.Services
                             {
                                 dataCurrentPrice.Add(new ItadGameInfo
                                 {
+                                    Name = wishlist.Name,
+                                    StoreId = wishlist.StoreId,
+                                    SourceId = wishlist.SourceId,
                                     Plain = wishlist.Plain,
                                     PriceNew = Math.Round((double)dataObj["price_new"], 2),
                                     PriceOld = Math.Round((double)dataObj["price_old"], 2),
