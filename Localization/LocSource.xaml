@@ -20,7 +20,6 @@
     <sys:String x:Key="LOCItadCountry">Country</sys:String>
     <sys:String x:Key="LOCItadStores">Store(s)</sys:String>
 
-    <sys:String x:Key="LOCItadMenuInExtensions">Plugin menus in extensions menu *</sys:String>
     <sys:String x:Key="LOCItadEnableNotificationGiveaways">Enable notification(s) giveaways</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">Enable notification(s)</sys:String>
     <sys:String x:Key="LOCItadLimitNotification">Price cut</sys:String>
@@ -28,14 +27,12 @@
 
     <!-- IsThereAnyDealView -->
 
-    <sys:String x:Key="LOCITADSearch">Search</sys:String>
     <sys:String x:Key="LOCITADFilterSource">Filter by store(s)</sys:String>
     <sys:String x:Key="LOCITADPercentage">Percentage</sys:String>
     <sys:String x:Key="LOCITADPrice">Price inferior</sys:String>
 
     <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Current store wish list</sys:String>
-    <sys:String x:Key="LOCItadWeb">Web</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy best</sys:String>
     <sys:String x:Key="LOCItadStore">Store</sys:String>
     <sys:String x:Key="LOCItadNoData">No data for selected store in settings</sys:String>
@@ -48,9 +45,11 @@
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal datas</sys:String>
-    
-    <sys:String x:Key="LOCItadNotificationGiveaway">Giveaway notification for {0} ({1} game(s))</sys:String>
-    <sys:String x:Key="LOCItadNotification">Price notification for {0} - {1}{2} ({3}%)</sys:String>
+
+    <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">IsThereAnyDeal
+Giveaway notification for {0} ({1} game(s))</sys:String>
+    <sys:String x:Key="LOCItadNotification" xml:space="preserve">IsThereAnyDeal
+Price notification for {0} - {1}{2} ({3}%)</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">An error occurred while retrieving the wishlist.
 Try to identify yourself to your account.</sys:String>

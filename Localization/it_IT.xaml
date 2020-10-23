@@ -26,13 +26,13 @@
     IsThereAnyDealView
     -->
 
-    <sys:String x:Key="LOCITADSearch">Cerca</sys:String>
+    <sys:String x:Key="LOCSearchLabel">Cerca</sys:String>
     <sys:String x:Key="LOCITADFilterSource">Filtra per negozio/zi</sys:String>
     <sys:String x:Key="LOCITADPercentage">Percentuale</sys:String>
 
     <sys:String x:Key="LOCItadCurrentBest">Migliore del momento</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Migliore per negozio (lista desideri)</sys:String>
-    <sys:String x:Key="LOCItadWeb">Sito</sys:String>
+    <sys:String x:Key="LOCWebsiteLabel">Sito</sys:String>
     <sys:String x:Key="LOCItadBuy">Compra</sys:String>
     <sys:String x:Key="LOCItadStore">Negozio</sys:String>
     <sys:String x:Key="LOCItadNoData">Nessuna informazione</sys:String>

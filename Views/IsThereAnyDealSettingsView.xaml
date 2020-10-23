@@ -128,7 +128,7 @@
 
                 <CheckBox Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" IsChecked="{Binding MenuInExtensions}" Margin="0,0,0,0" 
                           VerticalAlignment="Center">
-                    <Label Content="{DynamicResource LOCItadMenuInExtensions}" />
+                    <Label Content="{DynamicResource LOCCommonMenuInExtensions}" />
                 </CheckBox>
 
                 <CheckBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" IsChecked="{Binding EnableNotificationGiveaways}" VerticalAlignment="Center">

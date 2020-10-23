@@ -49,7 +49,7 @@
                                 <ColumnDefinition Width="45" />
                             </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="0" Content="{DynamicResource LOCITADSearch}" FontSize="16" />
+                            <Label Grid.Column="0" Content="{DynamicResource LOCSearchLabel}" FontSize="16" />
                             <TextBox Grid.Column="2" x:Name="TextboxSearch" TextWrapping="NoWrap" KeyUp="TextboxSearch_KeyUp" />
 
                             <Label Grid.Column="4" Content="{DynamicResource LOCITADFilterSource}" FontSize="16" />
@@ -391,7 +391,7 @@
                                             </Grid>
 
                                             <!-- actions buttons -->
-                                            <Button Height="30" Grid.Column="2" Grid.Row="0" Tag="{Binding UrlGame}" Content="{DynamicResource LOCItadWeb}" 
+                                            <Button Height="30" Grid.Column="2" Grid.Row="0" Tag="{Binding UrlGame}" Content="{DynamicResource LOCWebsiteLabel}" 
                                         Click="ButtonWeb_Click" />
                                             <Button Height="30"  Grid.Column="2" Grid.Row="2" Tag="{Binding ItadBestPrice.UrlBuy}" Content="{DynamicResource LOCItadBuy}" 
                                         Click="ButtonWeb_Click">

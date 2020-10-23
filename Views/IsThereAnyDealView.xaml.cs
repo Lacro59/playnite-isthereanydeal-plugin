@@ -159,7 +159,7 @@ namespace IsThereAnyDeal.Views
                             tb.VerticalAlignment = VerticalAlignment.Center;
 
                             var bt = new Button();
-                            bt.Content = resources.GetString("LOCItadWeb");
+                            bt.Content = resources.GetString("LOCWebsiteLabel");
                             bt.Tag = itadGiveaway.Link;
                             bt.Click += new RoutedEventHandler(webGiveaway);
                             bt.Height = 30;
