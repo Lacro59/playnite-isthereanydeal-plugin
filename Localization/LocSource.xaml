@@ -47,7 +47,7 @@
 
     <!-- IsThereAnyDeal -->
 
-    <sys:String x:Key="LOCItadViewPluginView">View IsThereAnyDeal datas</sys:String>
+    <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal datas</sys:String>
     
     <sys:String x:Key="LOCItadNotificationGiveaway">Giveaway notification for {0} ({1} game(s))</sys:String>
     <sys:String x:Key="LOCItadNotification">Price notification for {0} - {1}{2} ({3}%)</sys:String>

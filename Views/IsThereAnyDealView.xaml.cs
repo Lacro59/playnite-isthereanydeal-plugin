@@ -246,7 +246,7 @@ namespace IsThereAnyDeal.Views
                             {
                                 case "steam":
 #if DEBUG
-                                    logger.Debug($"IsTehreAnyDeal - Is Steam");
+                                    logger.Debug($"IsThereAnyDeal - Is Steam");
                                     SteamWishlist steamWishlist = new SteamWishlist();
                                     IsDeleted = steamWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
@@ -257,12 +257,12 @@ namespace IsThereAnyDeal.Views
                                     break;
                                 case "epic":
 #if DEBUG
-                                    logger.Debug($"IsTehreAnyDeal - Is Epic");
+                                    logger.Debug($"IsThereAnyDeal - Is Epic");
 #endif
                                     break;
                                 case "humble store":
 #if DEBUG
-                                    logger.Debug($"IsTehreAnyDeal - Is Humble Store");
+                                    logger.Debug($"IsThereAnyDeal - Is Humble Store");
 #endif
                                     HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
                                     IsDeleted = humbleBundleWishlist.RemoveWishlist(StorePriceSelected.StoreId);
@@ -273,7 +273,7 @@ namespace IsThereAnyDeal.Views
                                     break;
                                 case "gog":
 #if DEBUG
-                                    logger.Debug($"IsTehreAnyDeal - Is GOG");
+                                    logger.Debug($"IsThereAnyDeal - Is GOG");
 #endif
                                     GogWishlist gogWishlist = new GogWishlist(_PlayniteApi);
                                     IsDeleted = gogWishlist.RemoveWishlist(StorePriceSelected.StoreId);
@@ -287,7 +287,7 @@ namespace IsThereAnyDeal.Views
                     }
                     catch (Exception ex)
                     {
-                        Common.LogError(ex, "IsTehreAnyDeal", "Error on BtRemoveWishList_Click()");
+                        Common.LogError(ex, "IsThereAnyDeal", "Error on BtRemoveWishList_Click()");
                     }
                 })
                 .ContinueWith(antecedent =>
@@ -297,14 +297,14 @@ namespace IsThereAnyDeal.Views
                         if (IsDeleted)
                         {
 #if DEBUG
-                            logger.Debug($"IsTehreAnyDeal - IsDeleted");
+                            logger.Debug($"IsThereAnyDeal - IsDeleted");
 #endif
                             RefreshData();
                         }
                         else
                         {
 #if DEBUG
-                            logger.Debug($"IsTehreAnyDeal - IsNotDeleted");
+                            logger.Debug($"IsThereAnyDeal - IsNotDeleted");
 #endif
                             GetListGame();
                         }

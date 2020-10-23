@@ -83,7 +83,7 @@ namespace IsThereAnyDeal
                 new MainMenuItem
                 {
                     MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
-                    Description = resources.GetString("LOCItadViewPluginView"),
+                    Description = resources.GetString("LOCItadPluginView"),
                     Action = (mainMenuItem) =>
                     {
                         var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings);
