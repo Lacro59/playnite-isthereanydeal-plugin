@@ -18,9 +18,9 @@ namespace IsThereAnyDeal.Services
         public const string GraphQLEndpoint = @"https://graphql.epicgames.com/graphql";
 
 
-        public async Task<string> QuerySearchWishList(string token)
+        public async Task<string> QuerySearchWishList(string query, dynamic variables, string token)
         {
-            string query = @"query wishlistQuery { Wishlist { wishlistItems { elements { offer { title keyImages { type url width height } } } } } }";
+            
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
@@ -28,13 +28,34 @@ namespace IsThereAnyDeal.Services
             var queryObject = new
             {
                 query = query,
-                variables = new { }
+                variables = variables
             };
             var content = new StringContent(JsonConvert.SerializeObject(queryObject), Encoding.UTF8, "application/json");
             var response = await client.PostAsync(GraphQLEndpoint, content).ConfigureAwait(false);
             var str = await response.Content.ReadAsStringAsync();
 
             return str;
+        }
+
+        private string GetToken(string PluginUserDataPath)
+        {
+            string access_token = string.Empty;
+            try
+            {
+                JObject EpicConfig = JObject.Parse(File.ReadAllText(PluginUserDataPath + "\\..\\00000002-DBD1-46C6-B5D0-B1BA559D10E4\\tokens.json"));
+                access_token = (string)EpicConfig["access_token"];
+
+            }
+            catch
+            {
+            }
+
+            if (access_token.IsNullOrEmpty())
+            {
+                logger.Error($"ISThereAnyDeal - No Epic configuration.");
+            }
+
+            return access_token;
         }
 
 
@@ -58,24 +79,17 @@ namespace IsThereAnyDeal.Services
             logger.Info($"IsThereAnyDeal - Load from web for Epic");
 
             // Get Epic configuration if exist.
-            string access_token = string.Empty;
-            try
-            {
-                JObject EpicConfig = JObject.Parse(File.ReadAllText(PluginUserDataPath + "\\..\\00000002-DBD1-46C6-B5D0-B1BA559D10E4\\tokens.json"));
-                access_token = (string)EpicConfig["access_token"];
-            }
-            catch
-            {
-            }
-
+            string access_token = GetToken(PluginUserDataPath);
             if (access_token.IsNullOrEmpty())
             {
-                logger.Error($"ISThereAnyDeal - No Epic configuration.");
                 return Result;
             }
 
+
             // Get wishlist
-            string ResultWeb = QuerySearchWishList(access_token).GetAwaiter().GetResult();
+            string query = @"query wishlistQuery { Wishlist { wishlistItems { elements { offerId namespace offer { title keyImages { type url width height } } } } } }";
+            dynamic variables = new { };
+            string ResultWeb = QuerySearchWishList(query, variables, access_token).GetAwaiter().GetResult();
             if (!ResultWeb.IsNullOrEmpty())
             {
                 JObject resultObj = new JObject();
@@ -90,7 +104,10 @@ namespace IsThereAnyDeal.Services
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                         foreach (JObject gameWishlist in resultObj["data"]["Wishlist"]["wishlistItems"]["elements"])
                         {
-                            string StoreId = string.Empty;
+#if DEBUG
+                            logger.Debug($"IsThereAnyDeal - gameWishlist: {JsonConvert.SerializeObject(gameWishlist)}");
+#endif
+                            string StoreId = (string)gameWishlist["offerId"] + "|" + (string)gameWishlist["namespace"];
                             string Name = string.Empty;
                             DateTime ReleaseDate = default(DateTime);
                             string Capsule = string.Empty;
@@ -139,6 +156,42 @@ namespace IsThereAnyDeal.Services
             Result = SetCurrentPrice(Result, settings, PlayniteApi);
             SaveWishlist("Epic", PluginUserDataPath, Result);
             return Result;
+        }
+
+        public bool RemoveWishlist(string StoreId, string PluginUserDataPath)
+        {
+            try
+            {
+                // Get Epic configuration if exist.
+                string access_token = GetToken(PluginUserDataPath);
+                if (access_token.IsNullOrEmpty())
+                {
+                    return false;
+                }
+
+                string EpicOfferId = StoreId.Split('|')[0];
+                string EpicNamespace = StoreId.Split('|')[1];
+
+
+                string query = @"mutation removeFromWishlistMutation($namespace: String!, $offerId: String!, $operation: RemoveOperation!) { Wishlist { removeFromWishlist(namespace: $namespace, offerId: $offerId, operation: $operation) { success } } }";
+                dynamic variables = new
+                {
+                    @namespace = EpicNamespace,
+                    offerId = EpicOfferId,
+                    operation = "REMOVE"
+                };
+                string ResultWeb = QuerySearchWishList(query, variables, access_token).GetAwaiter().GetResult();
+#if DEBUG
+                logger.Debug($"IsThereAnyDeal - Epic.RemoveWishlist() - {ResultWeb.Trim()}");
+#endif
+                return ResultWeb.IndexOf("\"success\":true") > -1;
+            }
+            catch(Exception ex)
+            {
+                Common.LogError(ex, "IsThereAnyDeal", $"Error on RemoveWishlist()");
+            }
+
+            return false;
         }
     }
 }

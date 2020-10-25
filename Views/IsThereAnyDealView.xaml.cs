@@ -255,10 +255,16 @@ namespace IsThereAnyDeal.Views
                                     }
 #endif
                                     break;
-                                case "epic":
+                                case "epic game store":
 #if DEBUG
                                     logger.Debug($"IsThereAnyDeal - Is Epic");
 #endif
+                                    EpicWishlist epicWishlist = new EpicWishlist();
+                                    IsDeleted = epicWishlist.RemoveWishlist(StorePriceSelected.StoreId, _plugin.GetPluginUserDataPath());
+                                    if (IsDeleted)
+                                    {
+                                        epicWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false, true);
+                                    }
                                     break;
                                 case "humble store":
 #if DEBUG
