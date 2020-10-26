@@ -224,7 +224,7 @@ namespace IsThereAnyDeal.Views
             StorePriceSelected = (ItadGameInfo)elParent.Items[index];
             lbWishlist.ItemsSource = null;
 #if DEBUG
-            logger.Debug($"IsThereAnyDeal - BtRemoveWishList_Click({StorePriceSelected.ShopName} - {StorePriceSelected.Name} - {StorePriceSelected.Plain} - {StorePriceSelected.StoreId})");
+            logger.Debug($"IsThereAnyDeal - BtRemoveWishList_Click() - StorePriceSelected: {JsonConvert.SerializeObject(StorePriceSelected)}");
 #endif
             var RessultDialog = _PlayniteApi.Dialogs.ShowMessage(
                 string.Format(resources.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName), 
@@ -271,7 +271,7 @@ namespace IsThereAnyDeal.Views
                                     logger.Debug($"IsThereAnyDeal - Is Humble Store");
 #endif
                                     HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
-                                    IsDeleted = humbleBundleWishlist.RemoveWishlist(StorePriceSelected.StoreId);
+                                    IsDeleted = humbleBundleWishlist.RemoveWishlist(_PlayniteApi, StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
                                         humbleBundleWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _settings.HumbleKey, _plugin.GetPluginUserDataPath(), _settings, false, true);

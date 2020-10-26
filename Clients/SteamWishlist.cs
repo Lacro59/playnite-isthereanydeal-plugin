@@ -112,7 +112,7 @@ namespace IsThereAnyDeal.Services
 
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Steam-Error",
-                        resources.GetString("LOCItadNotificationError"),
+                        string.Format(resources.GetString("LOCItadNotificationError"), "Steam"),
                         NotificationType.Error
                     ));
 

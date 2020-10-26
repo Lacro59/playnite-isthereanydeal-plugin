@@ -1,4 +1,5 @@
 ﻿using IsThereAnyDeal.Models;
+using IsThereAnyDeal.Resources.PlayniteResources.GogLibrary;
 using Newtonsoft.Json.Linq;
 using Playnite.SDK;
 using PluginCommon;
@@ -115,7 +116,7 @@ namespace IsThereAnyDeal.Services
 
                             PlayniteApi.Notifications.Add(new NotificationMessage(
                                 $"IsThereAnyDeal-Gog-Error",
-                                resources.GetString("LOCItadNotificationError"),
+                                string.Format(resources.GetString("LOCItadNotificationError"), "GOG"),
                                 NotificationType.Error
                             ));
 

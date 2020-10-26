@@ -59,10 +59,11 @@
   <ItemGroup>
     <Compile Include="Clients\EpicWishlist.cs" />
     <Compile Include="Clients\GenericWishlist.cs" />
-    <Compile Include="Clients\GogAccountClientExtand.cs" />
+    <Compile Include="Resources\PlayniteResources\GogLibrary\GogAccountClientExtand.cs" />
     <Compile Include="Clients\GogWishlist.cs" />
     <Compile Include="Clients\HumbleBundleWishlist.cs" />
     <Compile Include="Models\ItadResult.cs" />
+    <Compile Include="Resources\PlayniteResources\HumbleLibrary\HumbleAccountClientExtand.cs" />
     <Compile Include="Services\IsThereAnyDealApi.cs" />
     <Compile Include="Clients\SteamWishlist.cs" />
     <Compile Include="IsThereAnyDeal.cs" />
@@ -128,8 +129,6 @@
       <Name>PluginCommon</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

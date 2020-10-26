@@ -51,7 +51,8 @@ Giveaway notification for {0} ({1} game(s))</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">IsThereAnyDeal
 Price notification for {0} - {1}{2} ({3}%)</sys:String>
 
-    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">An error occurred while retrieving the wishlist.
+    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">IsThereAnyDeal
+An error occurred while retrieving the wishlist from {0}.
 Try to identify yourself to your account.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">IsThereAnyDeal
 Humble Bundle is enable then disabled.</sys:String>

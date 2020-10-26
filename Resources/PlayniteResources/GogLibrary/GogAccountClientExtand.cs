@@ -1,6 +1,6 @@
 ﻿using Playnite.SDK;
 
-namespace IsThereAnyDeal.Services
+namespace IsThereAnyDeal.Resources.PlayniteResources.GogLibrary
 {
     public class GogAccountClientExtand
     {

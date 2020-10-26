@@ -97,7 +97,9 @@ namespace IsThereAnyDeal.Services
                 try
                 {
                     resultObj = JObject.Parse(ResultWeb);
-
+#if DEBUG
+                    logger.Debug($"IsThereAnyDeal - resultObj: {JsonConvert.SerializeObject(resultObj)}");
+#endif
                     if (resultObj != null && resultObj["data"] != null && resultObj["data"]["Wishlist"] != null 
                         && resultObj["data"]["Wishlist"]["wishlistItems"] != null && resultObj["data"]["Wishlist"]["wishlistItems"]["elements"] != null) {
 
@@ -141,11 +143,12 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
+#if DEBUG
                     Common.LogError(ex, "IsThereAnyDeal", "Error io parse Epic wishlist");
-
+#endif
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Epic-Error",
-                        resources.GetString("LOCItadNotificationError"),
+                        string.Format(resources.GetString("LOCItadNotificationError"), "Epic Game Store"),
                         NotificationType.Error
                     ));
 

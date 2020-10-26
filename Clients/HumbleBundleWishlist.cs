@@ -10,6 +10,7 @@ using PluginCommon.PlayniteResources.API;
 using PluginCommon.PlayniteResources.Common;
 using PluginCommon.PlayniteResources.Converters;
 using Newtonsoft.Json.Linq;
+using IsThereAnyDeal.Resources.PlayniteResources.HumbleLibrary;
 
 namespace IsThereAnyDeal.Services
 {
@@ -92,7 +93,7 @@ namespace IsThereAnyDeal.Services
 
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Humble-Error",
-                        resources.GetString("LOCItadNotificationError"),
+                        string.Format(resources.GetString("LOCItadNotificationError"), "Humble Bundle"),
                         NotificationType.Error
                     ));
 
@@ -105,10 +106,18 @@ namespace IsThereAnyDeal.Services
             return Result;
         }
 
-        public bool RemoveWishlist(string StoreId)
+        public bool RemoveWishlist(IPlayniteAPI PlayniteApi, string StoreId)
         {
-            string Url = string.Format(@"https://www.humblebundle.com/wishlist/remove/{0}", StoreId);
-            // TODO With post method
+            var view = PlayniteApi.WebViews.CreateOffscreenView();
+            HumbleAccountClientExtand humbleAccountClient = new HumbleAccountClientExtand(view);
+            //if (humbleAccountClient.GetIsUserLoggedIn())
+            //{
+            //    return humbleAccountClient.RemoveWishList(StoreId);
+            //}
+            //else
+            //{
+            //    logger.Warn($"IsThereAnyDeal - Humble account is not logged");
+            //}
             return false;
         }
     }
