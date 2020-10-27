@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Clients\EpicWishlist.cs" />
     <Compile Include="Clients\GenericWishlist.cs" />
+    <Compile Include="Clients\XboxWishlist.cs" />
     <Compile Include="Resources\PlayniteResources\GogLibrary\GogAccountClientExtand.cs" />
     <Compile Include="Clients\GogWishlist.cs" />
     <Compile Include="Clients\HumbleBundleWishlist.cs" />

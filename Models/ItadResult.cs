@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 
 namespace IsThereAnyDeal.Models
 {
@@ -7,6 +9,7 @@ namespace IsThereAnyDeal.Models
         [JsonProperty(".meta")]
         public ItadPlainMeta Meta { get; set; }
         [JsonProperty("data")]
+        [JsonConverter(typeof(ItadPlainDataConverter))]
         public ItadPlainData Data { get; set; }
     }
 
@@ -22,5 +25,29 @@ namespace IsThereAnyDeal.Models
     {
         [JsonProperty("plain")]
         public string Plain { get; set; }
+    }
+
+
+    public class ItadPlainDataConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return (objectType == typeof(ItadPlainData));
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JToken token = JToken.Load(reader);
+            if (token.Type == JTokenType.Object)
+            {
+                return token.ToObject<ItadPlainData>();
+            }
+            return null;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            serializer.Serialize(writer, value);
+        }
     }
 }

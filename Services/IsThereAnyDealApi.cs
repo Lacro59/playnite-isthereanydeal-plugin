@@ -1,5 +1,6 @@
 ﻿using AngleSharp.Dom.Html;
 using AngleSharp.Parser.Html;
+using IsThereAnyDeal.Clients;
 using IsThereAnyDeal.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -29,6 +30,7 @@ namespace IsThereAnyDeal.Services
             Guid GogId = new Guid();
             Guid EpicId = new Guid();
             Guid HumbleId = new Guid();
+            Guid XboxId = new Guid();
 
             foreach (var Source in PlayniteApi.Database.Sources)
             {
@@ -50,6 +52,11 @@ namespace IsThereAnyDeal.Services
                 if (Source.Name.ToLower() == "humble")
                 {
                     HumbleId = Source.Id;
+                }
+
+                if (Source.Name.ToLower() == "xbox")
+                {
+                    XboxId = Source.Id;
                 }
             }
 
@@ -134,8 +141,29 @@ namespace IsThereAnyDeal.Services
                 }
             }
 
+            List<Wishlist> ListWishlistXbox = new List<Wishlist>();
+            if (settings.EnableXbox)
+            {
+                if (!PlayniteTools.IsDisabledPlaynitePlugins("XboxLibrary", PlayniteApi.Paths.ConfigurationPath))
+                {
+                    XboxWishlist xboxWishlist = new XboxWishlist();
+                    ListWishlistXbox = xboxWishlist.GetWishlist(PlayniteApi, XboxId, PluginUserDataPath, settings, CacheOnly, Force);
+                }
+                else
+                {
+                    logger.Warn("IsThereAnyDeal - Xbox is enable then disabled");
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-Xbox-disabled",
+                        resources.GetString("LOCItadNotificationErrorXbox"),
+                        NotificationType.Error,
+                        () => plugin.OpenSettingsView()
+                    ));
+                }
+            }
+
+
             List<Wishlist> ListWishlist = ListWishlistSteam.Concat(ListWishlistGog).Concat(ListWishlistHumble)
-                .Concat(ListWishlistEpic).ToList();
+                .Concat(ListWishlistEpic).Concat(ListWishlistXbox).ToList();
 
 
             // Group same game
@@ -249,6 +277,9 @@ namespace IsThereAnyDeal.Services
             try
             {
                 string url = baseAddress + $"v02/game/plain/?key={key}&title={WebUtility.UrlEncode(WebUtility.HtmlDecode(title))}";
+#if DEBUG
+                logger.Debug($"IsThereAnyDeal - GetPlain({title}) - url: {url}");
+#endif
                 string responseData = string.Empty;
                 try
                 {

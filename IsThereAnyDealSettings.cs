@@ -18,6 +18,7 @@ namespace IsThereAnyDeal
         public bool EnableGog { get; set; } = false;
         public bool EnableHumble { get; set; } = false;
         public bool EnableEpic { get; set; } = false;
+        public bool EnableXbox { get; set; } = true;
 
         public bool EnableNotificationGiveaways { get; set; } = false;
         public bool EnableNotification { get; set; } = false;
@@ -27,6 +28,7 @@ namespace IsThereAnyDeal
         public int LimitNotificationPrice { get; set; } = 5;
 
         public string HumbleKey { get; set; } = string.Empty;
+        public string XboxLink { get; set; } = string.Empty;
 
         public bool EnableCheckVersion { get; set; } = true;
         public bool MenuInExtensions { get; set; } = true;
@@ -62,6 +64,7 @@ namespace IsThereAnyDeal
                 EnableGog = savedSettings.EnableGog;
                 EnableHumble = savedSettings.EnableHumble;
                 EnableEpic = savedSettings.EnableEpic;
+                EnableXbox = savedSettings.EnableXbox;
 
                 EnableNotificationGiveaways = savedSettings.EnableNotificationGiveaways;
                 EnableNotification = savedSettings.EnableNotification;
@@ -71,6 +74,7 @@ namespace IsThereAnyDeal
                 LimitNotificationPrice = savedSettings.LimitNotificationPrice;
 
                 HumbleKey = savedSettings.HumbleKey;
+                XboxLink = savedSettings.XboxLink;
 
                 EnableCheckVersion = savedSettings.EnableCheckVersion;
                 MenuInExtensions = savedSettings.MenuInExtensions;

@@ -111,6 +111,10 @@ namespace IsThereAnyDeal.Views
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "Epic", StoreNameDisplay = (TransformIcon.Get("Epic") + " Epic").Trim(), IsCheck = false });
             }
+            if (_settings.EnableXbox)
+            {
+                FilterStoreItems.Add(new ListStore { StoreName = "Microsoft Store", StoreNameDisplay = (TransformIcon.Get("Xbox") + " Microsoft Store").Trim(), IsCheck = false });
+            }
             FilterStoreItems.Sort((x, y) => string.Compare(x.StoreName, y.StoreName));
             FilterStore.ItemsSource = FilterStoreItems;
         }
@@ -287,6 +291,11 @@ namespace IsThereAnyDeal.Views
                                     {
                                         gogWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false, true);
                                     }
+                                    break;
+                                case "microsoft store":
+#if DEBUG
+                                    logger.Debug($"IsThereAnyDeal - Is xbox");
+#endif
                                     break;
                             }
                         }
