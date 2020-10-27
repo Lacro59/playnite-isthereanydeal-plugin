@@ -190,10 +190,10 @@
                                                             <Style TargetType="TextBlock">
                                                                 <Setter Property="Visibility" Value="Visible"/>
                                                                 <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
+                                                                    <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="{x:Null}">
+                                                                    <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding InLibrary}" Value="True">
@@ -211,10 +211,10 @@
                                                             <Style TargetType="StackPanel">
                                                                 <Setter Property="Visibility" Value="Visible"/>
                                                                 <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
+                                                                    <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="{x:Null}">
+                                                                    <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding InLibrary}" Value="True">
@@ -235,10 +235,10 @@
                                                             <Style TargetType="StackPanel">
                                                                 <Setter Property="Visibility" Value="Visible"/>
                                                                 <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
+                                                                    <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="{x:Null}">
+                                                                    <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding InLibrary}" Value="True">
@@ -259,10 +259,10 @@
                                                             <Style TargetType="TextBlock">
                                                                 <Setter Property="Visibility" Value="Visible"/>
                                                                 <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
+                                                                    <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="{x:Null}">
+                                                                    <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding InLibrary}" Value="True">
@@ -290,10 +290,10 @@
                                                                 <Style TargetType="TextBlock">
                                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                                     <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
+                                                                        <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
                                                                             <Setter Property="Visibility" Value="Visible"/>
                                                                         </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="{x:Null}">
+                                                                        <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
                                                                             <Setter Property="Visibility" Value="Visible"/>
                                                                         </DataTrigger>
                                                                         <DataTrigger Binding="{Binding InLibrary}" Value="True">

@@ -271,9 +271,9 @@ namespace IsThereAnyDeal.Services
             return RegionStores;
         }
 
-        public PlainData GetPlain(string title)
+        public PlainData GetPlain(string title, bool isSecond = false)
         {
-            PlainData PlainData = new PlainData();
+            PlainData plainData = new PlainData();
             try
             {
                 string url = baseAddress + $"v02/game/plain/?key={key}&title={WebUtility.UrlEncode(WebUtility.HtmlDecode(title))}";
@@ -293,8 +293,8 @@ namespace IsThereAnyDeal.Services
                 ItadPlain itadPlain = JsonConvert.DeserializeObject<ItadPlain>(responseData);
                 if (itadPlain.Meta.Match != "false")
                 {
-                    PlainData.Plain = itadPlain.Data.Plain;
-                    PlainData.IsActive = itadPlain.Meta.Active;
+                    plainData.Plain = itadPlain.Data.Plain;
+                    plainData.IsActive = itadPlain.Meta.Active;
                 }
                 else
                 {
@@ -306,7 +306,12 @@ namespace IsThereAnyDeal.Services
                 Common.LogError(ex, "IsThereAnyDeal", $"Error in GetPlain({WebUtility.HtmlDecode(title)})");
             }
 
-            return PlainData;
+            if (!isSecond && plainData.Plain.IsNullOrEmpty())
+            {
+                plainData = GetPlain(title.Split('-')[0].Trim(), true);
+            }
+
+            return plainData;
         }
 
 
