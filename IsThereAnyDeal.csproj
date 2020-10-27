@@ -59,12 +59,22 @@
   <ItemGroup>
     <Compile Include="Clients\EpicWishlist.cs" />
     <Compile Include="Clients\GenericWishlist.cs" />
+    <Compile Include="Clients\OriginWishlist.cs" />
     <Compile Include="Clients\XboxWishlist.cs" />
     <Compile Include="Resources\PlayniteResources\GogLibrary\GogAccountClientExtand.cs" />
     <Compile Include="Clients\GogWishlist.cs" />
     <Compile Include="Clients\HumbleBundleWishlist.cs" />
     <Compile Include="Models\ItadResult.cs" />
     <Compile Include="Resources\PlayniteResources\HumbleLibrary\HumbleAccountClientExtand.cs" />
+    <Compile Include="Resources\PlayniteResources\OriginLibrary\Models\AccountEntitlementsResponse.cs" />
+    <Compile Include="Resources\PlayniteResources\OriginLibrary\Models\AccountInfoResponse.cs" />
+    <Compile Include="Resources\PlayniteResources\OriginLibrary\Models\AuthTokenResponse.cs" />
+    <Compile Include="Resources\PlayniteResources\OriginLibrary\Models\GameLocalDataResponse.cs" />
+    <Compile Include="Resources\PlayniteResources\OriginLibrary\Models\GameStoreDataResponse.cs" />
+    <Compile Include="Resources\PlayniteResources\OriginLibrary\Models\StorePageMetadata.cs" />
+    <Compile Include="Resources\PlayniteResources\OriginLibrary\Models\UsageReponse.cs" />
+    <Compile Include="Resources\PlayniteResources\OriginLibrary\Services\OriginAccountClient.cs" />
+    <Compile Include="Resources\PlayniteResources\OriginLibrary\Services\OriginApiClient.cs" />
     <Compile Include="Services\IsThereAnyDealApi.cs" />
     <Compile Include="Clients\SteamWishlist.cs" />
     <Compile Include="IsThereAnyDeal.cs" />

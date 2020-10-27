@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
+using IsThereAnyDeal.Clients;
 
 namespace IsThereAnyDeal
 {
@@ -54,7 +55,6 @@ namespace IsThereAnyDeal
         {
             List<GameMenuItem> gameMenuItems = new List<GameMenuItem>
             {
-
             };
 
 #if DEBUG

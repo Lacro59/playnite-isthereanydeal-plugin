@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Data;
 using System.Globalization;
+using IsThereAnyDeal.Clients;
 
 namespace IsThereAnyDeal.Views
 {
@@ -114,6 +115,10 @@ namespace IsThereAnyDeal.Views
             if (_settings.EnableXbox)
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "Microsoft Store", StoreNameDisplay = (TransformIcon.Get("Xbox") + " Microsoft Store").Trim(), IsCheck = false });
+            }
+            if (_settings.EnableOrigin)
+            {
+                FilterStoreItems.Add(new ListStore { StoreName = "Origin", StoreNameDisplay = (TransformIcon.Get("Origin") + " Origin").Trim(), IsCheck = false });
             }
             FilterStoreItems.Sort((x, y) => string.Compare(x.StoreName, y.StoreName));
             FilterStore.ItemsSource = FilterStoreItems;
@@ -296,6 +301,17 @@ namespace IsThereAnyDeal.Views
 #if DEBUG
                                     logger.Debug($"IsThereAnyDeal - Is xbox");
 #endif
+                                    break;
+                                case "origin":
+#if DEBUG
+                                    logger.Debug($"IsThereAnyDeal - Is origin");
+#endif
+                                    OriginWishlist originWishlist = new OriginWishlist();
+                                    IsDeleted = originWishlist.RemoveWishlist(StorePriceSelected.StoreId, _PlayniteApi);
+                                    if (IsDeleted)
+                                    {
+                                        originWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false, true);
+                                    }
                                     break;
                             }
                         }

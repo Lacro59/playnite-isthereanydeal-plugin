@@ -19,6 +19,7 @@ namespace IsThereAnyDeal
         public bool EnableHumble { get; set; } = false;
         public bool EnableEpic { get; set; } = false;
         public bool EnableXbox { get; set; } = true;
+        public bool EnableOrigin { get; set; } = true;
 
         public bool EnableNotificationGiveaways { get; set; } = false;
         public bool EnableNotification { get; set; } = false;
@@ -65,6 +66,7 @@ namespace IsThereAnyDeal
                 EnableHumble = savedSettings.EnableHumble;
                 EnableEpic = savedSettings.EnableEpic;
                 EnableXbox = savedSettings.EnableXbox;
+                EnableOrigin = savedSettings.EnableOrigin;
 
                 EnableNotificationGiveaways = savedSettings.EnableNotificationGiveaways;
                 EnableNotification = savedSettings.EnableNotification;

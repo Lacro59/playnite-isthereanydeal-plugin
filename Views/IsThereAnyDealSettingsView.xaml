@@ -31,6 +31,7 @@
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
 
                 <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding EnableSteam}" VerticalAlignment="Center">
@@ -68,6 +69,10 @@
                                  MaxWidth="{Binding ElementName=scv, Path=ActualWidth}" VerticalAlignment="Center" />
                     </ScrollViewer>
                 </Grid>
+
+                <CheckBox Name="chk_Origin" Grid.Column="0" Grid.Row="6" IsChecked="{Binding EnableOrigin}" VerticalAlignment="Center">
+                    <Label Content="{DynamicResource LOCItadEnableOrigin}" />
+                </CheckBox>
             </Grid>
         </StackPanel>
 

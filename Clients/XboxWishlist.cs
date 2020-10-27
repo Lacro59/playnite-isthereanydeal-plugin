@@ -90,7 +90,7 @@ namespace IsThereAnyDeal.Clients
                 catch (Exception ex)
                 {
 #if DEBUG
-                    Common.LogError(ex, "IsThereAnyDeal", "Error io parse Xbox wishlist");
+                    Common.LogError(ex, "IsThereAnyDeal", "Error in parse Xbox wishlist");
 #endif
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Xbox-Error",

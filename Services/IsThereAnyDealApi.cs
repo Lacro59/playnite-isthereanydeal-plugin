@@ -31,6 +31,7 @@ namespace IsThereAnyDeal.Services
             Guid EpicId = new Guid();
             Guid HumbleId = new Guid();
             Guid XboxId = new Guid();
+            Guid OriginId = new Guid();
 
             foreach (var Source in PlayniteApi.Database.Sources)
             {
@@ -57,6 +58,11 @@ namespace IsThereAnyDeal.Services
                 if (Source.Name.ToLower() == "xbox")
                 {
                     XboxId = Source.Id;
+                }
+
+                if (Source.Name.ToLower() == "origin")
+                {
+                    OriginId = Source.Id;
                 }
             }
 
@@ -161,9 +167,29 @@ namespace IsThereAnyDeal.Services
                 }
             }
 
+            List<Wishlist> ListWishlisOrigin = new List<Wishlist>();
+            if (settings.EnableOrigin)
+            {
+                if (!PlayniteTools.IsDisabledPlaynitePlugins("OriginLibrary", PlayniteApi.Paths.ConfigurationPath))
+                {
+                    OriginWishlist originWishlist = new OriginWishlist();
+                    ListWishlistXbox = originWishlist.GetWishlist(PlayniteApi, OriginId, PluginUserDataPath, settings, CacheOnly, Force);
+                }
+                else
+                {
+                    logger.Warn("IsThereAnyDeal - Origin is enable then disabled");
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-Origin-disabled",
+                        resources.GetString("LOCItadNotificationErrorOrigin"),
+                        NotificationType.Error,
+                        () => plugin.OpenSettingsView()
+                    ));
+                }
+            }
+
 
             List<Wishlist> ListWishlist = ListWishlistSteam.Concat(ListWishlistGog).Concat(ListWishlistHumble)
-                .Concat(ListWishlistEpic).Concat(ListWishlistXbox).ToList();
+                .Concat(ListWishlistEpic).Concat(ListWishlistXbox).Concat(ListWishlisOrigin).ToList();
 
 
             // Group same game

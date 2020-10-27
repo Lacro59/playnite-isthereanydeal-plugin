@@ -112,7 +112,7 @@ namespace IsThereAnyDeal.Services
                         }
                         catch (Exception ex)
                         {
-                            Common.LogError(ex, "IsThereAnyDeal", $"Error io parse GOG wishlist");
+                            Common.LogError(ex, "IsThereAnyDeal", $"Error in parse GOG wishlist");
 
                             PlayniteApi.Notifications.Add(new NotificationMessage(
                                 $"IsThereAnyDeal-Gog-Error",

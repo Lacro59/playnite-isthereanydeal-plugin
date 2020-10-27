@@ -108,7 +108,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error io parse Steam wishlist");
+                    Common.LogError(ex, "IsThereAnyDeal", "Error in parse Steam wishlist");
 
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Steam-Error",
