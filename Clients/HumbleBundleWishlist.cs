@@ -10,7 +10,6 @@ using PluginCommon.PlayniteResources.API;
 using PluginCommon.PlayniteResources.Common;
 using PluginCommon.PlayniteResources.Converters;
 using Newtonsoft.Json.Linq;
-using IsThereAnyDeal.Resources.PlayniteResources.HumbleLibrary;
 
 namespace IsThereAnyDeal.Services
 {

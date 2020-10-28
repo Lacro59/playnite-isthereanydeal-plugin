@@ -1,15 +1,12 @@
 ﻿using Playnite.SDK;
+using PluginCommon.PlayniteResources.PluginLibrary.Services.GogLibrary;
 
-namespace IsThereAnyDeal.Resources.PlayniteResources.GogLibrary
+namespace IsThereAnyDeal.Services
 {
-    public class GogAccountClientExtand
+    public class GogAccountClientExtand : GogAccountClient
     {
-        private readonly ILogger logger = LogManager.GetLogger();
-        private IWebView webView;
-
-        public GogAccountClientExtand(IWebView webView)
+        public GogAccountClientExtand(IWebView webView) : base(webView)
         {
-            this.webView = webView;
         }
 
         public string GetWishList()
@@ -24,12 +21,6 @@ namespace IsThereAnyDeal.Resources.PlayniteResources.GogLibrary
             string url = string.Format(@"https://embed.gog.com/user/wishlist/remove/{0}", StoreId);
             webView.NavigateAndWait(url);
             return webView.GetPageSource().ToLower().IndexOf("unable to remove product from wishlist") == -1;
-        }
-
-        public bool GetIsUserLoggedIn()
-        {
-            webView.NavigateAndWait(@"https://www.gog.com/account/getFilteredProducts?hiddenFlag=0&mediaType=1&page=1&sortBy=title");
-            return webView.GetCurrentAddress().Contains("getFilteredProducts");
         }
     }
 }

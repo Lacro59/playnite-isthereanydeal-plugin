@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using IsThereAnyDeal.Resources.PlayniteResources.OriginLibrary.Services;
-using IsThereAnyDeal.Resources.PlayniteResources.OriginLibrary.Models;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Collections.Specialized;
+using PlayniteResources.PluginLibrary.OriginLibrary.Services;
+using PlayniteResources.PluginLibrary.OriginLibrary.Models;
 
 namespace IsThereAnyDeal.Clients
 {
