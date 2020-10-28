@@ -51,6 +51,9 @@
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal datas</sys:String>
+    <sys:String x:Key="LOCItadCheckNotifications">Check notifications</sys:String>
+    <sys:String x:Key="LOCItadUpdateDatas">Update IsThereAnyDeal datas</sys:String>
+    <sys:String x:Key="LOCITADDataDownloading">Downloading IsThereAnyDeal datas</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">IsThereAnyDeal
 Giveaway notification for {0} ({1} game(s))</sys:String>

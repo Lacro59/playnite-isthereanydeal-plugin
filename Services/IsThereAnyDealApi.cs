@@ -2,6 +2,7 @@
 using AngleSharp.Parser.Html;
 using IsThereAnyDeal.Clients;
 using IsThereAnyDeal.Models;
+using IsThereAnyDeal.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Playnite.SDK;
@@ -9,9 +10,12 @@ using PluginCommon;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace IsThereAnyDeal.Services
 {
@@ -24,7 +28,7 @@ namespace IsThereAnyDeal.Services
         private readonly string key = "fa49308286edcaf76fea58926fd2ea2d216a17ff";
 
 
-        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false, bool Force = false)
+        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false)
         {
             Guid SteamId = new Guid();
             Guid GogId = new Guid();
@@ -73,7 +77,7 @@ namespace IsThereAnyDeal.Services
                 if (!PlayniteTools.IsDisabledPlaynitePlugins("SteamLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     SteamWishlist steamWishlist = new SteamWishlist();
-                    ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings, CacheOnly, Force);
+                    ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings, CacheOnly);
                 }
                 else
                 {
@@ -93,7 +97,7 @@ namespace IsThereAnyDeal.Services
                 if (!PlayniteTools.IsDisabledPlaynitePlugins("GogLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     GogWishlist gogWishlist = new GogWishlist(PlayniteApi);
-                    ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly, Force);
+                    ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
                 }
                 else
                 {
@@ -113,7 +117,7 @@ namespace IsThereAnyDeal.Services
                 if (!PlayniteTools.IsDisabledPlaynitePlugins("EpicLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     EpicWishlist epicWishlist = new EpicWishlist();
-                    ListWishlistEpic = epicWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly, Force);
+                    ListWishlistEpic = epicWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
                 }
                 else
                 {
@@ -133,7 +137,7 @@ namespace IsThereAnyDeal.Services
                 if (!PlayniteTools.IsDisabledPlaynitePlugins("HumbleLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
-                    ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly, Force);
+                    ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly);
                 }
                 else
                 {
@@ -153,7 +157,7 @@ namespace IsThereAnyDeal.Services
                 if (!PlayniteTools.IsDisabledPlaynitePlugins("XboxLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     XboxWishlist xboxWishlist = new XboxWishlist();
-                    ListWishlistXbox = xboxWishlist.GetWishlist(PlayniteApi, XboxId, PluginUserDataPath, settings, CacheOnly, Force);
+                    ListWishlistXbox = xboxWishlist.GetWishlist(PlayniteApi, XboxId, PluginUserDataPath, settings, CacheOnly);
                 }
                 else
                 {
@@ -173,7 +177,7 @@ namespace IsThereAnyDeal.Services
                 if (!PlayniteTools.IsDisabledPlaynitePlugins("OriginLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     OriginWishlist originWishlist = new OriginWishlist();
-                    ListWishlistXbox = originWishlist.GetWishlist(PlayniteApi, OriginId, PluginUserDataPath, settings, CacheOnly, Force);
+                    ListWishlistXbox = originWishlist.GetWishlist(PlayniteApi, OriginId, PluginUserDataPath, settings, CacheOnly);
                 }
                 else
                 {
@@ -667,6 +671,111 @@ namespace IsThereAnyDeal.Services
             }
 
             return itadGiveaways;
+        }
+
+
+        public static void CheckNotifications(IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, IsThereAnyDeal plugin)
+        {
+            Task taskNotifications = Task.Run(() =>
+            {
+                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+
+                if (settings.EnableNotification)
+                {
+                    if (settings.EnableNotificationPercentage)
+                    {
+                        List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, PlayniteApi, settings, plugin.GetPluginUserDataPath(), true);
+                        foreach (Wishlist wishlist in ListWishlist)
+                        {
+                            if (wishlist.GetNotification(settings.LimitNotification))
+                            {
+                                PlayniteApi.Notifications.Add(new NotificationMessage(
+                                    $"IsThereAnyDeal-{wishlist.Plain}",
+                                    string.Format(resources.GetString("LOCItadNotification"),
+                                        wishlist.Name, wishlist.ItadBestPrice.PriceNew, wishlist.ItadBestPrice.CurrencySign, wishlist.ItadBestPrice.PriceCut),
+                                    NotificationType.Info,
+                                    () =>
+                                    {
+                                        var ViewExtension = new IsThereAnyDealView(plugin, PlayniteApi, plugin.GetPluginUserDataPath(), settings, wishlist.Plain);
+                                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
+                                        windowExtension.ShowDialog();
+                                    }
+                                ));
+                            }
+                        }
+                    }
+
+                    if (settings.EnableNotificationPrice)
+                    {
+                        List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, PlayniteApi, settings, plugin.GetPluginUserDataPath(), true);
+                        foreach (Wishlist wishlist in ListWishlist)
+                        {
+                            if (wishlist.GetNotificationPrice(settings.LimitNotificationPrice))
+                            {
+                                PlayniteApi.Notifications.Add(new NotificationMessage(
+                                    $"IsThereAnyDeal-{wishlist.Plain}",
+                                    string.Format(resources.GetString("LOCItadNotification"),
+                                        wishlist.Name, wishlist.ItadBestPrice.PriceNew, wishlist.ItadBestPrice.CurrencySign, wishlist.ItadBestPrice.PriceCut),
+                                    NotificationType.Info,
+                                    () =>
+                                    {
+                                        var ViewExtension = new IsThereAnyDealView(plugin, PlayniteApi, plugin.GetPluginUserDataPath(), settings, wishlist.Plain);
+                                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
+                                        windowExtension.ShowDialog();
+                                    }
+                                ));
+                            }
+                        }
+                    }
+                }
+
+                if (settings.EnableNotificationGiveaways)
+                {
+                    List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PlayniteApi, plugin.GetPluginUserDataPath());
+                    foreach (ItadGiveaway itadGiveaway in itadGiveaways)
+                    {
+                        if (!itadGiveaway.HasSeen)
+                        {
+                            PlayniteApi.Notifications.Add(new NotificationMessage(
+                                $"IsThereAnyDeal-{itadGiveaway.Title}",
+                                string.Format(resources.GetString("LOCItadNotificationGiveaway"), itadGiveaway.TitleAll, itadGiveaway.Count),
+                                NotificationType.Info,
+                                () => Process.Start(itadGiveaway.Link)
+                            ));
+                        }
+                    }
+                }
+            });
+        }
+
+        public static void UpdateDatas(IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, IsThereAnyDeal plugin)
+        {
+            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+
+            GlobalProgressOptions globalProgressOptions = new GlobalProgressOptions(
+                resources.GetString("LOCITADDataDownloading"),
+                false
+            );
+            globalProgressOptions.IsIndeterminate = true;
+
+            PlayniteApi.Dialogs.ActivateGlobalProgress((activateGlobalProgress) =>
+            {
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+
+                try
+                {
+                    isThereAnyDealApi.LoadWishlist(plugin, PlayniteApi, settings, plugin.GetPluginUserDataPath());
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, "IsThereAnyDeal", "Error on UpdateDatas()");
+                }
+
+                stopWatch.Stop();
+                TimeSpan ts = stopWatch.Elapsed;
+                logger.Warn($"IsThereAnyDeal - Task UpdateDatas() - {String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
+            }, globalProgressOptions);
         }
     }
 

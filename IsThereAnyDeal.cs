@@ -90,6 +90,24 @@ namespace IsThereAnyDeal
                         Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
                         windowExtension.ShowDialog();
                     }
+                },
+                new MainMenuItem
+                {
+                    MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
+                    Description = resources.GetString("LOCItadCheckNotifications"),
+                    Action = (mainMenuItem) =>
+                    {
+                        IsThereAnyDealApi.CheckNotifications(PlayniteApi, settings, this);
+                    }
+                },
+                new MainMenuItem
+                {
+                    MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
+                    Description = resources.GetString("LOCItadUpdateDatas"),
+                    Action = (mainMenuItem) =>
+                    {
+                        IsThereAnyDealApi.UpdateDatas(PlayniteApi, settings, this);
+                    }
                 }
             };
 
@@ -134,76 +152,7 @@ namespace IsThereAnyDeal
         {
             // Add code to be executed when Playnite is initialized.
 
-            Task taskNotifications = Task.Run(() => 
-            {
-                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-
-                if (settings.EnableNotification)
-                {
-                    if (settings.EnableNotificationPercentage)
-                    {
-                        List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(this, PlayniteApi, settings, this.GetPluginUserDataPath(), true);
-                        foreach (Wishlist wishlist in ListWishlist)
-                        {
-                            if (wishlist.GetNotification(settings.LimitNotification))
-                            {
-                                PlayniteApi.Notifications.Add(new NotificationMessage(
-                                    $"IsThereAnyDeal-{wishlist.Plain}",
-                                    string.Format(resources.GetString("LOCItadNotification"),
-                                        wishlist.Name, wishlist.ItadBestPrice.PriceNew, wishlist.ItadBestPrice.CurrencySign, wishlist.ItadBestPrice.PriceCut),
-                                    NotificationType.Info,
-                                    () => 
-                                        {
-                                            var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain);
-                                            Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
-                                            windowExtension.ShowDialog();
-                                        }
-                                ));
-                            }
-                        }
-                    }
-
-                    if (settings.EnableNotificationPrice)
-                    {
-                        List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(this, PlayniteApi, settings, this.GetPluginUserDataPath(), true);
-                        foreach (Wishlist wishlist in ListWishlist)
-                        {
-                            if (wishlist.GetNotificationPrice(settings.LimitNotificationPrice))
-                            {
-                                PlayniteApi.Notifications.Add(new NotificationMessage(
-                                    $"IsThereAnyDeal-{wishlist.Plain}",
-                                    string.Format(resources.GetString("LOCItadNotification"),
-                                        wishlist.Name, wishlist.ItadBestPrice.PriceNew, wishlist.ItadBestPrice.CurrencySign, wishlist.ItadBestPrice.PriceCut),
-                                    NotificationType.Info,
-                                    () =>
-                                    {
-                                        var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings, wishlist.Plain);
-                                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
-                                        windowExtension.ShowDialog();
-                                    }
-                                ));
-                            }
-                        }
-                    }
-                }
-
-                if (settings.EnableNotificationGiveaways)
-                {
-                    List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PlayniteApi, this.GetPluginUserDataPath());
-                    foreach (ItadGiveaway itadGiveaway in itadGiveaways)
-                    {
-                        if (!itadGiveaway.HasSeen)
-                        {
-                            PlayniteApi.Notifications.Add(new NotificationMessage(
-                                $"IsThereAnyDeal-{itadGiveaway.Title}",
-                                string.Format(resources.GetString("LOCItadNotificationGiveaway"), itadGiveaway.TitleAll, itadGiveaway.Count),
-                                NotificationType.Info,
-                                () => Process.Start(itadGiveaway.Link)
-                            ));
-                        }
-                    }
-                }
-            });
+            IsThereAnyDealApi.CheckNotifications(PlayniteApi, settings, this);
         }
 
         public override void OnApplicationStopped()

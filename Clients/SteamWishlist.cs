@@ -16,21 +16,16 @@ namespace IsThereAnyDeal.Services
 {
     class SteamWishlist : GenericWishlist
     {
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool Force = false)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
             List<Wishlist> ResultLoad = LoadWishlists("Steam", PluginUserDataPath);
-            if (ResultLoad != null && !Force)
+            if (ResultLoad != null && CacheOnly)
             {
                 ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                 SaveWishlist("Steam", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
-            }
-
-            if (CacheOnly)
-            {
-                return Result;
             }
 
             logger.Info($"IsThereAnyDeal - Load from web for Steam");

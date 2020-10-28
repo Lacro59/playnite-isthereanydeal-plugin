@@ -16,21 +16,16 @@ namespace IsThereAnyDeal.Services
 {
     class HumbleBundleWishlist : GenericWishlist
     {
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string HumbleBundleId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool Force = false)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string HumbleBundleId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
             List<Wishlist> ResultLoad = LoadWishlists("HumbleBundle", PluginUserDataPath);
-            if (ResultLoad != null && !Force)
+            if (ResultLoad != null && CacheOnly)
             {
                 ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                 SaveWishlist("HumbleBundle", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
-            }
-
-            if (CacheOnly)
-            {
-                return Result;
             }
 
             if (HumbleBundleId.IsNullOrEmpty())

@@ -32,21 +32,16 @@ namespace IsThereAnyDeal.Services
             }
         }
 
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool Force = false)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
             List<Wishlist> ResultLoad = LoadWishlists("Gog", PluginUserDataPath);
-            if (ResultLoad != null && !Force)
+            if (ResultLoad != null && CacheOnly)
             {
                 ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                 SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
-            }
-
-            if (CacheOnly)
-            {
-                return Result;
             }
 
             logger.Info($"IsThereAnyDeal - Load from web for GOG");

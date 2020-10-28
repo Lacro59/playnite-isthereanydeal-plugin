@@ -128,7 +128,7 @@ namespace IsThereAnyDeal.Views
         private async Task<List<Wishlist>> LoadData (IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-            List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(_plugin, PlayniteApi, settings, PluginUserDataPath);
+            List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(_plugin, PlayniteApi, settings, PluginUserDataPath, true);
             return ListWishlist;
         }
 
@@ -261,7 +261,7 @@ namespace IsThereAnyDeal.Views
                                     IsDeleted = steamWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        steamWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false, true);
+                                        steamWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
 #endif
                                     break;
@@ -273,7 +273,7 @@ namespace IsThereAnyDeal.Views
                                     IsDeleted = epicWishlist.RemoveWishlist(StorePriceSelected.StoreId, _plugin.GetPluginUserDataPath());
                                     if (IsDeleted)
                                     {
-                                        epicWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false, true);
+                                        epicWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
                                     break;
                                 case "humble store":
@@ -284,7 +284,7 @@ namespace IsThereAnyDeal.Views
                                     IsDeleted = humbleBundleWishlist.RemoveWishlist(_PlayniteApi, StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        humbleBundleWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _settings.HumbleKey, _plugin.GetPluginUserDataPath(), _settings, false, true);
+                                        humbleBundleWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _settings.HumbleKey, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
                                     break;
                                 case "gog":
@@ -295,7 +295,7 @@ namespace IsThereAnyDeal.Views
                                     IsDeleted = gogWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        gogWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false, true);
+                                        gogWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
                                     break;
                                 case "microsoft store":
@@ -311,7 +311,7 @@ namespace IsThereAnyDeal.Views
                                     IsDeleted = originWishlist.RemoveWishlist(StorePriceSelected.StoreId, _PlayniteApi);
                                     if (IsDeleted)
                                     {
-                                        originWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false, true);
+                                        originWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
                                     break;
                             }
