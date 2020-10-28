@@ -36,6 +36,7 @@ namespace IsThereAnyDeal.Views
         private int SearchPercentage = 0;
         private int SearchPrice = 100;
 
+        private IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
         private ItadGameInfo StorePriceSelected;
 
 
@@ -69,6 +70,7 @@ namespace IsThereAnyDeal.Views
                     Application.Current.Dispatcher.Invoke(new Action(() => {
                         lbWishlistItems = antecedent.Result;
                         GetListGame();
+                        SetInfos();
 
 #if DEBUG
                         logger.Debug($"IsThereAnyDeal - lbWishlistItems: {JsonConvert.SerializeObject(lbWishlistItems)}");
@@ -125,16 +127,20 @@ namespace IsThereAnyDeal.Views
             FilterStore.ItemsSource = FilterStoreItems;
         }
 
+        private void SetInfos()
+        {
+            tpListBox.ItemsSource = null;
+            tpListBox.ItemsSource = isThereAnyDealApi.countDatas;
+        }
+
         private async Task<List<Wishlist>> LoadData (IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(_plugin, PlayniteApi, settings, PluginUserDataPath, true);
             return ListWishlist;
         }
 
         private async Task<List<ItadGiveaway>> LoadDatatGiveaways(IPlayniteAPI PlayniteApi, string PluginUserDataPath)
         {
-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PlayniteApi, PluginUserDataPath);
             return itadGiveaways;
         }

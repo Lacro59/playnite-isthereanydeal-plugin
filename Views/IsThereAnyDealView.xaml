@@ -47,6 +47,8 @@
                                 <ColumnDefinition Width="6" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="45" />
+                                <ColumnDefinition Width="6" />
+                                <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
 
                             <Label Grid.Column="0" Content="{DynamicResource LOCSearchLabel}" FontSize="16" />
@@ -73,6 +75,28 @@
                                     TickFrequency="1" Name="sPrice"
                                     ValueChanged="Slider_ValueChangedPrice" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
                             <Label Grid.Column="16" Name="lPrice" Content="100€" Margin="5,0,0,0" HorizontalAlignment="Center" />
+
+                            <Label Grid.Column="18" FontFamily="{StaticResource font}" Content="" Name="ItadInfo">
+                                <Label.ToolTip>
+                                    <ToolTip>
+                                        <ListBox Name="tpListBox" BorderThickness="0">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Label Grid.Column="0" Content="{Binding StoreName}" />
+                                                        <Label Grid.Column="1" HorizontalAlignment="Right" Content="{Binding Count}" Margin="10,0,0,0" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </ToolTip>
+                                </Label.ToolTip>
+                            </Label>
                         </Grid>
                     </Border>
 

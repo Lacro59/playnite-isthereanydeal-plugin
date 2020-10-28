@@ -27,6 +27,7 @@ namespace IsThereAnyDeal.Services
         private readonly string baseAddress = "https://api.isthereanydeal.com/";
         private readonly string key = "fa49308286edcaf76fea58926fd2ea2d216a17ff";
 
+        public List<CountData> countDatas = new List<CountData>();
 
         public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false)
         {
@@ -78,6 +79,11 @@ namespace IsThereAnyDeal.Services
                 {
                     SteamWishlist steamWishlist = new SteamWishlist();
                     ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings, CacheOnly);
+                    countDatas.Add(new CountData
+                    {
+                        StoreName = "Steam",
+                        Count = ListWishlistSteam.Count
+                    });
                 }
                 else
                 {
@@ -98,6 +104,11 @@ namespace IsThereAnyDeal.Services
                 {
                     GogWishlist gogWishlist = new GogWishlist(PlayniteApi);
                     ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
+                    countDatas.Add(new CountData
+                    {
+                        StoreName = "GOG",
+                        Count = ListWishlistGog.Count
+                    });
                 }
                 else
                 {
@@ -118,6 +129,11 @@ namespace IsThereAnyDeal.Services
                 {
                     EpicWishlist epicWishlist = new EpicWishlist();
                     ListWishlistEpic = epicWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
+                    countDatas.Add(new CountData
+                    {
+                        StoreName = "Epic Game Store",
+                        Count = ListWishlistEpic.Count
+                    });
                 }
                 else
                 {
@@ -138,6 +154,11 @@ namespace IsThereAnyDeal.Services
                 {
                     HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
                     ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly);
+                    countDatas.Add(new CountData
+                    {
+                        StoreName = "Humble Bundle",
+                        Count = ListWishlistHumble.Count
+                    });
                 }
                 else
                 {
@@ -158,6 +179,11 @@ namespace IsThereAnyDeal.Services
                 {
                     XboxWishlist xboxWishlist = new XboxWishlist();
                     ListWishlistXbox = xboxWishlist.GetWishlist(PlayniteApi, XboxId, PluginUserDataPath, settings, CacheOnly);
+                    countDatas.Add(new CountData
+                    {
+                        StoreName = "Xbox",
+                        Count = ListWishlistXbox.Count
+                    });
                 }
                 else
                 {
@@ -178,6 +204,11 @@ namespace IsThereAnyDeal.Services
                 {
                     OriginWishlist originWishlist = new OriginWishlist();
                     ListWishlistXbox = originWishlist.GetWishlist(PlayniteApi, OriginId, PluginUserDataPath, settings, CacheOnly);
+                    countDatas.Add(new CountData
+                    {
+                        StoreName = "Origin",
+                        Count = ListWishlistXbox.Count
+                    });
                 }
                 else
                 {
@@ -783,5 +814,11 @@ namespace IsThereAnyDeal.Services
     {
         public string Plain { get; set; } = string.Empty;
         public bool IsActive { get; set; } = false;
+    }
+
+    public class CountData
+    {
+        public string StoreName { get; set; }
+        public int Count { get; set; }
     }
 }
