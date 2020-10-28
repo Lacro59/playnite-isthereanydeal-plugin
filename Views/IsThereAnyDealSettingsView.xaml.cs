@@ -3,8 +3,10 @@ using IsThereAnyDeal.Models;
 using Playnite.SDK;
 using System.Collections.Generic;
 using System.Windows;
+using System.Linq;
 using System.Windows.Controls;
 using Newtonsoft.Json;
+using PluginCommon;
 
 namespace IsThereAnyDeal.Views
 {
@@ -53,6 +55,9 @@ namespace IsThereAnyDeal.Views
 
             lLimitNotification.Content = settings.LimitNotification + "%";
             lLimitNotificationPrice.Content = settings.LimitNotificationPrice + GetInfosRegion(settings.Region, true);
+
+            _settings.wishlistIgnores = _settings.wishlistIgnores.OrderBy(x => x.StoreName).ThenBy(x => x.Name).ToList();
+            lvIgnoreList.ItemsSource = _settings.wishlistIgnores;
 
             DataContext = this;
             IsFirst = false;
@@ -215,6 +220,15 @@ namespace IsThereAnyDeal.Views
             catch
             {
             }
+        }
+
+
+        private void BtShow_Click(object sender, RoutedEventArgs e)
+        {
+            int index = int.Parse(((Button)sender).Tag.ToString());
+            _settings.wishlistIgnores.RemoveAt(index);
+            lvIgnoreList.ItemsSource = null;
+            lvIgnoreList.ItemsSource = _settings.wishlistIgnores;
         }
     }
 }

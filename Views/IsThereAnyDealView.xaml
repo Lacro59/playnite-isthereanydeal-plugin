@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:IsThereAnyDeal.Views"
              xmlns:pcon="clr-namespace:PluginCommon.PlayniteResources.Converters;assembly=PluginCommon"
              xmlns:pccon="clr-namespace:PluginCommon;assembly=PluginCommon"
-             mc:Ignorable="d" Height="740" Width="1200" Background="{DynamicResource WindowBackgourndBrush}">
+             mc:Ignorable="d" Height="740" Width="1280" Background="{DynamicResource WindowBackgourndBrush}">
 
     <UserControl.Resources>
         <pcon:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
@@ -380,10 +380,16 @@
                                                                 </StackPanel>
                                                                 <TextBlock Grid.Column="6" Text="{Binding ShopName}"
                                                                            Foreground="{Binding ShopColor}" VerticalAlignment="Center" />
-                                                                <Button Grid.Column="8" Click="BtRemoveWishList_Click" HorizontalAlignment="Right"
-                                                                        Content="" FontFamily="{StaticResource font}"
-                                                                        Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Mode=OneWay, Converter={StaticResource IndexConverter}}"
-                                                                        Name="BtRemoveWishList" VerticalAlignment="Center" />
+                                                                <StackPanel Grid.Column="8" Orientation="Horizontal" HorizontalAlignment="Right">
+                                                                    <Button Click="BtHideWishList_Click" 
+                                                                            Content="" FontFamily="{StaticResource font}"
+                                                                            Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Mode=OneWay, Converter={StaticResource IndexConverter}}"
+                                                                            Name="BtHideWishList" VerticalAlignment="Center" />
+                                                                    <Button Click="BtRemoveWishList_Click"
+                                                                            Content="" FontFamily="{StaticResource font}" Margin="10,0,0,0"
+                                                                            Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Mode=OneWay, Converter={StaticResource IndexConverter}}"
+                                                                            Name="BtRemoveWishList" VerticalAlignment="Center" />
+                                                                </StackPanel>
                                                             </Grid>
                                                         </DataTemplate>
                                                     </ListBox.ItemTemplate>

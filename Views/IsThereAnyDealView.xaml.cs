@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Playnite.SDK;
 using PluginCommon;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -352,6 +353,43 @@ namespace IsThereAnyDeal.Views
                 dpData.IsEnabled = true;
             }
         }
+
+        // Hide game
+        private void BtHideWishList_Click(object sender, RoutedEventArgs e)
+        {
+            int index = int.Parse(((Button)sender).Tag.ToString());
+
+            ListBox elParent = IntegrationUI.GetAncestorOfType<ListBox>(sender as Button);
+            StorePriceSelected = (ItadGameInfo)elParent.Items[index];
+            lbWishlist.ItemsSource = null;
+#if DEBUG
+            logger.Debug($"IsThereAnyDeal - BtHideWishList_Click() - StorePriceSelected: {JsonConvert.SerializeObject(StorePriceSelected)}");
+#endif
+            var RessultDialog = _PlayniteApi.Dialogs.ShowMessage(
+                string.Format(resources.GetString("LOCItadHideOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
+                "IsThereAnyDeal",
+                MessageBoxButton.YesNo
+            );
+            if (RessultDialog == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    _settings.wishlistIgnores.Add(new WishlistIgnore
+                    {
+                        StoreId = StorePriceSelected.StoreId,
+                        StoreName = StorePriceSelected.ShopName,
+                        Name = StorePriceSelected.Name,
+                        Plain = StorePriceSelected.Plain
+                    });
+                    _plugin.SavePluginSettings(_settings);
+                    GetListGame();
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, "IsThereAnyDeal", "Error on BtRemoveWishList_Click()");
+                }
+            }
+        }
         #endregion
 
 
@@ -359,6 +397,8 @@ namespace IsThereAnyDeal.Views
         // Get list
         private void GetListGame()
         {
+            lbWishlistItems = lbWishlistItems.Where(x => _settings.wishlistIgnores.All(y => y.StoreId != x.StoreId && y.Plain != x.Plain)).ToList(); ;
+
             lbWishlist.ItemsSource = lbWishlistItems.FindAll(
                 x => x.ItadBestPrice.PriceCut >= SearchPercentage
             );

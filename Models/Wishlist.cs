@@ -183,4 +183,12 @@ namespace IsThereAnyDeal.Models
             return false;
         }
     }
+
+    public class WishlistIgnore
+    {
+        public string StoreId { get; set; }
+        public string StoreName { get; set; }
+        public string Name { get; set; }
+        public string Plain { get; set; }
+    }
 }

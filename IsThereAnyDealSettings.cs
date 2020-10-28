@@ -9,6 +9,8 @@ namespace IsThereAnyDeal
     {
         private readonly IsThereAnyDeal plugin;
 
+        public List<WishlistIgnore> wishlistIgnores { get; set; } = new List<WishlistIgnore>();
+
         public string Region { get; set; } = "us";
         public string Country { get; set; } = "US";
         public string CurrencySign { get; set; } = "$";
@@ -56,6 +58,8 @@ namespace IsThereAnyDeal
             // LoadPluginSettings returns null if not saved data is available.
             if (savedSettings != null)
             {
+                wishlistIgnores = savedSettings.wishlistIgnores;
+
                 Region = savedSettings.Region;
                 Country = savedSettings.Country;
                 CurrencySign = savedSettings.CurrencySign;
