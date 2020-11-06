@@ -7,52 +7,52 @@
 
     <!-- IsThereAnyDealSettingsView -->
 
-    <sys:String x:Key="LOCItadExclusionList">Exclusion list</sys:String>
+    <sys:String x:Key="LOCItadExclusionList">Lista de exclusiones</sys:String>
     
-    <sys:String x:Key="LOCItadSettingWishlist">Wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableSteam">Enable Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableGog">Enable GOG wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableEpic">Enable Epic Game Store wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableHumble">Enable Humble wishlist</sys:String>
+    <sys:String x:Key="LOCItadSettingWishlist">Lista de deseos</sys:String>
+    <sys:String x:Key="LOCItadEnableSteam">Habilitar Steam</sys:String>
+    <sys:String x:Key="LOCItadEnableGog">Habilitar GOG</sys:String>
+    <sys:String x:Key="LOCItadEnableEpic">Habilitar Epic Game Store</sys:String>
+    <sys:String x:Key="LOCItadEnableHumble">Habilitar Humble</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
-    <sys:String x:Key="LOCItadEnableXbox">Enable Xbox</sys:String>
+    <sys:String x:Key="LOCItadEnableXbox">Habilitar Xbox</sys:String>
     <sys:String x:Key="LOCItadXboxWishlistLink">Wish list link</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Enable Origin</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">Habilitar origen</sys:String>
     
-    <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
-    <sys:String x:Key="LOCItadRegion">Region</sys:String>
-    <sys:String x:Key="LOCItadCountry">Country</sys:String>
-    <sys:String x:Key="LOCItadStores">Store(s)</sys:String>
+    <sys:String x:Key="LOCItadSettingItad">Hay alguna oferta</sys:String>
+    <sys:String x:Key="LOCItadRegion">Región</sys:String>
+    <sys:String x:Key="LOCItadCountry">País</sys:String>
+    <sys:String x:Key="LOCItadStores">Tienda(s)</sys:String>
 
-    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Enable notifications of giveaways</sys:String>
-    <sys:String x:Key="LOCItadEnableNotification">Enable notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotification">Price cut</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Enable notification(s) giveaways</sys:String>
+    <sys:String x:Key="LOCItadEnableNotification">Habilitar notificación(es)</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Precio recortado</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPrice">Precio inferior</sys:String>
 
     <!-- IsThereAnyDealView -->
 
-    <sys:String x:Key="LOCITADFilterSource">Filter by store(s)</sys:String>
-    <sys:String x:Key="LOCITADPercentage">Minimum discount percentage</sys:String>
+    <sys:String x:Key="LOCITADFilterSource">Filtrar por tienda(s)</sys:String>
+    <sys:String x:Key="LOCITADPercentage">Porcentajes</sys:String>
     <sys:String x:Key="LOCITADPrice">Price inferior</sys:String>
 
     <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
-    <sys:String x:Key="LOCItadCurrentStore">Current store wishlist</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">Lista de deseos de la tienda actual</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy best</sys:String>
-    <sys:String x:Key="LOCItadStore">Store</sys:String>
-    <sys:String x:Key="LOCItadNoData">No data for selected store in settings</sys:String>
-    <sys:String x:Key="LOCItadInLibrary">In library</sys:String>
+    <sys:String x:Key="LOCItadStore">Tienda</sys:String>
+    <sys:String x:Key="LOCItadNoData">No hay datos para la tienda seleccionada en los ajustes</sys:String>
+    <sys:String x:Key="LOCItadInLibrary">En la biblioteca</sys:String>
     <sys:String x:Key="LOCItadNotActive">Not active on IsThereAnyDeal</sys:String>
-    <sys:String x:Key="LOCItadNotFind">Not found on IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCItadNotFind">Not find on IsThereAnyDeal</sys:String>
     
-    <sys:String x:Key="LOCItadDeleteOnStoreWishList">Delete {0} on {1}?</sys:String>
+    <sys:String x:Key="LOCItadDeleteOnStoreWishList">¿Eliminar {0} en {1}?</sys:String>
     <sys:String x:Key="LOCItadHideOnStoreWishList">Exclude {0} on {1}?</sys:String>
 
     <!-- IsThereAnyDeal -->
 
-    <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal datas</sys:String>
-    <sys:String x:Key="LOCItadCheckNotifications">Check notifications</sys:String>
+    <sys:String x:Key="LOCItadPluginView">Ver datos de IsthereAnyDeal</sys:String>
+    <sys:String x:Key="LOCItadCheckNotifications">Comprobar notificaciones</sys:String>
     <sys:String x:Key="LOCItadUpdateDatas">Update IsThereAnyDeal datas</sys:String>
-    <sys:String x:Key="LOCITADDataDownloading">Downloading IsThereAnyDeal datas</sys:String>
+    <sys:String x:Key="LOCITADDataDownloading">Descargando datos de IsthereAnyDeal</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">IsThereAnyDeal
 Giveaway notification for {0} ({1} game(s))</sys:String>
