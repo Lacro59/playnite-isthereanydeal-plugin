@@ -1,6 +1,6 @@
 ﻿Id: playnite-isthereanydeal-plugin
 Name: IsThereAnyDeal
-Author: Lacro59 based on bburky's plugin
+Author: Lacro59
 Version: 1.0
 Module: IsThereAnyDeal.dll
 Type: GenericPlugin
@@ -10,3 +10,5 @@ Links:
     Url: https://playnite.link/forum/thread-323.html
   - Name: Plugin Github
     Url: https://github.com/Lacro59/playnite-isthereanydeal-plugin
+  - Name: Plugin translations
+    Url: https://crowdin.com/project/playnite-extensions

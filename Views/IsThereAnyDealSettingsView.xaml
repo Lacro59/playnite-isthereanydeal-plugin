@@ -71,7 +71,7 @@
 
                                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Name="scv" Grid.Column="2">
                                     <TextBox Text="{Binding XboxLink}" IsEnabled="{Binding ElementName=chk_Xbox, Path=IsChecked}" 
-                                 MaxWidth="{Binding ElementName=scv, Path=ActualWidth}" VerticalAlignment="Center" />
+                                             MaxWidth="{Binding ElementName=scv, Path=ActualWidth}" VerticalAlignment="Center" />
                                 </ScrollViewer>
                             </Grid>
 
