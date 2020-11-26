@@ -1,52 +1,80 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+﻿<?xml version="1.0"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <!--  
-    IsThereAnyDealSettingsView
-    -->
+    <!-- MainView -->
 
+    <sys:String x:Key="LOCItad">IsThereAnyDeal</sys:String>
+
+    <!-- IsThereAnyDealSettingsView -->
+
+    <sys:String x:Key="LOCItadExclusionList">Liste d'exclusion</sys:String>
+    
     <sys:String x:Key="LOCItadSettingWishlist">Liste de souhaits</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Activer Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Activer GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Activer Epic Game Store</sys:String>
     <sys:String x:Key="LOCItadEnableHumble">Activer Humble</sys:String>
-    <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
-
-    <sys:String x:Key="LOCItadSettingItad">Is There Any Deal</sys:String>
+    <sys:String x:Key="LOCItadHumbleKey">Id Humble</sys:String>
+    <sys:String x:Key="LOCItadEnableXbox">Activer Xbox</sys:String>
+    <sys:String x:Key="LOCItadXboxWishlistLink">Lien liste de souhaits</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">Activer Origin</sys:String>
+    
+    <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">Région</sys:String>
     <sys:String x:Key="LOCItadCountry">Pays</sys:String>
     <sys:String x:Key="LOCItadStores">Magasin(s)</sys:String>
 
     <sys:String x:Key="LOCItadEnableNotificationGiveaways">Actier notification(s) giveaways</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">Actier notification(s)</sys:String>
-    <sys:String x:Key="LOCItadLimitNotification">Réduction</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Prix remisé</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">Prix inférieur</sys:String>
 
-    <!--  
-    IsThereAnyDealView
-    -->
+    <!-- IsThereAnyDealView -->
 
-    <sys:String x:Key="LOCSearchLabel">Rechercher</sys:String>
     <sys:String x:Key="LOCITADFilterSource">Filtrer par magasin(s)</sys:String>
     <sys:String x:Key="LOCITADPercentage">Pourcentage</sys:String>
-    
+    <sys:String x:Key="LOCITADPrice">Prix inférieur</sys:String>
+
     <sys:String x:Key="LOCItadCurrentBest">Meilleur actuel</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Meilleur magasin (liste souhaits)</sys:String>
-    <sys:String x:Key="LOCWebsiteLabel">Site</sys:String>
-    <sys:String x:Key="LOCItadBuy">Acheter</sys:String>
+    <sys:String x:Key="LOCItadBuy">Achat meilleur</sys:String>
     <sys:String x:Key="LOCItadStore">Magasin</sys:String>
-    <sys:String x:Key="LOCItadNoData">Aucune données</sys:String>
+    <sys:String x:Key="LOCItadNoData">Aucune donnée pour le(s) magasin(s) paramétré(s)</sys:String>
     <sys:String x:Key="LOCItadInLibrary">Dans la bibliothèque</sys:String>
+    <sys:String x:Key="LOCItadNotActive">Non actif sur IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCItadNotFind">Non trouvé sur IsThereAnyDeal</sys:String>
+    
+    <sys:String x:Key="LOCItadDeleteOnStoreWishList">Supprimer {0} sur {1} ?</sys:String>
+    <sys:String x:Key="LOCItadHideOnStoreWishList">Exclure {0} sur {1}?</sys:String>
 
-    <!--  
-    IsThereAnyDeal
-    -->
+    <!-- IsThereAnyDeal -->
 
-    <sys:String x:Key="LOCItadNotificationGiveaway">Notification giveaway pour {0} ({1} jeu(x))</sys:String>
-    <sys:String x:Key="LOCItadNotification">Notification prix pour {0} - {1}{2} ({3}%)</sys:String>
+    <sys:String x:Key="LOCItadPluginView">Voir les données IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCItadCheckNotifications">Vérifier les notifications</sys:String>
+    <sys:String x:Key="LOCItadUpdateDatas">Mettre à jour les données IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCITADDataDownloading">Téléchargement des données IsThereAnyDeal</sys:String>
 
-    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Une erreur s'est produite lors de la récupération de la liste de souhaits.
+    <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">IsThereAnyDeal
+Notification cadeau pour {0} ({1} jeu(x))</sys:String>
+    <sys:String x:Key="LOCItadNotification" xml:space="preserve">IsThereAnyDeal
+Notification de prix pour {0} - {1}{2} ({3}%)</sys:String>
+
+    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">IsThereAnyDeal
+Une erreur s'est produite lors de la récupération de la liste de souhaits de {0}.
 Essayez de vous identifier à votre compte.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">IsThereAnyDeal
+Humble Bundle est activé alors qu'il est inactif.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">IsThereAnyDeal
+Epic Game Store est activé alors qu'il est inactif.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">IsThereAnyDeal
+GOG est activé alors qu'il est inactif.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">IsThereAnyDeal
+Steam est activé alors qu'il est inactif.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">IsThereAnyDeal
+Xbox est activé alors qu'il est inactif.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">IsThereAnyDeal
+Il n'y a pas de lien pour la liste de souhaits Xbox .</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">IsThereAnyDeal
+Origin est activé alors qu'il est inactif.</sys:String>
 
 </ResourceDictionary>

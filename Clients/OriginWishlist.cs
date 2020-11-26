@@ -11,8 +11,8 @@ using System.Net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Collections.Specialized;
-using PlayniteResources.PluginLibrary.OriginLibrary.Services;
-using PlayniteResources.PluginLibrary.OriginLibrary.Models;
+using PluginCommon.PlayniteResources.PluginLibrary.OriginLibrary.Services;
+using PluginCommon.PlayniteResources.PluginLibrary.OriginLibrary.Models;
 
 namespace IsThereAnyDeal.Clients
 {
