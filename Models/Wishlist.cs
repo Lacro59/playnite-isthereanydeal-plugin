@@ -93,6 +93,15 @@ namespace IsThereAnyDeal.Models
         }
 
         [JsonIgnore]
+        public bool HasItadData
+        {
+            get
+            {
+                return (ItadBestPrice.CurrencySign != null && !ItadBestPrice.CurrencySign.IsNullOrEmpty());
+            }
+        }
+
+        [JsonIgnore]
         public string UrlGame
         {
             get

@@ -133,6 +133,7 @@ namespace IsThereAnyDeal.Views
             tpListBox.ItemsSource = isThereAnyDealApi.countDatas;
         }
 
+
         private async Task<List<Wishlist>> LoadData (IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
             List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(_plugin, PlayniteApi, settings, PluginUserDataPath, true);
@@ -144,6 +145,7 @@ namespace IsThereAnyDeal.Views
             List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PlayniteApi, PluginUserDataPath);
             return itadGiveaways;
         }
+
 
         private void GetListGiveaways(IPlayniteAPI PlayniteApi, string PluginUserDataPath)
         {
@@ -403,19 +405,31 @@ namespace IsThereAnyDeal.Views
         // Get list
         private void GetListGame()
         {
-            lbWishlistItems = lbWishlistItems.Where(x => _settings.wishlistIgnores.All(y => y.StoreId != x.StoreId && y.Plain != x.Plain)).ToList(); ;
+            lbWishlistItems = lbWishlistItems.Where(x => _settings.wishlistIgnores.All(y => y.StoreId != x.StoreId && y.Plain != x.Plain)).ToList();
+            List<Wishlist> tempList = lbWishlistItems;
 
-            lbWishlist.ItemsSource = lbWishlistItems.FindAll(
+            // List options
+            if (!(bool)PART_TbIncludeInLibrary.IsChecked)
+            {
+                tempList = tempList.FindAll(x => x.InLibrary == false).ToList();
+            }
+            if (!(bool)PART_TbIncludeWithoutData.IsChecked)
+            {
+                tempList = tempList.FindAll(x => x.HasItadData).ToList();
+            }
+
+
+            lbWishlist.ItemsSource = tempList.FindAll(
                 x => x.ItadBestPrice.PriceCut >= SearchPercentage
             );
 
-            lbWishlist.ItemsSource = lbWishlistItems.FindAll(
+            lbWishlist.ItemsSource = tempList.FindAll(
                 x => x.ItadBestPrice.PriceNew <= SearchPrice
             );
 
             if (!TextboxSearch.Text.IsNullOrEmpty() && SearchStores.Count != 0)
             {
-                lbWishlist.ItemsSource = lbWishlistItems.FindAll(
+                lbWishlist.ItemsSource = tempList.FindAll(
                     x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1 &&
                     (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
                 );
@@ -424,7 +438,7 @@ namespace IsThereAnyDeal.Views
 
             if (!TextboxSearch.Text.IsNullOrEmpty())
             {
-                lbWishlist.ItemsSource = lbWishlistItems.FindAll(
+                lbWishlist.ItemsSource = tempList.FindAll(
                     x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1
                 );
                 return;
@@ -432,7 +446,7 @@ namespace IsThereAnyDeal.Views
 
             if (SearchStores.Count != 0)
             {
-                lbWishlist.ItemsSource = lbWishlistItems.FindAll(
+                lbWishlist.ItemsSource = tempList.FindAll(
                     x => x.ItadBestPrice.PriceCut >= SearchPercentage && 
                     (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
                 );
@@ -503,7 +517,18 @@ namespace IsThereAnyDeal.Views
             {
             }
         }
+
+        private void PART_TbInclude_Click(object sender, RoutedEventArgs e)
+        {
+            GetListGame();
+        }
         #endregion
+
+
+        private void PART_BtClose_Click(object sender, RoutedEventArgs e)
+        {
+            ((Window)this.Parent).Close();
+        }
     }
 
     public class ListStore

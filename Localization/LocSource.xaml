@@ -47,6 +47,10 @@
     <sys:String x:Key="LOCItadDeleteOnStoreWishList">Delete {0} on {1}?</sys:String>
     <sys:String x:Key="LOCItadHideOnStoreWishList">Exclude {0} on {1}?</sys:String>
 
+    <sys:String x:Key="LOCItadWhishListOptions">Wish list options</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Include games in library</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Include games without IsThereAnyDeal data</sys:String>
+
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal datas</sys:String>
