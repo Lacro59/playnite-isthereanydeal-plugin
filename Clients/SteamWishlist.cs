@@ -16,6 +16,9 @@ namespace IsThereAnyDeal.Services
 {
     class SteamWishlist : GenericWishlist
     {
+        public string UrlWishlist = @"https://store.steampowered.com/wishlist/profiles/{0}/wishlistdata/?p={1}&v=";
+
+
         public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
@@ -51,68 +54,81 @@ namespace IsThereAnyDeal.Services
 
 
             string ResultWeb = string.Empty;
-            string url = string.Format(@"https://store.steampowered.com/wishlist/profiles/{0}/wishlistdata/", userId);
-            try
-            {
-                ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
-            }
-            catch (WebException ex)
-            {
-                if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
-                {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error in download Steam wishlist");
-                    return Result;
-                }
-            }
+            string url = string.Empty;
 
-            if (!ResultWeb.IsNullOrEmpty())
+            for (int iPage = 0; iPage < 10; iPage++)
             {
-                JObject resultObj = new JObject();
-                JArray resultItems = new JArray();
+                url = string.Format(UrlWishlist, userId, iPage);
 
                 try
                 {
-                    resultObj = JObject.Parse(ResultWeb);
-
-                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                    foreach (var gameWishlist in resultObj)
+                    ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
+                }
+                catch (WebException ex)
+                {
+                    if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                     {
-                        JObject gameWishlistData = (JObject)gameWishlist.Value;
-
-                        string StoreId = gameWishlist.Key;
-                        string Name = (string)gameWishlistData["name"];
-                        DateTime ReleaseDate = ((int)gameWishlistData["release_date"] == 0) ? default(DateTime) : new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)gameWishlistData["release_date"]);
-                        string Capsule = (string)gameWishlistData["capsule"];
-
-                        PlainData plainData = isThereAnyDealApi.GetPlain(Name);
-
-                        Result.Add(new Wishlist
-                        {
-                            StoreId = StoreId,
-                            StoreName = "Steam",
-                            ShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1).Color,
-                            StoreUrl = "https://store.steampowered.com/app/" + StoreId,
-                            Name = WebUtility.HtmlDecode(Name),
-                            SourceId = SourceId,
-                            ReleaseDate = ReleaseDate.ToUniversalTime(),
-                            Capsule = Capsule,
-                            Plain = plainData.Plain,
-                            IsActive = plainData.IsActive
-                        });
+                        Common.LogError(ex, "IsThereAnyDeal", $"Error download Steam wishlist for page {iPage}");
+                        return Result;
                     }
                 }
-                catch (Exception ex)
+
+                if (!ResultWeb.IsNullOrEmpty())
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error in parse Steam wishlist");
+                    JObject resultObj = new JObject();
+                    JArray resultItems = new JArray();
 
-                    PlayniteApi.Notifications.Add(new NotificationMessage(
-                        $"IsThereAnyDeal-Steam-Error",
-                        string.Format(resources.GetString("LOCItadNotificationError"), "Steam"),
-                        NotificationType.Error
-                    ));
+                    if (ResultWeb == "[]")
+                    {
+                        logger.Info($"IsThereAnyDeal - No result after page {iPage} for Steam wishlist");
+                        break;
+                    }
 
-                    return Result;
+                    try
+                    {
+                        resultObj = JObject.Parse(ResultWeb);
+
+                        IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                        foreach (var gameWishlist in resultObj)
+                        {
+                            JObject gameWishlistData = (JObject)gameWishlist.Value;
+
+                            string StoreId = gameWishlist.Key;
+                            string Name = (string)gameWishlistData["name"];
+                            DateTime ReleaseDate = ((int)gameWishlistData["release_date"] == 0) ? default(DateTime) : new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)gameWishlistData["release_date"]);
+                            string Capsule = (string)gameWishlistData["capsule"];
+
+                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
+                            Result.Add(new Wishlist
+                            {
+                                StoreId = StoreId,
+                                StoreName = "Steam",
+                                ShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1).Color,
+                                StoreUrl = "https://store.steampowered.com/app/" + StoreId,
+                                Name = WebUtility.HtmlDecode(Name),
+                                SourceId = SourceId,
+                                ReleaseDate = ReleaseDate.ToUniversalTime(),
+                                Capsule = Capsule,
+                                Plain = plainData.Plain,
+                                IsActive = plainData.IsActive
+                            });
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Common.LogError(ex, "IsThereAnyDeal", "Error in parse Steam wishlist");
+
+                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                            $"IsThereAnyDeal-Steam-Error",
+                            string.Format(resources.GetString("LOCItadNotificationError"), "Steam"),
+                            NotificationType.Error
+                        ));
+
+                        return Result;
+                    }
                 }
+
             }
 
             Result = SetCurrentPrice(Result, settings, PlayniteApi);
