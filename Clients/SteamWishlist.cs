@@ -91,28 +91,45 @@ namespace IsThereAnyDeal.Services
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                         foreach (var gameWishlist in resultObj)
                         {
-                            JObject gameWishlistData = (JObject)gameWishlist.Value;
+                            string StoreId = string.Empty;
+                            string Name = string.Empty;
+                            DateTime ReleaseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                            string Capsule = string.Empty;
 
-                            string StoreId = gameWishlist.Key;
-                            string Name = (string)gameWishlistData["name"];
-                            DateTime ReleaseDate = ((int)gameWishlistData["release_date"] == 0) ? default(DateTime) : new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)gameWishlistData["release_date"]);
-                            string Capsule = (string)gameWishlistData["capsule"];
-
-                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
-
-                            Result.Add(new Wishlist
+                            try
                             {
-                                StoreId = StoreId,
-                                StoreName = "Steam",
-                                ShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1).Color,
-                                StoreUrl = "https://store.steampowered.com/app/" + StoreId,
-                                Name = WebUtility.HtmlDecode(Name),
-                                SourceId = SourceId,
-                                ReleaseDate = ReleaseDate.ToUniversalTime(),
-                                Capsule = Capsule,
-                                Plain = plainData.Plain,
-                                IsActive = plainData.IsActive
-                            });
+                                JObject gameWishlistData = (JObject)gameWishlist.Value;
+
+                                StoreId = gameWishlist.Key;
+                                Name = WebUtility.HtmlDecode((string)gameWishlistData["name"]);
+                                ReleaseDate = ((int)gameWishlistData["release_date"] == 0) ? default(DateTime) : new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)gameWishlistData["release_date"]);
+                                Capsule = (string)gameWishlistData["capsule"];
+
+                                PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
+                                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1);
+
+                                Result.Add(new Wishlist
+                                {
+                                    StoreId = StoreId,
+                                    StoreName = "Steam",
+                                    ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
+                                    StoreUrl = "https://store.steampowered.com/app/" + StoreId,
+                                    Name = Name,
+                                    SourceId = SourceId,
+                                    ReleaseDate = ReleaseDate.ToUniversalTime(),
+                                    Capsule = Capsule,
+                                    Plain = plainData.Plain,
+                                    IsActive = plainData.IsActive
+                                });
+                            }
+                            catch (Exception ex)
+                            {
+#if DEBUG
+                                Common.LogError(ex, "IsThereAnyDeal", $"Error in parse Steam wishlist - {Name}");
+#endif
+                                logger.Warn($"IsThereAnyDeal - Error in parse Steam wishlist - {Name}");
+                            }
                         }
                     }
                     catch (Exception ex)

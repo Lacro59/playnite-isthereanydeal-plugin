@@ -67,30 +67,48 @@ namespace IsThereAnyDeal.Clients
 
                         foreach (var item in WishlistData)
                         {
-                            string offerId = item.offerId;
-                            var gameData = GetGameStoreData(offerId, PlayniteApi);
+                            string StoreId = string.Empty;
+                            string StoreUrl = string.Empty;
+                            string Name = string.Empty;
+                            DateTime ReleaseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                            string Capsule = string.Empty;
 
-                            string StoreId = gameData.offerId;
-                            string Capsule = gameData.imageServer + gameData.i18n.packArtLarge;
-                            DateTime ReleaseDate = default(DateTime);
-                            string Name = gameData.i18n.displayName;
-                            string StoreUrl = urlBase + gameData.offerPath;
-
-                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
-
-                            Result.Add(new Wishlist
+                            try
                             {
-                                StoreId = StoreId,
-                                StoreName = "Origin",
-                                ShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("origin") > -1).Color,
-                                StoreUrl = string.Empty,
-                                Name = Name,
-                                SourceId = SourceId,
-                                ReleaseDate = ReleaseDate.ToUniversalTime(),
-                                Capsule = Capsule,
-                                Plain = plainData.Plain,
-                                IsActive = plainData.IsActive
-                            });
+                                string offerId = item.offerId;
+                                var gameData = GetGameStoreData(offerId, PlayniteApi);
+
+                                StoreId = gameData.offerId;
+                                Capsule = gameData.imageServer + gameData.i18n.packArtLarge;
+                                ReleaseDate = default(DateTime);
+                                Name = gameData.i18n.displayName;
+                                StoreUrl = urlBase + gameData.offerPath;
+
+                                PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
+                                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("origin") > -1);
+
+                                Result.Add(new Wishlist
+                                {
+                                    StoreId = StoreId,
+                                    StoreName = "Origin",
+                                    ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
+                                    StoreUrl = string.Empty,
+                                    Name = Name,
+                                    SourceId = SourceId,
+                                    ReleaseDate = ReleaseDate.ToUniversalTime(),
+                                    Capsule = Capsule,
+                                    Plain = plainData.Plain,
+                                    IsActive = plainData.IsActive
+                                });
+                            }
+                            catch (Exception ex)
+                            {
+#if DEBUG
+                                Common.LogError(ex, "IsThereAnyDeal", $"Error in parse Origin wishlist - {Name}");
+#endif
+                                logger.Warn($"IsThereAnyDeal - Error in parse Origin wishlist - {Name}");
+                            }
                         }
                     }
                     catch (WebException ex)

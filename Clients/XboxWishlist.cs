@@ -58,28 +58,46 @@ namespace IsThereAnyDeal.Clients
 
                     foreach (var SearchElement in HtmlRequirement.QuerySelectorAll("li.product-wishlist-item"))
                     {
-                        string StoreId = SearchElement.GetAttribute("data-product-id");
-                        string Capsule = SearchElement.QuerySelector("img.c-image").GetAttribute("src");
-                        DateTime ReleaseDate = default(DateTime);
-                        string Name = SearchElement.QuerySelector("h3.c-heading").InnerHtml.Trim();
-                        string StoreUrl = SearchElement.QuerySelector("a.c-button").GetAttribute("href");
+                        string StoreId = string.Empty;
+                        string StoreUrl = string.Empty;
+                        string Name = string.Empty;
+                        DateTime ReleaseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                        string Capsule = string.Empty;
 
-                        IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                        PlainData plainData = isThereAnyDealApi.GetPlain(Name);
-
-                        Result.Add(new Wishlist
+                        try
                         {
-                            StoreId = StoreId.Trim(),
-                            StoreName = "Microsoft Store",
-                            ShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("microsoft") > -1).Color,
-                            StoreUrl = baseUrl + StoreUrl.Trim(),
-                            Name = Name.Trim(),
-                            SourceId = SourceId,
-                            ReleaseDate = ReleaseDate.ToUniversalTime(),
-                            Capsule = Capsule.Trim(),
-                            Plain = plainData.Plain.Trim(),
-                            IsActive = plainData.IsActive
-                        });
+                            StoreId = SearchElement.GetAttribute("data-product-id");
+                            Capsule = SearchElement.QuerySelector("img.c-image").GetAttribute("src");
+                            ReleaseDate = default(DateTime);
+                            Name = SearchElement.QuerySelector("h3.c-heading").InnerHtml.Trim();
+                            StoreUrl = SearchElement.QuerySelector("a.c-button").GetAttribute("href");
+
+                            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
+                            var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("microsoft") > -1);
+
+                            Result.Add(new Wishlist
+                            {
+                                StoreId = StoreId.Trim(),
+                                StoreName = "Microsoft Store",
+                                ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
+                                StoreUrl = baseUrl + StoreUrl.Trim(),
+                                Name = Name.Trim(),
+                                SourceId = SourceId,
+                                ReleaseDate = ReleaseDate.ToUniversalTime(),
+                                Capsule = Capsule.Trim(),
+                                Plain = plainData.Plain.Trim(),
+                                IsActive = plainData.IsActive
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+#if DEBUG
+                            Common.LogError(ex, "IsThereAnyDeal", $"Error in parse Microsoft Store wishlist - {Name}");
+#endif
+                            logger.Warn($"IsThereAnyDeal - Error in parse Microsoft Store wishlist - {Name}");
+                        }
                     }
                 }
                 catch (Exception ex)

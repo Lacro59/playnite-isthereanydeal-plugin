@@ -101,38 +101,54 @@ namespace IsThereAnyDeal.Services
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                         foreach (JObject gameWishlist in resultObj["data"]["Wishlist"]["wishlistItems"]["elements"])
                         {
-#if DEBUG
-                            logger.Debug($"IsThereAnyDeal - gameWishlist: {JsonConvert.SerializeObject(gameWishlist)}");
-#endif
-                            string StoreId = (string)gameWishlist["offerId"] + "|" + (string)gameWishlist["namespace"];
+                            string StoreId = string.Empty;
                             string Name = string.Empty;
-                            DateTime ReleaseDate = default(DateTime);
+                            DateTime ReleaseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
                             string Capsule = string.Empty;
 
-                            Name = (string)gameWishlist["offer"]["title"];
-                            foreach (var keyImages in gameWishlist["offer"]["keyImages"])
+                            try
                             {
-                                if ((string)keyImages["type"] == "Thumbnail")
+#if DEBUG
+                                logger.Debug($"IsThereAnyDeal - gameWishlist: {JsonConvert.SerializeObject(gameWishlist)}");
+#endif
+                                StoreId = (string)gameWishlist["offerId"] + "|" + (string)gameWishlist["namespace"];
+                                ReleaseDate = default(DateTime);
+                                Capsule = string.Empty;
+
+                                Name = WebUtility.HtmlDecode((string)gameWishlist["offer"]["title"]);
+                                foreach (var keyImages in gameWishlist["offer"]["keyImages"])
                                 {
-                                    Capsule = (string)keyImages["url"];
+                                    if ((string)keyImages["type"] == "Thumbnail")
+                                    {
+                                        Capsule = (string)keyImages["url"];
+                                    }
                                 }
+
+                                PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
+                                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("epic") > -1);
+
+                                Result.Add(new Wishlist
+                                {
+                                    StoreId = StoreId,
+                                    StoreName = "Epic",
+                                    ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
+                                    StoreUrl = string.Empty,
+                                    Name = Name,
+                                    SourceId = SourceId,
+                                    ReleaseDate = ReleaseDate.ToUniversalTime(),
+                                    Capsule = Capsule,
+                                    Plain = plainData.Plain,
+                                    IsActive = plainData.IsActive
+                                });
                             }
-
-                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
-
-                            Result.Add(new Wishlist
+                            catch (Exception ex)
                             {
-                                StoreId = StoreId,
-                                StoreName = "Epic",
-                                ShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("epic") > -1).Color,
-                                StoreUrl = string.Empty,
-                                Name = WebUtility.HtmlDecode(Name),
-                                SourceId = SourceId,
-                                ReleaseDate = ReleaseDate.ToUniversalTime(),
-                                Capsule = Capsule,
-                                Plain = plainData.Plain,
-                                IsActive = plainData.IsActive
-                            });
+#if DEBUG
+                                Common.LogError(ex, "IsThereAnyDeal", $"Error in parse Epic wishlist - {Name}");
+#endif
+                                logger.Warn($"IsThereAnyDeal - Error in parse Epic wishlist - {Name}");
+                            }
                         }
                     }
                 }

@@ -55,27 +55,45 @@ namespace IsThereAnyDeal.Services
                     IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                     foreach (JObject gameWish in dataObj["products_json"])
                     {
-                        string StoreId = (string)gameWish["machine_name"];
-                        string StoreUrl = "https://www.humblebundle.com/store/" + gameWish["human_url"];
-                        string Name = (string)gameWish["human_name"];
-                        DateTime ReleaseDate = default(DateTime);
-                        string Capsule = (string)gameWish["standard_carousel_image"];
+                        string StoreId = string.Empty;
+                        string StoreUrl = string.Empty;
+                        string Name = string.Empty;
+                        DateTime ReleaseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                        string Capsule = string.Empty;
 
-                        PlainData plainData = isThereAnyDealApi.GetPlain(Name);
-
-                        Result.Add(new Wishlist
+                        try
                         {
-                            StoreId = StoreId,
-                            StoreName = "Humble",
-                            ShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("humble") > -1).Color,
-                            StoreUrl = StoreUrl,
-                            Name = WebUtility.HtmlDecode(Name),
-                            SourceId = SourceId,
-                            ReleaseDate = ReleaseDate.ToUniversalTime(),
-                            Capsule = Capsule,
-                            Plain = plainData.Plain,
-                            IsActive = plainData.IsActive
-                        });
+                            StoreId = (string)gameWish["machine_name"];
+                            StoreUrl = "https://www.humblebundle.com/store/" + gameWish["human_url"];
+                            Name = WebUtility.HtmlDecode((string)gameWish["human_name"]);
+                            ReleaseDate = default(DateTime);
+                            Capsule = (string)gameWish["standard_carousel_image"];
+
+                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
+                            var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("humble") > -1);
+
+                            Result.Add(new Wishlist
+                            {
+                                StoreId = StoreId,
+                                StoreName = "Humble",
+                                ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
+                                StoreUrl = StoreUrl,
+                                Name = Name,
+                                SourceId = SourceId,
+                                ReleaseDate = ReleaseDate.ToUniversalTime(),
+                                Capsule = Capsule,
+                                Plain = plainData.Plain,
+                                IsActive = plainData.IsActive
+                            });
+                        }
+                        catch(Exception ex)
+                        {
+#if DEBUG
+                            Common.LogError(ex, "IsThereAnyDeal", $"Error in parse Humble wishlist - {Name}");
+#endif
+                            logger.Warn($"IsThereAnyDeal - Error in parse Humble wishlist - {Name}");
+                        }
                     }
                 }
             }
