@@ -67,7 +67,7 @@ namespace IsThereAnyDeal.Views
             var task = Task.Run(() => LoadData(_PlayniteApi, _plugin.GetPluginUserDataPath(), _settings, _PlainSelected))
                 .ContinueWith(antecedent =>
                 {
-                    Application.Current.Dispatcher.Invoke(new Action(() => {
+                    this.Dispatcher.Invoke(new Action(() => {
                         lbWishlistItems = antecedent.Result;
                         GetListGame();
                         SetInfos();

@@ -203,11 +203,11 @@ namespace IsThereAnyDeal.Services
                 if (!PlayniteTools.IsDisabledPlaynitePlugins("OriginLibrary", PlayniteApi.Paths.ConfigurationPath))
                 {
                     OriginWishlist originWishlist = new OriginWishlist();
-                    ListWishlistXbox = originWishlist.GetWishlist(PlayniteApi, OriginId, PluginUserDataPath, settings, CacheOnly);
+                    ListWishlisOrigin = originWishlist.GetWishlist(PlayniteApi, OriginId, PluginUserDataPath, settings, CacheOnly);
                     countDatas.Add(new CountData
                     {
                         StoreName = "Origin",
-                        Count = ListWishlistXbox.Count
+                        Count = ListWishlisOrigin.Count
                     });
                 }
                 else

@@ -67,7 +67,7 @@ namespace IsThereAnyDeal.Clients
                         try
                         {
                             StoreId = SearchElement.GetAttribute("data-product-id");
-                            Capsule = SearchElement.QuerySelector("img.c-image").GetAttribute("src");
+                            Capsule = SearchElement.QuerySelector("img.c-image").GetAttribute("data-src");
                             ReleaseDate = default(DateTime);
                             Name = SearchElement.QuerySelector("h3.c-heading").InnerHtml.Trim();
                             StoreUrl = SearchElement.QuerySelector("a.c-button").GetAttribute("href");
