@@ -83,7 +83,7 @@ namespace IsThereAnyDeal.Services
                                             try
                                             {
                                                 JObject resultObjGame = JObject.Parse(ResultWeb);
-                                                ReleaseDate = (DateTime)resultObjGame["release_date"];
+                                                ReleaseDate = (DateTime)(resultObjGame["release_date"] ?? defult(DateTime));
                                                 Name = (string)resultObjGame["title"];
                                                 Capsule = "http:" + (string)resultObjGame["images"]["logo2x"];
 
