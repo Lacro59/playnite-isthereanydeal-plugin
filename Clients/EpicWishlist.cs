@@ -159,7 +159,7 @@ namespace IsThereAnyDeal.Services
 #endif
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Epic-Error",
-                        string.Format(resources.GetString("LOCItadNotificationError"), "Epic Game Store"),
+                        "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Epic Game Store"),
                         NotificationType.Error
                     ));
 

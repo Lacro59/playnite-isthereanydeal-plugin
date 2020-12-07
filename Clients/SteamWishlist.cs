@@ -49,6 +49,12 @@ namespace IsThereAnyDeal.Services
             if (userId.IsNullOrEmpty() || apiKey.IsNullOrEmpty())
             {
                 logger.Error($"ISThereAnyDeal - No Steam configuration.");
+                
+                PlayniteApi.Notifications.Add(new NotificationMessage(
+                    $"IsThereAnyDeal-Steam-Error",
+                    "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationsSteamBadConfig"), "Steam"),
+                    NotificationType.Error
+                ));
                 return Result;
             }
 
@@ -72,6 +78,19 @@ namespace IsThereAnyDeal.Services
                         return Result;
                     }
                 }
+
+                
+                if (ResultWeb.ToLower().Contains("{\"success\":2}"))
+                {
+                    logger.Warn($"IsThereAnyDeal - Private wishlist for {userId}?");
+
+                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                        $"IsThereAnyDeal-Steam-Error",
+                        "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationErrorSteamPrivate"), "Steam"),
+                        NotificationType.Error
+                    ));
+                }
+
 
                 if (!ResultWeb.IsNullOrEmpty())
                 {
@@ -138,7 +157,7 @@ namespace IsThereAnyDeal.Services
 
                         PlayniteApi.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-Steam-Error",
-                            string.Format(resources.GetString("LOCItadNotificationError"), "Steam"),
+                            "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Steam"),
                             NotificationType.Error
                         ));
 

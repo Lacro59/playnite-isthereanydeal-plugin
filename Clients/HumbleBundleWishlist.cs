@@ -105,7 +105,7 @@ namespace IsThereAnyDeal.Services
 
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Humble-Error",
-                        string.Format(resources.GetString("LOCItadNotificationError"), "Humble Bundle"),
+                        "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Humble Bundle"),
                         NotificationType.Error
                     ));
 

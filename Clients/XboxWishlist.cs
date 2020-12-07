@@ -39,7 +39,7 @@ namespace IsThereAnyDeal.Clients
 
                 PlayniteApi.Notifications.Add(new NotificationMessage(
                     $"IsThereAnyDeal-Xbox-Error",
-                    string.Format(resources.GetString("LOCItadNotificationErrorXboxNoLink"), "Xbox"),
+                    "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationErrorXboxNoLink"), "Xbox"),
                     NotificationType.Error
                 ));
                 return Result;
@@ -107,7 +107,7 @@ namespace IsThereAnyDeal.Clients
 #endif
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Xbox-Error",
-                        string.Format(resources.GetString("LOCItadNotificationError"), "Xbox"),
+                        "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Xbox"),
                         NotificationType.Error
                     ));
 

@@ -90,7 +90,7 @@ namespace IsThereAnyDeal.Services
                     logger.Warn("IsThereAnyDeal - Steam is enable then disabled");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Steam-disabled",
-                        resources.GetString("LOCItadNotificationErrorSteam"),
+                        "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorSteam"),
                         NotificationType.Error,
                         () => plugin.OpenSettingsView()
                     ));
@@ -115,7 +115,7 @@ namespace IsThereAnyDeal.Services
                     logger.Warn("IsThereAnyDeal - GOG is enable then disabled");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-GOG-disabled",
-                        resources.GetString("LOCItadNotificationErrorGog"),
+                        "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorGog"),
                         NotificationType.Error,
                         () => plugin.OpenSettingsView()
                     ));
@@ -140,7 +140,7 @@ namespace IsThereAnyDeal.Services
                     logger.Warn("IsThereAnyDeal - Epic Game Store is enable then disabled");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-EpicGameStore-disabled",
-                        resources.GetString("LOCItadNotificationErrorEpic"),
+                        "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorEpic"),
                         NotificationType.Error,
                         () => plugin.OpenSettingsView()
                     ));
@@ -165,7 +165,7 @@ namespace IsThereAnyDeal.Services
                     logger.Warn("IsThereAnyDeal - Humble Bundle is enable then disabled");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-HumbleBundle-disabled",
-                        resources.GetString("LOCItadNotificationErrorHumble"),
+                        "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorHumble"),
                         NotificationType.Error,
                         () => plugin.OpenSettingsView()
                     ));
@@ -190,7 +190,7 @@ namespace IsThereAnyDeal.Services
                     logger.Warn("IsThereAnyDeal - Xbox is enable then disabled");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Xbox-disabled",
-                        resources.GetString("LOCItadNotificationErrorXbox"),
+                        "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorXbox"),
                         NotificationType.Error,
                         () => plugin.OpenSettingsView()
                     ));
@@ -215,7 +215,7 @@ namespace IsThereAnyDeal.Services
                     logger.Warn("IsThereAnyDeal - Origin is enable then disabled");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Origin-disabled",
-                        resources.GetString("LOCItadNotificationErrorOrigin"),
+                        "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorOrigin"),
                         NotificationType.Error,
                         () => plugin.OpenSettingsView()
                     ));
@@ -722,7 +722,7 @@ namespace IsThereAnyDeal.Services
                             {
                                 PlayniteApi.Notifications.Add(new NotificationMessage(
                                     $"IsThereAnyDeal-{wishlist.Plain}",
-                                    string.Format(resources.GetString("LOCItadNotification"),
+                                    "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotification"),
                                         wishlist.Name, wishlist.ItadBestPrice.PriceNew, wishlist.ItadBestPrice.CurrencySign, wishlist.ItadBestPrice.PriceCut),
                                     NotificationType.Info,
                                     () =>
@@ -745,7 +745,7 @@ namespace IsThereAnyDeal.Services
                             {
                                 PlayniteApi.Notifications.Add(new NotificationMessage(
                                     $"IsThereAnyDeal-{wishlist.Plain}",
-                                    string.Format(resources.GetString("LOCItadNotification"),
+                                    "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotification"),
                                         wishlist.Name, wishlist.ItadBestPrice.PriceNew, wishlist.ItadBestPrice.CurrencySign, wishlist.ItadBestPrice.PriceCut),
                                     NotificationType.Info,
                                     () =>
@@ -769,7 +769,7 @@ namespace IsThereAnyDeal.Services
                         {
                             PlayniteApi.Notifications.Add(new NotificationMessage(
                                 $"IsThereAnyDeal-{itadGiveaway.Title}",
-                                string.Format(resources.GetString("LOCItadNotificationGiveaway"), itadGiveaway.TitleAll, itadGiveaway.Count),
+                                "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationGiveaway"), itadGiveaway.TitleAll, itadGiveaway.Count),
                                 NotificationType.Info,
                                 () => Process.Start(itadGiveaway.Link)
                             ));

@@ -83,7 +83,7 @@ namespace IsThereAnyDeal.Services
                                             try
                                             {
                                                 JObject resultObjGame = JObject.Parse(ResultWeb);
-                                                ReleaseDate = (DateTime)(resultObjGame["release_date"] ?? defult(DateTime));
+                                                ReleaseDate = (DateTime)(resultObjGame["release_date"] ?? default(DateTime));
                                                 Name = (string)resultObjGame["title"];
                                                 Capsule = "http:" + (string)resultObjGame["images"]["logo2x"];
 
@@ -128,7 +128,7 @@ namespace IsThereAnyDeal.Services
 
                             PlayniteApi.Notifications.Add(new NotificationMessage(
                                 $"IsThereAnyDeal-Gog-Error",
-                                string.Format(resources.GetString("LOCItadNotificationError"), "GOG"),
+                                "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "GOG"),
                                 NotificationType.Error
                             ));
 
