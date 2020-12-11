@@ -420,17 +420,14 @@ namespace IsThereAnyDeal.Views
 
 
             lbWishlist.ItemsSource = tempList.FindAll(
-                x => x.ItadBestPrice.PriceCut >= SearchPercentage
-            );
-
-            lbWishlist.ItemsSource = tempList.FindAll(
-                x => x.ItadBestPrice.PriceNew <= SearchPrice
+                x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.ItadBestPrice.PriceNew <= SearchPrice
             );
 
             if (!TextboxSearch.Text.IsNullOrEmpty() && SearchStores.Count != 0)
             {
                 lbWishlist.ItemsSource = tempList.FindAll(
-                    x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1 &&
+                    x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.ItadBestPrice.PriceNew <= SearchPrice && 
+                    x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1 &&
                     (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
                 );
                 return;
@@ -439,7 +436,8 @@ namespace IsThereAnyDeal.Views
             if (!TextboxSearch.Text.IsNullOrEmpty())
             {
                 lbWishlist.ItemsSource = tempList.FindAll(
-                    x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1
+                    x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.ItadBestPrice.PriceNew <= SearchPrice &&
+                    x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1
                 );
                 return;
             }
@@ -447,7 +445,7 @@ namespace IsThereAnyDeal.Views
             if (SearchStores.Count != 0)
             {
                 lbWishlist.ItemsSource = tempList.FindAll(
-                    x => x.ItadBestPrice.PriceCut >= SearchPercentage && 
+                    x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.ItadBestPrice.PriceNew <= SearchPrice && 
                     (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
                 );
                 return;
