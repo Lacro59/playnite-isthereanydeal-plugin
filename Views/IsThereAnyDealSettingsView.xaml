@@ -3,14 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:plugin="clr-namespace:PluginCommon;assembly=PluginCommon" 
-             xmlns:views="clr-namespace:IsThereAnyDeal.Views;assembly=IsThereAnyDeal">
+             xmlns:views="clr-namespace:IsThereAnyDeal.Views;assembly=IsThereAnyDeal"
+             xmlns:commonpluginsshared="clr-namespace:CommonPluginsShared">
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <plugin:StringToBooleanConverter x:Key="StringToBooleanConverter" />
-            <FontFamily x:Key="font">pack://application:,,,/PluginCommon;component/Resources/font.ttf#font</FontFamily>
-            <plugin:IndexConverter x:Key="IndexConverter"/>
+            <commonpluginsshared:StringToBooleanConverter x:Key="StringToBooleanConverter" />
+            <commonpluginsshared:IndexConverter x:Key="IndexConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -208,7 +207,7 @@
                                 <GridViewColumnHeader Content="{DynamicResource LOCActionsLabel}"></GridViewColumnHeader>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="" FontFamily="{StaticResource font}" Click="BtShow_Click"
+                                        <Button Content="" FontFamily="{DynamicResource CommonFont}" Click="BtShow_Click"
                                                 Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Mode=OneWay, Converter={StaticResource IndexConverter}}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>

@@ -6,7 +6,7 @@ using System.Windows;
 using System.Linq;
 using System.Windows.Controls;
 using Newtonsoft.Json;
-using PluginCommon;
+using CommonPluginsShared;
 
 namespace IsThereAnyDeal.Views
 {

@@ -4,11 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
-using PluginCommon;
-using PluginCommon.PlayniteResources;
-using PluginCommon.PlayniteResources.API;
-using PluginCommon.PlayniteResources.Common;
-using PluginCommon.PlayniteResources.Converters;
+using CommonPluginsShared;
 using Newtonsoft.Json.Linq;
 
 namespace IsThereAnyDeal.Services

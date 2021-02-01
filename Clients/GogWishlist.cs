@@ -1,11 +1,7 @@
 ﻿using IsThereAnyDeal.Models;
 using Newtonsoft.Json.Linq;
 using Playnite.SDK;
-using PluginCommon;
-using PluginCommon.PlayniteResources;
-using PluginCommon.PlayniteResources.API;
-using PluginCommon.PlayniteResources.Common;
-using PluginCommon.PlayniteResources.Converters;
+using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
 using System.Net;

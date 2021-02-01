@@ -4,7 +4,7 @@ using IsThereAnyDeal.Views;
 using Playnite.SDK;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
-using PluginCommon;
+using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -34,19 +34,15 @@ namespace IsThereAnyDeal
             string pluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             // Add plugin localization in application ressource.
-            PluginCommon.PluginLocalization.SetPluginLanguage(pluginFolder, api.ApplicationSettings.Language);
+            PluginLocalization.SetPluginLanguage(pluginFolder, api.ApplicationSettings.Language);
             // Add common in application ressource.
-            PluginCommon.Common.Load(pluginFolder);
+            Common.Load(pluginFolder);
 
             // Check version
             if (settings.EnableCheckVersion)
             {
                 CheckVersion cv = new CheckVersion();
-
-                if (cv.Check("IsThereAnyDeal", pluginFolder))
-                {
-                    cv.ShowNotification(api, "IsThereAnyDeal - " + resources.GetString("LOCUpdaterWindowTitle"));
-                }
+                cv.Check("IsThereAnyDeal", pluginFolder, api);
             }
         }
 

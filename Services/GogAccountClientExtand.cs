@@ -1,5 +1,5 @@
-﻿using Playnite.SDK;
-using PluginCommon.PlayniteResources.PluginLibrary.Services.GogLibrary;
+﻿using CommonPluginsPlaynite.PluginLibrary.Services.GogLibrary;
+using Playnite.SDK;
 
 namespace IsThereAnyDeal.Services
 {

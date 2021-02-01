@@ -1,7 +1,7 @@
 ﻿using IsThereAnyDeal.Models;
 using IsThereAnyDeal.Services;
 using Playnite.SDK;
-using PluginCommon;
+using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +11,8 @@ using System.Net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Collections.Specialized;
-using PluginCommon.PlayniteResources.PluginLibrary.OriginLibrary.Services;
-using PluginCommon.PlayniteResources.PluginLibrary.OriginLibrary.Models;
+using CommonPluginsPlaynite.PluginLibrary.OriginLibrary.Services;
+using CommonPluginsPlaynite.PluginLibrary.OriginLibrary.Models;
 
 namespace IsThereAnyDeal.Clients
 {

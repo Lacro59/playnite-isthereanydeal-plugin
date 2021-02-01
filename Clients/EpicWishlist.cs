@@ -8,7 +8,7 @@ using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using Newtonsoft.Json;
-using PluginCommon;
+using CommonPluginsShared;
 using System.Net;
 
 namespace IsThereAnyDeal.Services

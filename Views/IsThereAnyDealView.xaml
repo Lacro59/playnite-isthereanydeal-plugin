@@ -4,16 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IsThereAnyDeal.Views"
-             xmlns:pcon="clr-namespace:PluginCommon.PlayniteResources.Converters;assembly=PluginCommon"
-             xmlns:pccon="clr-namespace:PluginCommon;assembly=PluginCommon"
+             xmlns:converters="clr-namespace:CommonPluginsPlaynite.Converters"
+             xmlns:commonpluginsshared="clr-namespace:CommonPluginsShared"
              mc:Ignorable="d" Height="740" Width="1280" Background="{DynamicResource WindowBackgourndBrush}">
 
     <UserControl.Resources>
-        <pcon:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
+        <converters:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <pcon:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
-        <FontFamily x:Key="font">pack://application:,,,/PluginCommon;component/Resources/font.ttf#font</FontFamily>
-        <pccon:IndexConverter x:Key="IndexConverter"/>
+        <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
+        <commonpluginsshared:IndexConverter x:Key="IndexConverter"/>
     </UserControl.Resources>
 
     <TabControl Margin="10">
@@ -59,7 +58,7 @@
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <CheckBox Name="chkStore" Checked="ChkStore_Checked" Unchecked="ChkStore_Unchecked" Tag="{Binding StoreName}" 
-                                                  Content="{Binding StoreNameDisplay}" IsChecked="{Binding IsCheck}" FontFamily="{StaticResource font}" />
+                                                  Content="{Binding StoreNameDisplay}" IsChecked="{Binding IsCheck}" FontFamily="{DynamicResource CommonFont}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -76,7 +75,7 @@
                                     ValueChanged="Slider_ValueChangedPrice" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
                             <Label Grid.Column="16" Name="lPrice" Content="100€" Margin="5,0,0,0" HorizontalAlignment="Center" />
 
-                            <Label Grid.Column="18" FontFamily="{StaticResource font}" Content="" Name="ItadInfo">
+                            <Label Grid.Column="18" FontFamily="{DynamicResource CommonFont}" Content="" Name="ItadInfo">
                                 <Label.ToolTip>
                                     <ToolTip>
                                         <ListBox Name="tpListBox" BorderThickness="0">
@@ -193,7 +192,7 @@
                                         <StackPanel Grid.Column="0" Height="100" Width="200">
                                             <Image x:Name="HltbImage" Source="{Binding Capsule}" Stretch="UniformToFill" Height="100" Width="200"></Image>
                                             <Label Content="{Binding StoreNameIcon}" Foreground="{DynamicResource GlyphBrush}" HorizontalAlignment="Right" 
-                                                   VerticalAlignment="Bottom" FontSize="20" FontFamily="{StaticResource font}" 
+                                                   VerticalAlignment="Bottom" FontSize="20" FontFamily="{DynamicResource CommonFont}" 
                                                    Margin="-20,-20,0,0" />
                                         </StackPanel>
 
@@ -433,12 +432,12 @@
                                                                 <StackPanel Grid.Column="8" Orientation="Horizontal" HorizontalAlignment="Right">
                                                                     <Button Click="BtHideWishList_Click" 
                                                                             ToolTip="{DynamicResource LOCHideGame}"
-                                                                            Content="" FontFamily="{StaticResource font}"
+                                                                            Content="" FontFamily="{DynamicResource CommonFont}"
                                                                             Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Mode=OneWay, Converter={StaticResource IndexConverter}}"
                                                                             Name="BtHideWishList" VerticalAlignment="Center" />
                                                                     <Button Click="BtRemoveWishList_Click"
                                                                             ToolTip="{DynamicResource LOCRemoveTitle}"
-                                                                            Content="" FontFamily="{StaticResource font}" Margin="6,0,0,0"
+                                                                            Content="" FontFamily="{DynamicResource CommonFont}" Margin="6,0,0,0"
                                                                             Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Mode=OneWay, Converter={StaticResource IndexConverter}}"
                                                                             Name="BtRemoveWishList" VerticalAlignment="Center" />
                                                                 </StackPanel>

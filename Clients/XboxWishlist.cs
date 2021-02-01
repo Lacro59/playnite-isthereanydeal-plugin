@@ -4,7 +4,7 @@ using IsThereAnyDeal.Models;
 using IsThereAnyDeal.Services;
 using Newtonsoft.Json.Linq;
 using Playnite.SDK;
-using PluginCommon;
+using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -2,7 +2,7 @@
 using IsThereAnyDeal.Models;
 using Newtonsoft.Json;
 using Playnite.SDK;
-using PluginCommon;
+using CommonPluginsShared;
 using System;
 using System.Linq;
 using System.Collections.Generic;
