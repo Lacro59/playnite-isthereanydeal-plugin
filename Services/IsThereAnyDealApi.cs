@@ -264,7 +264,8 @@ namespace IsThereAnyDeal.Services
             {
                 string responseData = string.Empty;
                 string url = baseAddress + "v01/web/regions/";
-                try { 
+                try
+                { 
                     responseData = Web.DownloadStringData(url).GetAwaiter().GetResult();
                 }
                 catch (Exception ex)

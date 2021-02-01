@@ -7,6 +7,8 @@ using System.Linq;
 using System.Windows.Controls;
 using Newtonsoft.Json;
 using CommonPluginsShared;
+using System.Threading.Tasks;
+using System;
 
 namespace IsThereAnyDeal.Views
 {
@@ -27,34 +29,7 @@ namespace IsThereAnyDeal.Views
             
             InitializeComponent();
 
-            RegionsData = isThereAnyDealApi.GetCoveredRegions();
-#if DEBUG
-            logger.Debug($"IsThereAnyDeal - RegionsData: {JsonConvert.SerializeObject(RegionsData)}");
-#endif
-            ItadSelectRegion.ItemsSource = RegionsData;
-            ItadSelectRegion.Text = GetInfosRegion(settings.Region);
-
-            ItadSelectCountry.Text = settings.Country;
-            StoresItems = settings.Stores;
-            ListStores.ItemsSource = StoresItems;
-
-            foreach (ItadStore store in StoresItems)
-            {
-                if (store.IsCheck)
-                {
-                    if (ListStores.Text == string.Empty)
-                    {
-                        ListStores.Text += store.Title;
-                    }
-                    else
-                    {
-                        ListStores.Text += ", " + store.Title;
-                    }
-                }
-            }
-
-            lLimitNotification.Content = settings.LimitNotification + "%";
-            lLimitNotificationPrice.Content = settings.LimitNotificationPrice + GetInfosRegion(settings.Region, true);
+            GetDataRegion();
 
             _settings.wishlistIgnores = _settings.wishlistIgnores.OrderBy(x => x.StoreName).ThenBy(x => x.Name).ToList();
             lvIgnoreList.ItemsSource = _settings.wishlistIgnores;
@@ -111,12 +86,27 @@ namespace IsThereAnyDeal.Views
                 if (!IsFirst)
                 {
                     ListStores.Text = string.Empty;
-                    StoresItems = isThereAnyDealApi.GetRegionStores(_settings.Region, _settings.Country);
-#if DEBUG 
-                    logger.Debug($"IsThereAnyDeal - StoresItems: {JsonConvert.SerializeObject(StoresItems)}");
+
+
+                    PART_DataLoad.Visibility = Visibility.Visible;
+                    PART_Data.Visibility = Visibility.Hidden;
+
+                    var TaskView = Task.Run(() =>
+                    {
+                        StoresItems = isThereAnyDealApi.GetRegionStores(_settings.Region, _settings.Country);
+#if DEBUG
+                        logger.Debug($"IsThereAnyDeal - StoresItems: {JsonConvert.SerializeObject(StoresItems)}");
 #endif
-                    ListStores.ItemsSource = StoresItems;
-                    ListStores.UpdateLayout();
+
+                        this.Dispatcher.BeginInvoke((Action)delegate
+                        {
+                            ListStores.ItemsSource = StoresItems;
+                            ListStores.UpdateLayout();
+
+                            PART_DataLoad.Visibility = Visibility.Hidden;
+                            PART_Data.Visibility = Visibility.Visible;
+                        });
+                    });
                 }
             }
         }
@@ -229,6 +219,52 @@ namespace IsThereAnyDeal.Views
             _settings.wishlistIgnores.RemoveAt(index);
             lvIgnoreList.ItemsSource = null;
             lvIgnoreList.ItemsSource = _settings.wishlistIgnores;
+        }
+
+
+        private void GetDataRegion()
+        {
+            PART_DataLoad.Visibility = Visibility.Visible;
+            PART_Data.Visibility = Visibility.Hidden;
+
+            var TaskView = Task.Run(() =>
+            {
+                RegionsData = isThereAnyDealApi.GetCoveredRegions();
+#if DEBUG
+                logger.Debug($"IsThereAnyDeal - RegionsData: {JsonConvert.SerializeObject(RegionsData)}");
+#endif
+
+                this.Dispatcher.BeginInvoke((Action)delegate
+                {
+                    ItadSelectRegion.ItemsSource = RegionsData;
+                    ItadSelectRegion.Text = GetInfosRegion(_settings.Region);
+
+                    ItadSelectCountry.Text = _settings.Country;
+                    StoresItems = _settings.Stores;
+                    ListStores.ItemsSource = StoresItems;
+
+                    foreach (ItadStore store in StoresItems)
+                    {
+                        if (store.IsCheck)
+                        {
+                            if (ListStores.Text == string.Empty)
+                            {
+                                ListStores.Text += store.Title;
+                            }
+                            else
+                            {
+                                ListStores.Text += ", " + store.Title;
+                            }
+                        }
+                    }
+
+                    lLimitNotification.Content = _settings.LimitNotification + "%";
+                    lLimitNotificationPrice.Content = _settings.LimitNotificationPrice + GetInfosRegion(_settings.Region, true);
+
+                    PART_DataLoad.Visibility = Visibility.Hidden;
+                    PART_Data.Visibility = Visibility.Visible;
+                });
+            });
         }
     }
 }
