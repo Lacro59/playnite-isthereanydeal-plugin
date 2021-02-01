@@ -39,6 +39,8 @@ namespace IsThereAnyDeal
         public bool EnableCheckVersion { get; set; } = true;
         public bool MenuInExtensions { get; set; } = true;
 
+        public List<ItadNotificationCriteria> NotificationCriterias { get; set; } = new List<ItadNotificationCriteria>();
+
 
         // Playnite serializes settings object to a JSON object and saves it as text file.
         // If you want to exclude some property from being saved then use `JsonIgnore` ignore attribute.
@@ -90,6 +92,8 @@ namespace IsThereAnyDeal
 
                 EnableCheckVersion = savedSettings.EnableCheckVersion;
                 MenuInExtensions = savedSettings.MenuInExtensions;
+
+                NotificationCriterias = savedSettings.NotificationCriterias;
             }
         }
 

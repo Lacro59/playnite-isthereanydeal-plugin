@@ -166,27 +166,33 @@ namespace IsThereAnyDeal.Models
             }
         }
 
-        public bool GetNotification(int LimitNotification)
+        public bool GetNotification(List<ItadNotificationCriteria> Criterias)
         {
-            List<ItadGameInfo> Result = new List<ItadGameInfo>();
-            foreach (var item in ItadLastPrice)
+            foreach (ItadGameInfo item in ItadLastPrice)
             {
-                if (item.PriceCut >= LimitNotification)
+                foreach(ItadNotificationCriteria Criteria in Criterias)
                 {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public bool GetNotificationPrice(int LimitNotificationPrice)
-        {
-            List<ItadGameInfo> Result = new List<ItadGameInfo>();
-            foreach (var item in ItadLastPrice)
-            {
-                if (item.PriceNew <= LimitNotificationPrice)
-                {
-                    return true;
+                    if (Criteria.PriceCut > -1 && Criteria.PriceInferior > -1)
+                    {
+                        if (item.PriceCut >= Criteria.PriceCut && item.PriceNew <= Criteria.PriceInferior)
+                        {
+                            return true;
+                        }
+                    }
+                    else if (Criteria.PriceCut > -1)
+                    {
+                        if (item.PriceCut >= Criteria.PriceCut)
+                        {
+                            return true;
+                        }
+                    }
+                    else if (Criteria.PriceInferior > -1)
+                    {
+                        if (item.PriceNew <= Criteria.PriceInferior)
+                        {
+                            return true;
+                        }
+                    }
                 }
             }
             return false;

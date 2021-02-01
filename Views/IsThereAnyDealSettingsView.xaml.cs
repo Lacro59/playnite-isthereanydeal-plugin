@@ -38,6 +38,9 @@ namespace IsThereAnyDeal.Views
             IsFirst = false;
 
             PART_LimitNotificationPrice.LongValue = _settings.LimitNotificationPrice;
+
+
+            lLimitNotification.Content = PART_sPriceCut.Value + "%";
         }
 
         private void ItadSelectRegion_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -249,13 +252,52 @@ namespace IsThereAnyDeal.Views
                         }
                     }
 
-                    lLimitNotification.Content = _settings.LimitNotification + "%";
                     lLimitNotificationPrice.Content = GetInfosRegion(_settings.Region, true);
 
                     PART_DataLoad.Visibility = Visibility.Hidden;
                     PART_Data.Visibility = Visibility.Visible;
                 });
             });
+        }
+
+
+        private void ButtonRemove_Click(object sender, RoutedEventArgs e)
+        {
+            if (!((string)((Button)sender).Tag).IsNullOrEmpty())
+            {
+                int.TryParse((string)((Button)sender).Tag, out int index);
+
+                ((List<ItadNotificationCriteria>)PART_LbNotifications.ItemsSource).RemoveAt(index);
+
+                PART_LbNotifications.Items.Refresh();
+            }
+        }
+
+        private void ButtonAdd_Click(object sender, RoutedEventArgs e)
+        {
+            if ((bool)PART_CbPriceCut.IsChecked || (bool)PART_CbPriceInferior.IsChecked)
+            {
+                int PriceCut = -1;
+                int PriceInferior = -1;
+
+                if ((bool)PART_CbPriceCut.IsChecked)
+                {
+                    PriceCut = (int)PART_sPriceCut.Value;
+                }
+
+                if ((bool)PART_CbPriceInferior.IsChecked)
+                {
+                    PriceInferior = (int)PART_LimitNotificationPrice.LongValue;
+                }
+
+                ((List<ItadNotificationCriteria>)PART_LbNotifications.ItemsSource).Add(new ItadNotificationCriteria
+                {
+                    PriceCut = PriceCut,
+                    PriceInferior = PriceInferior
+                });
+
+                PART_LbNotifications.Items.Refresh();
+            }
         }
     }
 }

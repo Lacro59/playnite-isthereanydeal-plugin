@@ -72,6 +72,7 @@
     <Compile Include="Clients\XboxWishlist.cs" />
     <Compile Include="Clients\GogWishlist.cs" />
     <Compile Include="Clients\HumbleBundleWishlist.cs" />
+    <Compile Include="Models\ItadNotificationCriteria.cs" />
     <Compile Include="Models\ItadResult.cs" />
     <Compile Include="playnite-plugincommon\CommonPluginsControls\PlayniteControls\NumericBox.xaml.cs">
       <DependentUpon>NumericBox.xaml</DependentUpon>

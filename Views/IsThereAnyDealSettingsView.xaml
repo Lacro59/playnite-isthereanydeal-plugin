@@ -45,10 +45,6 @@
                                         <RowDefinition Height="auto" />
                                         <RowDefinition Height="10" />
                                         <RowDefinition Height="auto" />
-                                        <RowDefinition Height="10" />
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="10" />
-                                        <RowDefinition Height="auto" />
                                     </Grid.RowDefinitions>
 
                                     <CheckBox Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" IsChecked="{Binding MenuInExtensions}" Margin="0,0,0,0" 
@@ -63,28 +59,6 @@
                                     <CheckBox Name="chk_Notification" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" IsChecked="{Binding EnableNotification}" VerticalAlignment="Center">
                                         <Label Content="{DynamicResource LOCItadEnableNotification}" />
                                     </CheckBox>
-
-
-                                    <CheckBox Grid.Column="1" Grid.Row="6" IsChecked="{Binding EnableNotificationPercentage}" VerticalAlignment="Center"
-                          IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
-                                    <Label Grid.Column="1" Grid.Row="6" Margin="25,0,0,0" Content="{DynamicResource LOCItadLimitNotification}" 
-                       IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
-                                    <Slider Grid.Column="3" Grid.Row="6" Minimum="0" Maximum="100" ValueChanged="Slider_ValueChanged" 
-                        Value="{Binding LimitNotification}" IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" 
-                        IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" />
-                                    <Label Grid.Column="5" Grid.Row="6" Name="lLimitNotification" Content="50%" HorizontalAlignment="Center"
-                       IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
-
-
-                                    <CheckBox Grid.Column="1" Grid.Row="8" IsChecked="{Binding EnableNotificationPrice}" VerticalAlignment="Center"
-                          IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
-                                    <Label Grid.Column="1" Grid.Row="8" Margin="25,0,0,0" Content="{DynamicResource LOCItadLimitNotificationPrice}" 
-                       IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}" />
-                                    <playnitecontrols:NumericBox Grid.Column="3" Grid.Row="8" x:Name="PART_LimitNotificationPrice"
-                                                                 MinLongValue="0" Width="60" HorizontalAlignment="Left"
-                                                                 MaxLongValue="{Binding ElementName=PART_MaxPrice, Path=LongValue, Mode=OneWay}"
-                                                                 LongValue="{Binding LimitNotificationPrice}" />
-                                    <Label Name="lLimitNotificationPrice" Content="$" Grid.Column="3" Grid.Row="8" Margin="70,0,0,0" />
                                 </Grid>
                             </StackPanel>
 
@@ -150,31 +124,129 @@
 
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100" />
-                                        <ColumnDefinition Width="10" />
-                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="30" />
-                                        <RowDefinition Height="10" />
-                                        <RowDefinition Height="30" />
-                                    </Grid.RowDefinitions>
 
-                                    <Label Grid.Column="0" Grid.Row="0" Content="{DynamicResource LOCItadMinimum}" />
-                                    <playnitecontrols:NumericBox Grid.Column="2" Grid.Row="0"
+                                    <Grid Grid.Column="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="60" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Label Grid.Column="0" Grid.Row="0" Content="{DynamicResource LOCItadMinimum}" />
+                                        <playnitecontrols:NumericBox Grid.Column="2" Grid.Row="0"
                                                                  MinLongValue="0" MaxLongValue="200"
                                                                  LongValue="{Binding MinPrice}" />
+                                    </Grid>
 
-                                    <Label Grid.Column="0" Grid.Row="2" Content="{DynamicResource LOCItadMaximum}" />
-                                    <playnitecontrols:NumericBox Grid.Column="2" Grid.Row="2" x:Name="PART_MaxPrice"
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="60" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
+                                        
+                                        <Label Grid.Column="0" Grid.Row="0" Content="{DynamicResource LOCItadMaximum}" />
+                                        <playnitecontrols:NumericBox Grid.Column="2" Grid.Row="0" x:Name="PART_MaxPrice"
                                                                  MinLongValue="30" MaxLongValue="10000"
                                                                  LongValue="{Binding MaxPrice}" />
+                                    </Grid>
                                 </Grid>
                             </StackPanel>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="{DynamicResource LOCItadSettingsNotifications}" IsEnabled="{Binding EnableNotification}">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="40" />
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Name="PART_CbPriceCut" Grid.Column="0" VerticalAlignment="Center" />
+                        <Label Grid.Column="2" Content="{DynamicResource LOCItadLimitNotification}"
+                               IsEnabled="{Binding ElementName=PART_CbPriceCut, Path=IsChecked}" />
+                        <Slider Grid.Column="4" Minimum="0" Maximum="100" ValueChanged="Slider_ValueChanged" 
+                                Value="50" Name="PART_sPriceCut"
+                                IsEnabled="{Binding ElementName=PART_CbPriceCut, Path=IsChecked}"
+                                IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" />
+                        <Label Grid.Column="6" Name="lLimitNotification" Content="50%" HorizontalAlignment="Center"
+                               IsEnabled="{Binding ElementName=PART_CbPriceCut, Path=IsChecked}" />
+                    </Grid>
+                    
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="40" />
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Name="PART_CbPriceInferior" Grid.Column="0" VerticalAlignment="Center" />
+                        <Label Grid.Column="2" Content="{DynamicResource LOCItadLimitNotificationPrice}"
+                               IsEnabled="{Binding ElementName=PART_CbPriceInferior, Path=IsChecked}" />
+                        <playnitecontrols:NumericBox Grid.Column="4" Grid.Row="8" x:Name="PART_LimitNotificationPrice"
+                                                     MinLongValue="0" Width="60" HorizontalAlignment="Left"
+                                                     IsEnabled="{Binding ElementName=PART_CbPriceInferior, Path=IsChecked}"
+                                                     MaxLongValue="{Binding ElementName=PART_MaxPrice, Path=LongValue, Mode=OneWay}"
+                                                     LongValue="0" />
+                        <Label Grid.Column="6" Name="lLimitNotificationPrice" Content="$"
+                               IsEnabled="{Binding ElementName=PART_CbPriceInferior, Path=IsChecked}" />
+                    </Grid>
+
+                    <Button Grid.Row="4" Content="{DynamicResource LOCAddTitle}" HorizontalAlignment="Right" Click="ButtonAdd_Click" />
+
+                    <ListBox Grid.Row="6" Name="PART_LbNotifications" ItemsSource="{Binding NotificationCriterias}"
+                             MinHeight="200">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Content="{Binding Criteria}" Grid.Column="0" />
+                                    <Button Grid.Column="2"
+                                            Content="" FontFamily="{DynamicResource CommonFont}" Click="ButtonRemove_Click"
+                                            Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Mode=OneWay, Converter={StaticResource IndexConverter}}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
             </TabItem>
 
             <TabItem Header="{DynamicResource LOCItadSettingWishlist}">
