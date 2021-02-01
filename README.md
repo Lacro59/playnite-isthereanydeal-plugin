@@ -1,5 +1,5 @@
 # playnite-howlongtobeat-plugin
-Generic plugin for [Playnite](https://playnite).
+Generic plugin for [Playnite](https://playnite).  
 This plugin get [Is There Any Deal](https://isthereanydeal.com/) in application database from store wish list. 
 
 More information here: https://playnite.link/forum/thread-323.html
