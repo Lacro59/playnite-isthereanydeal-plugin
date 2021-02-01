@@ -56,7 +56,9 @@ namespace IsThereAnyDeal.Views
 
             SetFilterStore();
 
-            lPrice.Content = 100 + _settings.CurrencySign;
+            lPrice.Content = settings.MaxPrice + _settings.CurrencySign;
+            sPrice.Minimum = settings.MinPrice;
+            sPrice.Maximum = settings.MaxPrice;
 
             DataContext = this;
         }

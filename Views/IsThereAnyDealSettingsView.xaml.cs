@@ -36,6 +36,8 @@ namespace IsThereAnyDeal.Views
 
             DataContext = this;
             IsFirst = false;
+
+            PART_LimitNotificationPrice.LongValue = _settings.LimitNotificationPrice;
         }
 
         private void ItadSelectRegion_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -50,7 +52,7 @@ namespace IsThereAnyDeal.Views
                 ListStores.Text = string.Empty;
 
 
-                lLimitNotificationPrice.Content = sLimitNotificationPrice.Value + GetInfosRegion(_settings.Region, true);
+                lLimitNotificationPrice.Content = GetInfosRegion(_settings.Region, true);
             }
         }
 
@@ -201,17 +203,6 @@ namespace IsThereAnyDeal.Views
             }
         }
 
-        private void Slider_ValueChangedPrice(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            try
-            {
-                lLimitNotificationPrice.Content = ((Slider)sender).Value + GetInfosRegion(_settings.Region, true);
-            }
-            catch
-            {
-            }
-        }
-
 
         private void BtShow_Click(object sender, RoutedEventArgs e)
         {
@@ -259,7 +250,7 @@ namespace IsThereAnyDeal.Views
                     }
 
                     lLimitNotification.Content = _settings.LimitNotification + "%";
-                    lLimitNotificationPrice.Content = _settings.LimitNotificationPrice + GetInfosRegion(_settings.Region, true);
+                    lLimitNotificationPrice.Content = GetInfosRegion(_settings.Region, true);
 
                     PART_DataLoad.Visibility = Visibility.Hidden;
                     PART_Data.Visibility = Visibility.Visible;

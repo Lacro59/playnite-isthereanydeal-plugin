@@ -30,6 +30,9 @@ namespace IsThereAnyDeal
         public bool EnableNotificationPrice { get; set; } = false;
         public int LimitNotificationPrice { get; set; } = 5;
 
+        public int MinPrice { get; set; } = 1;
+        public int MaxPrice { get; set; } = 100;
+
         public string HumbleKey { get; set; } = string.Empty;
         public string XboxLink { get; set; } = string.Empty;
 
@@ -78,6 +81,9 @@ namespace IsThereAnyDeal
                 LimitNotification = savedSettings.LimitNotification;
                 EnableNotificationPrice = savedSettings.EnableNotificationPrice;
                 LimitNotificationPrice = savedSettings.LimitNotificationPrice;
+
+                MinPrice = savedSettings.MinPrice;
+                MaxPrice = savedSettings.MaxPrice;
 
                 HumbleKey = savedSettings.HumbleKey;
                 XboxLink = savedSettings.XboxLink;

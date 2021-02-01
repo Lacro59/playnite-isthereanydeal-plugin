@@ -29,6 +29,10 @@
     <sys:String x:Key="LOCItadLimitNotification">Price cut</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">Price inferior</sys:String>
 
+    <sys:String x:Key="LOCItadSettingPrice">Define limit to price slider</sys:String>
+    <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
+    <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
+
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADFilterSource">Filter by store(s)</sys:String>
