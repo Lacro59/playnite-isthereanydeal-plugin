@@ -163,6 +163,14 @@ namespace IsThereAnyDeal.Services
                         NotificationType.Error
                     ));
 
+                    ResultLoad = LoadWishlists("Epic", PluginUserDataPath, true);
+                    if (ResultLoad != null && CacheOnly)
+                    {
+                        ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                        SaveWishlist("Epic", PluginUserDataPath, ResultLoad);
+                        return ResultLoad;
+                    }
+
                     return Result;
                 }
             }

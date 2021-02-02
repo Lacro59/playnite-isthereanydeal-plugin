@@ -42,6 +42,14 @@ namespace IsThereAnyDeal.Clients
                     "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationErrorXboxNoLink"), "Xbox"),
                     NotificationType.Error
                 ));
+
+                ResultLoad = LoadWishlists("Xbox", PluginUserDataPath, true);
+                if (ResultLoad != null && CacheOnly)
+                {
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                    SaveWishlist("Xbox", PluginUserDataPath, ResultLoad);
+                    return ResultLoad;
+                }
                 return Result;
             }
 
@@ -111,6 +119,13 @@ namespace IsThereAnyDeal.Clients
                         NotificationType.Error
                     ));
 
+                    ResultLoad = LoadWishlists("Xbox", PluginUserDataPath, true);
+                    if (ResultLoad != null && CacheOnly)
+                    {
+                        ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                        SaveWishlist("Xbox", PluginUserDataPath, ResultLoad);
+                        return ResultLoad;
+                    }
                     return Result;
                 }
             }

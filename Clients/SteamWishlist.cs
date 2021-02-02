@@ -55,6 +55,14 @@ namespace IsThereAnyDeal.Services
                     "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationsSteamBadConfig"), "Steam"),
                     NotificationType.Error
                 ));
+
+                ResultLoad = LoadWishlists("Steam", PluginUserDataPath, true);
+                if (ResultLoad != null && CacheOnly)
+                {
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                    SaveWishlist("Steam", PluginUserDataPath, ResultLoad);
+                    return ResultLoad;
+                }
                 return Result;
             }
 
@@ -161,6 +169,13 @@ namespace IsThereAnyDeal.Services
                             NotificationType.Error
                         ));
 
+                        ResultLoad = LoadWishlists("Steam", PluginUserDataPath, true);
+                        if (ResultLoad != null && CacheOnly)
+                        {
+                            ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                            SaveWishlist("Steam", PluginUserDataPath, ResultLoad);
+                            return ResultLoad;
+                        }
                         return Result;
                     }
                 }

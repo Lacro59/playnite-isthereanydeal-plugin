@@ -128,6 +128,13 @@ namespace IsThereAnyDeal.Services
                                 NotificationType.Error
                             ));
 
+                            ResultLoad = LoadWishlists("Gog", PluginUserDataPath, true);
+                            if (ResultLoad != null && CacheOnly)
+                            {
+                                ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                                SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
+                                return ResultLoad;
+                            }
                             return Result;
                         }
                     }
@@ -135,6 +142,14 @@ namespace IsThereAnyDeal.Services
                 catch (WebException ex)
                 {
                     Common.LogError(ex, "IsThereAnyDeal", "Error in download GOG wishlist");
+
+                    ResultLoad = LoadWishlists("Gog", PluginUserDataPath, true);
+                    if (ResultLoad != null && CacheOnly)
+                    {
+                        ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                        SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
+                        return ResultLoad;
+                    }
                     return Result;
                 }
             }

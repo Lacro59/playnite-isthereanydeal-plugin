@@ -105,6 +105,13 @@ namespace IsThereAnyDeal.Services
                         NotificationType.Error
                     ));
 
+                    ResultLoad = LoadWishlists("Humble", PluginUserDataPath, true);
+                    if (ResultLoad != null && CacheOnly)
+                    {
+                        ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                        SaveWishlist("Humble", PluginUserDataPath, ResultLoad);
+                        return ResultLoad;
+                    }
                     return Result;
                 }
             }
