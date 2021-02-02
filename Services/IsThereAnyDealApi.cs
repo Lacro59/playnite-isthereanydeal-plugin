@@ -428,136 +428,159 @@ namespace IsThereAnyDeal.Services
 
         public List<Wishlist> GetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings, IPlayniteAPI PlayniteApi)
         {
-            // IS allready load?
-            if (wishlists.Count > 0)
-            {
-                foreach(Wishlist wishlist in wishlists)
-                {
-                    if (wishlist.itadGameInfos != null && wishlist.itadGameInfos.Keys.Contains(DateTime.Now.ToString("yyyy-MM-dd")))
-                    {
-#if DEBUG
-                        logger.Debug("IsThereAnyDeal - Current price is allready load");
-#endif
-
-                        return wishlists;
-                    }
-                }
-            }
-
-
             List<Wishlist> Result = new List<Wishlist>();
 
-            string plains = string.Empty;
-            foreach (Wishlist wishlist in wishlists)
+            try
             {
-                if (plains == string.Empty)
+                // IS allready load?
+                if (wishlists.Count > 0)
                 {
-                    plains += wishlist.Plain;
-                }
-                else
-                {
-                    plains += "," + wishlist.Plain;
-                }
-            }
-#if DEBUG
-            logger.Debug($"IsThereAnyDeal - GetCurrentPrice({plains})");
-#endif
-
-            string shops = string.Empty;
-            foreach (ItadStore Store in settings.Stores)
-            {
-                if (Store.IsCheck)
-                {
-                    if (shops == string.Empty)
+                    foreach (Wishlist wishlist in wishlists)
                     {
-                        shops += Store.Id;
+                        if (wishlist.itadGameInfos != null && wishlist.itadGameInfos.Keys.Contains(DateTime.Now.ToString("yyyy-MM-dd")))
+                        {
+#if DEBUG
+                            logger.Debug("IsThereAnyDeal - Current price is allready load");
+#endif
+                            return wishlists;
+                        }
+                    }
+                }
+
+
+                string plains = string.Empty;
+                foreach (Wishlist wishlist in wishlists)
+                {
+                    if (plains == string.Empty)
+                    {
+                        plains += wishlist.Plain;
                     }
                     else
                     {
-                        shops += "," + Store.Id;
+                        plains += "," + wishlist.Plain;
                     }
                 }
-            }
+#if DEBUG
+                logger.Debug($"IsThereAnyDeal - GetCurrentPrice({plains})");
+#endif
 
-            if (!plains.IsNullOrEmpty())
-            {
-                try
+                string shops = string.Empty;
+                foreach (ItadStore Store in settings.Stores)
                 {
-                    string url = baseAddress + $"v01/game/prices/?key={key}&plains={plains}&region{settings.Region}&country={settings.Country}&shops={shops}";
-                    string responseData = string.Empty;
+                    if (Store.IsCheck)
+                    {
+                        if (shops == string.Empty)
+                        {
+                            shops += Store.Id;
+                        }
+                        else
+                        {
+                            shops += "," + Store.Id;
+                        }
+                    }
+                }
+
+                if (!plains.IsNullOrEmpty())
+                {
                     try
                     {
-                        responseData = Web.DownloadStringData(url).GetAwaiter().GetResult();
+                        string url = baseAddress + $"v01/game/prices/?key={key}&plains={plains}&region{settings.Region}&country={settings.Country}&shops={shops}";
+                        string responseData = string.Empty;
+                        try
+                        {
+                            responseData = Web.DownloadStringData(url).GetAwaiter().GetResult();
+                        }
+                        catch (Exception ex)
+                        {
+                            Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                        }
+
+                        foreach (Wishlist wishlist in wishlists)
+                        {
+                            ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
+                            List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
+                            JObject datasObj = JObject.Parse(responseData);
+
+                            // Check if in library (exclude game emulated)
+                            List<Guid> ListEmulators = new List<Guid>();
+                            foreach (var item in PlayniteApi.Database.Emulators)
+                            {
+                                ListEmulators.Add(item.Id);
+                            }
+
+                            bool InLibrary = false;
+                            foreach (var game in PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower() && a.Hidden == false))
+                            {
+                                if (game.PlayAction != null && game.PlayAction.EmulatorId != null && ListEmulators.Contains(game.PlayAction.EmulatorId))
+                                {
+                                    InLibrary = false;
+                                }
+                                else
+                                {
+                                    InLibrary = true;
+                                }
+                            }
+                            wishlist.InLibrary = InLibrary;
+
+                            try
+                            {
+                                if (((JArray)datasObj["data"][wishlist.Plain]["list"]).Count > 0)
+                                {
+                                    foreach (JObject dataObj in ((JArray)datasObj["data"][wishlist.Plain]["list"]))
+                                    {
+                                        try
+                                        {
+                                            dataCurrentPrice.Add(new ItadGameInfo
+                                            {
+                                                Name = wishlist.Name,
+                                                StoreId = wishlist.StoreId,
+                                                SourceId = wishlist.SourceId,
+                                                Plain = wishlist.Plain,
+                                                PriceNew = Math.Round((double)dataObj["price_new"], 2),
+                                                PriceOld = Math.Round((double)dataObj["price_old"], 2),
+                                                PriceCut = (double)dataObj["price_cut"],
+                                                CurrencySign = settings.CurrencySign,
+                                                ShopName = (string)dataObj["shop"]["name"],
+                                                ShopColor = GetShopColor((string)dataObj["shop"]["name"], settings.Stores),
+                                                UrlBuy = (string)dataObj["url"]
+                                            });
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Common.LogError(ex, "IsThereAnyDeal");
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.Warn($"IsThereAnyDeal - No data for {wishlist.Name} - {plains}");
+#if DEBUG
+                                Common.LogError(ex, "IsThereAnyDeal", "Error on get dataCurrentPrice");
+#endif
+                            }
+
+                            itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
+
+                            wishlist.itadGameInfos = itadGameInfos;
+                            Result.Add(wishlist);
+                        }
                     }
                     catch (Exception ex)
                     {
-                        Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
-                    }
-
-                    foreach (Wishlist wishlist in wishlists)
-                    {
-                        ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
-                        List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
-                        JObject datasObj = JObject.Parse(responseData);
-
-                        // Check if in library (exclude game emulated)
-                        List<Guid> ListEmulators = new List<Guid>();
-                        foreach (var item in PlayniteApi.Database.Emulators)
-                        {
-                            ListEmulators.Add(item.Id);
-                        }
-
-                        bool InLibrary = false;
-                        foreach (var game in PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower() && a.Hidden == false))
-                        {
-                            if (game.PlayAction != null && game.PlayAction.EmulatorId != null && ListEmulators.Contains(game.PlayAction.EmulatorId))
-                            {
-                                InLibrary = false;
-                            }
-                            else
-                            {
-                                InLibrary = true;
-                            }        
-                        }
-                        wishlist.InLibrary = InLibrary;
-
-
-                        if (((JArray)datasObj["data"][wishlist.Plain]["list"]).Count > 0)
-                        {
-                            foreach (JObject dataObj in ((JArray)datasObj["data"][wishlist.Plain]["list"]))
-                            {
-                                dataCurrentPrice.Add(new ItadGameInfo
-                                {
-                                    Name = wishlist.Name,
-                                    StoreId = wishlist.StoreId,
-                                    SourceId = wishlist.SourceId,
-                                    Plain = wishlist.Plain,
-                                    PriceNew = Math.Round((double)dataObj["price_new"], 2),
-                                    PriceOld = Math.Round((double)dataObj["price_old"], 2),
-                                    PriceCut = (double)dataObj["price_cut"],
-                                    CurrencySign = settings.CurrencySign,
-                                    ShopName = (string)dataObj["shop"]["name"],
-                                    ShopColor = GetShopColor((string)dataObj["shop"]["name"], settings.Stores),
-                                    UrlBuy = (string)dataObj["url"]
-                                });
-                            }
-                        }
-                        itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
-
-                        wishlist.itadGameInfos = itadGameInfos;
-                        Result.Add(wishlist);
+                        Common.LogError(ex, "IsThereAnyDeal", $"Error in GetCurrentPrice({plains})");
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", $"Error in GetCurrentPrice({plains})");
+#if DEBUG
+                    logger.Debug("IsThereAnyDeal - No plain");
+#endif
                 }
             }
-            else
+            catch (Exception ex)
             {
-#if DEBUG
-                logger.Debug("IsThereAnyDeal - No plain");
-#endif
+                Common.LogError(ex, "IsThereAnyDeal");
             }
 
             return Result;

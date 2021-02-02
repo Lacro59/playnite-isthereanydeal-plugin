@@ -9,13 +9,20 @@ using Newtonsoft.Json;
 using CommonPluginsShared;
 using System.Threading.Tasks;
 using System;
+using Playnite.SDK.Models;
+using System.Windows.Documents;
+using System.Diagnostics;
 
 namespace IsThereAnyDeal.Views
 {
     public partial class IsThereAnyDealSettingsView : UserControl
     {
         private static readonly ILogger logger = LogManager.GetLogger();
+        private static IResourceProvider resources = new ResourceProvider();
+
+        private IPlayniteAPI _PlayniteApi;
         private IsThereAnyDealSettings _settings;
+        private string _PluginUserDataPath;
 
         private List<ItadRegion> RegionsData;
         private List<ItadStore> StoresItems = new List<ItadStore>();
@@ -23,9 +30,11 @@ namespace IsThereAnyDeal.Views
         private bool IsFirst = true;
 
 
-        public IsThereAnyDealSettingsView(IsThereAnyDealSettings settings)
+        public IsThereAnyDealSettingsView(IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, string PluginUserDataPath)
         {
+            _PlayniteApi = PlayniteApi;
             _settings = settings;
+            _PluginUserDataPath = PluginUserDataPath;
             
             InitializeComponent();
 
@@ -297,6 +306,89 @@ namespace IsThereAnyDeal.Views
                 });
 
                 PART_LbNotifications.Items.Refresh();
+            }
+        }
+
+
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            Hyperlink link = (Hyperlink)sender;
+            Process.Start((string)link.Tag);
+        }
+
+        private void ButtonImportSteam_Click(object sender, RoutedEventArgs e)
+        {
+            string targetPath = _PlayniteApi.Dialogs.SelectFile("json file|*.json");
+
+            if (!targetPath.IsNullOrEmpty())
+            {
+                GlobalProgressOptions globalProgressOptions = new GlobalProgressOptions(
+                    $"IsThereAnyDeal - " + resources.GetString("LOCImportLabel"),
+                    true
+                );
+                globalProgressOptions.IsIndeterminate = true;
+
+                _PlayniteApi.Dialogs.ActivateGlobalProgress((activateGlobalProgress) =>
+                {
+                    try
+                    {
+                        Stopwatch stopWatch = new Stopwatch();
+                        stopWatch.Start();
+
+
+                        GameSource gameSource = _PlayniteApi.Database.Sources.Where(x => x.Name.ToLower().IndexOf("steam") > -1).FirstOrDefault();
+
+                        if (gameSource != null)
+                        {
+                            Guid SteamID = gameSource.Id;
+
+                            SteamWishlist steamWishlist = new SteamWishlist();
+
+                            if (steamWishlist.ImportWishlist(_PlayniteApi, SteamID, _PluginUserDataPath, _settings, targetPath))
+                            {
+                                if (activateGlobalProgress.CancelToken.IsCancellationRequested)
+                                {
+                                    return;
+                                }
+
+                                _PlayniteApi.Dialogs.ShowMessage(resources.GetString("LOCItadImportSuccessful"), "IsThereAnyDeal");
+                            }
+                            else
+                            {
+                                if (activateGlobalProgress.CancelToken.IsCancellationRequested)
+                                {
+                                    return;
+                                }
+
+                                _PlayniteApi.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
+                            }
+                        }
+                        else
+                        {
+                            if (activateGlobalProgress.CancelToken.IsCancellationRequested)
+                            {
+                                return;
+                            }
+
+                            _PlayniteApi.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
+                        }
+
+                        stopWatch.Stop();
+                        TimeSpan ts = stopWatch.Elapsed;
+                        logger.Info($"IsThereAnyDeal - Task GetImportSteam() - {string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Common.LogError(ex, $"IsThereAnyDeal");
+
+                        if (activateGlobalProgress.CancelToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        _PlayniteApi.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
+                    }
+                }, globalProgressOptions);
             }
         }
     }

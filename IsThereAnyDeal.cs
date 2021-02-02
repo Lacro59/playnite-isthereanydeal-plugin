@@ -168,7 +168,7 @@ namespace IsThereAnyDeal
 
         public override UserControl GetSettingsView(bool firstRunSettings)
         {
-            return new IsThereAnyDealSettingsView(settings);
+            return new IsThereAnyDealSettingsView(PlayniteApi, settings, this.GetPluginUserDataPath());
         }
     }
 }

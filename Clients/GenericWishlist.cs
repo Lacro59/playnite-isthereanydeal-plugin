@@ -14,7 +14,7 @@ namespace IsThereAnyDeal.Services
         internal static readonly IResourceProvider resources = new ResourceProvider();
 
 
-        public List<Wishlist> LoadWishlists(string clientName, string PluginUserDataPath)
+        public List<Wishlist> LoadWishlists(string clientName, string PluginUserDataPath, bool force = false)
         {
             try
             {
@@ -30,7 +30,10 @@ namespace IsThereAnyDeal.Services
                 }
                 else if (File.GetLastWriteTime(PluginUserDataPath + $"\\IsThereAnyDeal\\{clientName}.json").AddDays(1) < DateTime.Now)
                 {
-                    return null;
+                    if (!force)
+                    {
+                        return null;
+                    }
                 }
 
                 logger.Info($"IsThereAnyDeal - Load from local for {clientName}");

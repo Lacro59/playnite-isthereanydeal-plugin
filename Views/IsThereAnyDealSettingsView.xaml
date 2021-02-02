@@ -10,6 +10,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <commonpluginsshared:StringToBooleanConverter x:Key="StringToBooleanConverter" />
+            <commonpluginsshared:InvertedBoolenConverter x:Key="InvertedBoolenConverter" />
             <commonpluginsshared:IndexConverter x:Key="IndexConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -266,6 +267,8 @@
                         <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
 
                     <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding EnableSteam}" VerticalAlignment="Center">
@@ -283,8 +286,10 @@
                     <CheckBox Name="chk_Humble" Grid.Column="0" Grid.Row="3" IsChecked="{Binding EnableHumble}" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableHumble}" />
                     </CheckBox>
-                    <Label Grid.Column="2" Grid.Row="3" Content="{DynamicResource LOCItadHumbleKey}" IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}" VerticalAlignment="Center" />
-                    <TextBox Grid.Column="4" Grid.Row="3" Text="{Binding HumbleKey}" IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}" 
+                    <Label Grid.Column="2" Grid.Row="3" Content="{DynamicResource LOCItadHumbleKey}" IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}" 
+                           VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <TextBox Grid.Column="4" Grid.Row="3" Text="{Binding HumbleKey}" Margin="10,0,0,0"
+                             IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}" 
                          MaxWidth="150" VerticalAlignment="Center" />
 
                     <CheckBox Name="chk_Xbox" Grid.Column="0" Grid.Row="4" IsChecked="{Binding EnableXbox}" VerticalAlignment="Center">
@@ -307,6 +312,33 @@
                     <CheckBox Name="chk_Origin" Grid.Column="0" Grid.Row="6" IsChecked="{Binding EnableOrigin}" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableOrigin}" />
                     </CheckBox>
+
+
+                    <Grid Grid.Column="0" Grid.Row="8" Grid.ColumnSpan="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Column="0" Grid.Row="0" Content="{DynamicResource LOCImportLabel}" FontSize="18" />
+                        <Separator Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="10" Margin="0,0,0,10" />
+
+                        <Button Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" Click="ButtonImportSteam_Click"
+                                Content="{DynamicResource LOCItadImportSteamWishlist}" />
+                        <TextBlock VerticalAlignment="Center" Grid.Column="2" Grid.Row="2">
+                        <Hyperlink Tag="https://store.steampowered.com/dynamicstore/userdata/" Click="Hyperlink_Click">
+                            <Hyperlink.Inlines>
+                                <Run Text="{DynamicResource LOCItadImportSteamWishlistLink}"/>
+                            </Hyperlink.Inlines>
+                        </Hyperlink>
+                        </TextBlock>
+                    </Grid>
                 </Grid>
             </TabItem>
 

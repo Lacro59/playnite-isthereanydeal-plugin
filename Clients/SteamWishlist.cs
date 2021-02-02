@@ -7,12 +7,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using Newtonsoft.Json;
+using CommonPluginsPlaynite.PluginLibrary.SteamLibrary.SteamShared;
+using System.Threading;
 
 namespace IsThereAnyDeal.Services
 {
     class SteamWishlist : GenericWishlist
     {
         public string UrlWishlist = @"https://store.steampowered.com/wishlist/profiles/{0}/wishlistdata/?p={1}&v=";
+        private string UrlAppData = @"https://store.steampowered.com/api/appdetails?appids={0}";
 
 
         public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
@@ -172,6 +176,88 @@ namespace IsThereAnyDeal.Services
         {
             string Url = @"https://store.steampowered.com/wishlist/profiles/76561198003215440/remove/";
             // formfata : appid=632470&sessionid=8e1207c6343129ee6b8098a2
+            return false;
+        }
+
+        public bool ImportWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, string FilePath)
+        {
+            List<Wishlist> Result = new List<Wishlist>();
+
+            if (File.Exists(FilePath))
+            {
+                try
+                {
+                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+
+                    string fileData = File.ReadAllText(FilePath);
+                    JObject jObject = JsonConvert.DeserializeObject<JObject>(fileData);
+
+                    var rgWishlist = jObject["rgWishlist"];
+                    foreach(var el in rgWishlist)
+                    {
+                        // Respect API limitation
+                        Thread.Sleep(1000);
+
+                        string ResultWeb = string.Empty;
+                        try
+                        {
+                            ResultWeb = Web.DownloadStringData(string.Format(UrlAppData, (string)el)).GetAwaiter().GetResult();
+                        }
+                        catch (WebException ex)
+                        {
+                            if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
+                            {
+                                Common.LogError(ex, "IsThereAnyDeal", $"Error download Steam app data - {el.ToString()}");
+                                return false;
+                            }
+                        }
+
+                        if (!ResultWeb.IsNullOrEmpty())
+                        {
+                            var parsedData = JsonConvert.DeserializeObject<Dictionary<string, StoreAppDetailsResult>>(ResultWeb);
+                            var AppDetails = parsedData[el.ToString()].data;
+
+                            if (AppDetails == null)
+                            {
+                                continue;
+                            }
+
+                            string StoreId = (string)el;
+                            string Name = WebUtility.HtmlDecode(AppDetails.name);
+                            DateTime ReleaseDate = (AppDetails.release_date.date == null) ? default(DateTime) : (DateTime)AppDetails.release_date.date;
+                            string Capsule = AppDetails.header_image;
+
+                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
+                            var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1);
+
+                            Result.Add(new Wishlist
+                            {
+                                StoreId = StoreId,
+                                StoreName = "Steam",
+                                ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
+                                StoreUrl = "https://store.steampowered.com/app/" + (string)el,
+                                Name = Name,
+                                SourceId = SourceId,
+                                ReleaseDate = ReleaseDate.ToUniversalTime(),
+                                Capsule = Capsule,
+                                Plain = plainData.Plain,
+                                IsActive = plainData.IsActive
+                            });
+                        }
+                    }
+
+                    Result = SetCurrentPrice(Result, settings, PlayniteApi);
+                    SaveWishlist("Steam", PluginUserDataPath, Result);
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, "IsThereAnyDeal");
+                }
+            }
+
             return false;
         }
     }
