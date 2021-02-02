@@ -217,7 +217,7 @@
                                             <Grid Grid.Column="0" Grid.Row="2" Grid.RowSpan="3">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="30" />
-                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="360" />
                                                     <ColumnDefinition Width="6" />
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
