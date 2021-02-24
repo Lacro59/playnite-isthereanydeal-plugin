@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using AngleSharp.Parser.Html;
+using AngleSharp.Dom.Html;
 
 namespace IsThereAnyDeal.Services
 {
@@ -38,8 +40,15 @@ namespace IsThereAnyDeal.Services
                 SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
             }
+            else if (ResultLoad != null)
+            {
+                Result = ResultLoad;
+            }
+
 
             logger.Info($"IsThereAnyDeal - Load from web for GOG");
+
+            bool HasError = false;
 
             if (gogAPI != null && gogAPI.GetIsUserLoggedIn())
             {
@@ -47,95 +56,101 @@ namespace IsThereAnyDeal.Services
 
                 try
                 {
+                    logger.Info($"IsThereAnyDeal - Get GOG Wishlist with api");
+
                     // Get wishlist
                     ResultWeb = gogAPI.GetWishList();
 
                     // Get game information for wishlist
                     if (!ResultWeb.IsNullOrEmpty())
                     {
-                        string StoreId = string.Empty;
-                        string Name = string.Empty;
-                        DateTime ReleaseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                        string Capsule = string.Empty;
-
-                        try
-                        { 
-                            JObject resultObj = JObject.Parse(ResultWeb);
-            
-                            if (((JObject)resultObj["wishlist"]).Count > 0)
+                        // Not connected
+                        if (ResultWeb.Contains("id=\"login_username\""))
+                        {
+                            logger.Warn($"IsThereAnyDeal - GOG is disconnected");
+                        }
+                        else
+                        {
+                            try
                             {
-                                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                                foreach (var gameWishlist in (JObject)resultObj["wishlist"])
+                                JObject resultObj = JObject.Parse(ResultWeb);
+
+                                if (((JObject)resultObj["wishlist"]).Count > 0)
                                 {
-                                    try
+                                    foreach (var gameWishlist in (JObject)resultObj["wishlist"])
                                     {
                                         if (((bool)gameWishlist.Value))
                                         {
-                                            StoreId = gameWishlist.Key;
+                                            string StoreId = gameWishlist.Key;
 
-                                            //Download game information
-                                            string url = string.Format(@"https://api.gog.com/products/{0}", StoreId);
-                                            ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
-                                            try
+                                            Wishlist wishlist = GetGameData(SourceId, StoreId, settings);
+                                            if (wishlist != null)
                                             {
-                                                JObject resultObjGame = JObject.Parse(ResultWeb);
-                                                ReleaseDate = (DateTime)(resultObjGame["release_date"] ?? default(DateTime));
-                                                Name = (string)resultObjGame["title"];
-                                                Capsule = "http:" + (string)resultObjGame["images"]["logo2x"];
-
-                                                PlainData plainData = isThereAnyDealApi.GetPlain(Name);
-
-                                                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("gog") > -1);
-
-                                                Result.Add(new Wishlist
-                                                {
-                                                    StoreId = StoreId,
-                                                    StoreName = "GOG",
-                                                    ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
-                                                    StoreUrl = (string)resultObjGame["links"]["product_card"],
-                                                    Name = WebUtility.HtmlDecode(Name),
-                                                    SourceId = SourceId,
-                                                    ReleaseDate = ReleaseDate.ToUniversalTime(),
-                                                    Capsule = Capsule,
-                                                    Plain = plainData.Plain,
-                                                    IsActive = plainData.IsActive
-                                                });
+                                                Result.Add(wishlist);
                                             }
-                                            catch (Exception ex)
+                                            else
                                             {
-                                                Common.LogError(ex, "IsThereAnyDeal", $"Failed to download game information for {StoreId}");
-                                                return Result;
+                                                logger.Warn($"IsThereAnyDeal - GOG wishlist is incomplet");
                                             }
                                         }
                                     }
-                                    catch (Exception ex)
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Common.LogError(ex, "IsThereAnyDeal", $"Error in parse GOG wishlist");
+                                HasError = true;
+                            }
+                        }
+                    }
+
+
+                    if (HasError)
+                    {
+                        logger.Info($"IsThereAnyDeal - Get GOG Wishlist without api");
+
+                        // Get wishlist
+                        ResultWeb = gogAPI.GetWishListWithoutAPI();
+
+                        // Get game information for wishlist
+                        if (!ResultWeb.IsNullOrEmpty())
+                        {
+                            try
+                            {
+                                HtmlParser parser = new HtmlParser();
+                                IHtmlDocument HtmlRequirement = parser.Parse(ResultWeb);
+
+                                foreach(var el in HtmlRequirement.QuerySelectorAll(".product-row-wrapper .product-state-holder"))
+                                {
+                                    string StoreId = el.GetAttribute("gog-product");
+
+                                    Wishlist wishlist = GetGameData(SourceId, StoreId, settings);
+                                    if (wishlist != null)
                                     {
-#if DEBUG
-                                        Common.LogError(ex, "IsThereAnyDeal", $"Error in parse GOG wishlist - {Name}");
-#endif
-                                        logger.Warn($"IsThereAnyDeal - Error in parse GOG wishlist - {Name}");
+                                        Result.Add(wishlist);
+                                    }
+                                    else
+                                    {
+                                        logger.Warn($"IsThereAnyDeal - GOG wishlist is incomplet - StoreId: {StoreId}");
                                     }
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            Common.LogError(ex, "IsThereAnyDeal", $"Error in parse GOG wishlist");
-
-                            PlayniteApi.Notifications.Add(new NotificationMessage(
-                                $"IsThereAnyDeal-Gog-Error",
-                                "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "GOG"),
-                                NotificationType.Error
-                            ));
-
-                            ResultLoad = LoadWishlists("Gog", PluginUserDataPath, true);
-                            if (ResultLoad != null && CacheOnly)
+                            catch (Exception ex)
                             {
-                                ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
-                                SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
-                                return ResultLoad;
+                                Common.LogError(ex, "IsThereAnyDeal", $"Error in parse GOG wishlist");
+
+                                if (ResultLoad != null)
+                                {
+                                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                                    SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
+                                    return ResultLoad;
+                                }
+                                return Result;
                             }
-                            return Result;
+                        }
+                        else
+                        {
+
                         }
                     }
                 }
@@ -143,8 +158,7 @@ namespace IsThereAnyDeal.Services
                 {
                     Common.LogError(ex, "IsThereAnyDeal", "Error in download GOG wishlist");
 
-                    ResultLoad = LoadWishlists("Gog", PluginUserDataPath, true);
-                    if (ResultLoad != null && CacheOnly)
+                    if (ResultLoad != null)
                     {
                         ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                         SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
@@ -162,6 +176,50 @@ namespace IsThereAnyDeal.Services
         public bool RemoveWishlist(string StoreId)
         {
             return gogAPI.RemoveWishList(StoreId);
+        }
+
+
+        private Wishlist GetGameData(Guid SourceId, string StoreId, IsThereAnyDealSettings settings)
+        {
+            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+
+            string Name = string.Empty;
+            DateTime ReleaseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            string Capsule = string.Empty;
+
+            //Download game information
+            string url = string.Format(@"https://api.gog.com/products/{0}", StoreId);
+            string ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
+            try
+            {
+                JObject resultObjGame = JObject.Parse(ResultWeb);
+                ReleaseDate = (DateTime)(resultObjGame["release_date"] ?? default(DateTime));
+                Name = (string)resultObjGame["title"];
+                Capsule = "http:" + (string)resultObjGame["images"]["logo2x"];
+
+                PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
+                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("gog") > -1);
+
+                return new Wishlist
+                {
+                    StoreId = StoreId,
+                    StoreName = "GOG",
+                    ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
+                    StoreUrl = (string)resultObjGame["links"]["product_card"],
+                    Name = WebUtility.HtmlDecode(Name),
+                    SourceId = SourceId,
+                    ReleaseDate = ReleaseDate.ToUniversalTime(),
+                    Capsule = Capsule,
+                    Plain = plainData.Plain,
+                    IsActive = plainData.IsActive
+                };
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, "IsThereAnyDeal", $"Failed to download game information for {StoreId}");
+                return null;
+            }
         }
     }
 }

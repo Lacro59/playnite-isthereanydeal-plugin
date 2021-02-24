@@ -15,8 +15,8 @@ namespace IsThereAnyDeal.Services
 {
     class SteamWishlist : GenericWishlist
     {
-        public string UrlWishlist = @"https://store.steampowered.com/wishlist/profiles/{0}/wishlistdata/?p={1}&v=";
-        private string UrlAppData = @"https://store.steampowered.com/api/appdetails?appids={0}";
+        public readonly string UrlWishlist = @"https://store.steampowered.com/wishlist/profiles/{0}/wishlistdata/?p={1}&v=";
+        private readonly string UrlAppData = @"https://store.steampowered.com/api/appdetails?appids={0}";
 
 
         public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
@@ -40,13 +40,13 @@ namespace IsThereAnyDeal.Services
             {
                 JObject SteamConfig = JObject.Parse(File.ReadAllText(PluginUserDataPath + "\\..\\CB91DFC9-B977-43BF-8E70-55F46E410FAB\\config.json"));
                 userId = (string)SteamConfig["UserId"];
-                apiKey = (string)SteamConfig["ApiKey"];
+                //apiKey = (string)SteamConfig["ApiKey"];
             }
             catch
             {
             }
 
-            if (userId.IsNullOrEmpty() || apiKey.IsNullOrEmpty())
+            if (userId.IsNullOrEmpty())
             {
                 logger.Error($"ISThereAnyDeal - No Steam configuration.");
                 
@@ -129,7 +129,11 @@ namespace IsThereAnyDeal.Services
 
                                 StoreId = gameWishlist.Key;
                                 Name = WebUtility.HtmlDecode((string)gameWishlistData["name"]);
-                                ReleaseDate = ((int)gameWishlistData["release_date"] == 0) ? default(DateTime) : new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)gameWishlistData["release_date"]);
+
+                                string release_date = ((string)gameWishlistData["release_date"]).Split('.')[0];
+                                int.TryParse(release_date, out int release_date_int);
+                                ReleaseDate = (release_date_int == 0) ? default(DateTime) : new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(release_date_int);
+
                                 Capsule = (string)gameWishlistData["capsule"];
 
                                 PlainData plainData = isThereAnyDealApi.GetPlain(Name);
@@ -179,7 +183,6 @@ namespace IsThereAnyDeal.Services
                         return Result;
                     }
                 }
-
             }
 
             Result = SetCurrentPrice(Result, settings, PlayniteApi);

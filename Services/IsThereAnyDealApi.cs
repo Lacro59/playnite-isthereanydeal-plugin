@@ -556,7 +556,7 @@ namespace IsThereAnyDeal.Services
                             {
                                 logger.Warn($"IsThereAnyDeal - No data for {wishlist.Name} - {plains}");
 #if DEBUG
-                                Common.LogError(ex, "IsThereAnyDeal", "Error on get dataCurrentPrice");
+                                Common.LogError(ex, "IsThereAnyDeal [Ignored]", "Error on get dataCurrentPrice");
 #endif
                             }
 

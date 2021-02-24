@@ -155,7 +155,7 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
 #if DEBUG
-                    Common.LogError(ex, "IsThereAnyDeal", "Error in parse Epic wishlist");
+                    Common.LogError(ex, "IsThereAnyDeal [Ignored]", "Error in parse Epic wishlist");
 #endif
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Epic-Error",

@@ -5,6 +5,7 @@ using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using CommonPluginsPlaynite.Common;
 
 namespace IsThereAnyDeal.Services
 {
@@ -18,17 +19,20 @@ namespace IsThereAnyDeal.Services
         {
             try
             {
-                if (!Directory.Exists(PluginUserDataPath + "\\IsThereAnyDeal"))
+                string DirPath = Path.Combine(PluginUserDataPath, "IsThereAnyDeal");
+                string FilePath = Path.Combine(DirPath, $"{clientName}.json");
+
+                if (!Directory.Exists(DirPath))
                 {
-                    Directory.CreateDirectory(PluginUserDataPath + "\\IsThereAnyDeal");
+                    Directory.CreateDirectory(DirPath);
                     return null;
                 }
 
-                if (!File.Exists(PluginUserDataPath + $"\\IsThereAnyDeal\\{clientName}.json"))
+                if (!File.Exists(FilePath))
                 {
                     return null;
                 }
-                else if (File.GetLastWriteTime(PluginUserDataPath + $"\\IsThereAnyDeal\\{clientName}.json").AddDays(1) < DateTime.Now)
+                else if (File.GetLastWriteTime(FilePath).AddDays(1) < DateTime.Now)
                 {
                     if (!force)
                     {
@@ -36,14 +40,14 @@ namespace IsThereAnyDeal.Services
                     }
                 }
 
-                logger.Info($"IsThereAnyDeal - Load from local for {clientName}");
+                logger.Info($"IsThereAnyDeal - Load wishlist from local for {clientName}");
 
-                string fileData = File.ReadAllText(PluginUserDataPath + $"\\IsThereAnyDeal\\{clientName}.json");
-                return JsonConvert.DeserializeObject<List<Wishlist>>(fileData);
+                string FileData = FileSystem.ReadFileAsStringSafe(FilePath);
+                return JsonConvert.DeserializeObject<List<Wishlist>>(FileData);
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", $"Error for save {clientName} wishlist");
+                Common.LogError(ex, "IsThereAnyDeal", $"Error for load {clientName} wishlist");
                 return null;
             }
         }
@@ -52,18 +56,17 @@ namespace IsThereAnyDeal.Services
         {
             try
             {
-                if (!Directory.Exists(PluginUserDataPath + "\\IsThereAnyDeal"))
-                {
-                    Directory.CreateDirectory(PluginUserDataPath + "\\IsThereAnyDeal");
-                }
+                string DirPath = Path.Combine(PluginUserDataPath, "IsThereAnyDeal");
+                string FilePath = Path.Combine(DirPath, $"{clientName}.json");
 
-                File.WriteAllText(PluginUserDataPath + $"\\IsThereAnyDeal\\{clientName}.json", JsonConvert.SerializeObject(Wishlist));
+                FileSystem.WriteStringToFile(FilePath, JsonConvert.SerializeObject(Wishlist));
             }
             catch (Exception ex)
             {
                 Common.LogError(ex, "IsThereAnyDeal", $"Error for save {clientName} wishlist");
             }
         }
+
 
         public List<Wishlist> SetCurrentPrice(List<Wishlist> ListWishlist, IsThereAnyDealSettings settings, IPlayniteAPI PlayniteApi)
         {
