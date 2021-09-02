@@ -39,6 +39,11 @@ namespace IsThereAnyDeal.Services
                 if (!ResultWeb.IsNullOrEmpty())
                 {
                     int startSub = ResultWeb.IndexOf("<script id=\"storefront-webpack-json-data\" type=\"application/json\">");
+                    if (startSub == -1)
+                    {
+                        logger.Warn($"IsThereAnyDeal - No Humble wishlist?");
+                        return Result;
+                    }
                     ResultWeb = ResultWeb.Substring(startSub, (ResultWeb.Length - startSub));
 
                     int endSub = ResultWeb.IndexOf("</script>");
@@ -54,7 +59,7 @@ namespace IsThereAnyDeal.Services
                         string StoreId = string.Empty;
                         string StoreUrl = string.Empty;
                         string Name = string.Empty;
-                        DateTime ReleaseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                        DateTime ReleaseDate = default(DateTime);
                         string Capsule = string.Empty;
 
                         try
@@ -62,7 +67,6 @@ namespace IsThereAnyDeal.Services
                             StoreId = (string)gameWish["machine_name"];
                             StoreUrl = "https://www.humblebundle.com/store/" + gameWish["human_url"];
                             Name = WebUtility.HtmlDecode((string)gameWish["human_name"]);
-                            ReleaseDate = default(DateTime);
                             Capsule = (string)gameWish["standard_carousel_image"];
 
                             PlainData plainData = isThereAnyDealApi.GetPlain(Name);

@@ -40,11 +40,6 @@ namespace IsThereAnyDeal.Services
                 SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
             }
-            else if (ResultLoad != null)
-            {
-                Result = ResultLoad;
-            }
-
 
             logger.Info($"IsThereAnyDeal - Load from web for GOG");
 
@@ -77,6 +72,9 @@ namespace IsThereAnyDeal.Services
 
                                 if (((JObject)resultObj["wishlist"]).Count > 0)
                                 {
+                                    var a = ((JObject)resultObj["wishlist"]).Count;
+
+
                                     foreach (var gameWishlist in (JObject)resultObj["wishlist"])
                                     {
                                         if (((bool)gameWishlist.Value))
@@ -184,7 +182,7 @@ namespace IsThereAnyDeal.Services
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
 
             string Name = string.Empty;
-            DateTime ReleaseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            DateTime ReleaseDate = default(DateTime);
             string Capsule = string.Empty;
 
             //Download game information
@@ -193,7 +191,7 @@ namespace IsThereAnyDeal.Services
             try
             {
                 JObject resultObjGame = JObject.Parse(ResultWeb);
-                ReleaseDate = (DateTime)(resultObjGame["release_date"] ?? default(DateTime));
+                ReleaseDate = (resultObjGame["release_date"].ToString().IsNullOrEmpty()) ? default(DateTime) : (DateTime)resultObjGame["release_date"];
                 Name = (string)resultObjGame["title"];
                 Capsule = "http:" + (string)resultObjGame["images"]["logo2x"];
 

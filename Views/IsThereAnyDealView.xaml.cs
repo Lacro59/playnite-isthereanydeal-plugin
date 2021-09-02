@@ -69,31 +69,38 @@ namespace IsThereAnyDeal.Views
             var task = Task.Run(() => LoadData(_PlayniteApi, _plugin.GetPluginUserDataPath(), _settings, _PlainSelected))
                 .ContinueWith(antecedent =>
                 {
-                    this.Dispatcher.Invoke(new Action(() => {
-                        lbWishlistItems = antecedent.Result;
-                        GetListGame();
-                        SetInfos();
+                    this.Dispatcher?.Invoke(new Action(() => {
+                        try
+                        {
+                            lbWishlistItems = antecedent.Result;
+                            GetListGame();
+                            SetInfos();
 
 #if DEBUG
-                        logger.Debug($"IsThereAnyDeal - lbWishlistItems: {JsonConvert.SerializeObject(lbWishlistItems)}");
+                            logger.Debug($"IsThereAnyDeal - lbWishlistItems: {JsonConvert.SerializeObject(lbWishlistItems)}");
 #endif
 
-                        if (!_PlainSelected.IsNullOrEmpty())
-                        {
-                            int index = 0;
-                            foreach (Wishlist wishlist in antecedent.Result)
+                            if (!_PlainSelected.IsNullOrEmpty())
                             {
-                                if (wishlist.Plain == _PlainSelected)
+                                int index = 0;
+                                foreach (Wishlist wishlist in antecedent.Result)
                                 {
-                                    lbWishlist.SelectedIndex = index;
-                                    lbWishlist.ScrollIntoView(lbWishlist.SelectedItem);
-                                    break;
+                                    if (wishlist.Plain == _PlainSelected)
+                                    {
+                                        lbWishlist.SelectedIndex = index;
+                                        lbWishlist.ScrollIntoView(lbWishlist.SelectedItem);
+                                        break;
+                                    }
+                                    index += 1;
                                 }
-                                index += 1;
                             }
+                            DataLoadWishlist.Visibility = Visibility.Collapsed;
+                            dpData.IsEnabled = true;
                         }
-                        DataLoadWishlist.Visibility = Visibility.Collapsed;
-                        dpData.IsEnabled = true;
+                        catch (Exception ex)
+                        {
+                            Common.LogError(ex, "IsThereAnyDeal");
+                        }
                     }));
                 });
         }

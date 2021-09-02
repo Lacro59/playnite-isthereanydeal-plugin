@@ -69,14 +69,13 @@ namespace IsThereAnyDeal.Clients
                         string StoreId = string.Empty;
                         string StoreUrl = string.Empty;
                         string Name = string.Empty;
-                        DateTime ReleaseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                        DateTime ReleaseDate = default(DateTime);
                         string Capsule = string.Empty;
 
                         try
                         {
                             StoreId = SearchElement.GetAttribute("data-product-id");
                             Capsule = SearchElement.QuerySelector("img.c-image").GetAttribute("data-src");
-                            ReleaseDate = default(DateTime);
                             Name = SearchElement.QuerySelector("h3.c-heading").InnerHtml.Trim();
                             StoreUrl = SearchElement.QuerySelector("a.c-button").GetAttribute("href");
 

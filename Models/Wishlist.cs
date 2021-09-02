@@ -47,13 +47,18 @@ namespace IsThereAnyDeal.Models
             {
                 List<ItadGameInfo> Result = new List<ItadGameInfo>();
                 DateTime last = Convert.ToDateTime("1982-12-15");
-                foreach (var item in itadGameInfos)
+
+                if (itadGameInfos != null)
                 {
-                    if (Convert.ToDateTime(item.Key) > last)
+                    foreach (var item in itadGameInfos)
                     {
-                        Result = item.Value;
+                        if (Convert.ToDateTime(item.Key) > last)
+                        {
+                            Result = item.Value;
+                        }
                     }
                 }
+
                 return Result;
             }
         }

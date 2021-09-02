@@ -191,9 +191,13 @@
                                         <!-- Image -->
                                         <StackPanel Grid.Column="0" Height="100" Width="200">
                                             <Image x:Name="HltbImage" Source="{Binding Capsule}" Stretch="UniformToFill" Height="100" Width="200"></Image>
-                                            <Label Content="{Binding StoreNameIcon}" Foreground="{DynamicResource GlyphBrush}" HorizontalAlignment="Right" 
-                                                   VerticalAlignment="Bottom" FontSize="20" FontFamily="{DynamicResource CommonFont}" 
-                                                   Margin="-20,-20,0,0" />
+                                            <TextBlock Text="{Binding StoreNameIcon}" Foreground="{DynamicResource GlyphBrush}" HorizontalAlignment="Right" 
+                                                       VerticalAlignment="Bottom" FontSize="24" FontFamily="{DynamicResource CommonFont}" 
+                                                       Margin="0,-40,5,5">
+                                                <TextBlock.Effect>
+                                                    <DropShadowEffect Color="Black" Opacity="0.75" BlurRadius="3" ShadowDepth="0" />
+                                                </TextBlock.Effect>
+                                            </TextBlock>
                                         </StackPanel>
 
                                         <!-- Infos & actions -->

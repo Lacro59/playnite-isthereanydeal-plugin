@@ -74,10 +74,11 @@ namespace IsThereAnyDeal.Services
             logger.Info($"IsThereAnyDeal - Load from web for Epic");
 
             // Get Epic configuration if exist.
+            // TODO Check with new Epic plugin
             string access_token = GetToken(PluginUserDataPath);
             if (access_token.IsNullOrEmpty())
             {
-                return Result;
+                return ResultLoad;
             }
 
 
@@ -103,7 +104,7 @@ namespace IsThereAnyDeal.Services
                         {
                             string StoreId = string.Empty;
                             string Name = string.Empty;
-                            DateTime ReleaseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                            DateTime ReleaseDate = default(DateTime);
                             string Capsule = string.Empty;
 
                             try
@@ -112,7 +113,6 @@ namespace IsThereAnyDeal.Services
                                 logger.Debug($"IsThereAnyDeal - gameWishlist: {JsonConvert.SerializeObject(gameWishlist)}");
 #endif
                                 StoreId = (string)gameWishlist["offerId"] + "|" + (string)gameWishlist["namespace"];
-                                ReleaseDate = default(DateTime);
                                 Capsule = string.Empty;
 
                                 Name = WebUtility.HtmlDecode((string)gameWishlist["offer"]["title"]);

@@ -75,150 +75,192 @@ namespace IsThereAnyDeal.Services
             List<Wishlist> ListWishlistSteam = new List<Wishlist>();
             if (settings.EnableSteam)
             {
-                if (!PlayniteTools.IsDisabledPlaynitePlugins("SteamLibrary", PlayniteApi.Paths.ConfigurationPath))
+                try
                 {
-                    SteamWishlist steamWishlist = new SteamWishlist();
-                    ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings, CacheOnly);
-                    countDatas.Add(new CountData
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("SteamLibrary", PlayniteApi.Paths.ConfigurationPath))
                     {
-                        StoreName = "Steam",
-                        Count = ListWishlistSteam.Count
-                    });
+                        SteamWishlist steamWishlist = new SteamWishlist();
+                        ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings, CacheOnly);
+                        countDatas.Add(new CountData
+                        {
+                            StoreName = "Steam",
+                            Count = ListWishlistSteam.Count
+                        });
+                    }
+                    else
+                    {
+                        logger.Warn("IsThereAnyDeal - Steam is enable then disabled");
+                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                            $"IsThereAnyDeal-Steam-disabled",
+                            "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorSteam"),
+                            NotificationType.Error,
+                            () => plugin.OpenSettingsView()
+                        ));
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
-                    logger.Warn("IsThereAnyDeal - Steam is enable then disabled");
-                    PlayniteApi.Notifications.Add(new NotificationMessage(
-                        $"IsThereAnyDeal-Steam-disabled",
-                        "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorSteam"),
-                        NotificationType.Error,
-                        () => plugin.OpenSettingsView()
-                    ));
+                    Common.LogError(ex, "IsThereAnyDeal", "Error on ListWishlistSteam");
                 }
             }
 
             List<Wishlist> ListWishlistGog = new List<Wishlist>();
             if (settings.EnableGog)
             {
-                if (!PlayniteTools.IsDisabledPlaynitePlugins("GogLibrary", PlayniteApi.Paths.ConfigurationPath))
+                try
                 {
-                    GogWishlist gogWishlist = new GogWishlist(PlayniteApi);
-                    ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
-                    countDatas.Add(new CountData
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("GogLibrary", PlayniteApi.Paths.ConfigurationPath))
                     {
-                        StoreName = "GOG",
-                        Count = ListWishlistGog.Count
-                    });
+                        GogWishlist gogWishlist = new GogWishlist(PlayniteApi);
+                        ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
+                        countDatas.Add(new CountData
+                        {
+                            StoreName = "GOG",
+                            Count = ListWishlistGog.Count
+                        });
+                    }
+                    else
+                    {
+                        logger.Warn("IsThereAnyDeal - GOG is enable then disabled");
+                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                            $"IsThereAnyDeal-GOG-disabled",
+                            "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorGog"),
+                            NotificationType.Error,
+                            () => plugin.OpenSettingsView()
+                        ));
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    logger.Warn("IsThereAnyDeal - GOG is enable then disabled");
-                    PlayniteApi.Notifications.Add(new NotificationMessage(
-                        $"IsThereAnyDeal-GOG-disabled",
-                        "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorGog"),
-                        NotificationType.Error,
-                        () => plugin.OpenSettingsView()
-                    ));
+                    Common.LogError(ex, "IsThereAnyDeal", "Error on ListWishlistGog");
                 }
             }
 
             List<Wishlist> ListWishlistEpic = new List<Wishlist>();
             if (settings.EnableEpic)
             {
-                if (!PlayniteTools.IsDisabledPlaynitePlugins("EpicLibrary", PlayniteApi.Paths.ConfigurationPath))
+                try
                 {
-                    EpicWishlist epicWishlist = new EpicWishlist();
-                    ListWishlistEpic = epicWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
-                    countDatas.Add(new CountData
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("EpicLibrary", PlayniteApi.Paths.ConfigurationPath))
                     {
-                        StoreName = "Epic Game Store",
-                        Count = ListWishlistEpic.Count
-                    });
+                        EpicWishlist epicWishlist = new EpicWishlist();
+                        ListWishlistEpic = epicWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
+                        countDatas.Add(new CountData
+                        {
+                            StoreName = "Epic Game Store",
+                            Count = ListWishlistEpic.Count
+                        });
+                    }
+                    else
+                    {
+                        logger.Warn("IsThereAnyDeal - Epic Game Store is enable then disabled");
+                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                            $"IsThereAnyDeal-EpicGameStore-disabled",
+                            "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorEpic"),
+                            NotificationType.Error,
+                            () => plugin.OpenSettingsView()
+                        ));
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    logger.Warn("IsThereAnyDeal - Epic Game Store is enable then disabled");
-                    PlayniteApi.Notifications.Add(new NotificationMessage(
-                        $"IsThereAnyDeal-EpicGameStore-disabled",
-                        "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorEpic"),
-                        NotificationType.Error,
-                        () => plugin.OpenSettingsView()
-                    ));
+                    Common.LogError(ex, "IsThereAnyDeal", "Error on ListWishlistEpic");
                 }
             }
 
             List<Wishlist> ListWishlistHumble = new List<Wishlist>();
             if (settings.EnableHumble)
             {
-                if (!PlayniteTools.IsDisabledPlaynitePlugins("HumbleLibrary", PlayniteApi.Paths.ConfigurationPath))
+                try
                 {
-                    HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
-                    ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly);
-                    countDatas.Add(new CountData
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("HumbleLibrary", PlayniteApi.Paths.ConfigurationPath))
                     {
-                        StoreName = "Humble Bundle",
-                        Count = ListWishlistHumble.Count
-                    });
+                        HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
+                        ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly);
+                        countDatas.Add(new CountData
+                        {
+                            StoreName = "Humble Bundle",
+                            Count = ListWishlistHumble.Count
+                        });
+                    }
+                    else
+                    {
+                        logger.Warn("IsThereAnyDeal - Humble Bundle is enable then disabled");
+                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                            $"IsThereAnyDeal-HumbleBundle-disabled",
+                            "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorHumble"),
+                            NotificationType.Error,
+                            () => plugin.OpenSettingsView()
+                        ));
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    logger.Warn("IsThereAnyDeal - Humble Bundle is enable then disabled");
-                    PlayniteApi.Notifications.Add(new NotificationMessage(
-                        $"IsThereAnyDeal-HumbleBundle-disabled",
-                        "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorHumble"),
-                        NotificationType.Error,
-                        () => plugin.OpenSettingsView()
-                    ));
+                    Common.LogError(ex, "IsThereAnyDeal", "Error on ListWishlistHumble");
                 }
             }
 
             List<Wishlist> ListWishlistXbox = new List<Wishlist>();
             if (settings.EnableXbox)
             {
-                if (!PlayniteTools.IsDisabledPlaynitePlugins("XboxLibrary", PlayniteApi.Paths.ConfigurationPath))
+                try
                 {
-                    XboxWishlist xboxWishlist = new XboxWishlist();
-                    ListWishlistXbox = xboxWishlist.GetWishlist(PlayniteApi, XboxId, PluginUserDataPath, settings, CacheOnly);
-                    countDatas.Add(new CountData
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("XboxLibrary", PlayniteApi.Paths.ConfigurationPath))
                     {
-                        StoreName = "Xbox",
-                        Count = ListWishlistXbox.Count
-                    });
+                        XboxWishlist xboxWishlist = new XboxWishlist();
+                        ListWishlistXbox = xboxWishlist.GetWishlist(PlayniteApi, XboxId, PluginUserDataPath, settings, CacheOnly);
+                        countDatas.Add(new CountData
+                        {
+                            StoreName = "Xbox",
+                            Count = ListWishlistXbox.Count
+                        });
+                    }
+                    else
+                    {
+                        logger.Warn("IsThereAnyDeal - Xbox is enable then disabled");
+                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                            $"IsThereAnyDeal-Xbox-disabled",
+                            "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorXbox"),
+                            NotificationType.Error,
+                            () => plugin.OpenSettingsView()
+                        ));
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    logger.Warn("IsThereAnyDeal - Xbox is enable then disabled");
-                    PlayniteApi.Notifications.Add(new NotificationMessage(
-                        $"IsThereAnyDeal-Xbox-disabled",
-                        "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorXbox"),
-                        NotificationType.Error,
-                        () => plugin.OpenSettingsView()
-                    ));
+                    Common.LogError(ex, "IsThereAnyDeal", "Error on ListWishlistXbox");
                 }
             }
 
             List<Wishlist> ListWishlisOrigin = new List<Wishlist>();
             if (settings.EnableOrigin)
             {
-                if (!PlayniteTools.IsDisabledPlaynitePlugins("OriginLibrary", PlayniteApi.Paths.ConfigurationPath))
+                try
                 {
-                    OriginWishlist originWishlist = new OriginWishlist();
-                    ListWishlisOrigin = originWishlist.GetWishlist(PlayniteApi, OriginId, PluginUserDataPath, settings, CacheOnly);
-                    countDatas.Add(new CountData
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("OriginLibrary", PlayniteApi.Paths.ConfigurationPath))
                     {
-                        StoreName = "Origin",
-                        Count = ListWishlisOrigin.Count
-                    });
+                        OriginWishlist originWishlist = new OriginWishlist();
+                        ListWishlisOrigin = originWishlist.GetWishlist(PlayniteApi, OriginId, PluginUserDataPath, settings, CacheOnly);
+                        countDatas.Add(new CountData
+                        {
+                            StoreName = "Origin",
+                            Count = ListWishlisOrigin.Count
+                        });
+                    }
+                    else
+                    {
+                        logger.Warn("IsThereAnyDeal - Origin is enable then disabled");
+                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                            $"IsThereAnyDeal-Origin-disabled",
+                            "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorOrigin"),
+                            NotificationType.Error,
+                            () => plugin.OpenSettingsView()
+                        ));
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    logger.Warn("IsThereAnyDeal - Origin is enable then disabled");
-                    PlayniteApi.Notifications.Add(new NotificationMessage(
-                        $"IsThereAnyDeal-Origin-disabled",
-                        "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorOrigin"),
-                        NotificationType.Error,
-                        () => plugin.OpenSettingsView()
-                    ));
+                    Common.LogError(ex, "IsThereAnyDeal", "Error on ListWishlisOrigin");
                 }
             }
 
@@ -228,7 +270,7 @@ namespace IsThereAnyDeal.Services
 
 
             // Group same game
-            var listDuplicates = ListWishlist.GroupBy(c => c.Name.ToLower()).Where(g => g.Skip(1).Any());
+            var listDuplicates = ListWishlist.GroupBy(c => Common.NormalizeGameName(c.Name).ToLower()).Where(g => g.Skip(1).Any());
             foreach (var duplicates in listDuplicates)
             {
                 bool isFirst = true;
@@ -243,12 +285,16 @@ namespace IsThereAnyDeal.Services
                     else
                     {
                         List<Wishlist> keepDuplicates = keep.Duplicates;
-                        keepDuplicates.Add(wish);
-                        keep.Duplicates = keepDuplicates;
 
-                        ListWishlist.Find(x => x == keep).Duplicates = keepDuplicates;
-                        ListWishlist.Find(x => x == keep).hasDuplicates = true;
-                        ListWishlist.Remove(wish);
+                        if (wish.StoreName != ListWishlist.Find(x => x == keep).StoreName)
+                        {
+                            keepDuplicates.Add(wish);
+                            keep.Duplicates = keepDuplicates;
+
+                            ListWishlist.Find(x => x == keep).Duplicates = keepDuplicates;
+                            ListWishlist.Find(x => x == keep).hasDuplicates = true;
+                            ListWishlist.Remove(wish);
+                        }
                     }
                 }
             }
@@ -789,6 +835,7 @@ namespace IsThereAnyDeal.Services
 
             PlayniteApi.Dialogs.ActivateGlobalProgress((activateGlobalProgress) =>
             {
+                logger.Info($"IsThereAnyDeal - Task UpdateDatas()");
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
 
@@ -803,7 +850,7 @@ namespace IsThereAnyDeal.Services
 
                 stopWatch.Stop();
                 TimeSpan ts = stopWatch.Elapsed;
-                logger.Warn($"IsThereAnyDeal - Task UpdateDatas() - {String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
+                logger.Info($"IsThereAnyDeal - Task UpdateDatas() - {String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
             }, globalProgressOptions);
         }
     }

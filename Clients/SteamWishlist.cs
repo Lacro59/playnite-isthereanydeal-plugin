@@ -120,7 +120,7 @@ namespace IsThereAnyDeal.Services
                         {
                             string StoreId = string.Empty;
                             string Name = string.Empty;
-                            DateTime ReleaseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                            DateTime ReleaseDate = default(DateTime);
                             string Capsule = string.Empty;
 
                             try
