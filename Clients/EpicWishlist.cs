@@ -1,13 +1,12 @@
 ﻿using Playnite.SDK;
+using Playnite.SDK.Data;
 using IsThereAnyDeal.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
-using Newtonsoft.Json.Linq;
 using System.IO;
-using Newtonsoft.Json;
 using CommonPluginsShared;
 using System.Net;
 
@@ -30,7 +29,7 @@ namespace IsThereAnyDeal.Services
                 query = query,
                 variables = variables
             };
-            var content = new StringContent(JsonConvert.SerializeObject(queryObject), Encoding.UTF8, "application/json");
+            var content = new StringContent(Serialization.ToJson(queryObject), Encoding.UTF8, "application/json");
             var response = await client.PostAsync(GraphQLEndpoint, content).ConfigureAwait(false);
             var str = await response.Content.ReadAsStringAsync();
 
@@ -42,7 +41,7 @@ namespace IsThereAnyDeal.Services
             string access_token = string.Empty;
             try
             {
-                JObject EpicConfig = JObject.Parse(File.ReadAllText(PluginUserDataPath + "\\..\\00000002-DBD1-46C6-B5D0-B1BA559D10E4\\tokens.json"));
+                dynamic EpicConfig = Serialization.FromJsonFile<dynamic>(PluginUserDataPath + "\\..\\00000002-DBD1-46C6-B5D0-B1BA559D10E4\\tokens.json");
                 access_token = (string)EpicConfig["access_token"];
 
             }
@@ -88,19 +87,19 @@ namespace IsThereAnyDeal.Services
             string ResultWeb = QuerySearchWishList(query, variables, access_token).GetAwaiter().GetResult();
             if (!ResultWeb.IsNullOrEmpty())
             {
-                JObject resultObj = new JObject();
+                dynamic resultObj = null;
 
                 try
                 {
-                    resultObj = JObject.Parse(ResultWeb);
+                    resultObj = Serialization.FromJson<dynamic>(ResultWeb);
 #if DEBUG
-                    logger.Debug($"IsThereAnyDeal - resultObj: {JsonConvert.SerializeObject(resultObj)}");
+                    logger.Debug($"IsThereAnyDeal - resultObj: {Serialization.ToJson(resultObj)}");
 #endif
                     if (resultObj != null && resultObj["data"] != null && resultObj["data"]["Wishlist"] != null 
                         && resultObj["data"]["Wishlist"]["wishlistItems"] != null && resultObj["data"]["Wishlist"]["wishlistItems"]["elements"] != null) {
 
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                        foreach (JObject gameWishlist in resultObj["data"]["Wishlist"]["wishlistItems"]["elements"])
+                        foreach (dynamic gameWishlist in resultObj["data"]["Wishlist"]["wishlistItems"]["elements"])
                         {
                             string StoreId = string.Empty;
                             string Name = string.Empty;
@@ -110,7 +109,7 @@ namespace IsThereAnyDeal.Services
                             try
                             {
 #if DEBUG
-                                logger.Debug($"IsThereAnyDeal - gameWishlist: {JsonConvert.SerializeObject(gameWishlist)}");
+                                logger.Debug($"IsThereAnyDeal - gameWishlist: {Serialization.ToJson(gameWishlist)}");
 #endif
                                 StoreId = (string)gameWishlist["offerId"] + "|" + (string)gameWishlist["namespace"];
                                 Capsule = string.Empty;
@@ -144,9 +143,7 @@ namespace IsThereAnyDeal.Services
                             }
                             catch (Exception ex)
                             {
-#if DEBUG
-                                Common.LogError(ex, "IsThereAnyDeal", $"Error in parse Epic wishlist - {Name}");
-#endif
+                                Common.LogError(ex, true, $"Error in parse Epic wishlist - {Name}");
                                 logger.Warn($"IsThereAnyDeal - Error in parse Epic wishlist - {Name}");
                             }
                         }
@@ -154,9 +151,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-#if DEBUG
-                    Common.LogError(ex, "IsThereAnyDeal [Ignored]", "Error in parse Epic wishlist");
-#endif
+                    Common.LogError(ex, true, "Error in parse Epic wishlist");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Epic-Error",
                         "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Epic Game Store"),
@@ -210,7 +205,7 @@ namespace IsThereAnyDeal.Services
             }
             catch(Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", $"Error on RemoveWishlist()");
+                Common.LogError(ex, false, $"Error on RemoveWishlist()");
             }
 
             return false;

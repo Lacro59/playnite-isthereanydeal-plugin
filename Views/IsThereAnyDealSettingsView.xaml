@@ -4,14 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:IsThereAnyDeal.Views;assembly=IsThereAnyDeal"
-             xmlns:commonpluginsshared="clr-namespace:CommonPluginsShared"
-             xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls">
+             xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls"
+             xmlns:converters="clr-namespace:CommonPluginsShared.Converters">
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <commonpluginsshared:StringToBooleanConverter x:Key="StringToBooleanConverter" />
-            <commonpluginsshared:InvertedBoolenConverter x:Key="InvertedBoolenConverter" />
-            <commonpluginsshared:IndexConverter x:Key="IndexConverter"/>
+            <converters:StringToBooleanConverter x:Key="StringToBooleanConverter" />
+            <converters:InvertedBoolenConverter x:Key="InvertedBoolenConverter" />
+            <converters:IndexConverter x:Key="IndexConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
 

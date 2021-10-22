@@ -1,7 +1,7 @@
 ﻿using IsThereAnyDeal.Services;
 using IsThereAnyDeal.Models;
-using Newtonsoft.Json;
 using Playnite.SDK;
+using Playnite.SDK.Data;
 using CommonPluginsShared;
 using System;
 using System.Linq;
@@ -10,9 +10,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Data;
-using System.Globalization;
 using IsThereAnyDeal.Clients;
 
 namespace IsThereAnyDeal.Views
@@ -77,7 +74,7 @@ namespace IsThereAnyDeal.Views
                             SetInfos();
 
 #if DEBUG
-                            logger.Debug($"IsThereAnyDeal - lbWishlistItems: {JsonConvert.SerializeObject(lbWishlistItems)}");
+                            logger.Debug($"IsThereAnyDeal - lbWishlistItems: {Serialization.ToJson(lbWishlistItems)}");
 #endif
 
                             if (!_PlainSelected.IsNullOrEmpty())
@@ -99,7 +96,7 @@ namespace IsThereAnyDeal.Views
                         }
                         catch (Exception ex)
                         {
-                            Common.LogError(ex, "IsThereAnyDeal");
+                            Common.LogError(ex, false);
                         }
                     }));
                 });
@@ -247,11 +244,11 @@ namespace IsThereAnyDeal.Views
             bool IsDeleted = false;
             int index = int.Parse(((Button)sender).Tag.ToString());
 
-            ListBox elParent = IntegrationUI.GetAncestorOfType<ListBox>(sender as Button);
+            ListBox elParent = UI.FindParent<ListBox>(sender as Button);
             StorePriceSelected = (ItadGameInfo)elParent.Items[index];
             lbWishlist.ItemsSource = null;
 #if DEBUG
-            logger.Debug($"IsThereAnyDeal - BtRemoveWishList_Click() - StorePriceSelected: {JsonConvert.SerializeObject(StorePriceSelected)}");
+            logger.Debug($"IsThereAnyDeal - BtRemoveWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
 #endif
             var RessultDialog = _PlayniteApi.Dialogs.ShowMessage(
                 string.Format(resources.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName), 
@@ -336,7 +333,7 @@ namespace IsThereAnyDeal.Views
                     }
                     catch (Exception ex)
                     {
-                        Common.LogError(ex, "IsThereAnyDeal", "Error on BtRemoveWishList_Click()");
+                        Common.LogError(ex, false);
                     }
                 })
                 .ContinueWith(antecedent =>
@@ -376,11 +373,11 @@ namespace IsThereAnyDeal.Views
         {
             int index = int.Parse(((Button)sender).Tag.ToString());
 
-            ListBox elParent = IntegrationUI.GetAncestorOfType<ListBox>(sender as Button);
+            ListBox elParent = UI.FindParent<ListBox>(sender as Button);
             StorePriceSelected = (ItadGameInfo)elParent.Items[index];
             lbWishlist.ItemsSource = null;
 #if DEBUG
-            logger.Debug($"IsThereAnyDeal - BtHideWishList_Click() - StorePriceSelected: {JsonConvert.SerializeObject(StorePriceSelected)}");
+            logger.Debug($"IsThereAnyDeal - BtHideWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
 #endif
             var RessultDialog = _PlayniteApi.Dialogs.ShowMessage(
                 string.Format(resources.GetString("LOCItadHideOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
@@ -403,7 +400,7 @@ namespace IsThereAnyDeal.Views
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error on BtRemoveWishList_Click()");
+                    Common.LogError(ex, false);
                 }
             }
         }

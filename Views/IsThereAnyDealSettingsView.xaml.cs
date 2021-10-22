@@ -1,11 +1,11 @@
 ﻿using IsThereAnyDeal.Services;
 using IsThereAnyDeal.Models;
 using Playnite.SDK;
+using Playnite.SDK.Data;
 using System.Collections.Generic;
 using System.Windows;
 using System.Linq;
 using System.Windows.Controls;
-using Newtonsoft.Json;
 using CommonPluginsShared;
 using System.Threading.Tasks;
 using System;
@@ -109,7 +109,7 @@ namespace IsThereAnyDeal.Views
                     {
                         StoresItems = isThereAnyDealApi.GetRegionStores(_settings.Region, _settings.Country);
 #if DEBUG
-                        logger.Debug($"IsThereAnyDeal - StoresItems: {JsonConvert.SerializeObject(StoresItems)}");
+                        logger.Debug($"IsThereAnyDeal - StoresItems: {Serialization.ToJson(StoresItems)}");
 #endif
 
                         this.Dispatcher.BeginInvoke((Action)delegate
@@ -234,7 +234,7 @@ namespace IsThereAnyDeal.Views
             {
                 RegionsData = isThereAnyDealApi.GetCoveredRegions();
 #if DEBUG
-                logger.Debug($"IsThereAnyDeal - RegionsData: {JsonConvert.SerializeObject(RegionsData)}");
+                logger.Debug($"IsThereAnyDeal - RegionsData: {Serialization.ToJson(RegionsData)}");
 #endif
 
                 this.Dispatcher.BeginInvoke((Action)delegate
@@ -379,7 +379,7 @@ namespace IsThereAnyDeal.Views
                     }
                     catch (Exception ex)
                     {
-                        Common.LogError(ex, $"IsThereAnyDeal");
+                        Common.LogError(ex, false);
 
                         if (activateGlobalProgress.CancelToken.IsCancellationRequested)
                         {

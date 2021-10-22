@@ -1,11 +1,11 @@
 ﻿using IsThereAnyDeal.Models;
-using Newtonsoft.Json;
 using Playnite.SDK;
 using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using CommonPluginsPlaynite.Common;
+using CommonPlayniteShared.Common;
+using Playnite.SDK.Data;
 
 namespace IsThereAnyDeal.Services
 {
@@ -42,12 +42,11 @@ namespace IsThereAnyDeal.Services
 
                 logger.Info($"IsThereAnyDeal - Load wishlist from local for {clientName}");
 
-                string FileData = FileSystem.ReadFileAsStringSafe(FilePath);
-                return JsonConvert.DeserializeObject<List<Wishlist>>(FileData);
+                return Serialization.FromJsonFile<List<Wishlist>>(FilePath);
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", $"Error for load {clientName} wishlist");
+                Common.LogError(ex, false, $"Error for load {clientName} wishlist");
                 return null;
             }
         }
@@ -59,11 +58,11 @@ namespace IsThereAnyDeal.Services
                 string DirPath = Path.Combine(PluginUserDataPath, "IsThereAnyDeal");
                 string FilePath = Path.Combine(DirPath, $"{clientName}.json");
 
-                FileSystem.WriteStringToFile(FilePath, JsonConvert.SerializeObject(Wishlist));
+                FileSystem.WriteStringToFile(FilePath, Serialization.ToJson(Wishlist));
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", $"Error for save {clientName} wishlist");
+                Common.LogError(ex, false, $"Error for save {clientName} wishlist");
             }
         }
 

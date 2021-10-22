@@ -1,14 +1,13 @@
 ﻿using IsThereAnyDeal.Models;
-using Newtonsoft.Json;
 using Playnite.SDK;
+using Playnite.SDK.Data;
 using System.Collections.Generic;
 
 namespace IsThereAnyDeal
 {
-    public class IsThereAnyDealSettings : ISettings
+    public class IsThereAnyDealSettings : ObservableObject
     {
-        private readonly IsThereAnyDeal plugin;
-
+        #region Settings variables
         public List<WishlistIgnore> wishlistIgnores { get; set; } = new List<WishlistIgnore>();
 
         public string Region { get; set; } = "us";
@@ -40,22 +39,37 @@ namespace IsThereAnyDeal
         public bool MenuInExtensions { get; set; } = true;
 
         public List<ItadNotificationCriteria> NotificationCriterias { get; set; } = new List<ItadNotificationCriteria>();
-
+        #endregion
 
         // Playnite serializes settings object to a JSON object and saves it as text file.
-        // If you want to exclude some property from being saved then use `JsonIgnore` ignore attribute.
-        [JsonIgnore]
-        public bool OptionThatWontBeSaved { get; set; } = false;
+        // If you want to exclude some property from being saved then use `JsonDontSerialize` ignore attribute.
+        #region Variables exposed
 
-        // Parameterless constructor must exist if you want to use LoadPluginSettings method.
-        public IsThereAnyDealSettings()
+        #endregion  
+    }
+
+
+    public class IsThereAnyDealSettingsViewModel : ObservableObject, ISettings
+    {
+        private readonly IsThereAnyDeal Plugin;
+        private IsThereAnyDealSettings EditingClone { get; set; }
+
+        private IsThereAnyDealSettings _Settings;
+        public IsThereAnyDealSettings Settings
         {
+            get => _Settings;
+            set
+            {
+                _Settings = value;
+                OnPropertyChanged();
+            }
         }
 
-        public IsThereAnyDealSettings(IsThereAnyDeal plugin)
+
+        public IsThereAnyDealSettingsViewModel(IsThereAnyDeal plugin)
         {
             // Injecting your plugin instance is required for Save/Load method because Playnite saves data to a location based on what plugin requested the operation.
-            this.plugin = plugin;
+            Plugin = plugin;
 
             // Load saved settings.
             var savedSettings = plugin.LoadPluginSettings<IsThereAnyDealSettings>();
@@ -63,63 +77,39 @@ namespace IsThereAnyDeal
             // LoadPluginSettings returns null if not saved data is available.
             if (savedSettings != null)
             {
-                wishlistIgnores = savedSettings.wishlistIgnores;
-
-                Region = savedSettings.Region;
-                Country = savedSettings.Country;
-                CurrencySign = savedSettings.CurrencySign;
-                Stores = savedSettings.Stores;
-
-                EnableSteam = savedSettings.EnableSteam;
-                EnableGog = savedSettings.EnableGog;
-                EnableHumble = savedSettings.EnableHumble;
-                EnableEpic = savedSettings.EnableEpic;
-                EnableXbox = savedSettings.EnableXbox;
-                EnableOrigin = savedSettings.EnableOrigin;
-
-                EnableNotificationGiveaways = savedSettings.EnableNotificationGiveaways;
-                EnableNotification = savedSettings.EnableNotification;
-                EnableNotificationPercentage = savedSettings.EnableNotificationPercentage;
-                LimitNotification = savedSettings.LimitNotification;
-                EnableNotificationPrice = savedSettings.EnableNotificationPrice;
-                LimitNotificationPrice = savedSettings.LimitNotificationPrice;
-
-                MinPrice = savedSettings.MinPrice;
-                MaxPrice = savedSettings.MaxPrice;
-
-                HumbleKey = savedSettings.HumbleKey;
-                XboxLink = savedSettings.XboxLink;
-
-                EnableCheckVersion = savedSettings.EnableCheckVersion;
-                MenuInExtensions = savedSettings.MenuInExtensions;
-
-                NotificationCriterias = savedSettings.NotificationCriterias;
+                Settings = savedSettings;
+            }
+            else
+            {
+                Settings = new IsThereAnyDealSettings();
             }
         }
 
+        // Code executed when settings view is opened and user starts editing values.
         public void BeginEdit()
         {
-            // Code executed when settings view is opened and user starts editing values.
+            EditingClone = Serialization.GetClone(Settings);
         }
 
+        // Code executed when user decides to cancel any changes made since BeginEdit was called.
+        // This method should revert any changes made to Option1 and Option2.
         public void CancelEdit()
         {
-            // Code executed when user decides to cancel any changes made since BeginEdit was called.
-            // This method should revert any changes made to Option1 and Option2.
+            Settings = EditingClone;
         }
 
+        // Code executed when user decides to confirm changes made since BeginEdit was called.
+        // This method should save settings made to Option1 and Option2.
         public void EndEdit()
         {
-            // Code executed when user decides to confirm changes made since BeginEdit was called.
-            // This method should save settings made to Option1 and Option2.
-            plugin.SavePluginSettings(this);
+            Plugin.SavePluginSettings(Settings);
         }
 
+        // Code execute when user decides to confirm changes made since BeginEdit was called.
+        // Executed before EndEdit is called and EndEdit is not called if false is returned.
+        // List of errors is presented to user if verification fails.
         public bool VerifySettings(out List<string> errors)
         {
-            // Code execute when user decides to confirm changes made since BeginEdit was called.
-            // Executed before EndEdit is called and EndEdit is not called if false is returned.
-            // List of errors is presented to user if verification fails.
             errors = new List<string>();
             return true;
         }

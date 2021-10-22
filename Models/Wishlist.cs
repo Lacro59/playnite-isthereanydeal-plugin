@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Playnite.SDK;
+﻿using Playnite.SDK;
+using Playnite.SDK.Data;
 using CommonPluginsShared;
 using System;
 using System.Collections.Concurrent;
@@ -24,7 +24,7 @@ namespace IsThereAnyDeal.Models
         public bool IsActive { get; set; }
         public ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos { get; set; }
 
-        [JsonIgnore]
+        [DontSerialize]
         public string StoreNameIcon
         {
             get
@@ -40,7 +40,7 @@ namespace IsThereAnyDeal.Models
                 return storeNameIcon;
             }
         }
-        [JsonIgnore]
+        [DontSerialize]
         public List<ItadGameInfo> ItadLastPrice
         {
             get
@@ -62,7 +62,7 @@ namespace IsThereAnyDeal.Models
                 return Result;
             }
         }
-        [JsonIgnore]
+        [DontSerialize]
         public ItadGameInfo ItadBestPrice
         {
             get
@@ -80,7 +80,7 @@ namespace IsThereAnyDeal.Models
                 return Result;
             }
         }
-        [JsonIgnore]
+        [DontSerialize]
         public ItadGameInfo ItadPriceForWishlistStore
         {
             get
@@ -97,7 +97,7 @@ namespace IsThereAnyDeal.Models
             }
         }
 
-        [JsonIgnore]
+        [DontSerialize]
         public bool HasItadData
         {
             get
@@ -106,7 +106,7 @@ namespace IsThereAnyDeal.Models
             }
         }
 
-        [JsonIgnore]
+        [DontSerialize]
         public string UrlGame
         {
             get
@@ -115,11 +115,11 @@ namespace IsThereAnyDeal.Models
             }
         }
 
-        [JsonIgnore]
+        [DontSerialize]
         public List<Wishlist> Duplicates = new List<Wishlist>();
-        [JsonIgnore]
+        [DontSerialize]
         public bool hasDuplicates = false;
-        [JsonIgnore]
+        [DontSerialize]
         public List<ItadGameInfo> ListItadPriceForWishlistStore
         {
             get

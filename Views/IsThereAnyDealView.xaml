@@ -4,15 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IsThereAnyDeal.Views"
-             xmlns:converters="clr-namespace:CommonPluginsPlaynite.Converters"
-             xmlns:commonpluginsshared="clr-namespace:CommonPluginsShared"
+             xmlns:converters="clr-namespace:CommonPlayniteShared.Converters"
+             xmlns:converters1="clr-namespace:CommonPluginsShared.Converters"
              mc:Ignorable="d" Height="740" Width="1280" Background="{DynamicResource WindowBackgourndBrush}">
 
     <UserControl.Resources>
         <converters:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
-        <commonpluginsshared:IndexConverter x:Key="IndexConverter"/>
+        <converters1:IndexConverter x:Key="IndexConverter"/>
     </UserControl.Resources>
 
     <TabControl Margin="10">

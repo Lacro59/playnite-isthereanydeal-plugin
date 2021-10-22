@@ -1,6 +1,6 @@
 ﻿using IsThereAnyDeal.Models;
-using Newtonsoft.Json.Linq;
 using Playnite.SDK;
+using Playnite.SDK.Data;
 using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", $"GOG is not defined");
+                Common.LogError(ex, false, $"GOG is not defined");
             }
         }
 
@@ -68,14 +68,11 @@ namespace IsThereAnyDeal.Services
                         {
                             try
                             {
-                                JObject resultObj = JObject.Parse(ResultWeb);
+                                dynamic resultObj = Serialization.FromJson<dynamic>(ResultWeb);
 
-                                if (((JObject)resultObj["wishlist"]).Count > 0)
+                                if (((dynamic)resultObj["wishlist"]).Count > 0)
                                 {
-                                    var a = ((JObject)resultObj["wishlist"]).Count;
-
-
-                                    foreach (var gameWishlist in (JObject)resultObj["wishlist"])
+                                    foreach (var gameWishlist in (dynamic)resultObj["wishlist"])
                                     {
                                         if (((bool)gameWishlist.Value))
                                         {
@@ -96,7 +93,7 @@ namespace IsThereAnyDeal.Services
                             }
                             catch (Exception ex)
                             {
-                                Common.LogError(ex, "IsThereAnyDeal", $"Error in parse GOG wishlist");
+                                Common.LogError(ex, false, $"Error in parse GOG wishlist");
                                 HasError = true;
                             }
                         }
@@ -135,7 +132,7 @@ namespace IsThereAnyDeal.Services
                             }
                             catch (Exception ex)
                             {
-                                Common.LogError(ex, "IsThereAnyDeal", $"Error in parse GOG wishlist");
+                                Common.LogError(ex, false, $"Error in parse GOG wishlist");
 
                                 if (ResultLoad != null)
                                 {
@@ -154,7 +151,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (WebException ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error in download GOG wishlist");
+                    Common.LogError(ex, false, "Error in download GOG wishlist");
 
                     if (ResultLoad != null)
                     {
@@ -190,7 +187,7 @@ namespace IsThereAnyDeal.Services
             string ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
             try
             {
-                JObject resultObjGame = JObject.Parse(ResultWeb);
+                dynamic resultObjGame = Serialization.FromJson<dynamic>(ResultWeb);
                 ReleaseDate = (resultObjGame["release_date"].ToString().IsNullOrEmpty()) ? default(DateTime) : (DateTime)resultObjGame["release_date"];
                 Name = (string)resultObjGame["title"];
                 Capsule = "http:" + (string)resultObjGame["images"]["logo2x"];
@@ -215,7 +212,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", $"Failed to download game information for {StoreId}");
+                Common.LogError(ex, false, $"Failed to download game information for {StoreId}");
                 return null;
             }
         }

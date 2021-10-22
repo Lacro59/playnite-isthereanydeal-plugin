@@ -1,6 +1,7 @@
 ﻿using IsThereAnyDeal.Models;
 using IsThereAnyDeal.Services;
 using Playnite.SDK;
+using Playnite.SDK.Data;
 using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using System.Collections.Specialized;
-using CommonPluginsPlaynite.PluginLibrary.OriginLibrary.Services;
-using CommonPluginsPlaynite.PluginLibrary.OriginLibrary.Models;
+using CommonPlayniteShared.PluginLibrary.OriginLibrary.Services;
+using CommonPlayniteShared.PluginLibrary.OriginLibrary.Models;
 
 namespace IsThereAnyDeal.Clients
 {
@@ -60,8 +59,8 @@ namespace IsThereAnyDeal.Clients
                         webClient.Headers.Add("accept", "application/vnd.origin.v3+json; x-cache/force-write");
 
                         var stringData = webClient.DownloadString(url);
-                        string data = JsonConvert.SerializeObject(JObject.Parse(stringData)["wishlist"]);
-                        List<WishlistData> WishlistData = JsonConvert.DeserializeObject<List<WishlistData>>(data);
+                        string data = Serialization.ToJson(Serialization.FromJson<dynamic>(stringData)["wishlist"]);
+                        List<WishlistData> WishlistData = Serialization.FromJson<List<WishlistData>>(data);
 
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
 
@@ -103,9 +102,7 @@ namespace IsThereAnyDeal.Clients
                             }
                             catch (Exception ex)
                             {
-#if DEBUG
-                                Common.LogError(ex, "IsThereAnyDeal", $"Error in parse Origin wishlist - {Name}");
-#endif
+                                Common.LogError(ex, true, $"Error in parse Origin wishlist - {Name}");
                                 logger.Warn($"IsThereAnyDeal - Error in parse Origin wishlist - {Name}");
                             }
                         }
@@ -120,7 +117,7 @@ namespace IsThereAnyDeal.Clients
                                 case HttpStatusCode.NotFound: // HTTP 404
                                     break;
                                 default:
-                                    Common.LogError(ex, "IsThereAnyDeal", $"Failed to load from {url}. ");
+                                    Common.LogError(ex, false, $"Failed to load from {url}. ");
                                     break;
                             }
                             return Result;
@@ -161,7 +158,7 @@ namespace IsThereAnyDeal.Clients
                     }
                     catch (WebException ex)
                     {
-                        Common.LogError(ex, "IsThereAnyDeal", $"Error on RemoveWishlist()");
+                        Common.LogError(ex, false, $"Error on RemoveWishlist()");
                     }
                 }
             }
@@ -178,7 +175,7 @@ namespace IsThereAnyDeal.Clients
             var url = string.Format(@"https://api2.origin.com/ecommerce2/public/supercat/{0}/{1}?country={2}", gameId, lang, langShort);
 
             string stringData = Web.DownloadStringData(url).GetAwaiter().GetResult();
-            return JsonConvert.DeserializeObject<GameStoreDataResponse>(stringData);
+            return Serialization.FromJson<GameStoreDataResponse>(stringData);
         }
     }
 

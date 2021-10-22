@@ -3,9 +3,8 @@ using AngleSharp.Parser.Html;
 using IsThereAnyDeal.Clients;
 using IsThereAnyDeal.Models;
 using IsThereAnyDeal.Views;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Playnite.SDK;
+using Playnite.SDK.Data;
 using CommonPluginsShared;
 using System;
 using System.Collections.Concurrent;
@@ -77,7 +76,7 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("SteamLibrary", PlayniteApi.Paths.ConfigurationPath))
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("SteamLibrary"))
                     {
                         SteamWishlist steamWishlist = new SteamWishlist();
                         ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings, CacheOnly);
@@ -100,7 +99,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch(Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error on ListWishlistSteam");
+                    Common.LogError(ex, false, "Error on ListWishlistSteam");
                 }
             }
 
@@ -109,7 +108,7 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("GogLibrary", PlayniteApi.Paths.ConfigurationPath))
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("GogLibrary"))
                     {
                         GogWishlist gogWishlist = new GogWishlist(PlayniteApi);
                         ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
@@ -132,7 +131,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error on ListWishlistGog");
+                    Common.LogError(ex, false, "Error on ListWishlistGog");
                 }
             }
 
@@ -141,7 +140,7 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("EpicLibrary", PlayniteApi.Paths.ConfigurationPath))
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("EpicLibrary"))
                     {
                         EpicWishlist epicWishlist = new EpicWishlist();
                         ListWishlistEpic = epicWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
@@ -164,7 +163,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error on ListWishlistEpic");
+                    Common.LogError(ex, false, "Error on ListWishlistEpic");
                 }
             }
 
@@ -173,7 +172,7 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("HumbleLibrary", PlayniteApi.Paths.ConfigurationPath))
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("HumbleLibrary"))
                     {
                         HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
                         ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly);
@@ -196,7 +195,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error on ListWishlistHumble");
+                    Common.LogError(ex, false, "Error on ListWishlistHumble");
                 }
             }
 
@@ -205,7 +204,7 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("XboxLibrary", PlayniteApi.Paths.ConfigurationPath))
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("XboxLibrary"))
                     {
                         XboxWishlist xboxWishlist = new XboxWishlist();
                         ListWishlistXbox = xboxWishlist.GetWishlist(PlayniteApi, XboxId, PluginUserDataPath, settings, CacheOnly);
@@ -228,7 +227,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error on ListWishlistXbox");
+                    Common.LogError(ex, false, "Error on ListWishlistXbox");
                 }
             }
 
@@ -237,7 +236,7 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("OriginLibrary", PlayniteApi.Paths.ConfigurationPath))
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("OriginLibrary"))
                     {
                         OriginWishlist originWishlist = new OriginWishlist();
                         ListWishlisOrigin = originWishlist.GetWishlist(PlayniteApi, OriginId, PluginUserDataPath, settings, CacheOnly);
@@ -260,7 +259,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error on ListWishlisOrigin");
+                    Common.LogError(ex, false, "Error on ListWishlisOrigin");
                 }
             }
 
@@ -270,7 +269,7 @@ namespace IsThereAnyDeal.Services
 
 
             // Group same game
-            var listDuplicates = ListWishlist.GroupBy(c => Common.NormalizeGameName(c.Name).ToLower()).Where(g => g.Skip(1).Any());
+            var listDuplicates = ListWishlist.GroupBy(c => PlayniteTools.NormalizeGameName(c.Name).ToLower()).Where(g => g.Skip(1).Any());
             foreach (var duplicates in listDuplicates)
             {
                 bool isFirst = true;
@@ -316,16 +315,16 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                    Common.LogError(ex, false, $"Failed to download {url}");
                 }
 
-                JObject datasObj = JObject.Parse(responseData);
-                if (((JObject)datasObj["data"]).Count > 0)
+                dynamic datasObj = Serialization.FromJson<dynamic>(responseData);
+                if (((dynamic)datasObj["data"]).Count > 0)
                 {
-                    foreach (var dataObj in ((JObject)datasObj["data"]))
+                    foreach (var dataObj in (dynamic)datasObj["data"])
                     {
                         List<string> countries = new List<string>();
-                        foreach (string country in ((JArray)dataObj.Value["countries"]))
+                        foreach (string country in (dynamic)dataObj.Value["countries"])
                         {
                             countries.Add(country);
                         }
@@ -343,7 +342,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", "Error to parse downloaded data in GetCoveredRegions()");
+                Common.LogError(ex, false);
             }
 
             return itadRegions;
@@ -362,18 +361,18 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                    Common.LogError(ex, false, $"Failed to download {url}");
                 }
 
-                JObject datasObj = JObject.Parse(responseData);
-                if (((JArray)datasObj["data"]).Count > 0)
+                dynamic datasObj = Serialization.FromJson<dynamic>(responseData);
+                if (((dynamic)datasObj["data"]).Count > 0)
                 {
-                    RegionStores = JsonConvert.DeserializeObject<List<ItadStore>>((JsonConvert.SerializeObject((JArray)datasObj["data"])));
+                    RegionStores = Serialization.FromJson<List<ItadStore>>(Serialization.ToJson((dynamic)datasObj["data"]));
                 }
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", "Error to parse downloaded data in GetRegionStores()");
+                Common.LogError(ex, false);
             }
 
             return RegionStores;
@@ -395,10 +394,10 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                    Common.LogError(ex, false, $"Failed to download {url}");
                 }
 
-                ItadPlain itadPlain = JsonConvert.DeserializeObject<ItadPlain>(responseData);
+                ItadPlain itadPlain = Serialization.FromJson<ItadPlain>(responseData);
                 if (itadPlain.Meta.Match != "false")
                 {
                     plainData.Plain = itadPlain.Data.Plain;
@@ -411,7 +410,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", $"Error in GetPlain({WebUtility.HtmlDecode(title)})");
+                Common.LogError(ex, false, $"Error in GetPlain({WebUtility.HtmlDecode(title)})");
             }
 
             if (!isSecond && plainData.Plain.IsNullOrEmpty())
@@ -440,13 +439,13 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                    Common.LogError(ex, false, $"Failed to download {url}");
                 }
 
-                JObject datasObj = JObject.Parse(responseData);
-                if (((JArray)datasObj["data"]["list"]).Count > 0)
+                dynamic datasObj = Serialization.FromJson<dynamic>(responseData);
+                if (((dynamic)datasObj["data"]["list"]).Count > 0)
                 {
-                    foreach (JObject dataObj in ((JArray)datasObj["data"]["list"]))
+                    foreach (dynamic dataObj in (dynamic)datasObj["data"]["list"])
                     {
                         itadGameInfos.Add(new ItadGameInfo
                         {
@@ -466,7 +465,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", "Error in SearchGame()");
+                Common.LogError(ex, false);
             }
 
             return itadGameInfos;
@@ -538,14 +537,14 @@ namespace IsThereAnyDeal.Services
                         }
                         catch (Exception ex)
                         {
-                            Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                            Common.LogError(ex, false, $"Failed to download {url}");
                         }
 
                         foreach (Wishlist wishlist in wishlists)
                         {
                             ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
                             List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
-                            JObject datasObj = JObject.Parse(responseData);
+                            dynamic datasObj = Serialization.FromJson<dynamic>(responseData);
 
                             // Check if in library (exclude game emulated)
                             List<Guid> ListEmulators = new List<Guid>();
@@ -554,25 +553,14 @@ namespace IsThereAnyDeal.Services
                                 ListEmulators.Add(item.Id);
                             }
 
-                            bool InLibrary = false;
-                            foreach (var game in PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower() && a.Hidden == false))
-                            {
-                                if (game.PlayAction != null && game.PlayAction.EmulatorId != null && ListEmulators.Contains(game.PlayAction.EmulatorId))
-                                {
-                                    InLibrary = false;
-                                }
-                                else
-                                {
-                                    InLibrary = true;
-                                }
-                            }
+                            bool InLibrary = PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower() && a.Hidden == false)?.Count() > 0;
                             wishlist.InLibrary = InLibrary;
 
                             try
                             {
-                                if (((JArray)datasObj["data"][wishlist.Plain]["list"]).Count > 0)
+                                if (((dynamic)datasObj["data"][wishlist.Plain]["list"]).Count > 0)
                                 {
-                                    foreach (JObject dataObj in ((JArray)datasObj["data"][wishlist.Plain]["list"]))
+                                    foreach (dynamic dataObj in (dynamic)datasObj["data"][wishlist.Plain]["list"])
                                     {
                                         try
                                         {
@@ -593,7 +581,7 @@ namespace IsThereAnyDeal.Services
                                         }
                                         catch (Exception ex)
                                         {
-                                            Common.LogError(ex, "IsThereAnyDeal");
+                                            Common.LogError(ex, false);
                                         }
                                     }
                                 }
@@ -601,9 +589,7 @@ namespace IsThereAnyDeal.Services
                             catch (Exception ex)
                             {
                                 logger.Warn($"IsThereAnyDeal - No data for {wishlist.Name} - {plains}");
-#if DEBUG
-                                Common.LogError(ex, "IsThereAnyDeal [Ignored]", "Error on get dataCurrentPrice");
-#endif
+                                Common.LogError(ex, true);
                             }
 
                             itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
@@ -614,7 +600,7 @@ namespace IsThereAnyDeal.Services
                     }
                     catch (Exception ex)
                     {
-                        Common.LogError(ex, "IsThereAnyDeal", $"Error in GetCurrentPrice({plains})");
+                        Common.LogError(ex, false, $"Error in GetCurrentPrice({plains})");
                     }
                 }
                 else
@@ -626,7 +612,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal");
+                Common.LogError(ex, false);
             }
 
             return Result;
@@ -660,13 +646,12 @@ namespace IsThereAnyDeal.Services
                 
                 if (File.Exists(PluginFileCache))
                 {
-                    string fileData = File.ReadAllText(PluginFileCache);
-                    itadGiveawaysCache = JsonConvert.DeserializeObject<List<ItadGiveaway>>(fileData);
+                    itadGiveawaysCache = Serialization.FromJsonFile<List<ItadGiveaway>>(PluginFileCache);
                 }
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", "Error in GetGiveAway() with cache data");
+                Common.LogError(ex, false, "Error in GetGiveAway() with cache data");
             }
 
 
@@ -684,7 +669,7 @@ namespace IsThereAnyDeal.Services
                     }
                     catch (Exception ex)
                     {
-                        Common.LogError(ex, "IsThereAnyDeal", $"Failed to download {url}");
+                        Common.LogError(ex, false, $"Failed to download {url}");
                     }
 
                     if (responseData != string.Empty)
@@ -736,7 +721,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error in GetGiveAway() with web data");
+                    Common.LogError(ex, false, "Error in GetGiveAway() with web data");
                 }
             }
 
@@ -764,11 +749,11 @@ namespace IsThereAnyDeal.Services
             // Save new
             try
             {
-                File.WriteAllText(PluginFileCache, JsonConvert.SerializeObject(itadGiveaways));
+                File.WriteAllText(PluginFileCache, Serialization.ToJson(itadGiveaways));
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "IsThereAnyDeal", "Error in GetGiveAway() with save data");
+                Common.LogError(ex, false, "Error in GetGiveAway() with save data");
             }
 
             return itadGiveaways;
@@ -845,7 +830,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error on UpdateDatas()");
+                    Common.LogError(ex, false);
                 }
 
                 stopWatch.Stop();

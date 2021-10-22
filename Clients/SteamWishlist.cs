@@ -1,15 +1,14 @@
 ﻿using IsThereAnyDeal.Models;
-using Newtonsoft.Json.Linq;
 using Playnite.SDK;
+using Playnite.SDK.Data;
 using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using Newtonsoft.Json;
-using CommonPluginsPlaynite.PluginLibrary.SteamLibrary.SteamShared;
 using System.Threading;
+using CommonPlayniteShared.PluginLibrary.SteamLibrary.SteamShared;
 
 namespace IsThereAnyDeal.Services
 {
@@ -38,7 +37,7 @@ namespace IsThereAnyDeal.Services
             string apiKey = string.Empty;
             try
             {
-                JObject SteamConfig = JObject.Parse(File.ReadAllText(PluginUserDataPath + "\\..\\CB91DFC9-B977-43BF-8E70-55F46E410FAB\\config.json"));
+                dynamic SteamConfig = Serialization.FromJsonFile<dynamic>(PluginUserDataPath + "\\..\\CB91DFC9-B977-43BF-8E70-55F46E410FAB\\config.json");
                 userId = (string)SteamConfig["UserId"];
                 //apiKey = (string)SteamConfig["ApiKey"];
             }
@@ -82,7 +81,7 @@ namespace IsThereAnyDeal.Services
                 {
                     if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                     {
-                        Common.LogError(ex, "IsThereAnyDeal", $"Error download Steam wishlist for page {iPage}");
+                        Common.LogError(ex, false, $"Error download Steam wishlist for page {iPage}");
                         return Result;
                     }
                 }
@@ -102,8 +101,8 @@ namespace IsThereAnyDeal.Services
 
                 if (!ResultWeb.IsNullOrEmpty())
                 {
-                    JObject resultObj = new JObject();
-                    JArray resultItems = new JArray();
+                    dynamic resultObj = null;
+                    dynamic resultItems = null;
 
                     if (ResultWeb == "[]")
                     {
@@ -113,7 +112,7 @@ namespace IsThereAnyDeal.Services
 
                     try
                     {
-                        resultObj = JObject.Parse(ResultWeb);
+                        resultObj = Serialization.FromJson<dynamic>(ResultWeb);
 
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                         foreach (var gameWishlist in resultObj)
@@ -125,7 +124,7 @@ namespace IsThereAnyDeal.Services
 
                             try
                             {
-                                JObject gameWishlistData = (JObject)gameWishlist.Value;
+                                dynamic gameWishlistData = (dynamic)gameWishlist.Value;
 
                                 StoreId = gameWishlist.Key;
                                 Name = WebUtility.HtmlDecode((string)gameWishlistData["name"]);
@@ -156,16 +155,14 @@ namespace IsThereAnyDeal.Services
                             }
                             catch (Exception ex)
                             {
-#if DEBUG
-                                Common.LogError(ex, "IsThereAnyDeal", $"Error in parse Steam wishlist - {Name}");
-#endif
+                                Common.LogError(ex, true, $"Error in parse Steam wishlist - {Name}");
                                 logger.Warn($"IsThereAnyDeal - Error in parse Steam wishlist - {Name}");
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        Common.LogError(ex, "IsThereAnyDeal", "Error in parse Steam wishlist");
+                        Common.LogError(ex, false, "Error in parse Steam wishlist");
 
                         PlayniteApi.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-Steam-Error",
@@ -206,9 +203,8 @@ namespace IsThereAnyDeal.Services
                 try
                 {
                     IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-
-                    string fileData = File.ReadAllText(FilePath);
-                    JObject jObject = JsonConvert.DeserializeObject<JObject>(fileData);
+                    
+                    dynamic jObject = Serialization.FromJsonFile<dynamic>(FilePath);
 
                     var rgWishlist = jObject["rgWishlist"];
                     foreach(var el in rgWishlist)
@@ -225,14 +221,14 @@ namespace IsThereAnyDeal.Services
                         {
                             if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                             {
-                                Common.LogError(ex, "IsThereAnyDeal", $"Error download Steam app data - {el.ToString()}");
+                                Common.LogError(ex, false, $"Error download Steam app data - {el.ToString()}");
                                 return false;
                             }
                         }
 
                         if (!ResultWeb.IsNullOrEmpty())
                         {
-                            var parsedData = JsonConvert.DeserializeObject<Dictionary<string, StoreAppDetailsResult>>(ResultWeb);
+                            var parsedData = Serialization.FromJson<Dictionary<string, StoreAppDetailsResult>>(ResultWeb);
                             var AppDetails = parsedData[el.ToString()].data;
 
                             if (AppDetails == null)
@@ -272,7 +268,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal");
+                    Common.LogError(ex, false);
                 }
             }
 

@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
-using Playnite.SDK;
+﻿using Playnite.SDK;
+using Playnite.SDK.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace IsThereAnyDeal.Models
 {
@@ -16,7 +15,7 @@ namespace IsThereAnyDeal.Models
         public int PriceCut { get; set; } = -1;
         public int PriceInferior { get; set; } = -1;
 
-        [JsonIgnore]
+        [DontSerialize]
         public string Criteria {
             get
             {

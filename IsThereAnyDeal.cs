@@ -1,53 +1,28 @@
 ﻿using IsThereAnyDeal.Services;
-using IsThereAnyDeal.Models;
 using IsThereAnyDeal.Views;
 using Playnite.SDK;
-using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
 using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
-using IsThereAnyDeal.Clients;
+using CommonPluginsShared.PlayniteExtended;
+using Playnite.SDK.Events;
 
 namespace IsThereAnyDeal
 {
-    public class IsThereAnyDeal : Plugin
+    public class IsThereAnyDeal : PluginExtended<IsThereAnyDealSettingsViewModel>
     {
-        private static readonly ILogger logger = LogManager.GetLogger();
-        private static IResourceProvider resources = new ResourceProvider();
-
-        private IsThereAnyDealSettings settings { get; set; }
-
         public override Guid Id { get; } = Guid.Parse("7d5cbee9-3c86-4389-ac7b-9abe3da4c9cd");
 
         public IsThereAnyDeal(IPlayniteAPI api) : base(api)
         {
-            settings = new IsThereAnyDealSettings(this);
 
-            // Get plugin's location 
-            string pluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            // Add plugin localization in application ressource.
-            PluginLocalization.SetPluginLanguage(pluginFolder, api.ApplicationSettings.Language);
-            // Add common in application ressource.
-            Common.Load(pluginFolder);
-
-            // Check version
-            if (settings.EnableCheckVersion)
-            {
-                CheckVersion cv = new CheckVersion();
-                cv.Check("IsThereAnyDeal", pluginFolder, api);
-            }
         }
 
         // To add new game menu items override GetGameMenuItems
-        public override List<GameMenuItem> GetGameMenuItems(GetGameMenuItemsArgs args)
+        public override IEnumerable<GameMenuItem> GetGameMenuItems(GetGameMenuItemsArgs args)
         {
             List<GameMenuItem> gameMenuItems = new List<GameMenuItem>
             {
@@ -66,10 +41,10 @@ namespace IsThereAnyDeal
         }
 
         // To add new main menu items override GetMainMenuItems
-        public override List<MainMenuItem> GetMainMenuItems(GetMainMenuItemsArgs args)
+        public override IEnumerable<MainMenuItem> GetMainMenuItems(GetMainMenuItemsArgs args)
         {
             string MenuInExtensions = string.Empty;
-            if (settings.MenuInExtensions)
+            if (PluginSettings.Settings.MenuInExtensions)
             {
                 MenuInExtensions = "@";
             }
@@ -82,7 +57,7 @@ namespace IsThereAnyDeal
                     Description = resources.GetString("LOCItadPluginView"),
                     Action = (mainMenuItem) =>
                     {
-                        var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), settings);
+                        var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), PluginSettings.Settings);
                         Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
                         windowExtension.ShowDialog();
                     }
@@ -93,7 +68,7 @@ namespace IsThereAnyDeal
                     Description = resources.GetString("LOCItadCheckNotifications"),
                     Action = (mainMenuItem) =>
                     {
-                        IsThereAnyDealApi.CheckNotifications(PlayniteApi, settings, this);
+                        IsThereAnyDealApi.CheckNotifications(PlayniteApi, PluginSettings.Settings, this);
                     }
                 },
                 new MainMenuItem
@@ -102,7 +77,7 @@ namespace IsThereAnyDeal
                     Description = resources.GetString("LOCItadUpdateDatas"),
                     Action = (mainMenuItem) =>
                     {
-                        IsThereAnyDealApi.UpdateDatas(PlayniteApi, settings, this);
+                        IsThereAnyDealApi.UpdateDatas(PlayniteApi, PluginSettings.Settings, this);
                     }
                 }
             };
@@ -119,56 +94,77 @@ namespace IsThereAnyDeal
             return mainMenuItems;
         }
 
-        public override void OnGameInstalled(Game game)
+
+        #region Game event
+        public override void OnGameSelected(OnGameSelectedEventArgs args)
         {
-            // Add code to be executed when game is finished installing.
+
         }
 
-        public override void OnGameStarted(Game game)
+        // Add code to be executed when game is started running.
+        public override void OnGameStarted(OnGameStartedEventArgs args)
         {
-            // Add code to be executed when game is started running.
+
         }
 
-        public override void OnGameStarting(Game game)
+        // Add code to be executed when game is preparing to be started.
+        public override void OnGameStarting(OnGameStartingEventArgs args)
         {
-            // Add code to be executed when game is preparing to be started.
+
         }
 
-        public override void OnGameStopped(Game game, long elapsedSeconds)
+        // Add code to be executed when game is preparing to be started.
+        public override void OnGameStopped(OnGameStoppedEventArgs args)
         {
-            // Add code to be executed when game is preparing to be started.
+
         }
 
-        public override void OnGameUninstalled(Game game)
+        // Add code to be executed when game is finished installing.
+        public override void OnGameInstalled(OnGameInstalledEventArgs args)
         {
-            // Add code to be executed when game is uninstalled.
+
         }
 
-        public override void OnApplicationStarted()
+        // Add code to be executed when game is uninstalled.
+        public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
         {
-            // Add code to be executed when Playnite is initialized.
 
-            IsThereAnyDealApi.CheckNotifications(PlayniteApi, settings, this);
+        }
+        #endregion
+
+
+        #region Application event
+        // Add code to be executed when Playnite is initialized.
+        public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
+        {
+
         }
 
-        public override void OnApplicationStopped()
+        // Add code to be executed when Playnite is shutting down.
+        public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
         {
-            // Add code to be executed when Playnite is shutting down.
+
+        }
+        #endregion
+
+
+        // Add code to be executed when library is updated.
+        public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
+        {
+
         }
 
-        public override void OnLibraryUpdated()
-        {
-            // Add code to be executed when library is updated.
-        }
 
+        #region Settings
         public override ISettings GetSettings(bool firstRunSettings)
         {
-            return settings;
+            return PluginSettings;
         }
 
         public override UserControl GetSettingsView(bool firstRunSettings)
         {
-            return new IsThereAnyDealSettingsView(PlayniteApi, settings, this.GetPluginUserDataPath());
+            return new IsThereAnyDealSettingsView(PlayniteApi, PluginSettings.Settings, this.GetPluginUserDataPath());
         }
+        #endregion
     }
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Playnite.SDK.Data;
 using System;
 
 namespace IsThereAnyDeal.Models
@@ -17,7 +17,7 @@ namespace IsThereAnyDeal.Models
         public string ShopColor { get; set; }
         public string UrlBuy { get; set; }
 
-        [JsonIgnore]
+        [DontSerialize]
         public string UrlGame
         {
             get

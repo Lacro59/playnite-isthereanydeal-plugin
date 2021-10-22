@@ -1,4 +1,4 @@
-﻿using CommonPluginsPlaynite.PluginLibrary.HumbleLibrary.Services;
+﻿using CommonPlayniteShared.PluginLibrary.HumbleLibrary.Services;
 using Playnite.SDK;
 
 namespace IsThereAnyDeal.Services

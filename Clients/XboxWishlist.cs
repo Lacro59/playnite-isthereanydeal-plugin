@@ -2,14 +2,13 @@
 using AngleSharp.Parser.Html;
 using IsThereAnyDeal.Models;
 using IsThereAnyDeal.Services;
-using Newtonsoft.Json.Linq;
 using Playnite.SDK;
+using Playnite.SDK.Data;
 using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace IsThereAnyDeal.Clients
 {
@@ -100,18 +99,15 @@ namespace IsThereAnyDeal.Clients
                         }
                         catch (Exception ex)
                         {
-#if DEBUG
-                            Common.LogError(ex, "IsThereAnyDeal", $"Error in parse Microsoft Store wishlist - {Name}");
-#endif
+                            Common.LogError(ex, true, $"Error in parse Microsoft Store wishlist - {Name}");
                             logger.Warn($"IsThereAnyDeal - Error in parse Microsoft Store wishlist - {Name}");
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-#if DEBUG
-                    Common.LogError(ex, "IsThereAnyDeal", "Error in parse Xbox wishlist");
-#endif
+                    Common.LogError(ex, true, "Error in parse Xbox wishlist");
+
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Xbox-Error",
                         "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Xbox"),

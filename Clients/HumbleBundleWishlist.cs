@@ -1,11 +1,11 @@
 ﻿using Playnite.SDK;
+using Playnite.SDK.Data;
 using IsThereAnyDeal.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using CommonPluginsShared;
-using Newtonsoft.Json.Linq;
 
 namespace IsThereAnyDeal.Services
 {
@@ -51,10 +51,10 @@ namespace IsThereAnyDeal.Services
 
                     ResultWeb = ResultWeb.Replace("<script id=\"storefront-webpack-json-data\" type=\"application/json\">", string.Empty);
 
-                    JObject dataObj = JObject.Parse(ResultWeb);
+                    dynamic dataObj = Serialization.FromJson<dynamic>(ResultWeb);
 
                     IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                    foreach (JObject gameWish in dataObj["products_json"])
+                    foreach (dynamic gameWish in dataObj["products_json"])
                     {
                         string StoreId = string.Empty;
                         string StoreUrl = string.Empty;
@@ -89,9 +89,7 @@ namespace IsThereAnyDeal.Services
                         }
                         catch(Exception ex)
                         {
-#if DEBUG
-                            Common.LogError(ex, "IsThereAnyDeal", $"Error in parse Humble wishlist - {Name}");
-#endif
+                            Common.LogError(ex, true, $"Error in parse Humble wishlist - {Name}");
                             logger.Warn($"IsThereAnyDeal - Error in parse Humble wishlist - {Name}");
                         }
                     }
@@ -101,7 +99,7 @@ namespace IsThereAnyDeal.Services
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                 {
-                    Common.LogError(ex, "IsThereAnyDeal", "Error in download HumbleBundle wishlist");
+                    Common.LogError(ex, false, "Error in download HumbleBundle wishlist");
 
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Humble-Error",

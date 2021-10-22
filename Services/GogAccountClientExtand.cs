@@ -1,5 +1,5 @@
-﻿using CommonPluginsPlaynite.PluginLibrary.GogLibrary.Models;
-using CommonPluginsPlaynite.PluginLibrary.Services.GogLibrary;
+﻿using CommonPlayniteShared.PluginLibrary.GogLibrary.Models;
+using CommonPlayniteShared.PluginLibrary.Services.GogLibrary;
 using CommonPluginsShared;
 using Playnite.SDK;
 using System;
@@ -22,7 +22,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "ISThereAnyDeal");
+                Common.LogError(ex, false);
                 return string.Empty;
             }
         }
@@ -39,7 +39,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, "ISThereAnyDeal");
+                Common.LogError(ex, false);
                 return string.Empty;
             }
         }
