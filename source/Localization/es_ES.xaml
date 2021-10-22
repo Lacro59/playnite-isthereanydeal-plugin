@@ -29,6 +29,14 @@
     <sys:String x:Key="LOCItadLimitNotification">Precio recortado</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">Precio inferior</sys:String>
 
+    <sys:String x:Key="LOCItadSettingPrice">Define limit to price slider</sys:String>
+    <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
+    <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
+
+    <sys:String x:Key="LOCItadSettingsNotifications">Notifications</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationAt">Price cut at</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Price inferior at</sys:String>
+
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADFilterSource">Filtrar por tienda(s)</sys:String>
@@ -44,12 +52,17 @@
     <sys:String x:Key="LOCItadNotActive">No activo en IsthereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadNotFind">No encontrado en IsthereAnyDeal</sys:String>
 
-    <sys:String x:Key="LOCItadDeleteOnStoreWishList">¿Eliminar {0} en {1}?</sys:String>
-    <sys:String x:Key="LOCItadHideOnStoreWishList">¿Eliminar {0} en {1}?</sys:String>
+    <sys:String x:Key="LOCItadDeleteOnStoreWishList"></sys:String>
+    <sys:String x:Key="LOCItadHideOnStoreWishList"></sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">Wishlist options</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Incluir juegos en la biblioteca</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Incluir juegos sin datos de IsthereAnyDeal</sys:String>
+
+    <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
+    <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
 
     <!-- IsThereAnyDeal -->
 
