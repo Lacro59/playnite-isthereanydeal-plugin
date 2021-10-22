@@ -8,17 +8,17 @@
     <!-- IsThereAnyDealSettingsView -->
 
     <sys:String x:Key="LOCItadExclusionList">Elenco di esclusione</sys:String>
-    
+
     <sys:String x:Key="LOCItadSettingWishlist">Lista dei desideri</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Abilita lista dei desideri di Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Abilita la lista dei desideri di GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Abilita lista dei desideri dell'Epic Game Store</sys:String>
     <sys:String x:Key="LOCItadEnableHumble">Abilita lista dei desideri di Humble</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
-    <sys:String x:Key="LOCItadEnableXbox">Abilita Xbox</sys:String>
+    <sys:String x:Key="LOCItadEnableXbox">Abilita la lista dei desideri della Xbox</sys:String>
     <sys:String x:Key="LOCItadXboxWishlistLink">Collegamento lista dei desideri</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Abilita Origin</sys:String>
-    
+    <sys:String x:Key="LOCItadEnableOrigin">Abilita lista dei desideri Origin</sys:String>
+
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">Regione</sys:String>
     <sys:String x:Key="LOCItadCountry">Paese</sys:String>
@@ -43,34 +43,34 @@
     <sys:String x:Key="LOCItadInLibrary">In libreria</sys:String>
     <sys:String x:Key="LOCItadNotActive">Non attivo su IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadNotFind">Non trovato su IsThereAnyDeal</sys:String>
-    
+
     <sys:String x:Key="LOCItadDeleteOnStoreWishList">Eliminare {0} su {1}?</sys:String>
     <sys:String x:Key="LOCItadHideOnStoreWishList">Escludere {0} su {1}?</sys:String>
 
-    <sys:String x:Key="LOCItadWhishListOptions">Opzioni della lista dei desideri</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptions">Opzioni lista desideri</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Includi giochi nella libreria</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Includi giochi senza i dati di IsThereAnyDeal</sys:String>
 
     <!-- IsThereAnyDeal -->
 
-    <sys:String x:Key="LOCItadPluginView">Visualizza dati IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCItadPluginView">Visualizza i dati IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadCheckNotifications">Controlla le notifiche</sys:String>
-    <sys:String x:Key="LOCItadUpdateDatas">Aggiorna dati di IsThereAnyDeal</sys:String>
-    <sys:String x:Key="LOCITADDataDownloading">Scarica i dati di IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCItadUpdateDatas">Aggiorna i dati IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCITADDataDownloading">Scaricamento dati IsThereAnyDeal...</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Notifica di giveaway per {0} ({1} gioco/chi)</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">Notifica di presso per {0} - {1}{2} ({3}%)</sys:String>
 
-    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Si è verificato un errore recuperando la lista dei desideri da {0}.
-Prova a identificarti al tuo profilo.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Il Bundle di Humble è abilitato poi disabilitato.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">L'Epic Game Store è abilitato poi disabilitato.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG viene abilitato e poi disabilitato.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam viene abilitato e poi disabilitato.</sys:String>
+    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Si è verificato un errore durante il recupero della lista dei desideri da {0}.
+Prova ad accedere con il tuo account.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Humble Bundle è abilitato nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disattivata in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic è attivato nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disattivata in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG è attivato nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disattivata in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam è attivata nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disattivata in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam non è stato configurato correttamente nelle impostazioni</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">La lista dei desideri di Steam è privata.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox viene abilitata e poi disabilitata.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Non c'è nessun link per la lista dei desideri Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Origin è abilitata e poi disabilitata.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">La lista desideri di Steam è privata.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox è attivato nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disattivata in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Non c'è nessun link alla lista dei desideri Xbox.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Origin è attivato nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disattivata in Playnite.</sys:String>
 
 </ResourceDictionary>

@@ -7,70 +7,70 @@
 
     <!-- IsThereAnyDealSettingsView -->
 
-    <sys:String x:Key="LOCItadExclusionList">Exclusion list</sys:String>
-    
-    <sys:String x:Key="LOCItadSettingWishlist">Wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableSteam">Enable Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableGog">Enable GOG wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableEpic">Enable Epic Game Store wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableHumble">Enable Humble wishlist</sys:String>
+    <sys:String x:Key="LOCItadExclusionList">Ausschlussliste</sys:String>
+
+    <sys:String x:Key="LOCItadSettingWishlist">Wunschliste</sys:String>
+    <sys:String x:Key="LOCItadEnableSteam">Steam Wunschliste aktivieren</sys:String>
+    <sys:String x:Key="LOCItadEnableGog">GOG Wunschliste aktivieren</sys:String>
+    <sys:String x:Key="LOCItadEnableEpic">Epic Games Store Wunschliste aktivieren</sys:String>
+    <sys:String x:Key="LOCItadEnableHumble">Humble Wunschliste aktivieren</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
-    <sys:String x:Key="LOCItadEnableXbox">Enable Xbox</sys:String>
-    <sys:String x:Key="LOCItadXboxWishlistLink">Wish list link</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Enable Origin</sys:String>
-    
+    <sys:String x:Key="LOCItadEnableXbox">Xbox Wunschliste aktivieren</sys:String>
+    <sys:String x:Key="LOCItadXboxWishlistLink">Link zur Wunschliste</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">Origin Wunschliste aktivieren</sys:String>
+
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">Region</sys:String>
-    <sys:String x:Key="LOCItadCountry">Country</sys:String>
-    <sys:String x:Key="LOCItadStores">Store(s)</sys:String>
+    <sys:String x:Key="LOCItadCountry">Land</sys:String>
+    <sys:String x:Key="LOCItadStores">Geschäft(e)</sys:String>
 
-    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Enable notifications of giveaways</sys:String>
-    <sys:String x:Key="LOCItadEnableNotification">Enable notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotification">Price cut</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Benachrichtigungen für Giveaways aktivieren</sys:String>
+    <sys:String x:Key="LOCItadEnableNotification">Benachrichtigung aktivieren</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Preisreduktion</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPrice">Preis kleiner als</sys:String>
 
     <!-- IsThereAnyDealView -->
 
-    <sys:String x:Key="LOCITADFilterSource">Filter by store(s)</sys:String>
-    <sys:String x:Key="LOCITADPercentage">Minimum discount percentage</sys:String>
-    <sys:String x:Key="LOCITADPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCITADFilterSource">Nach Shop(s) filtern</sys:String>
+    <sys:String x:Key="LOCITADPercentage">Mindestrabatt Prozentsatz</sys:String>
+    <sys:String x:Key="LOCITADPrice">Preis kleiner als</sys:String>
 
-    <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
-    <sys:String x:Key="LOCItadCurrentStore">Current store wishlist</sys:String>
-    <sys:String x:Key="LOCItadBuy">Buy best</sys:String>
-    <sys:String x:Key="LOCItadStore">Store</sys:String>
-    <sys:String x:Key="LOCItadNoData">No data for selected store in settings</sys:String>
-    <sys:String x:Key="LOCItadInLibrary">In library</sys:String>
-    <sys:String x:Key="LOCItadNotActive">Not active on IsThereAnyDeal</sys:String>
-    <sys:String x:Key="LOCItadNotFind">Not found on IsThereAnyDeal</sys:String>
-    
-    <sys:String x:Key="LOCItadDeleteOnStoreWishList">Delete {0} on {1}?</sys:String>
-    <sys:String x:Key="LOCItadHideOnStoreWishList">Exclude {0} on {1}?</sys:String>
+    <sys:String x:Key="LOCItadCurrentBest">Aktueller Bestpreis</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">Derzeitige Shop-Wunschliste</sys:String>
+    <sys:String x:Key="LOCItadBuy">Am besten kaufen</sys:String>
+    <sys:String x:Key="LOCItadStore">Shop</sys:String>
+    <sys:String x:Key="LOCItadNoData">Keine Daten für den ausgewählten Shop in den Einstellungen</sys:String>
+    <sys:String x:Key="LOCItadInLibrary">In Bibliothek</sys:String>
+    <sys:String x:Key="LOCItadNotActive">Nicht aktiv bei IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCItadNotFind">Auf IsThereAnyDeal nicht gefunden</sys:String>
 
-    <sys:String x:Key="LOCItadWhishListOptions">Wish list options</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Include games in library</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Include games without IsThereAnyDeal data</sys:String>
+    <sys:String x:Key="LOCItadDeleteOnStoreWishList">{0} bei {1} löschen?</sys:String>
+    <sys:String x:Key="LOCItadHideOnStoreWishList">{0} bei {1} ausschließen?</sys:String>
+
+    <sys:String x:Key="LOCItadWhishListOptions">Wunschlistenoptionen</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Spiele in der Bibliothek einbeziehen</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Spiele ohne IsThereAnyDeal Daten einbeziehen</sys:String>
 
     <!-- IsThereAnyDeal -->
 
-    <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal datas</sys:String>
-    <sys:String x:Key="LOCItadCheckNotifications">Check notifications</sys:String>
-    <sys:String x:Key="LOCItadUpdateDatas">Update IsThereAnyDeal datas</sys:String>
-    <sys:String x:Key="LOCITADDataDownloading">Downloading IsThereAnyDeal datas</sys:String>
+    <sys:String x:Key="LOCItadPluginView">IsThereAnyDeal Daten anzeigen</sys:String>
+    <sys:String x:Key="LOCItadCheckNotifications">Benachrichtigungen prüfen</sys:String>
+    <sys:String x:Key="LOCItadUpdateDatas">IsThereAnyDeal Daten aktualisieren</sys:String>
+    <sys:String x:Key="LOCITADDataDownloading">IsThereAnyDeal Daten werden heruntergeladen...</sys:String>
 
-    <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Giveaway notification for {0} ({1} game(s))</sys:String>
-    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Price notification for {0} - {1}{2} ({3}%)</sys:String>
+    <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Giveway-Benachrichtigung für {0} ({1} Spiel(e))</sys:String>
+    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Preisbenachrichtigung für {0} - {1}{2} ({3}%)</sys:String>
 
-    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">An error occurred while retrieving the wishlist from {0}.
-Try to identify yourself to your account.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Humble Bundle is enable then disabled.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic Game Store is enable then disabled.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG is enable then disabled.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam is enable then disabled.</sys:String>
-    <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam has not been correctly configured in settings</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam wish list is private.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox is enable then disabled.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">There is no Xbox wish list link.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Origin is enable then disabled.</sys:String>
+    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Beim Abrufen der Wunschliste von {0} ist ein Fehler aufgetreten.
+Versuchen Sie, sich mit Ihrem Konto anzumelden.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Humble Bundle ist im IsThereAnyDeal Plugin aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic ist im IsThereAnyDeal Plugin aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG ist im IsThereAnyDeal Plugin aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam ist im IsThereAnyDeal Plugin aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert.</sys:String>
+    <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam wurde in den Einstellungen nicht richtig konfiguriert</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Die Steam Wunschliste ist privat.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox ist im IsThereAnyDeal Plugin aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Der Link zur Xbox Wunsch konnte nicht gefunden werden.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Origin ist im IsThereAnyDeal Plugin aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert.</sys:String>
 
 </ResourceDictionary>
