@@ -1,5 +1,6 @@
 ﻿using Playnite.SDK.Data;
 using System;
+using System.Collections.Generic;
 
 namespace IsThereAnyDeal.Models
 {
@@ -9,7 +10,8 @@ namespace IsThereAnyDeal.Models
         public ItadPlainMeta Meta { get; set; }
         [SerializationPropertyName("data")]
         //[JsonConverter(typeof(ItadPlainDataConverter))]
-        public ItadPlainData Data { get; set; }
+        //public ItadPlainData Data { get; set; }
+        public dynamic data { get; set; }
     }
 
     public class ItadPlainMeta

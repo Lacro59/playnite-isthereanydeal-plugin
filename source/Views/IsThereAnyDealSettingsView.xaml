@@ -19,8 +19,8 @@
         <Grid Name="PART_DataLoad">
             <ProgressBar IsIndeterminate="True" Width="350" Height="40" />
             <TextBlock Text="{DynamicResource LOCLoadingLabel}"
-                                           Style="{DynamicResource BaseTextBlockStyle}"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                       Style="{DynamicResource BaseTextBlockStyle}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
 
         <TabControl Name="PART_Data">
@@ -48,16 +48,16 @@
                                         <RowDefinition Height="auto" />
                                     </Grid.RowDefinitions>
 
-                                    <CheckBox Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" IsChecked="{Binding MenuInExtensions}" Margin="0,0,0,0" 
-                          VerticalAlignment="Center">
+                                    <CheckBox Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" IsChecked="{Binding Settings.MenuInExtensions}" Margin="0,0,0,0" 
+                                              VerticalAlignment="Center">
                                         <Label Content="{DynamicResource LOCCommonMenuInExtensions}" />
                                     </CheckBox>
 
-                                    <CheckBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" IsChecked="{Binding EnableNotificationGiveaways}" VerticalAlignment="Center">
+                                    <CheckBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" IsChecked="{Binding Settings.EnableNotificationGiveaways}" VerticalAlignment="Center">
                                         <Label Content="{DynamicResource LOCItadEnableNotificationGiveaways}" />
                                     </CheckBox>
 
-                                    <CheckBox Name="chk_Notification" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" IsChecked="{Binding EnableNotification}" VerticalAlignment="Center">
+                                    <CheckBox Name="chk_Notification" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" IsChecked="{Binding Settings.EnableNotification}" VerticalAlignment="Center">
                                         <Label Content="{DynamicResource LOCItadEnableNotification}" />
                                     </CheckBox>
                                 </Grid>
@@ -143,7 +143,7 @@
                                         <Label Grid.Column="0" Grid.Row="0" Content="{DynamicResource LOCItadMinimum}" />
                                         <playnitecontrols:NumericBox Grid.Column="2" Grid.Row="0"
                                                                  MinLongValue="0" MaxLongValue="200"
-                                                                 LongValue="{Binding MinPrice}" />
+                                                                 LongValue="{Binding Settings.MinPrice}" />
                                     </Grid>
 
                                     <Grid Grid.Column="1">
@@ -160,7 +160,7 @@
                                         <Label Grid.Column="0" Grid.Row="0" Content="{DynamicResource LOCItadMaximum}" />
                                         <playnitecontrols:NumericBox Grid.Column="2" Grid.Row="0" x:Name="PART_MaxPrice"
                                                                  MinLongValue="30" MaxLongValue="10000"
-                                                                 LongValue="{Binding MaxPrice}" />
+                                                                 LongValue="{Binding Settings.MaxPrice}" />
                                     </Grid>
                                 </Grid>
                             </StackPanel>
@@ -169,7 +169,7 @@
                 </ScrollViewer>
             </TabItem>
 
-            <TabItem Header="{DynamicResource LOCItadSettingsNotifications}" IsEnabled="{Binding EnableNotification}">
+            <TabItem Header="{DynamicResource LOCItadSettingsNotifications}" IsEnabled="{Binding Settings.EnableNotification}">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
@@ -228,7 +228,7 @@
 
                     <Button Grid.Row="4" Content="{DynamicResource LOCAddTitle}" HorizontalAlignment="Right" Click="ButtonAdd_Click" />
 
-                    <ListBox Grid.Row="6" Name="PART_LbNotifications" ItemsSource="{Binding NotificationCriterias}"
+                    <ListBox Grid.Row="6" Name="PART_LbNotifications" ItemsSource="{Binding Settings.NotificationCriterias}"
                              MinHeight="200">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -271,28 +271,28 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
 
-                    <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding EnableSteam}" VerticalAlignment="Center">
+                    <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding Settings.EnableSteam}" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableSteam}" />
                     </CheckBox>
 
-                    <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding EnableGog}" VerticalAlignment="Center">
+                    <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding Settings.EnableGog}" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableGog}" />
                     </CheckBox>
 
-                    <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding EnableEpic}" VerticalAlignment="Center">
+                    <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding Settings.EnableEpic}" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableEpic}" />
                     </CheckBox>
 
-                    <CheckBox Name="chk_Humble" Grid.Column="0" Grid.Row="3" IsChecked="{Binding EnableHumble}" VerticalAlignment="Center">
+                    <CheckBox Name="chk_Humble" Grid.Column="0" Grid.Row="3" IsChecked="{Binding Settings.EnableHumble}" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableHumble}" />
                     </CheckBox>
                     <Label Grid.Column="2" Grid.Row="3" Content="{DynamicResource LOCItadHumbleKey}" IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}" 
                            VerticalAlignment="Center" HorizontalAlignment="Right" />
-                    <TextBox Grid.Column="4" Grid.Row="3" Text="{Binding HumbleKey}" Margin="10,0,0,0"
+                    <TextBox Grid.Column="4" Grid.Row="3" Text="{Binding Settings.HumbleKey}" Margin="10,0,0,0"
                              IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}" 
                          MaxWidth="150" VerticalAlignment="Center" />
 
-                    <CheckBox Name="chk_Xbox" Grid.Column="0" Grid.Row="4" IsChecked="{Binding EnableXbox}" VerticalAlignment="Center">
+                    <CheckBox Name="chk_Xbox" Grid.Column="0" Grid.Row="4" IsChecked="{Binding Settings.EnableXbox}" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableXbox}" />
                     </CheckBox>
                     <Grid Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="5" Margin="50,0,0,0">
@@ -304,12 +304,12 @@
                         <Label Grid.Column="0" Content="{DynamicResource LOCItadXboxWishlistLink}" IsEnabled="{Binding ElementName=chk_Xbox, Path=IsChecked}" VerticalAlignment="Center" />
 
                         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Name="scv" Grid.Column="2">
-                            <TextBox Text="{Binding XboxLink}" IsEnabled="{Binding ElementName=chk_Xbox, Path=IsChecked}" 
+                            <TextBox Text="{Binding Settings.XboxLink}" IsEnabled="{Binding ElementName=chk_Xbox, Path=IsChecked}" 
                                              MaxWidth="{Binding ElementName=scv, Path=ActualWidth}" VerticalAlignment="Center" />
                         </ScrollViewer>
                     </Grid>
 
-                    <CheckBox Name="chk_Origin" Grid.Column="0" Grid.Row="6" IsChecked="{Binding EnableOrigin}" VerticalAlignment="Center">
+                    <CheckBox Name="chk_Origin" Grid.Column="0" Grid.Row="6" IsChecked="{Binding Settings.EnableOrigin}" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableOrigin}" />
                     </CheckBox>
 

@@ -68,8 +68,12 @@
     <Compile Include="Clients\XboxWishlist.cs" />
     <Compile Include="Clients\GogWishlist.cs" />
     <Compile Include="Clients\HumbleBundleWishlist.cs" />
+    <Compile Include="Models\EpicWishlistResult.cs" />
+    <Compile Include="Models\GogWishlistResult.cs" />
     <Compile Include="Models\ItadNotificationCriteria.cs" />
+    <Compile Include="Models\ItadRegionsResult.cs" />
     <Compile Include="Models\ItadResult.cs" />
+    <Compile Include="Models\Wishlist.cs" />
     <Compile Include="playnite-plugincommon\CommonPluginsControls\PlayniteControls\NumericBox.xaml.cs">
       <DependentUpon>NumericBox.xaml</DependentUpon>
     </Compile>
@@ -89,7 +93,6 @@
       <DependentUpon>IsThereAnyDealSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ItadRegion.cs" />
-    <Compile Include="Models\Wishlist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\IsThereAnyDealView.xaml.cs">
       <DependentUpon>IsThereAnyDealView.xaml</DependentUpon>

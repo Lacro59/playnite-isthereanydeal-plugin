@@ -8,6 +8,7 @@ using System.Net;
 using System.Text;
 using AngleSharp.Parser.Html;
 using AngleSharp.Dom.Html;
+using CommonPlayniteShared.PluginLibrary.GogLibrary.Models;
 
 namespace IsThereAnyDeal.Services
 {
@@ -68,25 +69,21 @@ namespace IsThereAnyDeal.Services
                         {
                             try
                             {
-                                dynamic resultObj = Serialization.FromJson<dynamic>(ResultWeb);
-
-                                if (((dynamic)resultObj["wishlist"]).Count > 0)
+                                GogWishlistResult resultObj = Serialization.FromJson<GogWishlistResult>(ResultWeb);
+                                foreach (var gameWishlist in resultObj.wishlist)
                                 {
-                                    foreach (var gameWishlist in (dynamic)resultObj["wishlist"])
+                                    if (((bool)gameWishlist.Value))
                                     {
-                                        if (((bool)gameWishlist.Value))
-                                        {
-                                            string StoreId = gameWishlist.Key;
+                                        string StoreId = gameWishlist.Name;
 
-                                            Wishlist wishlist = GetGameData(SourceId, StoreId, settings);
-                                            if (wishlist != null)
-                                            {
-                                                Result.Add(wishlist);
-                                            }
-                                            else
-                                            {
-                                                logger.Warn($"IsThereAnyDeal - GOG wishlist is incomplet");
-                                            }
+                                        Wishlist wishlist = GetGameData(SourceId, StoreId, settings);
+                                        if (wishlist != null)
+                                        {
+                                            Result.Add(wishlist);
+                                        }
+                                        else
+                                        {
+                                            logger.Warn($"IsThereAnyDeal - GOG wishlist is incomplet");
                                         }
                                     }
                                 }
@@ -162,7 +159,17 @@ namespace IsThereAnyDeal.Services
                     return Result;
                 }
             }
-            
+            else
+            {
+                logger.Warn($"GOG user is not authenticated");
+
+                PlayniteApi.Notifications.Add(new NotificationMessage(
+                    $"isthereanydeal-gog-noauthenticate",
+                    $"IsThereAnyDeal\r\nGOG - {resources.GetString("LOCLoginRequired")}",
+                    NotificationType.Error
+                ));
+            }
+
             Result = SetCurrentPrice(Result, settings, PlayniteApi);
             SaveWishlist("Gog", PluginUserDataPath, Result);
             return Result;
@@ -187,10 +194,10 @@ namespace IsThereAnyDeal.Services
             string ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
             try
             {
-                dynamic resultObjGame = Serialization.FromJson<dynamic>(ResultWeb);
-                ReleaseDate = (resultObjGame["release_date"].ToString().IsNullOrEmpty()) ? default(DateTime) : (DateTime)resultObjGame["release_date"];
-                Name = (string)resultObjGame["title"];
-                Capsule = "http:" + (string)resultObjGame["images"]["logo2x"];
+                ProductApiDetail resultObjGame = Serialization.FromJson<ProductApiDetail>(ResultWeb);
+                ReleaseDate = resultObjGame.release_date == null ? default(DateTime) : (DateTime)resultObjGame.release_date;
+                Name = resultObjGame.title;
+                Capsule = "http:" + resultObjGame.images.logo2x;
 
                 PlainData plainData = isThereAnyDealApi.GetPlain(Name);
 
@@ -201,7 +208,7 @@ namespace IsThereAnyDeal.Services
                     StoreId = StoreId,
                     StoreName = "GOG",
                     ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
-                    StoreUrl = (string)resultObjGame["links"]["product_card"],
+                    StoreUrl = resultObjGame.links.product_card,
                     Name = WebUtility.HtmlDecode(Name),
                     SourceId = SourceId,
                     ReleaseDate = ReleaseDate.ToUniversalTime(),

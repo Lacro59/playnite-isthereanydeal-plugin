@@ -102,7 +102,6 @@ namespace IsThereAnyDeal.Services
                 if (!ResultWeb.IsNullOrEmpty())
                 {
                     dynamic resultObj = null;
-                    dynamic resultItems = null;
 
                     if (ResultWeb == "[]")
                     {
@@ -126,10 +125,10 @@ namespace IsThereAnyDeal.Services
                             {
                                 dynamic gameWishlistData = (dynamic)gameWishlist.Value;
 
-                                StoreId = gameWishlist.Key;
+                                StoreId = gameWishlist.Name;
                                 Name = WebUtility.HtmlDecode((string)gameWishlistData["name"]);
 
-                                string release_date = ((string)gameWishlistData["release_date"]).Split('.')[0];
+                                string release_date = ((string)gameWishlistData["release_date"])?.Split('.')[0];
                                 int.TryParse(release_date, out int release_date_int);
                                 ReleaseDate = (release_date_int == 0) ? default(DateTime) : new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(release_date_int);
 
@@ -163,7 +162,6 @@ namespace IsThereAnyDeal.Services
                     catch (Exception ex)
                     {
                         Common.LogError(ex, false, "Error in parse Steam wishlist");
-
                         PlayniteApi.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-Steam-Error",
                             "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Steam"),

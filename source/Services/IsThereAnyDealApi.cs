@@ -318,25 +318,31 @@ namespace IsThereAnyDeal.Services
                     Common.LogError(ex, false, $"Failed to download {url}");
                 }
 
-                dynamic datasObj = Serialization.FromJson<dynamic>(responseData);
-                if (((dynamic)datasObj["data"]).Count > 0)
+                ItadRegionsResult datasObj = Serialization.FromJson<ItadRegionsResult>(responseData);
+                if (datasObj != null)
                 {
-                    foreach (var dataObj in (dynamic)datasObj["data"])
+                    foreach (var dataObj in datasObj.data.GetType().GetProperties())
                     {
-                        List<string> countries = new List<string>();
-                        foreach (string country in (dynamic)dataObj.Value["countries"])
-                        {
-                            countries.Add(country);
-                        }
+                        var Key = dataObj.Name;
+                        var Value = dataObj.GetValue(datasObj.data, null);
 
-                        itadRegions.Add(new ItadRegion
+                        if (Value is Region region)
                         {
-                            Region = dataObj.Key,
-                            CurrencyName = (string)dataObj.Value["currency"]["name"],
-                            CurrencyCode = (string)dataObj.Value["currency"]["code"],
-                            CurrencySign = (string)dataObj.Value["currency"]["sign"],
-                            Countries = countries
-                        });
+                            List<string> countries = new List<string>();
+                            foreach (string country in region.countries)
+                            {
+                                countries.Add(country);
+                            }
+
+                            itadRegions.Add(new ItadRegion
+                            {
+                                Region = Key,
+                                CurrencyName = region.currency.name,
+                                CurrencyCode = region.currency.code,
+                                CurrencySign = region.currency.sign,
+                                Countries = countries
+                            });
+                        }
                     }
                 }
             }
@@ -400,7 +406,7 @@ namespace IsThereAnyDeal.Services
                 ItadPlain itadPlain = Serialization.FromJson<ItadPlain>(responseData);
                 if (itadPlain.Meta.Match != "false")
                 {
-                    plainData.Plain = itadPlain.Data.Plain;
+                    plainData.Plain = itadPlain.data?["plain"];
                     plainData.IsActive = itadPlain.Meta.Active;
                 }
                 else

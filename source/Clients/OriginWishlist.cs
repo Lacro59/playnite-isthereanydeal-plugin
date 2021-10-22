@@ -125,6 +125,16 @@ namespace IsThereAnyDeal.Clients
                     }
                 }
             }
+            else
+            {
+                logger.Warn($"Origin user is not authenticated");
+
+                PlayniteApi.Notifications.Add(new NotificationMessage(
+                    $"isthereanydeal-origin-noauthenticate",
+                    $"IsThereAnyDeal\r\nGOrigin - {resources.GetString("LOCLoginRequired")}",
+                    NotificationType.Error
+                ));
+            }
 
             Result = SetCurrentPrice(Result, settings, PlayniteApi);
             SaveWishlist("Origin", PluginUserDataPath, Result);

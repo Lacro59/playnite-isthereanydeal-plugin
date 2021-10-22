@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.IO;
 using CommonPluginsShared;
 using System.Net;
+using CommonPlayniteShared.Common;
+using System.Security.Principal;
 
 namespace IsThereAnyDeal.Services
 {
@@ -41,17 +43,16 @@ namespace IsThereAnyDeal.Services
             string access_token = string.Empty;
             try
             {
-                dynamic EpicConfig = Serialization.FromJsonFile<dynamic>(PluginUserDataPath + "\\..\\00000002-DBD1-46C6-B5D0-B1BA559D10E4\\tokens.json");
-                access_token = (string)EpicConfig["access_token"];
+                dynamic EpicConfig = Serialization.FromJson<dynamic>(
+                    Encryption.DecryptFromFile(
+                        PluginUserDataPath + "\\..\\00000002-DBD1-46C6-B5D0-B1BA559D10E4\\tokens.json",
+                        Encoding.UTF8,
+                        WindowsIdentity.GetCurrent().User.Value));
 
+                access_token = (string)EpicConfig["access_token"];
             }
             catch
             {
-            }
-
-            if (access_token.IsNullOrEmpty())
-            {
-                logger.Error($"ISThereAnyDeal - No Epic configuration.");
             }
 
             return access_token;
@@ -77,6 +78,14 @@ namespace IsThereAnyDeal.Services
             string access_token = GetToken(PluginUserDataPath);
             if (access_token.IsNullOrEmpty())
             {
+                logger.Warn($"Epic user is not authenticated");
+
+                PlayniteApi.Notifications.Add(new NotificationMessage(
+                    $"isthereanydeal-epic-noauthenticate",
+                    $"IsThereAnyDeal\r\n Epic - {resources.GetString("LOCLoginRequired")}",
+                    NotificationType.Error
+                ));
+
                 return ResultLoad;
             }
 
@@ -87,19 +96,19 @@ namespace IsThereAnyDeal.Services
             string ResultWeb = QuerySearchWishList(query, variables, access_token).GetAwaiter().GetResult();
             if (!ResultWeb.IsNullOrEmpty())
             {
-                dynamic resultObj = null;
+                EpicWishlistResult resultObj = null;
 
                 try
                 {
-                    resultObj = Serialization.FromJson<dynamic>(ResultWeb);
+                    resultObj = Serialization.FromJson<EpicWishlistResult>(ResultWeb);
 #if DEBUG
                     logger.Debug($"IsThereAnyDeal - resultObj: {Serialization.ToJson(resultObj)}");
 #endif
-                    if (resultObj != null && resultObj["data"] != null && resultObj["data"]["Wishlist"] != null 
-                        && resultObj["data"]["Wishlist"]["wishlistItems"] != null && resultObj["data"]["Wishlist"]["wishlistItems"]["elements"] != null) {
+                    if (resultObj != null && resultObj.data != null && resultObj.data.Wishlist != null 
+                        && resultObj.data.Wishlist.wishlistItems != null && resultObj.data.Wishlist.wishlistItems.elements != null) {
 
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                        foreach (dynamic gameWishlist in resultObj["data"]["Wishlist"]["wishlistItems"]["elements"])
+                        foreach (Element gameWishlist in resultObj.data.Wishlist.wishlistItems.elements)
                         {
                             string StoreId = string.Empty;
                             string Name = string.Empty;
@@ -111,15 +120,15 @@ namespace IsThereAnyDeal.Services
 #if DEBUG
                                 logger.Debug($"IsThereAnyDeal - gameWishlist: {Serialization.ToJson(gameWishlist)}");
 #endif
-                                StoreId = (string)gameWishlist["offerId"] + "|" + (string)gameWishlist["namespace"];
+                                StoreId = gameWishlist.offerId + "|" + gameWishlist.@namespace;
                                 Capsule = string.Empty;
 
-                                Name = WebUtility.HtmlDecode((string)gameWishlist["offer"]["title"]);
-                                foreach (var keyImages in gameWishlist["offer"]["keyImages"])
+                                Name = WebUtility.HtmlDecode(gameWishlist.offer.title);
+                                foreach (var keyImages in gameWishlist.offer.keyImages)
                                 {
-                                    if ((string)keyImages["type"] == "Thumbnail")
+                                    if (keyImages.type == "Thumbnail")
                                     {
-                                        Capsule = (string)keyImages["url"];
+                                        Capsule = keyImages.url;
                                     }
                                 }
 
