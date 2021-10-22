@@ -29,6 +29,14 @@
     <sys:String x:Key="LOCItadLimitNotification">Preisreduktion</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">Preis kleiner als</sys:String>
 
+    <sys:String x:Key="LOCItadSettingPrice">Define limit to price slider</sys:String>
+    <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
+    <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
+
+    <sys:String x:Key="LOCItadSettingsNotifications">Notifications</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationAt">Price cut at</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Price inferior at</sys:String>
+
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADFilterSource">Nach Shop(s) filtern</sys:String>
@@ -50,6 +58,11 @@
     <sys:String x:Key="LOCItadWhishListOptions">Wunschlistenoptionen</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Spiele in der Bibliothek einbeziehen</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Spiele ohne IsThereAnyDeal Daten einbeziehen</sys:String>
+
+    <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
+    <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
 
     <!-- IsThereAnyDeal -->
 
