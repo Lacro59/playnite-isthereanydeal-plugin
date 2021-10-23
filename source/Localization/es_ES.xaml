@@ -12,12 +12,12 @@
     <sys:String x:Key="LOCItadSettingWishlist">Lista de deseos</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Habilitar lista de deseados de Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Habilitar lista de deseados GOG</sys:String>
-    <sys:String x:Key="LOCItadEnableEpic">Enable Epic Games Store wishlist</sys:String>
+    <sys:String x:Key="LOCItadEnableEpic">Habilitar lista de deseados de Epic Game Store</sys:String>
     <sys:String x:Key="LOCItadEnableHumble">Habilitar lista de deseados de Humble</sys:String>
-    <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
-    <sys:String x:Key="LOCItadEnableXbox">Enable Xbox wishlist</sys:String>
-    <sys:String x:Key="LOCItadXboxWishlistLink">Wishlist link</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Enable Origin wishlist</sys:String>
+    <sys:String x:Key="LOCItadHumbleKey">Id de Humble</sys:String>
+    <sys:String x:Key="LOCItadEnableXbox">Habilitar lista de deseados de Xbox</sys:String>
+    <sys:String x:Key="LOCItadXboxWishlistLink">Enlace de lista de deseados</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">Habilitar lista de deseados de Origin</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">Región</sys:String>
@@ -29,13 +29,13 @@
     <sys:String x:Key="LOCItadLimitNotification">Precio recortado</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">Precio inferior</sys:String>
 
-    <sys:String x:Key="LOCItadSettingPrice">Define limit to price slider</sys:String>
-    <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
-    <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
+    <sys:String x:Key="LOCItadSettingPrice">Definir límite al deslizador de precios</sys:String>
+    <sys:String x:Key="LOCItadMinimum">Mínimo</sys:String>
+    <sys:String x:Key="LOCItadMaximum">Máximo</sys:String>
 
-    <sys:String x:Key="LOCItadSettingsNotifications">Notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationAt">Price cut at</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Price inferior at</sys:String>
+    <sys:String x:Key="LOCItadSettingsNotifications">Notificaciones</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationAt">Precio recortado en</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Precio inferior a</sys:String>
 
     <!-- IsThereAnyDealView -->
 
@@ -55,35 +55,35 @@
     <sys:String x:Key="LOCItadDeleteOnStoreWishList"></sys:String>
     <sys:String x:Key="LOCItadHideOnStoreWishList"></sys:String>
 
-    <sys:String x:Key="LOCItadWhishListOptions">Wishlist options</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptions">Opciones de lista de deseados</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Incluir juegos en la biblioteca</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Incluir juegos sin datos de IsthereAnyDeal</sys:String>
 
-    <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>
-    <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
-    <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlist">Importar lista de deseados de Steam</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">Enlace de lista de deseados de Steam</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">Importación exitosa</sys:String>
+    <sys:String x:Key="LOCItadImportError">Imposible importar archivo de lista de deseados</sys:String>
 
     <!-- IsThereAnyDeal -->
 
-    <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal data</sys:String>
+    <sys:String x:Key="LOCItadPluginView">Ver datos de IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadCheckNotifications">Comprobar notificaciones</sys:String>
-    <sys:String x:Key="LOCItadUpdateDatas">Update IsThereAnyDeal data</sys:String>
-    <sys:String x:Key="LOCITADDataDownloading">Downloading IsThereAnyDeal data...</sys:String>
+    <sys:String x:Key="LOCItadUpdateDatas">Actualizar datos de IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCITADDataDownloading">Descargando datos de IsThereAnyDeal...</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Notificación regalo para {0} ({1} juego (s))</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">Notificación de precio para {0} - {1}{2} ({3}%)</sys:String>
 
-    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">An error occurred while retrieving the wishlist from {0}.
-Try login in with your account.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Humble Bundle is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Se ha producido un error al recuperar la lista de deseados de {0}.
+Intenta identificarte con tu cuenta.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Humble Bundle está habilitado en el plugin IsThereAnyDeal pero la extensión de la biblioteca ha sido desactivada en Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic está habilitado en el plugin IsThereAnyDeal pero la extensión de la biblioteca ha sido desactivada en Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG está habilitado en el plugin IsThereAnyDeal pero la extensión de la biblioteca ha sido desactivada en Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam está habilitado en el plugin IsThereAnyDeal pero la extensión de la biblioteca ha sido desactivada en Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam no se ha configurado correctamente en la configuración</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam wishlist is private.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">There is no Xbox wishlist link.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Origin is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">La lista de deseados de Steam es privada.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox está habilitado en el plugin IsThereAnyDeal pero la extensión de la biblioteca ha sido desactivada en Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">No hay ningún enlace de lista de deseados de Xbox.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Origin está habilitado en el plugin IsThereAnyDeal pero la extensión de la biblioteca ha sido desactivada en Playnite.</sys:String>
 
 </ResourceDictionary>
