@@ -26,8 +26,16 @@
 
     <sys:String x:Key="LOCItadEnableNotificationGiveaways">Activer les notifications des cadeaux</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">Activer les notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotification">Prix remisé</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Prix remis</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">Prix inférieur</sys:String>
+
+    <sys:String x:Key="LOCItadSettingPrice">Définir une limite au curseur de prix</sys:String>
+    <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
+    <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
+
+    <sys:String x:Key="LOCItadSettingsNotifications">Notifications</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationAt">Réduction de prix de</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Prix inférieur à</sys:String>
 
     <!-- IsThereAnyDealView -->
 
@@ -50,6 +58,11 @@
     <sys:String x:Key="LOCItadWhishListOptions">Options de la liste de souhaits</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Inclure les jeux présent dans la bibliothèque</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Inclure les jeux sans données IsThereAnyDeal</sys:String>
+
+    <sys:String x:Key="LOCItadImportSteamWishlist">Importer la liste de souhaits Steam</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">Lien de la liste de souhaits Steam</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">Importation réussie</sys:String>
+    <sys:String x:Key="LOCItadImportError">Impossible d'importer le fichier de la liste de souhaits</sys:String>
 
     <!-- IsThereAnyDeal -->
 

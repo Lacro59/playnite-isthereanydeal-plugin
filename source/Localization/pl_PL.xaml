@@ -7,16 +7,16 @@
 
     <!-- IsThereAnyDealSettingsView -->
 
-    <sys:String x:Key="LOCItadExclusionList">Lista wykluczeń</sys:String>
+    <sys:String x:Key="LOCItadExclusionList">Lista wyklucze</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist">Lista życzeń</sys:String>
+    <sys:String x:Key="LOCItadSettingWishlist">Lista życze</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Włącz listę życzeń Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Włącz listę życzeń GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Włącz listę życzeń Epic Game Store</sys:String>
     <sys:String x:Key="LOCItadEnableHumble">Włącz listę życzeń Humble</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Identyfikator Humble</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Włącz listę życzeń Xbox</sys:String>
-    <sys:String x:Key="LOCItadXboxWishlistLink">Link do listy życzeń</sys:String>
+    <sys:String x:Key="LOCItadXboxWishlistLink">Link do listy życze</sys:String>
     <sys:String x:Key="LOCItadEnableOrigin">Włącz listę życzeń Origin</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
@@ -29,6 +29,14 @@
     <sys:String x:Key="LOCItadLimitNotification">Obniżka ceny</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">Price inferior</sys:String>
 
+    <sys:String x:Key="LOCItadSettingPrice">Define limit to price slider</sys:String>
+    <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
+    <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
+
+    <sys:String x:Key="LOCItadSettingsNotifications">Notifications</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationAt">Price cut at</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Price inferior at</sys:String>
+
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADFilterSource">Filtruj wg sklepu(ów)</sys:String>
@@ -37,7 +45,7 @@
 
     <sys:String x:Key="LOCItadCurrentBest">Najlepsza obecnie</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Lista życzeń wybranego sklepu</sys:String>
-    <sys:String x:Key="LOCItadBuy">Kup najlepszą</sys:String>
+    <sys:String x:Key="LOCItadBuy">Kup najlepsz</sys:String>
     <sys:String x:Key="LOCItadStore">Sklep</sys:String>
     <sys:String x:Key="LOCItadNoData">Brak danych dla wybranego sklepu w ustawieniach</sys:String>
     <sys:String x:Key="LOCItadInLibrary">W bibliotece</sys:String>
@@ -47,9 +55,14 @@
     <sys:String x:Key="LOCItadDeleteOnStoreWishList">Usunąć {0} z {1}?</sys:String>
     <sys:String x:Key="LOCItadHideOnStoreWishList">Wykluczyć {0} z {1}?</sys:String>
 
-    <sys:String x:Key="LOCItadWhishListOptions">Opcje listy życzeń</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptions">Opcje listy życze</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Dołącz gry z biblioteki</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Dołącz gry bez danych IsThereAnyDeal</sys:String>
+
+    <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
+    <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
 
     <!-- IsThereAnyDeal -->
 
