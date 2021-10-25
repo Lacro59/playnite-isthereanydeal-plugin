@@ -14,7 +14,7 @@
     <sys:String x:Key="LOCItadEnableGog">Habilitar a lista de desejos da GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Ativar lista de desejos da Epic Game Store</sys:String>
     <sys:String x:Key="LOCItadEnableHumble">Habilitar a lista de desejos da Humble</sys:String>
-    <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
+    <sys:String x:Key="LOCItadHumbleKey">Id Humble</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Ativar lista de desejos do Xbox</sys:String>
     <sys:String x:Key="LOCItadXboxWishlistLink">Link da lista de desejos</sys:String>
     <sys:String x:Key="LOCItadEnableOrigin">Habilitar a lista de desejos da Origin</sys:String>
@@ -29,13 +29,13 @@
     <sys:String x:Key="LOCItadLimitNotification">Desconto</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">Preço inferior</sys:String>
 
-    <sys:String x:Key="LOCItadSettingPrice">Define limit to price slider</sys:String>
-    <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
-    <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
+    <sys:String x:Key="LOCItadSettingPrice">Definir limite para controle deslizante de preço</sys:String>
+    <sys:String x:Key="LOCItadMinimum">Mínimo</sys:String>
+    <sys:String x:Key="LOCItadMaximum">Máximo</sys:String>
 
-    <sys:String x:Key="LOCItadSettingsNotifications">Notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationAt">Price cut at</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Price inferior at</sys:String>
+    <sys:String x:Key="LOCItadSettingsNotifications">Notificações</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationAt">Desconto em</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Preço inferior em</sys:String>
 
     <!-- IsThereAnyDealView -->
 
@@ -59,10 +59,10 @@
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Incluir jogos na bibioteca</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Incluir jogos sem nenhuma informação de IsThereAnyDeal</sys:String>
 
-    <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>
-    <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
-    <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlist">Importar lista de desejos Steam</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">Link da lista de desejos Steam</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">Importação bem sucedida</sys:String>
+    <sys:String x:Key="LOCItadImportError">Impossível importar arquivo de lista de desejos</sys:String>
 
     <!-- IsThereAnyDeal -->
 
