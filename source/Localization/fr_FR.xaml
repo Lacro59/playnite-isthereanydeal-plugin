@@ -26,7 +26,7 @@
 
     <sys:String x:Key="LOCItadEnableNotificationGiveaways">Activer les notifications des cadeaux</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">Activer les notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotification">Prix remis</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Réduction</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">Prix inférieur</sys:String>
 
     <sys:String x:Key="LOCItadSettingPrice">Définir une limite au curseur de prix</sys:String>
@@ -44,19 +44,19 @@
     <sys:String x:Key="LOCITADPrice">Prix inférieur</sys:String>
 
     <sys:String x:Key="LOCItadCurrentBest">Meilleur actuel</sys:String>
-    <sys:String x:Key="LOCItadCurrentStore">Meilleur magasin (liste souhaits)</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">Liste de souhaits du magasin actuel</sys:String>
     <sys:String x:Key="LOCItadBuy">Achat meilleur</sys:String>
     <sys:String x:Key="LOCItadStore">Magasin</sys:String>
-    <sys:String x:Key="LOCItadNoData">Aucune donnée pour le(s) magasin(s) paramétré(s)</sys:String>
+    <sys:String x:Key="LOCItadNoData">Aucune donnée pour le magasin sélectionné dans les paramètres</sys:String>
     <sys:String x:Key="LOCItadInLibrary">Dans la bibliothèque</sys:String>
     <sys:String x:Key="LOCItadNotActive">Non actif sur IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadNotFind">Non trouvé sur IsThereAnyDeal</sys:String>
 
     <sys:String x:Key="LOCItadDeleteOnStoreWishList">Supprimer {0} sur {1} ?</sys:String>
-    <sys:String x:Key="LOCItadHideOnStoreWishList">Exclure {0} sur {1}?</sys:String>
+    <sys:String x:Key="LOCItadHideOnStoreWishList">Exclure {0} sur {1} ?</sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">Options de la liste de souhaits</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Inclure les jeux présent dans la bibliothèque</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Inclure les jeux présents dans la bibliothèque</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Inclure les jeux sans données IsThereAnyDeal</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">Importer la liste de souhaits Steam</sys:String>
@@ -71,7 +71,7 @@
     <sys:String x:Key="LOCItadUpdateDatas">Mettre à jour les données IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCITADDataDownloading">Téléchargement des données IsThereAnyDeal...</sys:String>
 
-    <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Notification cadeau pour {0} ({1} jeu(x))</sys:String>
+    <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Notification de cadeau pour {0} ({1} jeu(x))</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">Notification de prix pour {0} - {1}{2} ({3}%)</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Une erreur s'est produite lors de la récupération de la liste de souhaits de {0}.
