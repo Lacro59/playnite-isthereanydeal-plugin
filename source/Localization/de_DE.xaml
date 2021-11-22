@@ -16,35 +16,35 @@
     <sys:String x:Key="LOCItadEnableHumble">Humble Wunschliste aktivieren</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Xbox Wunschliste aktivieren</sys:String>
-    <sys:String x:Key="LOCItadXboxWishlistLink">Link zur Wunschliste</sys:String>
+    <sys:String x:Key="LOCItadXboxWishlistLink">Wunschlisten Link</sys:String>
     <sys:String x:Key="LOCItadEnableOrigin">Origin Wunschliste aktivieren</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">Region</sys:String>
     <sys:String x:Key="LOCItadCountry">Land</sys:String>
-    <sys:String x:Key="LOCItadStores">Geschäft(e)</sys:String>
+    <sys:String x:Key="LOCItadStores">Shop(s)</sys:String>
 
     <sys:String x:Key="LOCItadEnableNotificationGiveaways">Benachrichtigungen für Giveaways aktivieren</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">Benachrichtigung aktivieren</sys:String>
-    <sys:String x:Key="LOCItadLimitNotification">Preisreduktion</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Preissenkung</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">Preis kleiner als</sys:String>
 
-    <sys:String x:Key="LOCItadSettingPrice">Define limit to price slider</sys:String>
+    <sys:String x:Key="LOCItadSettingPrice">Limit für Preisregler festlegen</sys:String>
     <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
-    <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
+    <sys:String x:Key="LOCItadMaximum">Maximal</sys:String>
 
-    <sys:String x:Key="LOCItadSettingsNotifications">Notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationAt">Price cut at</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Price inferior at</sys:String>
+    <sys:String x:Key="LOCItadSettingsNotifications">Benachrichtigungen</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationAt">Preissenkung um</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Preis niedriger um</sys:String>
 
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADFilterSource">Nach Shop(s) filtern</sys:String>
-    <sys:String x:Key="LOCITADPercentage">Mindestrabatt Prozentsatz</sys:String>
+    <sys:String x:Key="LOCITADPercentage">Mindestrabatt in Prozent</sys:String>
     <sys:String x:Key="LOCITADPrice">Preis kleiner als</sys:String>
 
-    <sys:String x:Key="LOCItadCurrentBest">Aktueller Bestpreis</sys:String>
-    <sys:String x:Key="LOCItadCurrentStore">Derzeitige Shop-Wunschliste</sys:String>
+    <sys:String x:Key="LOCItadCurrentBest">Aktuell Bester Preis</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">Aktuelle Store Wunschliste</sys:String>
     <sys:String x:Key="LOCItadBuy">Am besten kaufen</sys:String>
     <sys:String x:Key="LOCItadStore">Shop</sys:String>
     <sys:String x:Key="LOCItadNoData">Keine Daten für den ausgewählten Shop in den Einstellungen</sys:String>
@@ -59,10 +59,10 @@
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Spiele in der Bibliothek einbeziehen</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Spiele ohne IsThereAnyDeal Daten einbeziehen</sys:String>
 
-    <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>
-    <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
-    <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlist">Steam Wunschliste importieren</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam Wunschlisten Link</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">Import erfolgreich</sys:String>
+    <sys:String x:Key="LOCItadImportError">Wunschlistendatei konnte nicht importiert werden</sys:String>
 
     <!-- IsThereAnyDeal -->
 
@@ -71,7 +71,7 @@
     <sys:String x:Key="LOCItadUpdateDatas">IsThereAnyDeal Daten aktualisieren</sys:String>
     <sys:String x:Key="LOCITADDataDownloading">IsThereAnyDeal Daten werden heruntergeladen...</sys:String>
 
-    <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Giveway-Benachrichtigung für {0} ({1} Spiel(e))</sys:String>
+    <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Giveway Benachrichtigung für {0} ({1} Spiel(e))</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">Preisbenachrichtigung für {0} - {1}{2} ({3}%)</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Beim Abrufen der Wunschliste von {0} ist ein Fehler aufgetreten.
@@ -83,7 +83,7 @@ Versuchen Sie, sich mit Ihrem Konto anzumelden.</sys:String>
     <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam wurde in den Einstellungen nicht richtig konfiguriert</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Die Steam Wunschliste ist privat.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox ist im IsThereAnyDeal Plugin aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Der Link zur Xbox Wunsch konnte nicht gefunden werden.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Der Link zur Xbox Wunschliste konnte nicht gefunden werden.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Origin ist im IsThereAnyDeal Plugin aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert.</sys:String>
 
 </ResourceDictionary>
