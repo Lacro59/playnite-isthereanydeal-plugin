@@ -81,7 +81,7 @@ namespace IsThereAnyDeal.Services
                 {
                     if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                     {
-                        Common.LogError(ex, false, $"Error download Steam wishlist for page {iPage}");
+                        Common.LogError(ex, false, $"Error download Steam wishlist for page {iPage}", true, "IsThereAnyDeal");
                         return Result;
                     }
                 }
@@ -89,7 +89,7 @@ namespace IsThereAnyDeal.Services
                 
                 if (ResultWeb.ToLower().Contains("{\"success\":2}"))
                 {
-                    logger.Warn($"IsThereAnyDeal - Private wishlist for {userId}?");
+                    logger.Warn($"Private wishlist for {userId}?");
 
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Steam-Error",
@@ -155,18 +155,13 @@ namespace IsThereAnyDeal.Services
                             catch (Exception ex)
                             {
                                 Common.LogError(ex, true, $"Error in parse Steam wishlist - {Name}");
-                                logger.Warn($"IsThereAnyDeal - Error in parse Steam wishlist - {Name}");
+                                logger.Warn($"Error in parse Steam wishlist - {Name}");
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        Common.LogError(ex, false, "Error in parse Steam wishlist");
-                        PlayniteApi.Notifications.Add(new NotificationMessage(
-                            $"IsThereAnyDeal-Steam-Error",
-                            "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Steam"),
-                            NotificationType.Error
-                        ));
+                        Common.LogError(ex, false, "Error in parse Steam wishlist", true, "IsThereAnyDeal");
 
                         ResultLoad = LoadWishlists("Steam", PluginUserDataPath, true);
                         if (ResultLoad != null && CacheOnly)
@@ -219,7 +214,7 @@ namespace IsThereAnyDeal.Services
                         {
                             if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                             {
-                                Common.LogError(ex, false, $"Error download Steam app data - {el.ToString()}");
+                                Common.LogError(ex, false, $"Error download Steam app data - {el.ToString()}", true, "IsThereAnyDeal");
                                 return false;
                             }
                         }
@@ -266,7 +261,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false);
+                    Common.LogError(ex, false, true, "IsThereAnyDeal");
                 }
             }
 

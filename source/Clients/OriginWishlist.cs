@@ -103,7 +103,7 @@ namespace IsThereAnyDeal.Clients
                             catch (Exception ex)
                             {
                                 Common.LogError(ex, true, $"Error in parse Origin wishlist - {Name}");
-                                logger.Warn($"IsThereAnyDeal - Error in parse Origin wishlist - {Name}");
+                                logger.Warn($"Error in parse Origin wishlist - {Name}");
                             }
                         }
                     }
@@ -117,7 +117,7 @@ namespace IsThereAnyDeal.Clients
                                 case HttpStatusCode.NotFound: // HTTP 404
                                     break;
                                 default:
-                                    Common.LogError(ex, false, $"Failed to load from {url}. ");
+                                    Common.LogError(ex, false, $"Failed to load from {url}", true, "IsThereAnyDeal");
                                     break;
                             }
                             return Result;
@@ -168,7 +168,7 @@ namespace IsThereAnyDeal.Clients
                     }
                     catch (WebException ex)
                     {
-                        Common.LogError(ex, false, $"Error on RemoveWishlist()");
+                        Common.LogError(ex, false, true, "IsThereAnyDeal");
                     }
                 }
             }

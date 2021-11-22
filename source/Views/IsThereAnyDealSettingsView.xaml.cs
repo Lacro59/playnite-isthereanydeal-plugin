@@ -379,13 +379,12 @@ namespace IsThereAnyDeal.Views
                     }
                     catch (Exception ex)
                     {
-                        Common.LogError(ex, false);
+                        Common.LogError(ex, false, true, "IsThereAnyDeal");
 
                         if (activateGlobalProgress.CancelToken.IsCancellationRequested)
                         {
                             return;
                         }
-
                         _PlayniteApi.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
                     }
                 }, globalProgressOptions);

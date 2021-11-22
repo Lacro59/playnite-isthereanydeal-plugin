@@ -26,7 +26,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false, $"GOG is not defined");
+                Common.LogError(ex, false, $"GOG is not defined", true, "IsThereAnyDeal");
             }
         }
 
@@ -63,7 +63,7 @@ namespace IsThereAnyDeal.Services
                         // Not connected
                         if (ResultWeb.Contains("id=\"login_username\""))
                         {
-                            logger.Warn($"IsThereAnyDeal - GOG is disconnected");
+                            logger.Warn($"GOG is disconnected");
                         }
                         else
                         {
@@ -83,14 +83,14 @@ namespace IsThereAnyDeal.Services
                                         }
                                         else
                                         {
-                                            logger.Warn($"IsThereAnyDeal - GOG wishlist is incomplet");
+                                            logger.Warn($"GOG wishlist is incomplet");
                                         }
                                     }
                                 }
                             }
                             catch (Exception ex)
                             {
-                                Common.LogError(ex, false, $"Error in parse GOG wishlist");
+                                Common.LogError(ex, false, $"Error in parse GOG wishlist", true, "IsThereAnyDeal");
                                 HasError = true;
                             }
                         }
@@ -123,13 +123,13 @@ namespace IsThereAnyDeal.Services
                                     }
                                     else
                                     {
-                                        logger.Warn($"IsThereAnyDeal - GOG wishlist is incomplet - StoreId: {StoreId}");
+                                        logger.Warn($"GOG wishlist is incomplet - StoreId: {StoreId}");
                                     }
                                 }
                             }
                             catch (Exception ex)
                             {
-                                Common.LogError(ex, false, $"Error in parse GOG wishlist");
+                                Common.LogError(ex, false, $"Error in parse GOG wishlist", true, "IsThereAnyDeal");
 
                                 if (ResultLoad != null)
                                 {
@@ -148,8 +148,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (WebException ex)
                 {
-                    Common.LogError(ex, false, "Error in download GOG wishlist");
-
+                    Common.LogError(ex, false, "Error in download GOG wishlist", true, "IsThereAnyDeal");
                     if (ResultLoad != null)
                     {
                         ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
@@ -162,7 +161,6 @@ namespace IsThereAnyDeal.Services
             else
             {
                 logger.Warn($"GOG user is not authenticated");
-
                 PlayniteApi.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-gog-noauthenticate",
                     $"IsThereAnyDeal\r\nGOG - {resources.GetString("LOCLoginRequired")}",
@@ -219,7 +217,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false, $"Failed to download game information for {StoreId}");
+                Common.LogError(ex, false, $"Failed to download game information for {StoreId}", true, "IsThereAnyDeal");
                 return null;
             }
         }

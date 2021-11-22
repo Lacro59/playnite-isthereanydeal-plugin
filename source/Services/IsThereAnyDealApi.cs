@@ -88,7 +88,7 @@ namespace IsThereAnyDeal.Services
                     }
                     else
                     {
-                        logger.Warn("IsThereAnyDeal - Steam is enable then disabled");
+                        logger.Warn("Steam is enable then disabled");
                         PlayniteApi.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-Steam-disabled",
                             "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorSteam"),
@@ -99,7 +99,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch(Exception ex)
                 {
-                    Common.LogError(ex, false, "Error on ListWishlistSteam");
+                    Common.LogError(ex, false, "Error on ListWishlistSteam", true, "IsThereAnyDeal");
                 }
             }
 
@@ -120,7 +120,7 @@ namespace IsThereAnyDeal.Services
                     }
                     else
                     {
-                        logger.Warn("IsThereAnyDeal - GOG is enable then disabled");
+                        logger.Warn("GOG is enable then disabled");
                         PlayniteApi.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-GOG-disabled",
                             "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorGog"),
@@ -131,7 +131,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, "Error on ListWishlistGog");
+                    Common.LogError(ex, false, "Error on ListWishlistGog", true, "IsThereAnyDeal");
                 }
             }
 
@@ -152,7 +152,7 @@ namespace IsThereAnyDeal.Services
                     }
                     else
                     {
-                        logger.Warn("IsThereAnyDeal - Epic Game Store is enable then disabled");
+                        logger.Warn("Epic Game Store is enable then disabled");
                         PlayniteApi.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-EpicGameStore-disabled",
                             "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorEpic"),
@@ -163,7 +163,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, "Error on ListWishlistEpic");
+                    Common.LogError(ex, false, "Error on ListWishlistEpic", true, "IsThereAnyDeal");
                 }
             }
 
@@ -184,7 +184,7 @@ namespace IsThereAnyDeal.Services
                     }
                     else
                     {
-                        logger.Warn("IsThereAnyDeal - Humble Bundle is enable then disabled");
+                        logger.Warn("Humble Bundle is enable then disabled");
                         PlayniteApi.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-HumbleBundle-disabled",
                             "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorHumble"),
@@ -195,7 +195,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, "Error on ListWishlistHumble");
+                    Common.LogError(ex, false, "Error on ListWishlistHumble", true, "IsThereAnyDeal");
                 }
             }
 
@@ -216,7 +216,7 @@ namespace IsThereAnyDeal.Services
                     }
                     else
                     {
-                        logger.Warn("IsThereAnyDeal - Xbox is enable then disabled");
+                        logger.Warn("Xbox is enable then disabled");
                         PlayniteApi.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-Xbox-disabled",
                             "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorXbox"),
@@ -227,7 +227,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, "Error on ListWishlistXbox");
+                    Common.LogError(ex, false, "Error on ListWishlistXbox", true, "IsThereAnyDeal");
                 }
             }
 
@@ -248,7 +248,7 @@ namespace IsThereAnyDeal.Services
                     }
                     else
                     {
-                        logger.Warn("IsThereAnyDeal - Origin is enable then disabled");
+                        logger.Warn("Origin is enable then disabled");
                         PlayniteApi.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-Origin-disabled",
                             "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorOrigin"),
@@ -259,7 +259,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, "Error on ListWishlisOrigin");
+                    Common.LogError(ex, false, "Error on ListWishlisOrigin", true, "IsThereAnyDeal");
                 }
             }
 
@@ -315,7 +315,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, $"Failed to download {url}");
+                    Common.LogError(ex, false, $"Failed to download {url}", true, "IsThereAnyDeal");
                 }
 
                 ItadRegionsResult datasObj = Serialization.FromJson<ItadRegionsResult>(responseData);
@@ -348,7 +348,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false);
+                Common.LogError(ex, false, true, "IsThereAnyDeal");
             }
 
             return itadRegions;
@@ -367,7 +367,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, $"Failed to download {url}");
+                    Common.LogError(ex, false, $"Failed to download {url}", true, "IsThereAnyDeal");
                 }
 
                 dynamic datasObj = Serialization.FromJson<dynamic>(responseData);
@@ -378,7 +378,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false);
+                Common.LogError(ex, false, true, "IsThereAnyDeal");
             }
 
             return RegionStores;
@@ -400,7 +400,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, $"Failed to download {url}");
+                    Common.LogError(ex, false, $"Failed to download {url}", true, "IsThereAnyDeal");
                 }
 
                 ItadPlain itadPlain = Serialization.FromJson<ItadPlain>(responseData);
@@ -411,12 +411,12 @@ namespace IsThereAnyDeal.Services
                 }
                 else
                 {
-                    logger.Warn($"IsThereAnyDeal - not find for {WebUtility.HtmlDecode(title)}");
+                    logger.Warn($"Not find for {WebUtility.HtmlDecode(title)}");
                 }
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false, $"Error in GetPlain({WebUtility.HtmlDecode(title)})");
+                Common.LogError(ex, false, $"Error in GetPlain({WebUtility.HtmlDecode(title)})", true, "IsThereAnyDeal");
             }
 
             if (!isSecond && plainData.Plain.IsNullOrEmpty())
@@ -445,7 +445,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, $"Failed to download {url}");
+                    Common.LogError(ex, false, $"Failed to download {url}", true, "IsThereAnyDeal");
                 }
 
                 dynamic datasObj = Serialization.FromJson<dynamic>(responseData);
@@ -471,7 +471,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false);
+                Common.LogError(ex, false, true, "IsThereAnyDeal");
             }
 
             return itadGameInfos;
@@ -543,7 +543,7 @@ namespace IsThereAnyDeal.Services
                         }
                         catch (Exception ex)
                         {
-                            Common.LogError(ex, false, $"Failed to download {url}");
+                            Common.LogError(ex, false, $"Failed to download {url}", true, "IsThereAnyDeal");
                         }
 
                         foreach (Wishlist wishlist in wishlists)
@@ -587,14 +587,14 @@ namespace IsThereAnyDeal.Services
                                         }
                                         catch (Exception ex)
                                         {
-                                            Common.LogError(ex, false);
+                                            Common.LogError(ex, false, true, "IsThereAnyDeal");
                                         }
                                     }
                                 }
                             }
                             catch (Exception ex)
                             {
-                                logger.Warn($"IsThereAnyDeal - No data for {wishlist.Name} - {plains}");
+                                logger.Warn($"No data for {wishlist.Name} - {plains}");
                                 Common.LogError(ex, true);
                             }
 
@@ -606,7 +606,7 @@ namespace IsThereAnyDeal.Services
                     }
                     catch (Exception ex)
                     {
-                        Common.LogError(ex, false, $"Error in GetCurrentPrice({plains})");
+                        Common.LogError(ex, false, $"Error in GetCurrentPrice({plains})", true, "IsThereAnyDeal");
                     }
                 }
                 else
@@ -657,7 +657,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false, "Error in GetGiveAway() with cache data");
+                Common.LogError(ex, false, "Error in GetGiveAway() with cache data", true, "IsThereAnyDeal");
             }
 
 
@@ -675,7 +675,7 @@ namespace IsThereAnyDeal.Services
                     }
                     catch (Exception ex)
                     {
-                        Common.LogError(ex, false, $"Failed to download {url}");
+                        Common.LogError(ex, false, $"Failed to download {url}", true, "IsThereAnyDeal");
                     }
 
                     if (responseData != string.Empty)
@@ -727,7 +727,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, "Error in GetGiveAway() with web data");
+                    Common.LogError(ex, false, "Error in GetGiveAway() with web data", true, "IsThereAnyDeal");
                 }
             }
 
@@ -748,7 +748,7 @@ namespace IsThereAnyDeal.Services
             // No data
             else
             {
-                logger.Warn("IsThereAnyDeal - No new data for GetGiveaways()");
+                logger.Warn("No new data for GetGiveaways()");
                 itadGiveaways = itadGiveawaysCache;
             }
 
@@ -759,7 +759,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false, "Error in GetGiveAway() with save data");
+                Common.LogError(ex, false, "Error in GetGiveAway() with save data", true, "IsThereAnyDeal");
             }
 
             return itadGiveaways;
@@ -836,7 +836,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false);
+                    Common.LogError(ex, false, true, "IsThereAnyDeal");
                 }
 
                 stopWatch.Stop();

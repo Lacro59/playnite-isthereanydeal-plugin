@@ -153,7 +153,7 @@ namespace IsThereAnyDeal.Services
                             catch (Exception ex)
                             {
                                 Common.LogError(ex, true, $"Error in parse Epic wishlist - {Name}");
-                                logger.Warn($"IsThereAnyDeal - Error in parse Epic wishlist - {Name}");
+                                logger.Warn($"Error in parse Epic wishlist - {Name}");
                             }
                         }
                     }
@@ -214,7 +214,7 @@ namespace IsThereAnyDeal.Services
             }
             catch(Exception ex)
             {
-                Common.LogError(ex, false, $"Error on RemoveWishlist()");
+                Common.LogError(ex, false, true, "IsThereAnyDeal");
             }
 
             return false;

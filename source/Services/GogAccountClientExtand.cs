@@ -22,7 +22,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false);
+                Common.LogError(ex, false, true, "IsThereAnyDeal");
                 return string.Empty;
             }
         }

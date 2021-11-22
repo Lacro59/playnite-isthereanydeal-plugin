@@ -96,7 +96,7 @@ namespace IsThereAnyDeal.Views
                         }
                         catch (Exception ex)
                         {
-                            Common.LogError(ex, false);
+                            Common.LogError(ex, false, true, "IsThereAnyDeal");
                         }
                     }));
                 });
@@ -333,7 +333,7 @@ namespace IsThereAnyDeal.Views
                     }
                     catch (Exception ex)
                     {
-                        Common.LogError(ex, false);
+                        Common.LogError(ex, false, true, "IsThereAnyDeal");
                     }
                 })
                 .ContinueWith(antecedent =>
@@ -400,7 +400,7 @@ namespace IsThereAnyDeal.Views
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false);
+                    Common.LogError(ex, false, true, "IsThereAnyDeal");
                 }
             }
         }

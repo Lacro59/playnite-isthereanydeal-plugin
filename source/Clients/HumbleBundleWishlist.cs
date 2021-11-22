@@ -41,7 +41,7 @@ namespace IsThereAnyDeal.Services
                     int startSub = ResultWeb.IndexOf("<script id=\"storefront-webpack-json-data\" type=\"application/json\">");
                     if (startSub == -1)
                     {
-                        logger.Warn($"IsThereAnyDeal - No Humble wishlist?");
+                        logger.Warn($"No Humble wishlist?");
                         return Result;
                     }
                     ResultWeb = ResultWeb.Substring(startSub, (ResultWeb.Length - startSub));
@@ -90,7 +90,7 @@ namespace IsThereAnyDeal.Services
                         catch(Exception ex)
                         {
                             Common.LogError(ex, true, $"Error in parse Humble wishlist - {Name}");
-                            logger.Warn($"IsThereAnyDeal - Error in parse Humble wishlist - {Name}");
+                            logger.Warn($"Error in parse Humble wishlist - {Name}");
                         }
                     }
                 }
@@ -99,13 +99,7 @@ namespace IsThereAnyDeal.Services
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                 {
-                    Common.LogError(ex, false, "Error in download HumbleBundle wishlist");
-
-                    PlayniteApi.Notifications.Add(new NotificationMessage(
-                        $"IsThereAnyDeal-Humble-Error",
-                        "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Humble Bundle"),
-                        NotificationType.Error
-                    ));
+                    Common.LogError(ex, false, "Error in download HumbleBundle wishlist", true, "IsThereAnyDeal");
 
                     ResultLoad = LoadWishlists("Humble", PluginUserDataPath, true);
                     if (ResultLoad != null && CacheOnly)
@@ -133,7 +127,7 @@ namespace IsThereAnyDeal.Services
             //}
             //else
             //{
-            //    logger.Warn($"IsThereAnyDeal - Humble account is not logged");
+            //    logger.Warn($"Humble account is not logged");
             //}
             return false;
         }

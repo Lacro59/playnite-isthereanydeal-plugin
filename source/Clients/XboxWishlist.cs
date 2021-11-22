@@ -100,7 +100,7 @@ namespace IsThereAnyDeal.Clients
                         catch (Exception ex)
                         {
                             Common.LogError(ex, true, $"Error in parse Microsoft Store wishlist - {Name}");
-                            logger.Warn($"IsThereAnyDeal - Error in parse Microsoft Store wishlist - {Name}");
+                            logger.Warn($"Error in parse Microsoft Store wishlist - {Name}");
                         }
                     }
                 }

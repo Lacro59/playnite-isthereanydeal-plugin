@@ -46,7 +46,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false, $"Error for load {clientName} wishlist");
+                Common.LogError(ex, false, $"Error for load {clientName} wishlist", true, "IsThereAnyDeal");
                 return null;
             }
         }
@@ -62,7 +62,7 @@ namespace IsThereAnyDeal.Services
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false, $"Error for save {clientName} wishlist");
+                Common.LogError(ex, false, $"Error for save {clientName} wishlist", true, "IsThereAnyDeal");
             }
         }
 
