@@ -221,36 +221,51 @@ namespace IsThereAnyDeal.Services
 
                         if (!ResultWeb.IsNullOrEmpty())
                         {
-                            var parsedData = Serialization.FromJson<Dictionary<string, StoreAppDetailsResult>>(ResultWeb);
-                            var AppDetails = parsedData[el.ToString()].data;
+                            string StoreId = string.Empty;
 
-                            if (AppDetails == null)
+                            try
                             {
-                                continue;
+                                StoreId = (string)el;
+
+                                var parsedData = Serialization.FromJson<Dictionary<string, StoreAppDetailsResult>>(ResultWeb);
+                                var AppDetails = parsedData[el.ToString()].data;
+
+                                if (AppDetails == null)
+                                {
+                                    continue;
+                                }
+                                
+                                string Name = WebUtility.HtmlDecode(AppDetails.name);
+
+                                if (!DateTime.TryParse(AppDetails?.release_date?.date, out DateTime ReleaseDate))
+                                {
+                                    ReleaseDate = default(DateTime);
+                                }
+
+                                string Capsule = AppDetails.header_image;
+
+                                PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+
+                                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1);
+
+                                Result.Add(new Wishlist
+                                {
+                                    StoreId = StoreId,
+                                    StoreName = "Steam",
+                                    ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
+                                    StoreUrl = "https://store.steampowered.com/app/" + (string)el,
+                                    Name = Name,
+                                    SourceId = SourceId,
+                                    ReleaseDate = ReleaseDate.ToUniversalTime(),
+                                    Capsule = Capsule,
+                                    Plain = plainData.Plain,
+                                    IsActive = plainData.IsActive
+                                });
                             }
-
-                            string StoreId = (string)el;
-                            string Name = WebUtility.HtmlDecode(AppDetails.name);
-                            DateTime ReleaseDate = (AppDetails.release_date.date == null) ? default(DateTime) : (DateTime)AppDetails.release_date.date;
-                            string Capsule = AppDetails.header_image;
-
-                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
-
-                            var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1);
-
-                            Result.Add(new Wishlist
+                            catch(Exception ex)
                             {
-                                StoreId = StoreId,
-                                StoreName = "Steam",
-                                ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
-                                StoreUrl = "https://store.steampowered.com/app/" + (string)el,
-                                Name = Name,
-                                SourceId = SourceId,
-                                ReleaseDate = ReleaseDate.ToUniversalTime(),
-                                Capsule = Capsule,
-                                Plain = plainData.Plain,
-                                IsActive = plainData.IsActive
-                            });
+                                Common.LogError(ex, false, $"Error for import Steam game {StoreId}" true, "IsThereAnyDeal");
+                            }
                         }
                     }
 
