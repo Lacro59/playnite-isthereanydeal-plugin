@@ -14,20 +14,28 @@ namespace IsThereAnyDeal.Services
 {
     public class GogWishlist : GenericWishlist
     {
-        private GogAccountClientExtand gogAPI;
+        protected static GogAccountClientExtand _GogAPI;
+        internal static GogAccountClientExtand GogAPI
+        {
+            get
+            {
+                if (_GogAPI == null)
+                {
+                    _GogAPI = new GogAccountClientExtand(WebViewOffscreen);
+                }
+                return _GogAPI;
+            }
+
+            set
+            {
+                _GogAPI = value;
+            }
+        }
 
 
         public GogWishlist(IPlayniteAPI PlayniteApi)
         {
-            try
-            {
-                var view = PlayniteApi.WebViews.CreateOffscreenView();
-                gogAPI = new GogAccountClientExtand(view);
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, false, $"GOG is not defined", true, "IsThereAnyDeal");
-            }
+
         }
 
         public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
@@ -46,7 +54,7 @@ namespace IsThereAnyDeal.Services
 
             bool HasError = false;
 
-            if (gogAPI != null && gogAPI.GetIsUserLoggedIn())
+            if (GogAPI.GetIsUserLoggedIn())
             {
                 string ResultWeb = string.Empty;
 
@@ -55,7 +63,7 @@ namespace IsThereAnyDeal.Services
                     logger.Info($"Get GOG Wishlist with api");
 
                     // Get wishlist
-                    ResultWeb = gogAPI.GetWishList();
+                    ResultWeb = GogAPI.GetWishList();
 
                     // Get game information for wishlist
                     if (!ResultWeb.IsNullOrEmpty())
@@ -102,7 +110,7 @@ namespace IsThereAnyDeal.Services
                         logger.Info($"Get GOG Wishlist without api");
 
                         // Get wishlist
-                        ResultWeb = gogAPI.GetWishListWithoutAPI();
+                        ResultWeb = GogAPI.GetWishListWithoutAPI();
 
                         // Get game information for wishlist
                         if (!ResultWeb.IsNullOrEmpty())
@@ -175,7 +183,7 @@ namespace IsThereAnyDeal.Services
 
         public bool RemoveWishlist(string StoreId)
         {
-            return gogAPI.RemoveWishList(StoreId);
+            return GogAPI.RemoveWishList(StoreId);
         }
 
 
