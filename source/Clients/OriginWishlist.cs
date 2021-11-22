@@ -17,7 +17,23 @@ namespace IsThereAnyDeal.Clients
 {
     class OriginWishlist : GenericWishlist
     {
-        private OriginAccountClient originAPI;
+        protected static OriginAccountClient _OriginAPI;
+        internal static OriginAccountClient OriginAPI
+        {
+            get
+            {
+                if (_OriginAPI == null)
+                {
+                    _OriginAPI = new OriginAccountClient(WebViewOffscreen);
+                }
+                return _OriginAPI;
+            }
+
+            set
+            {
+                _OriginAPI = value;
+            }
+        }
 
         private string urlBase = "https://www.origin.com/";
         private string urlWishlist = "https://api2.origin.com/gifting/users/{0}/wishlist";
@@ -40,14 +56,14 @@ namespace IsThereAnyDeal.Clients
 
             // Get wishlist
             var view = PlayniteApi.WebViews.CreateOffscreenView();
-            originAPI = new OriginAccountClient(view);
+            OriginAPI = new OriginAccountClient(view);
 
             // Only if user is logged. 
-            if (originAPI.GetIsUserLoggedIn())
+            if (OriginAPI.GetIsUserLoggedIn())
             {
                 // Get informations from Origin plugin.
-                string accessToken = originAPI.GetAccessToken().access_token;
-                var userId = originAPI.GetAccountInfo(originAPI.GetAccessToken()).pid.pidId;
+                string accessToken = OriginAPI.GetAccessToken().access_token;
+                var userId = OriginAPI.GetAccountInfo(OriginAPI.GetAccessToken()).pid.pidId;
 
                 string url = string.Format(urlWishlist, userId);
 
@@ -144,14 +160,14 @@ namespace IsThereAnyDeal.Clients
         public bool RemoveWishlist(string StoreId, IPlayniteAPI PlayniteApi)
         {
             var view = PlayniteApi.WebViews.CreateOffscreenView();
-            originAPI = new OriginAccountClient(view);
+            OriginAPI = new OriginAccountClient(view);
     
             // Only if user is logged. 
-            if (originAPI.GetIsUserLoggedIn())
+            if (OriginAPI.GetIsUserLoggedIn())
             {
                 // Get informations from Origin plugin.
-                string accessToken = originAPI.GetAccessToken().access_token;
-                var userId = originAPI.GetAccountInfo(originAPI.GetAccessToken()).pid.pidId;
+                string accessToken = OriginAPI.GetAccessToken().access_token;
+                var userId = OriginAPI.GetAccountInfo(OriginAPI.GetAccessToken()).pid.pidId;
 
                 string url = string.Format(urlWishlistDelete, userId, StoreId);
 
