@@ -26,7 +26,7 @@ namespace IsThereAnyDeal.Clients
                 return ResultLoad;
             }
 
-            logger.Info($"IsThereAnyDeal - Load from web for Xbox");
+            logger.Info($"Load from web for Xbox");
 
             // Get wishlist
             string url = settings.XboxLink;

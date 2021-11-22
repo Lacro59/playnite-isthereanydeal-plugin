@@ -36,7 +36,7 @@ namespace IsThereAnyDeal.Clients
                 return ResultLoad;
             }
 
-            logger.Info($"IsThereAnyDeal - Load from web for Origin");
+            logger.Info($"Load from web for Origin");
 
             // Get wishlist
             var view = PlayniteApi.WebViews.CreateOffscreenView();

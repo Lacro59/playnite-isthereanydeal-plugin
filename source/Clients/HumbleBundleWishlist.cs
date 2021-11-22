@@ -28,7 +28,7 @@ namespace IsThereAnyDeal.Services
                 return Result;
             }
 
-            logger.Info($"IsThereAnyDeal - Load from web for HumbleBundle");
+            logger.Info($"Load from web for HumbleBundle");
 
             string ResultWeb = string.Empty;
             string url = string.Format(@"https://www.humblebundle.com/store/wishlist/{0}", HumbleBundleId);

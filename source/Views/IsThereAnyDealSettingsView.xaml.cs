@@ -375,7 +375,7 @@ namespace IsThereAnyDeal.Views
 
                         stopWatch.Stop();
                         TimeSpan ts = stopWatch.Elapsed;
-                        logger.Info($"IsThereAnyDeal - Task GetImportSteam() - {string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
+                        logger.Info($"Task GetImportSteam() - {string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
                     }
                     catch (Exception ex)
                     {

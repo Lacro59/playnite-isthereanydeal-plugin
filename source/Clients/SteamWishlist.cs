@@ -30,7 +30,7 @@ namespace IsThereAnyDeal.Services
                 return ResultLoad;
             }
 
-            logger.Info($"IsThereAnyDeal - Load from web for Steam");
+            logger.Info($"Load from web for Steam");
 
             // Get Steam configuration if exist.
             string userId = string.Empty;
@@ -105,7 +105,7 @@ namespace IsThereAnyDeal.Services
 
                     if (ResultWeb == "[]")
                     {
-                        logger.Info($"IsThereAnyDeal - No result after page {iPage} for Steam wishlist");
+                        logger.Info($"No result after page {iPage} for Steam wishlist");
                         break;
                     }
 

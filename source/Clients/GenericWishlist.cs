@@ -44,7 +44,7 @@ namespace IsThereAnyDeal.Services
                     }
                 }
 
-                logger.Info($"IsThereAnyDeal - Load wishlist from local for {clientName}");
+                logger.Info($"Load wishlist from local for {clientName}");
 
                 return Serialization.FromJsonFile<List<Wishlist>>(FilePath);
             }

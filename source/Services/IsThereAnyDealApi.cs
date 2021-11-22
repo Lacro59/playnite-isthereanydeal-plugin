@@ -826,7 +826,7 @@ namespace IsThereAnyDeal.Services
 
             PlayniteApi.Dialogs.ActivateGlobalProgress((activateGlobalProgress) =>
             {
-                logger.Info($"IsThereAnyDeal - Task UpdateDatas()");
+                logger.Info($"Task UpdateDatas()");
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
 
@@ -841,7 +841,7 @@ namespace IsThereAnyDeal.Services
 
                 stopWatch.Stop();
                 TimeSpan ts = stopWatch.Elapsed;
-                logger.Info($"IsThereAnyDeal - Task UpdateDatas() - {String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
+                logger.Info($"Task UpdateDatas() - {String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
             }, globalProgressOptions);
         }
     }

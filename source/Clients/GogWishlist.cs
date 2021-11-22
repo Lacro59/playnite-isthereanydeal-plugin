@@ -42,7 +42,7 @@ namespace IsThereAnyDeal.Services
                 return ResultLoad;
             }
 
-            logger.Info($"IsThereAnyDeal - Load from web for GOG");
+            logger.Info($"Load from web for GOG");
 
             bool HasError = false;
 
@@ -52,7 +52,7 @@ namespace IsThereAnyDeal.Services
 
                 try
                 {
-                    logger.Info($"IsThereAnyDeal - Get GOG Wishlist with api");
+                    logger.Info($"Get GOG Wishlist with api");
 
                     // Get wishlist
                     ResultWeb = gogAPI.GetWishList();
@@ -99,7 +99,7 @@ namespace IsThereAnyDeal.Services
 
                     if (HasError)
                     {
-                        logger.Info($"IsThereAnyDeal - Get GOG Wishlist without api");
+                        logger.Info($"Get GOG Wishlist without api");
 
                         // Get wishlist
                         ResultWeb = gogAPI.GetWishListWithoutAPI();

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
-using System.IO;
 using CommonPluginsShared;
 using System.Net;
 using CommonPlayniteShared.Common;
@@ -93,7 +92,7 @@ namespace IsThereAnyDeal.Services
                 return ResultLoad;
             }
 
-            logger.Info($"IsThereAnyDeal - Load from web for Epic");
+            logger.Info($"Load from web for Epic");
 
 
             if (!EpicAPI.GetIsUserLoggedIn())
