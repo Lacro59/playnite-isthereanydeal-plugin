@@ -264,7 +264,7 @@ namespace IsThereAnyDeal.Services
                             }
                             catch(Exception ex)
                             {
-                                Common.LogError(ex, false, $"Error for import Steam game {StoreId}" true, "IsThereAnyDeal");
+                                Common.LogError(ex, false, $"Error for import Steam game {StoreId}", true, "IsThereAnyDeal");
                             }
                         }
                     }

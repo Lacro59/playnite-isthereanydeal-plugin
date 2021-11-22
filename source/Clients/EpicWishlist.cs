@@ -11,11 +11,33 @@ using CommonPluginsShared;
 using System.Net;
 using CommonPlayniteShared.Common;
 using System.Security.Principal;
+using CommonPlayniteShared.PluginLibrary.EpicLibrary;
 
 namespace IsThereAnyDeal.Services
 {
     class EpicWishlist : GenericWishlist
     {
+        protected static EpicAccountClient _EpicAPI;
+        internal static EpicAccountClient EpicAPI
+        {
+            get
+            {
+                if (_EpicAPI == null)
+                {
+                    _EpicAPI = new EpicAccountClient(
+                        API.Instance,
+                        PluginUserDataPath + "\\..\\00000002-DBD1-46C6-B5D0-B1BA559D10E4\\tokens.json"
+                    );
+                }
+                return _EpicAPI;
+            }
+
+            set
+            {
+                _EpicAPI = value;
+            }
+        }
+
         public const string GraphQLEndpoint = @"https://graphql.epicgames.com/graphql";
 
 
@@ -73,10 +95,22 @@ namespace IsThereAnyDeal.Services
 
             logger.Info($"IsThereAnyDeal - Load from web for Epic");
 
-            // Get Epic configuration if exist.
-            // TODO Check with new Epic plugin
-            string access_token = GetToken(PluginUserDataPath);
-            if (access_token.IsNullOrEmpty())
+
+            if (!EpicAPI.GetIsUserLoggedIn())
+            {
+                logger.Warn($"Epic user is not authenticated");
+
+                PlayniteApi.Notifications.Add(new NotificationMessage(
+                    $"isthereanydeal-epic-noauthenticate",
+                    $"IsThereAnyDeal\r\n Epic - {resources.GetString("LOCLoginRequired")}",
+                    NotificationType.Error
+                ));
+
+                return ResultLoad;
+            }
+
+            var tokens = EpicAPI.loadTokens();
+            if (tokens.access_token.IsNullOrEmpty())
             {
                 logger.Warn($"Epic user is not authenticated");
 
@@ -93,7 +127,7 @@ namespace IsThereAnyDeal.Services
             // Get wishlist
             string query = @"query wishlistQuery { Wishlist { wishlistItems { elements { offerId namespace offer { title keyImages { type url width height } } } } } }";
             dynamic variables = new { };
-            string ResultWeb = QuerySearchWishList(query, variables, access_token).GetAwaiter().GetResult();
+            string ResultWeb = QuerySearchWishList(query, variables, tokens.access_token).GetAwaiter().GetResult();
             if (!ResultWeb.IsNullOrEmpty())
             {
                 EpicWishlistResult resultObj = null;

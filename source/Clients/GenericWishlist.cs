@@ -14,9 +14,13 @@ namespace IsThereAnyDeal.Services
         internal static readonly ILogger logger = LogManager.GetLogger();
         internal static readonly IResourceProvider resources = new ResourceProvider();
 
+        internal static string PluginUserDataPath;
+
 
         public List<Wishlist> LoadWishlists(string clientName, string PluginUserDataPath, bool force = false)
         {
+            GenericWishlist.PluginUserDataPath = PluginUserDataPath;
+
             try
             {
                 string DirPath = Path.Combine(PluginUserDataPath, "IsThereAnyDeal");
