@@ -5,17 +5,45 @@ using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
 using CommonPlayniteShared.PluginLibrary.SteamLibrary.SteamShared;
+using CommonPluginsStores;
+using AngleSharp.Parser.Html;
+using AngleSharp.Dom.Html;
+using System.Text.RegularExpressions;
 
 namespace IsThereAnyDeal.Services
 {
     class SteamWishlist : GenericWishlist
     {
+        protected static SteamApi _steamApi;
+        internal static SteamApi steamApi
+        {
+            get
+            {
+                if (_steamApi == null)
+                {
+                    _steamApi = new SteamApi();
+                }
+                return _steamApi;
+            }
+
+            set
+            {
+                _steamApi = value;
+            }
+        }
+
+        private const string UrlProfil = @"https://steamcommunity.com/my/profile";
         public readonly string UrlWishlist = @"https://store.steampowered.com/wishlist/profiles/{0}/wishlistdata/?p={1}&v=";
         private readonly string UrlAppData = @"https://store.steampowered.com/api/appdetails?appids={0}";
+
+        private static string SteamId { get; set; } = string.Empty;
+        private static string SteamApiKey { get; set; } = string.Empty;
+        private static string SteamUser { get; set; } = string.Empty;
 
 
         public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
@@ -33,22 +61,25 @@ namespace IsThereAnyDeal.Services
             logger.Info($"Load from web for Steam");
 
             // Get Steam configuration if exist.
-            string userId = string.Empty;
-            string apiKey = string.Empty;
             try
             {
-                dynamic SteamConfig = Serialization.FromJsonFile<dynamic>(PluginUserDataPath + "\\..\\CB91DFC9-B977-43BF-8E70-55F46E410FAB\\config.json");
-                userId = (string)SteamConfig["UserId"];
-                //apiKey = (string)SteamConfig["ApiKey"];
+                if (File.Exists(PluginUserDataPath + "\\..\\CB91DFC9-B977-43BF-8E70-55F46E410FAB\\config.json"))
+                {
+                    dynamic SteamConfig = Serialization.FromJsonFile<dynamic>(PluginUserDataPath + "\\..\\CB91DFC9-B977-43BF-8E70-55F46E410FAB\\config.json");
+                    SteamId = (string)SteamConfig["UserId"];
+                    SteamApiKey = (string)SteamConfig["ApiKey"];
+                    SteamUser = steamApi.GetSteamUsers()?.First()?.PersonaName;
+                }
+
+                SteamUserAndSteamIdByWeb();
             }
             catch
             {
             }
 
-            if (userId.IsNullOrEmpty())
+            if (SteamId.IsNullOrEmpty())
             {
-                logger.Error($"ISThereAnyDeal - No Steam configuration.");
-                
+                logger.Error($"No Steam configuration.");
                 PlayniteApi.Notifications.Add(new NotificationMessage(
                     $"IsThereAnyDeal-Steam-Error",
                     "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationsSteamBadConfig"), "Steam"),
@@ -71,26 +102,27 @@ namespace IsThereAnyDeal.Services
 
             for (int iPage = 0; iPage < 10; iPage++)
             {
-                url = string.Format(UrlWishlist, userId, iPage);
+                url = string.Format(UrlWishlist, SteamId, iPage);
 
-                try
-                {
-                    ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
-                }
-                catch (WebException ex)
-                {
-                    if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
-                    {
-                        Common.LogError(ex, false, $"Error download Steam wishlist for page {iPage}", true, "IsThereAnyDeal");
-                        return Result;
-                    }
-                }
+                WebViewOffscreen.NavigateAndWait(url);
+                ResultWeb = WebViewOffscreen.GetPageText();
 
+                //try
+                //{
+                //    ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
+                //}
+                //catch (WebException ex)
+                //{
+                //    if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
+                //    {
+                //        Common.LogError(ex, false, $"Error download Steam wishlist for page {iPage}", true, "IsThereAnyDeal");
+                //        return Result;
+                //    }
+                //}
                 
                 if (ResultWeb.ToLower().Contains("{\"success\":2}"))
                 {
-                    logger.Warn($"Private wishlist for {userId}?");
-
+                    logger.Warn($"Private wishlist for {SteamId}?");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Steam-Error",
                         "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationErrorSteamPrivate"), "Steam"),
@@ -179,6 +211,48 @@ namespace IsThereAnyDeal.Services
             SaveWishlist("Steam", PluginUserDataPath, Result);
             return Result;
         }
+
+
+        private void SteamUserAndSteamIdByWeb()
+        {
+            if (SteamUser.IsNullOrEmpty() || SteamId.IsNullOrEmpty())
+            {
+                WebViewOffscreen.NavigateAndWait(UrlProfil);
+                WebViewOffscreen.NavigateAndWait(WebViewOffscreen.GetCurrentAddress());
+                string ResultWeb = WebViewOffscreen.GetPageSource();
+
+                if (SteamUser.IsNullOrEmpty())
+                {
+                    HtmlParser parser = new HtmlParser();
+                    IHtmlDocument htmlDocument = parser.Parse(ResultWeb);
+
+                    var el = htmlDocument.QuerySelector(".actual_persona_name");
+                    if (el != null)
+                    {
+                        SteamUser = el.InnerHtml;
+                    }
+                }
+
+                if (SteamId.IsNullOrEmpty())
+                {
+                    int index = ResultWeb.IndexOf("g_steamID = ");
+                    if (index > -1)
+                    {
+                        ResultWeb = ResultWeb.Substring(index + "g_steamID  = ".Length);
+
+                        index = ResultWeb.IndexOf("g_strLanguage =");
+                        ResultWeb = ResultWeb.Substring(0, index).Trim();
+
+                        ResultWeb = ResultWeb.Substring(0, ResultWeb.Length - 1).Trim();
+
+                        SteamId = Regex.Replace(ResultWeb, @"[^\d]", string.Empty);
+                    }
+                }
+            }
+        }
+
+
+
 
         public bool RemoveWishlist(string StoreId)
         {

@@ -34,7 +34,7 @@ namespace IsThereAnyDeal.Clients
 
             if (url.IsNullOrEmpty())
             {
-                logger.Error($"IsThereAnyDeal - No Xbox wish list link");
+                logger.Error($"No Xbox wish list link");
 
                 PlayniteApi.Notifications.Add(new NotificationMessage(
                     $"IsThereAnyDeal-Xbox-Error",
