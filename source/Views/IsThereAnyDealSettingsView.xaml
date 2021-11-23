@@ -171,7 +171,7 @@
                 </ScrollViewer>
             </TabItem>
 
-            <TabItem Header="{DynamicResource LOCItadSettingsNotifications}" IsEnabled="{Binding Settings.EnableNotification}">
+            <TabItem Header="{DynamicResource LOCItadSettingsNotifications}" IsEnabled="{Binding ElementName=chk_Notification, Path=IsChecked}">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />

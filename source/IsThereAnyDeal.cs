@@ -246,7 +246,7 @@ namespace IsThereAnyDeal
         // Add code to be executed when Playnite is initialized.
         public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
         {
-
+            IsThereAnyDealApi.CheckNotifications(PlayniteApi, PluginSettings.Settings, this);
         }
 
         // Add code to be executed when Playnite is shutting down.
