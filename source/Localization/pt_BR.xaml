@@ -81,7 +81,7 @@ Tente entrar com sua conta.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">A GOG está habilitada no plugin IsThereAnyDeal, mas a extensão da biblioteca foi desativada no Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">A Steam está habilitada no plugin IsThereAnyDeal, mas a extensão da biblioteca foi desativada no Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationsSteamBadConfig">A Steam não foi ajustada corretamente nas configurações</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">A lista de desejos da Steam é privada.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Lista de desejos Steam é privada. Você deve usar o botão de autenticar no plugin da Biblioteca Steam</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">O Xbox está habilitado no plugin IsThereAnyDeal, mas a extensão da biblioteca foi desativada no Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Não há nenhum link para a lista de desejos do Xbox.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">A Origin está habilitada no plugin IsThereAnyDeal, mas a extensão da biblioteca foi desativada no Playnite.</sys:String>
