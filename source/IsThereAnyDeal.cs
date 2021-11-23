@@ -11,6 +11,8 @@ using CommonPluginsShared.PlayniteExtended;
 using Playnite.SDK.Events;
 using System.Windows.Media;
 using CommonPluginsShared.Controls;
+using System.IO;
+using System.Reflection;
 
 namespace IsThereAnyDeal
 {
@@ -24,6 +26,22 @@ namespace IsThereAnyDeal
 
         public IsThereAnyDeal(IPlayniteAPI api) : base(api)
         {
+            // Manual dll load
+            try
+            {
+                string PluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string PathDLL = Path.Combine(PluginPath, "VirtualizingWrapPanel.dll");
+                if (File.Exists(PathDLL))
+                {
+                    var DLL = Assembly.LoadFile(PathDLL);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, false, true, "SuccessStory");
+            }
+
+
             topPanelItem = new TopPanelItem()
             {
                 Icon = new TextBlock
