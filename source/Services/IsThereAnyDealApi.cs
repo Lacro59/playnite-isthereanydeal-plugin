@@ -15,6 +15,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Threading;
 
 namespace IsThereAnyDeal.Services
 {
@@ -479,41 +480,39 @@ namespace IsThereAnyDeal.Services
 
         public List<Wishlist> GetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings, IPlayniteAPI PlayniteApi)
         {
-            List<Wishlist> Result = new List<Wishlist>();
-
             try
             {
-                // IS allready load?
-                if (wishlists.Count > 0)
-                {
-                    foreach (Wishlist wishlist in wishlists)
-                    {
-                        if (wishlist.itadGameInfos != null && wishlist.itadGameInfos.Keys.Contains(DateTime.Now.ToString("yyyy-MM-dd")))
-                        {
-#if DEBUG
-                            logger.Debug("IsThereAnyDeal - Current price is allready load");
-#endif
-                            return wishlists;
-                        }
-                    }
-                }
-
-
-                string plains = string.Empty;
+                List<string> plains = new List<string>();
+                string plain = string.Empty;
+                int countString = 0;
                 foreach (Wishlist wishlist in wishlists)
                 {
-                    if (plains == string.Empty)
+                    if (countString == 200)
                     {
-                        plains += wishlist.Plain;
+                        plains.Add(plain);
+                        countString = 0;
                     }
-                    else
+
+                    if (countString == 0)
                     {
-                        plains += "," + wishlist.Plain;
+                        plain = string.Empty;
+                    }
+
+                    if (!wishlist.itadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true)
+                    {
+                        if (plain == string.Empty)
+                        {
+                            plain += wishlist.Plain;
+                        }
+                        else
+                        {
+                            plain += "," + wishlist.Plain;
+                        }
+                        countString++;
                     }
                 }
-#if DEBUG
-                logger.Debug($"IsThereAnyDeal - GetCurrentPrice({plains})");
-#endif
+                plains.Add(plain);
+
 
                 string shops = string.Empty;
                 foreach (ItadStore Store in settings.Stores)
@@ -531,82 +530,90 @@ namespace IsThereAnyDeal.Services
                     }
                 }
 
-                if (!plains.IsNullOrEmpty())
+                if (plains.Count != 0)
                 {
-                    try
+                    // Check if in library (exclude game emulated)
+                    List<Guid> ListEmulators = new List<Guid>();
+                    foreach (var item in PlayniteApi.Database.Emulators)
                     {
-                        string url = baseAddress + $"v01/game/prices/?key={key}&plains={plains}&region{settings.Region}&country={settings.Country}&shops={shops}";
-                        string responseData = string.Empty;
+                        ListEmulators.Add(item.Id);
+                    }
+
+                    foreach (string plainData in plains)
+                    {
                         try
                         {
-                            responseData = Web.DownloadStringData(url).GetAwaiter().GetResult();
-                        }
-                        catch (Exception ex)
-                        {
-                            Common.LogError(ex, false, $"Failed to download {url}", true, "IsThereAnyDeal");
-                        }
-
-                        foreach (Wishlist wishlist in wishlists)
-                        {
-                            ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
-                            List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
-                            dynamic datasObj = Serialization.FromJson<dynamic>(responseData);
-
-                            // Check if in library (exclude game emulated)
-                            List<Guid> ListEmulators = new List<Guid>();
-                            foreach (var item in PlayniteApi.Database.Emulators)
-                            {
-                                ListEmulators.Add(item.Id);
-                            }
-
-                            bool InLibrary = PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower() && a.Hidden == false)?.Count() > 0;
-                            wishlist.InLibrary = InLibrary;
-
+                            Thread.Sleep(1000);
+                            string url = baseAddress + $"v01/game/prices/?key={key}&plains={plainData}&region{settings.Region}&country={settings.Country}&shops={shops}";
+                            string responseData = string.Empty;
                             try
                             {
-                                if (((dynamic)datasObj["data"][wishlist.Plain]["list"]).Count > 0)
-                                {
-                                    foreach (dynamic dataObj in (dynamic)datasObj["data"][wishlist.Plain]["list"])
-                                    {
-                                        try
-                                        {
-                                            dataCurrentPrice.Add(new ItadGameInfo
-                                            {
-                                                Name = wishlist.Name,
-                                                StoreId = wishlist.StoreId,
-                                                SourceId = wishlist.SourceId,
-                                                Plain = wishlist.Plain,
-                                                PriceNew = Math.Round((double)dataObj["price_new"], 2),
-                                                PriceOld = Math.Round((double)dataObj["price_old"], 2),
-                                                PriceCut = (double)dataObj["price_cut"],
-                                                CurrencySign = settings.CurrencySign,
-                                                ShopName = (string)dataObj["shop"]["name"],
-                                                ShopColor = GetShopColor((string)dataObj["shop"]["name"], settings.Stores),
-                                                UrlBuy = (string)dataObj["url"]
-                                            });
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Common.LogError(ex, false, true, "IsThereAnyDeal");
-                                        }
-                                    }
-                                }
+                                responseData = Web.DownloadStringData(url).GetAwaiter().GetResult();
                             }
                             catch (Exception ex)
                             {
-                                logger.Warn($"No data for {wishlist.Name} - {plains}");
-                                Common.LogError(ex, true);
+                                Common.LogError(ex, false, $"Failed to download {url}", true, "IsThereAnyDeal");
                             }
 
-                            itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
 
-                            wishlist.itadGameInfos = itadGameInfos;
-                            Result.Add(wishlist);
+                            dynamic datasObj = Serialization.FromJson<dynamic>(responseData);
+                           
+
+                            foreach (Wishlist wishlist in wishlists)
+                            {
+                                if (!wishlist.itadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true)
+                                {
+                                    ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
+                                    List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
+
+                                    bool InLibrary = PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower() && a.Hidden == false)?.Count() > 0;
+                                    wishlist.InLibrary = InLibrary;
+
+                                    try
+                                    {
+                                        if (((dynamic)datasObj["data"][wishlist.Plain]["list"]).Count > 0)
+                                        {
+                                            foreach (dynamic dataObj in (dynamic)datasObj["data"][wishlist.Plain]["list"])
+                                            {
+                                                try
+                                                {
+                                                    dataCurrentPrice.Add(new ItadGameInfo
+                                                    {
+                                                        Name = wishlist.Name,
+                                                        StoreId = wishlist.StoreId,
+                                                        SourceId = wishlist.SourceId,
+                                                        Plain = wishlist.Plain,
+                                                        PriceNew = Math.Round((double)dataObj["price_new"], 2),
+                                                        PriceOld = Math.Round((double)dataObj["price_old"], 2),
+                                                        PriceCut = (double)dataObj["price_cut"],
+                                                        CurrencySign = settings.CurrencySign,
+                                                        ShopName = (string)dataObj["shop"]["name"],
+                                                        ShopColor = GetShopColor((string)dataObj["shop"]["name"], settings.Stores),
+                                                        UrlBuy = (string)dataObj["url"]
+                                                    });
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    Common.LogError(ex, false, true, "IsThereAnyDeal");
+                                                }
+                                            }
+
+                                            itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
+                                            wishlist.itadGameInfos = itadGameInfos;
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        logger.Warn($"No data for {wishlist.Name} - {plainData}");
+                                        Common.LogError(ex, true);
+                                    }
+                                }
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Common.LogError(ex, false, $"Error in GetCurrentPrice({plains})", true, "IsThereAnyDeal");
+                        catch (Exception ex)
+                        {
+                            Common.LogError(ex, false, $"Error in GetCurrentPrice({plainData})", true, "IsThereAnyDeal");
+                        }
                     }
                 }
                 else
@@ -621,7 +628,7 @@ namespace IsThereAnyDeal.Services
                 Common.LogError(ex, false);
             }
 
-            return Result;
+            return wishlists;
         }
 
         private string GetShopColor(string ShopName, List<ItadStore> itadStores)
