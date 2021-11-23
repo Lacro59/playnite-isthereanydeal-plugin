@@ -6,3 +6,13 @@ Packages:
     PackageUrl: https://github.com/Lacro59/playnite-isthereanydeal-plugin/releases/download/v2.0/playnite-isthereanydeal-plugin_2_0.pext
     Changelog:
       - Playnite 9 version
+  - Version: 2.1
+    RequiredApiVersion: 6.1.0
+    ReleaseDate: 2021-11-23
+    PackageUrl: https://github.com/Lacro59/playnite-isthereanydeal-plugin/releases/download/v2.1/playnite-isthereanydeal-plugin_2_1.pext
+    Changelog:
+      - Updated localizations
+      - Fixed wish lists download
+      - Fixed notification system
+      - Added options to add header and sidebar button
+      - Fixed issue on large wish list
