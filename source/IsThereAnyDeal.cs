@@ -9,6 +9,8 @@ using System.Windows.Controls;
 using System.Windows;
 using CommonPluginsShared.PlayniteExtended;
 using Playnite.SDK.Events;
+using System.Windows.Media;
+using CommonPluginsShared.Controls;
 
 namespace IsThereAnyDeal
 {
@@ -16,11 +18,91 @@ namespace IsThereAnyDeal
     {
         public override Guid Id { get; } = Guid.Parse("7d5cbee9-3c86-4389-ac7b-9abe3da4c9cd");
 
+        internal TopPanelItem topPanelItem;
+        internal ItadViewSidebar itadViewSidebar;
+
+
         public IsThereAnyDeal(IPlayniteAPI api) : base(api)
         {
+            topPanelItem = new TopPanelItem()
+            {
+                Icon = new TextBlock
+                {
+                    Text = "\uea63",
+                    FontSize = 22,
+                    FontFamily = resources.GetResource("CommonFont") as FontFamily
+                },
+                Title = resources.GetString("LOCItad"),
+                Activated = () =>
+                {
+                    var windowOptions = new WindowOptions
+                    {
+                        ShowMinimizeButton = false,
+                        ShowMaximizeButton = false,
+                        ShowCloseButton = true,
+                        Width = 1280,
+                        Height = 740
+                    };
 
+                    var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), PluginSettings.Settings);
+                    Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
+                    windowExtension.ShowDialog();
+                },
+                Visible = PluginSettings.Settings.EnableIntegrationButtonHeader
+            };
+
+            itadViewSidebar = new ItadViewSidebar(this);
         }
 
+
+        #region Theme integration
+        // Button on top panel
+        public override IEnumerable<TopPanelItem> GetTopPanelItems()
+        {
+            yield return topPanelItem;
+        }
+
+        // List custom controls
+        public override Control GetGameViewControl(GetGameViewControlArgs args)
+        {
+            return null;
+        }
+
+        // SidebarItem
+        public class ItadViewSidebar : SidebarItem
+        {
+            public ItadViewSidebar(IsThereAnyDeal plugin)
+            {
+                Type = SiderbarItemType.View;
+                Title = resources.GetString("LOCItad");
+                Icon = new TextBlock
+                {
+                    Text = "\uea63",
+                    FontFamily = resources.GetResource("CommonFont") as FontFamily
+                };
+                Opened = () =>
+                {
+                    SidebarItemControl sidebarItemControl = new SidebarItemControl(API.Instance);
+                    sidebarItemControl.SetTitle(resources.GetString("LOCItad"));
+                    sidebarItemControl.AddContent(new IsThereAnyDealView(plugin, API.Instance, plugin.GetPluginUserDataPath(), plugin.PluginSettings.Settings));
+
+                    return sidebarItemControl;
+                };
+                Visible = plugin.PluginSettings.Settings.EnableIntegrationButtonSide;
+            }
+        }
+
+        public override IEnumerable<SidebarItem> GetSidebarItems()
+        {
+            return new List<SidebarItem>
+            {
+                itadViewSidebar
+            };
+        }
+        #endregion
+
+
+        #region Menus
         // To add new game menu items override GetGameMenuItems
         public override IEnumerable<GameMenuItem> GetGameMenuItems(GetGameMenuItemsArgs args)
         {
@@ -57,8 +139,16 @@ namespace IsThereAnyDeal
                     Description = resources.GetString("LOCItadPluginView"),
                     Action = (mainMenuItem) =>
                     {
+                        var windowOptions = new WindowOptions
+                        {
+                            ShowMinimizeButton = false,
+                            ShowMaximizeButton = false,
+                            ShowCloseButton = true,
+                            Width = 1280,
+                            Height = 740
+                        };
                         var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), PluginSettings.Settings);
-                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
+                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
                         windowExtension.ShowDialog();
                     }
                 },
@@ -93,6 +183,7 @@ namespace IsThereAnyDeal
 
             return mainMenuItems;
         }
+        #endregion
 
 
         #region Game event

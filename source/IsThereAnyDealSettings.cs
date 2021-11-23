@@ -8,6 +8,10 @@ namespace IsThereAnyDeal
     public class IsThereAnyDealSettings : ObservableObject
     {
         #region Settings variables
+        public bool MenuInExtensions { get; set; } = true;
+        public bool EnableIntegrationButtonHeader { get; set; } = false;
+        public bool EnableIntegrationButtonSide { get; set; } = true;
+
         public List<WishlistIgnore> wishlistIgnores { get; set; } = new List<WishlistIgnore>();
 
         public string Region { get; set; } = "us";
@@ -34,9 +38,6 @@ namespace IsThereAnyDeal
 
         public string HumbleKey { get; set; } = string.Empty;
         public string XboxLink { get; set; } = string.Empty;
-
-        public bool EnableCheckVersion { get; set; } = true;
-        public bool MenuInExtensions { get; set; } = true;
 
         public List<ItadNotificationCriteria> NotificationCriterias { get; set; } = new List<ItadNotificationCriteria>();
         #endregion
@@ -103,6 +104,8 @@ namespace IsThereAnyDeal
         public void EndEdit()
         {
             Plugin.SavePluginSettings(Settings);
+            Plugin.topPanelItem.Visible = Settings.EnableIntegrationButtonHeader;
+            Plugin.itadViewSidebar.Visible = Settings.EnableIntegrationButtonSide;
         }
 
         // Code execute when user decides to confirm changes made since BeginEdit was called.
