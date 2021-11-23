@@ -81,7 +81,7 @@
     <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG включен в плагин IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam включен в плагине IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam не был правильно настроен в параметра</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Список желаемого Steam является личным.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam wishlist is private. You must use authenticate buton in Steam Library plugin</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox включен в плагин IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Нет ссылки на список желемого Xbox.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Origin включен в плагин IsThereAnyDeal, однако расширение библиотеки было отключено в Playnite.</sys:String>
