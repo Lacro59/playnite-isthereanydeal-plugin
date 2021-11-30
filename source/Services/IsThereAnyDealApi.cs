@@ -40,32 +40,32 @@ namespace IsThereAnyDeal.Services
 
             foreach (var Source in PlayniteApi.Database.Sources)
             {
-                if (Source.Name.ToLower() == "steam")
+                if (Source.Equals("steam"))
                 {
                     SteamId = Source.Id;
                 }
 
-                if (Source.Name.ToLower() == "gog")
+                if (Source.Equals("gog"))
                 {
                     GogId = Source.Id;
                 }
 
-                if (Source.Name.ToLower() == "epic")
+                if (Source.Equals("epic"))
                 {
                     EpicId = Source.Id;
                 }
 
-                if (Source.Name.ToLower() == "humble")
+                if (Source.Equals("humble"))
                 {
                     HumbleId = Source.Id;
                 }
 
-                if (Source.Name.ToLower() == "xbox")
+                if (Source.Equals("xbox"))
                 {
                     XboxId = Source.Id;
                 }
 
-                if (Source.Name.ToLower() == "origin")
+                if (Source.Equals("origin"))
                 {
                     OriginId = Source.Id;
                 }
