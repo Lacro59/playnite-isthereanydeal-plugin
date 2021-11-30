@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using IsThereAnyDeal.Clients;
+using CommonPluginsShared.Extensions;
 
 namespace IsThereAnyDeal.Views
 {
@@ -73,22 +74,18 @@ namespace IsThereAnyDeal.Views
                             GetListGame();
                             SetInfos();
 
-#if DEBUG
-                            logger.Debug($"IsThereAnyDeal - lbWishlistItems: {Serialization.ToJson(lbWishlistItems)}");
-#endif
-
                             if (!_PlainSelected.IsNullOrEmpty())
                             {
                                 int index = 0;
-                                foreach (Wishlist wishlist in antecedent.Result)
+                                foreach (Wishlist wishlist in lbWishlist.ItemsSource)
                                 {
-                                    if (wishlist.Plain == _PlainSelected)
+                                    if (wishlist.Plain.IsEqual(_PlainSelected))
                                     {
+                                        index = ((List<Wishlist>)lbWishlist.ItemsSource).FindIndex(x => x == wishlist);
                                         lbWishlist.SelectedIndex = index;
                                         lbWishlist.ScrollIntoView(lbWishlist.SelectedItem);
                                         break;
                                     }
-                                    index += 1;
                                 }
                             }
                             DataLoadWishlist.Visibility = Visibility.Collapsed;

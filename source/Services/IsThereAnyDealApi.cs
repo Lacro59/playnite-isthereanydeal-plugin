@@ -795,8 +795,17 @@ namespace IsThereAnyDeal.Services
                                 {
                                     if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
                                     {
+                                        var windowOptions = new WindowOptions
+                                        {
+                                            ShowMinimizeButton = false,
+                                            ShowMaximizeButton = false,
+                                            ShowCloseButton = true,
+                                            Width = 1280,
+                                            Height = 740
+                                        };
+
                                         var ViewExtension = new IsThereAnyDealView(plugin, PlayniteApi, plugin.GetPluginUserDataPath(), settings, wishlist.Plain);
-                                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
+                                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
                                         windowExtension.ShowDialog();
                                     }
                                     else
