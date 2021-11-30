@@ -16,3 +16,10 @@ Packages:
       - Fixed notification system
       - Added options to add header and sidebar button
       - Fixed issue on large wish list
+  - Version: 2.1.1
+    RequiredApiVersion: 6.1.0
+    ReleaseDate: 2021-11-23
+    PackageUrl: https://github.com/Lacro59/playnite-isthereanydeal-plugin/releases/download/v2.1.1/playnite-isthereanydeal-plugin_2_1_1.pext
+    Changelog:
+      - Fixed a crash
+      - Fixed FullScreen issue
