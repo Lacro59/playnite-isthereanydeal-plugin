@@ -527,13 +527,8 @@ namespace IsThereAnyDeal.Views
             GetListGame();
         }
         #endregion
-
-
-        private void PART_BtClose_Click(object sender, RoutedEventArgs e)
-        {
-            ((Window)this.Parent).Close();
-        }
     }
+
 
     public class ListStore
     {
