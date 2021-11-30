@@ -104,8 +104,12 @@ namespace IsThereAnyDeal
         public void EndEdit()
         {
             Plugin.SavePluginSettings(Settings);
-            Plugin.topPanelItem.Visible = Settings.EnableIntegrationButtonHeader;
-            Plugin.itadViewSidebar.Visible = Settings.EnableIntegrationButtonSide;
+
+            if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
+            {
+                Plugin.topPanelItem.Visible = Settings.EnableIntegrationButtonHeader;
+                Plugin.itadViewSidebar.Visible = Settings.EnableIntegrationButtonSide;
+            }
         }
 
         // Code execute when user decides to confirm changes made since BeginEdit was called.

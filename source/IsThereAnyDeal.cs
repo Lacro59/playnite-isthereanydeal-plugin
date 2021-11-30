@@ -42,34 +42,37 @@ namespace IsThereAnyDeal
             }
 
             // Initialize top & side bar
-            topPanelItem = new TopPanelItem()
+            if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
             {
-                Icon = new TextBlock
+                topPanelItem = new TopPanelItem()
                 {
-                    Text = "\uea63",
-                    FontSize = 22,
-                    FontFamily = resources.GetResource("CommonFont") as FontFamily
-                },
-                Title = resources.GetString("LOCItad"),
-                Activated = () =>
-                {
-                    var windowOptions = new WindowOptions
+                    Icon = new TextBlock
                     {
-                        ShowMinimizeButton = false,
-                        ShowMaximizeButton = false,
-                        ShowCloseButton = true,
-                        Width = 1280,
-                        Height = 740
-                    };
+                        Text = "\uea63",
+                        FontSize = 22,
+                        FontFamily = resources.GetResource("CommonFont") as FontFamily
+                    },
+                    Title = resources.GetString("LOCItad"),
+                    Activated = () =>
+                    {
+                        var windowOptions = new WindowOptions
+                        {
+                            ShowMinimizeButton = false,
+                            ShowMaximizeButton = false,
+                            ShowCloseButton = true,
+                            Width = 1280,
+                            Height = 740
+                        };
 
-                    var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), PluginSettings.Settings);
-                    Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
-                    windowExtension.ShowDialog();
-                },
-                Visible = PluginSettings.Settings.EnableIntegrationButtonHeader
-            };
+                        var ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), PluginSettings.Settings);
+                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
+                        windowExtension.ShowDialog();
+                    },
+                    Visible = PluginSettings.Settings.EnableIntegrationButtonHeader
+                };
 
-            itadViewSidebar = new ItadViewSidebar(this);
+                itadViewSidebar = new ItadViewSidebar(this);
+            }
         }
 
 

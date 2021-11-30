@@ -793,9 +793,16 @@ namespace IsThereAnyDeal.Services
                                 NotificationType.Info,
                                 () =>
                                 {
-                                    var ViewExtension = new IsThereAnyDealView(plugin, PlayniteApi, plugin.GetPluginUserDataPath(), settings, wishlist.Plain);
-                                    Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
-                                    windowExtension.ShowDialog();
+                                    if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
+                                    {
+                                        var ViewExtension = new IsThereAnyDealView(plugin, PlayniteApi, plugin.GetPluginUserDataPath(), settings, wishlist.Plain);
+                                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension);
+                                        windowExtension.ShowDialog();
+                                    }
+                                    else
+                                    {
+                                        Process.Start(wishlist.UrlGame);
+                                    }
                                 }
                             ));
                         }
