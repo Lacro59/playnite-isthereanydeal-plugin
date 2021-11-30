@@ -41,7 +41,7 @@ namespace IsThereAnyDeal
                 Common.LogError(ex, false, true, "SuccessStory");
             }
 
-
+            // Initialize top & side bar
             topPanelItem = new TopPanelItem()
             {
                 Icon = new TextBlock
