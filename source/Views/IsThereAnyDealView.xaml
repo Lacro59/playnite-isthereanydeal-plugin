@@ -521,7 +521,7 @@
                                             <Button Height="30"  Grid.Column="2" Grid.Row="4" Tag="{Binding StoreUrl}" Content="{DynamicResource LOCItadStore}" 
                                         Click="ButtonWeb_Click" IsEnabled="False" Name="btStore">
                                                 <Button.Style>
-                                                    <Style TargetType="Button" BasedOn="{StaticResource BaseStyle}">
+                                                    <Style TargetType="Button" BasedOn="{StaticResource Button}">
                                                         <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
                                                         <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}" />
                                                         <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
