@@ -16,6 +16,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Threading;
+using CommonPluginsShared.Extensions;
 
 namespace IsThereAnyDeal.Services
 {
@@ -101,6 +102,7 @@ namespace IsThereAnyDeal.Services
                 catch(Exception ex)
                 {
                     Common.LogError(ex, false, "Error on ListWishlistSteam", true, "IsThereAnyDeal");
+                    ListWishlistSteam = new List<Wishlist>();
                 }
             }
 
@@ -133,6 +135,7 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, false, "Error on ListWishlistGog", true, "IsThereAnyDeal");
+                    ListWishlistGog = new List<Wishlist>();
                 }
             }
 
@@ -165,6 +168,7 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, false, "Error on ListWishlistEpic", true, "IsThereAnyDeal");
+                    ListWishlistEpic = new List<Wishlist>();
                 }
             }
 
@@ -197,6 +201,7 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, false, "Error on ListWishlistHumble", true, "IsThereAnyDeal");
+                    ListWishlistHumble = new List<Wishlist>();
                 }
             }
 
@@ -229,6 +234,7 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, false, "Error on ListWishlistXbox", true, "IsThereAnyDeal");
+                    ListWishlistXbox = new List<Wishlist>();
                 }
             }
 
@@ -261,12 +267,18 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, false, "Error on ListWishlisOrigin", true, "IsThereAnyDeal");
+                    ListWishlisOrigin = new List<Wishlist>();
                 }
             }
 
 
-            List<Wishlist> ListWishlist = ListWishlistSteam.Concat(ListWishlistGog).Concat(ListWishlistHumble)
-                .Concat(ListWishlistEpic).Concat(ListWishlistXbox).Concat(ListWishlisOrigin).ToList();
+            List<Wishlist> ListWishlist = ListWishlistSteam
+                .Concat(ListWishlistGog)
+                .Concat(ListWishlistHumble)
+                .Concat(ListWishlistEpic)
+                .Concat(ListWishlistXbox)
+                .Concat(ListWishlisOrigin)
+                .ToList();
 
 
             // Group same game
@@ -450,23 +462,28 @@ namespace IsThereAnyDeal.Services
                 }
 
                 dynamic datasObj = Serialization.FromJson<dynamic>(responseData);
+
+
                 if (((dynamic)datasObj["data"]["list"]).Count > 0)
                 {
                     foreach (dynamic dataObj in (dynamic)datasObj["data"]["list"])
                     {
-                        itadGameInfos.Add(new ItadGameInfo
-                        {
-                            Plain = (string)dataObj["plain"],
-                            //title = (string)dataObj["title"],
-                            PriceNew = (double)dataObj["price_new"],
-                            PriceOld = (double)dataObj["price_old"],
-                            PriceCut = (double)dataObj["price_cut"],
-                            //added = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)dataObj["added"]),
-                            ShopName = (string)dataObj["shop"]["name"],
-                            //shop_color = GetShopColor((string)dataObj["shop"]["name"], settings.Stores),
-                            UrlBuy = (string)dataObj["urls"]["buy"]
-                            //url_game = (string)dataObj["urls"]["game"],
-                        });
+                        //if ((double)dataObj["price_new"] != 0 && (double)dataObj["price_old"] != 0 && (double)dataObj["price_cut"] != 0)
+                        //{
+                            itadGameInfos.Add(new ItadGameInfo
+                            {
+                                Plain = (string)dataObj["plain"],
+                                //title = (string)dataObj["title"],
+                                PriceNew = (double)dataObj["price_new"],
+                                PriceOld = (double)dataObj["price_old"],
+                                PriceCut = (double)dataObj["price_cut"],
+                                //added = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)dataObj["added"]),
+                                ShopName = (string)dataObj["shop"]["name"],
+                                //shop_color = GetShopColor((string)dataObj["shop"]["name"], settings.Stores),
+                                UrlBuy = (string)dataObj["urls"]["buy"]
+                                //url_game = (string)dataObj["urls"]["game"],
+                            });
+                        //}
                     }
                 }
             }
@@ -571,26 +588,32 @@ namespace IsThereAnyDeal.Services
 
                                     try
                                     {
-                                        if (((dynamic)datasObj["data"][wishlist.Plain]["list"]).Count > 0)
+                                        string ListPrice = Serialization.ToJson((dynamic)datasObj["data"][wishlist.Plain]["list"]);
+                                        List<ItadPrice> itadPrices = Serialization.FromJson<List<ItadPrice>>(ListPrice);
+
+                                        if (itadPrices?.Count > 0)
                                         {
-                                            foreach (dynamic dataObj in (dynamic)datasObj["data"][wishlist.Plain]["list"])
+                                            foreach (ItadPrice dataObj in itadPrices)
                                             {
                                                 try
                                                 {
-                                                    dataCurrentPrice.Add(new ItadGameInfo
-                                                    {
-                                                        Name = wishlist.Name,
-                                                        StoreId = wishlist.StoreId,
-                                                        SourceId = wishlist.SourceId,
-                                                        Plain = wishlist.Plain,
-                                                        PriceNew = Math.Round((double)dataObj["price_new"], 2),
-                                                        PriceOld = Math.Round((double)dataObj["price_old"], 2),
-                                                        PriceCut = (double)dataObj["price_cut"],
-                                                        CurrencySign = settings.CurrencySign,
-                                                        ShopName = (string)dataObj["shop"]["name"],
-                                                        ShopColor = GetShopColor((string)dataObj["shop"]["name"], settings.Stores),
-                                                        UrlBuy = (string)dataObj["url"]
-                                                    });
+                                                    if (dataObj.price_new != 0 && itadPrices.Where(x => x.price_new > 0).Count() > 1)
+                                                    { 
+                                                        dataCurrentPrice.Add(new ItadGameInfo
+                                                        {
+                                                            Name = wishlist.Name,
+                                                            StoreId = wishlist.StoreId,
+                                                            SourceId = wishlist.SourceId,
+                                                            Plain = wishlist.Plain,
+                                                            PriceNew = Math.Round(dataObj.price_new, 2),
+                                                            PriceOld = Math.Round(dataObj.price_old, 2),
+                                                            PriceCut = dataObj.price_cut,
+                                                            CurrencySign = settings.CurrencySign,
+                                                            ShopName = dataObj.shop.name,
+                                                            ShopColor = GetShopColor(dataObj.shop.name, settings.Stores),
+                                                            UrlBuy = dataObj.url
+                                                        });
+                                                    }
                                                 }
                                                 catch (Exception ex)
                                                 {

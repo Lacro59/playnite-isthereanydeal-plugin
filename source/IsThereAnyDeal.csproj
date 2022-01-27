@@ -92,6 +92,7 @@
     <Compile Include="Models\EpicWishlistResult.cs" />
     <Compile Include="Models\GogWishlistResult.cs" />
     <Compile Include="Models\ItadNotificationCriteria.cs" />
+    <Compile Include="Models\ItadPrice.cs" />
     <Compile Include="Models\ItadRegionsResult.cs" />
     <Compile Include="Models\ItadResult.cs" />
     <Compile Include="Models\Wishlist.cs" />
