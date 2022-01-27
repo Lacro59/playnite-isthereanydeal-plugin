@@ -101,7 +101,7 @@ namespace IsThereAnyDeal.Services
 
                 PlayniteApi.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-epic-noauthenticate",
-                    $"IsThereAnyDeal\r\n Epic - {resources.GetString("LOCLoginRequired")}",
+                    $"IsThereAnyDeal\r\nEpic - {resources.GetString("LOCLoginRequired")}",
                     NotificationType.Error
                 ));
 
@@ -115,7 +115,7 @@ namespace IsThereAnyDeal.Services
 
                 PlayniteApi.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-epic-noauthenticate",
-                    $"IsThereAnyDeal\r\n Epic - {resources.GetString("LOCLoginRequired")}",
+                    $"IsThereAnyDeal\r\nEpic - {resources.GetString("LOCLoginRequired")}",
                     NotificationType.Error
                 ));
 
