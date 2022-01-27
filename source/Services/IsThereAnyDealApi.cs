@@ -82,6 +82,10 @@ namespace IsThereAnyDeal.Services
                     {
                         SteamWishlist steamWishlist = new SteamWishlist();
                         ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings, CacheOnly);
+                        if (ListWishlistSteam == null)
+                        {
+                            ListWishlistSteam = new List<Wishlist>();
+                        }
                         countDatas.Add(new CountData
                         {
                             StoreName = "Steam",
@@ -102,7 +106,6 @@ namespace IsThereAnyDeal.Services
                 catch(Exception ex)
                 {
                     Common.LogError(ex, false, "Error on ListWishlistSteam", true, "IsThereAnyDeal");
-                    ListWishlistSteam = new List<Wishlist>();
                 }
             }
 
@@ -115,6 +118,10 @@ namespace IsThereAnyDeal.Services
                     {
                         GogWishlist gogWishlist = new GogWishlist(PlayniteApi);
                         ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
+                        if (ListWishlistGog == null)
+                        {
+                            ListWishlistGog = new List<Wishlist>();
+                        }
                         countDatas.Add(new CountData
                         {
                             StoreName = "GOG",
@@ -135,7 +142,6 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, false, "Error on ListWishlistGog", true, "IsThereAnyDeal");
-                    ListWishlistGog = new List<Wishlist>();
                 }
             }
 
@@ -148,6 +154,10 @@ namespace IsThereAnyDeal.Services
                     {
                         EpicWishlist epicWishlist = new EpicWishlist();
                         ListWishlistEpic = epicWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
+                        if (ListWishlistEpic == null)
+                        {
+                            ListWishlistEpic = new List<Wishlist>();
+                        }
                         countDatas.Add(new CountData
                         {
                             StoreName = "Epic Game Store",
@@ -168,7 +178,6 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, false, "Error on ListWishlistEpic", true, "IsThereAnyDeal");
-                    ListWishlistEpic = new List<Wishlist>();
                 }
             }
 
@@ -181,6 +190,10 @@ namespace IsThereAnyDeal.Services
                     {
                         HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
                         ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly);
+                        if (ListWishlistHumble == null)
+                        {
+                            ListWishlistHumble = new List<Wishlist>();
+                        }
                         countDatas.Add(new CountData
                         {
                             StoreName = "Humble Bundle",
@@ -201,7 +214,6 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, false, "Error on ListWishlistHumble", true, "IsThereAnyDeal");
-                    ListWishlistHumble = new List<Wishlist>();
                 }
             }
 
@@ -214,6 +226,10 @@ namespace IsThereAnyDeal.Services
                     {
                         XboxWishlist xboxWishlist = new XboxWishlist();
                         ListWishlistXbox = xboxWishlist.GetWishlist(PlayniteApi, XboxId, PluginUserDataPath, settings, CacheOnly);
+                        if (ListWishlistXbox == null)
+                        {
+                            ListWishlistXbox = new List<Wishlist>();
+                        }
                         countDatas.Add(new CountData
                         {
                             StoreName = "Xbox",
@@ -234,7 +250,6 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, false, "Error on ListWishlistXbox", true, "IsThereAnyDeal");
-                    ListWishlistXbox = new List<Wishlist>();
                 }
             }
 
@@ -247,6 +262,10 @@ namespace IsThereAnyDeal.Services
                     {
                         OriginWishlist originWishlist = new OriginWishlist();
                         ListWishlisOrigin = originWishlist.GetWishlist(PlayniteApi, OriginId, PluginUserDataPath, settings, CacheOnly);
+                        if (ListWishlisOrigin == null)
+                        {
+                            ListWishlisOrigin = new List<Wishlist>();
+                        }
                         countDatas.Add(new CountData
                         {
                             StoreName = "Origin",
@@ -267,7 +286,6 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, false, "Error on ListWishlisOrigin", true, "IsThereAnyDeal");
-                    ListWishlisOrigin = new List<Wishlist>();
                 }
             }
 
