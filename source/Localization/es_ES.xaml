@@ -52,8 +52,8 @@
     <sys:String x:Key="LOCItadNotActive">No activo en IsthereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadNotFind">No encontrado en IsthereAnyDeal</sys:String>
 
-    <sys:String x:Key="LOCItadDeleteOnStoreWishList"></sys:String>
-    <sys:String x:Key="LOCItadHideOnStoreWishList"></sys:String>
+    <sys:String x:Key="LOCItadDeleteOnStoreWishList">¿Eliminar {0} en {1}?</sys:String>
+    <sys:String x:Key="LOCItadHideOnStoreWishList">¿Excluir {0} en {1}?</sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">Opciones de lista de deseados</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Incluir juegos en la biblioteca</sys:String>

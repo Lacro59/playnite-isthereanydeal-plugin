@@ -3,7 +3,7 @@
 
     <!-- MainView -->
 
-    <sys:String x:Key="LOCItad">IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCItad">有折扣吗-IsThereAnyDeal</sys:String>
 
     <!-- IsThereAnyDealSettingsView -->
 
