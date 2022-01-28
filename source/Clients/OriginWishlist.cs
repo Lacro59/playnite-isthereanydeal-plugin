@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.Collections.Specialized;
 using CommonPlayniteShared.PluginLibrary.OriginLibrary.Services;
@@ -64,7 +63,6 @@ namespace IsThereAnyDeal.Clients
                 // Get informations from Origin plugin.
                 string accessToken = OriginAPI.GetAccessToken().access_token;
                 var userId = OriginAPI.GetAccountInfo(OriginAPI.GetAccessToken()).pid.pidId;
-
                 string url = string.Format(urlWishlist, userId);
 
                 using (var webClient = new WebClient { Encoding = Encoding.UTF8 })
@@ -144,7 +142,6 @@ namespace IsThereAnyDeal.Clients
             else
             {
                 logger.Warn($"Origin user is not authenticated");
-
                 PlayniteApi.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-origin-noauthenticate",
                     $"IsThereAnyDeal\r\nGOrigin - {resources.GetString("LOCLoginRequired")}",
@@ -159,9 +156,6 @@ namespace IsThereAnyDeal.Clients
 
         public bool RemoveWishlist(string StoreId, IPlayniteAPI PlayniteApi)
         {
-            var view = PlayniteApi.WebViews.CreateOffscreenView();
-            OriginAPI = new OriginAccountClient(view);
-    
             // Only if user is logged. 
             if (OriginAPI.GetIsUserLoggedIn())
             {
@@ -178,8 +172,7 @@ namespace IsThereAnyDeal.Clients
                         webClient.Headers.Add("authToken", accessToken);
                         webClient.Headers.Add("accept", "application/vnd.origin.v3+json; x-cache/force-write");
                         
-                        var stringData = System.Text.Encoding.UTF8.GetString(webClient.UploadValues(url, "DELETE", new NameValueCollection()));
-        
+                        var stringData = Encoding.UTF8.GetString(webClient.UploadValues(url, "DELETE", new NameValueCollection()));
                         return stringData.Contains("\"ok\"");
                     }
                     catch (WebException ex)

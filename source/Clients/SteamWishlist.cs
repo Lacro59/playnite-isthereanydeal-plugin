@@ -256,8 +256,7 @@ namespace IsThereAnyDeal.Services
 
         public bool RemoveWishlist(string StoreId)
         {
-            string Url = @"https://store.steampowered.com/wishlist/profiles/76561198003215440/remove/";
-            // formfata : appid=632470&sessionid=8e1207c6343129ee6b8098a2
+            string Url = @"https://store.steampowered.com/wishlist/profiles/{0}/remove/";
             return false;
         }
 
