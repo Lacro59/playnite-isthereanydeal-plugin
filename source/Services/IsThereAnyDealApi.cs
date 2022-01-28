@@ -421,9 +421,8 @@ namespace IsThereAnyDeal.Services
             try
             {
                 string url = baseAddress + $"v02/game/plain/?key={key}&title={WebUtility.UrlEncode(WebUtility.HtmlDecode(title))}";
-#if DEBUG
-                logger.Debug($"IsThereAnyDeal - GetPlain({title}) - url: {url}");
-#endif
+                Common.LogDebug(true, $"GetPlain({title}) - url: {url}");
+
                 string responseData = string.Empty;
                 try
                 {
@@ -466,9 +465,8 @@ namespace IsThereAnyDeal.Services
             try
             {
                 string url = baseAddress + $"v01/search/search/?key={key}&q={q}&region{region}&country={country}";
-#if DEBUG
-                logger.Debug($"IsThereAnyDeal - SearchGame({q}) - {url}");
-#endif
+                Common.LogDebug(true, $"SearchGame({q}) - {url}");
+
                 string responseData = string.Empty;
                 try
                 {
@@ -656,9 +654,7 @@ namespace IsThereAnyDeal.Services
                 }
                 else
                 {
-#if DEBUG
-                    logger.Debug("IsThereAnyDeal - No plain");
-#endif
+                    Common.LogDebug(true, $"No plain");
                 }
             }
             catch (Exception ex)
@@ -779,9 +775,7 @@ namespace IsThereAnyDeal.Services
             // Compare new with cache
             if (itadGiveaways.Count != 0)
             {
-#if DEBUG
-                logger.Debug("IsThereAnyDeal - Compare with cache");
-#endif
+                Common.LogDebug(true, $"Compare with cache");
                 foreach (ItadGiveaway itadGiveaway in itadGiveawaysCache)
                 {
                     if (itadGiveaways.Find(x => x.TitleAll == itadGiveaway.TitleAll) != null)

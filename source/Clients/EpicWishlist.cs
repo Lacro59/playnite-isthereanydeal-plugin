@@ -134,9 +134,8 @@ namespace IsThereAnyDeal.Services
                 try
                 {
                     resultObj = Serialization.FromJson<EpicWishlistResult>(ResultWeb);
-#if DEBUG
-                    logger.Debug($"IsThereAnyDeal - resultObj: {Serialization.ToJson(resultObj)}");
-#endif
+                    Common.LogDebug(true, $"resultObj: {Serialization.ToJson(resultObj)}");
+
                     if (resultObj != null && resultObj.data != null && resultObj.data.Wishlist != null 
                         && resultObj.data.Wishlist.wishlistItems != null && resultObj.data.Wishlist.wishlistItems.elements != null) {
 
@@ -150,9 +149,8 @@ namespace IsThereAnyDeal.Services
 
                             try
                             {
-#if DEBUG
-                                logger.Debug($"IsThereAnyDeal - gameWishlist: {Serialization.ToJson(gameWishlist)}");
-#endif
+                                Common.LogDebug(true, $"gameWishlist: {Serialization.ToJson(gameWishlist)}");
+
                                 StoreId = gameWishlist.offerId + "|" + gameWishlist.@namespace;
                                 Capsule = string.Empty;
 
@@ -240,9 +238,7 @@ namespace IsThereAnyDeal.Services
                     operation = "REMOVE"
                 };
                 string ResultWeb = QuerySearchWishList(query, variables, access_token).GetAwaiter().GetResult();
-#if DEBUG
-                logger.Debug($"IsThereAnyDeal - Epic.RemoveWishlist() - {ResultWeb.Trim()}");
-#endif
+                Common.LogDebug(true, $"Epic.RemoveWishlist() - {ResultWeb.Trim()}");
                 return ResultWeb.IndexOf("\"success\":true") > -1;
             }
             catch(Exception ex)

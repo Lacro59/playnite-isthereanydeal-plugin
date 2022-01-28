@@ -108,9 +108,7 @@ namespace IsThereAnyDeal.Views
                     var TaskView = Task.Run(() =>
                     {
                         StoresItems = isThereAnyDealApi.GetRegionStores(_settings.Region, _settings.Country);
-#if DEBUG
-                        logger.Debug($"IsThereAnyDeal - StoresItems: {Serialization.ToJson(StoresItems)}");
-#endif
+                        Common.LogDebug(true, $"StoresItems: {Serialization.ToJson(StoresItems)}");
 
                         this.Dispatcher.BeginInvoke((Action)delegate
                         {
@@ -233,9 +231,7 @@ namespace IsThereAnyDeal.Views
             var TaskView = Task.Run(() =>
             {
                 RegionsData = isThereAnyDealApi.GetCoveredRegions();
-#if DEBUG
-                logger.Debug($"IsThereAnyDeal - RegionsData: {Serialization.ToJson(RegionsData)}");
-#endif
+                Common.LogDebug(true, $"RegionsData: {Serialization.ToJson(RegionsData)}");
 
                 this.Dispatcher.BeginInvoke((Action)delegate
                 {

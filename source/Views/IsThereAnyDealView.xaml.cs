@@ -245,9 +245,8 @@ namespace IsThereAnyDeal.Views
             ListBox elParent = UI.FindParent<ListBox>(sender as Button);
             StorePriceSelected = (ItadGameInfo)elParent.Items[index];
             lbWishlist.ItemsSource = null;
-#if DEBUG
-            logger.Debug($"IsThereAnyDeal - BtRemoveWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
-#endif
+            Common.LogDebug(true, $"BtRemoveWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
+
             var RessultDialog = _PlayniteApi.Dialogs.ShowMessage(
                 string.Format(resources.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName), 
                 "IsThereAnyDeal", 
@@ -267,8 +266,8 @@ namespace IsThereAnyDeal.Views
                             switch (StorePriceSelected.ShopName.ToLower())
                             {
                                 case "steam":
+                                    Common.LogDebug(true, $"Is Steam");
 #if DEBUG
-                                    logger.Debug($"IsThereAnyDeal - Is Steam");
                                     SteamWishlist steamWishlist = new SteamWishlist();
                                     IsDeleted = steamWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
@@ -277,10 +276,10 @@ namespace IsThereAnyDeal.Views
                                     }
 #endif
                                     break;
+
                                 case "epic game store":
-#if DEBUG
-                                    logger.Debug($"IsThereAnyDeal - Is Epic");
-#endif
+                                    Common.LogDebug(true, $"Is Epic");
+
                                     EpicWishlist epicWishlist = new EpicWishlist();
                                     IsDeleted = epicWishlist.RemoveWishlist(StorePriceSelected.StoreId, _plugin.GetPluginUserDataPath());
                                     if (IsDeleted)
@@ -288,10 +287,10 @@ namespace IsThereAnyDeal.Views
                                         epicWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
                                     break;
+
                                 case "humble store":
-#if DEBUG
-                                    logger.Debug($"IsThereAnyDeal - Is Humble Store");
-#endif
+                                    Common.LogDebug(true, $"Is Humble Store");
+
                                     HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
                                     IsDeleted = humbleBundleWishlist.RemoveWishlist(_PlayniteApi, StorePriceSelected.StoreId);
                                     if (IsDeleted)
@@ -299,10 +298,10 @@ namespace IsThereAnyDeal.Views
                                         humbleBundleWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _settings.HumbleKey, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
                                     break;
+
                                 case "gog":
-#if DEBUG
-                                    logger.Debug($"IsThereAnyDeal - Is GOG");
-#endif
+                                    Common.LogDebug(true, $"Is GOG");
+
                                     GogWishlist gogWishlist = new GogWishlist(_PlayniteApi);
                                     IsDeleted = gogWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
@@ -310,15 +309,14 @@ namespace IsThereAnyDeal.Views
                                         gogWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
                                     break;
+
                                 case "microsoft store":
-#if DEBUG
-                                    logger.Debug($"IsThereAnyDeal - Is xbox");
-#endif
+                                    Common.LogDebug(true, $" Is xbox");
                                     break;
+
                                 case "origin":
-#if DEBUG
-                                    logger.Debug($"IsThereAnyDeal - Is origin");
-#endif
+                                    Common.LogDebug(true, $"Is origin");
+
                                     OriginWishlist originWishlist = new OriginWishlist();
                                     IsDeleted = originWishlist.RemoveWishlist(StorePriceSelected.StoreId, _PlayniteApi);
                                     if (IsDeleted)
@@ -340,16 +338,12 @@ namespace IsThereAnyDeal.Views
                     {
                         if (IsDeleted)
                         {
-#if DEBUG
-                            logger.Debug($"IsThereAnyDeal - IsDeleted");
-#endif
+                            Common.LogDebug(true, $"IsDeleted");
                             RefreshData();
                         }
                         else
                         {
-#if DEBUG
-                            logger.Debug($"IsThereAnyDeal - IsNotDeleted");
-#endif
+                            Common.LogDebug(true, $"IsNotDeleted");
                             GetListGame();
                         }
                         
@@ -374,9 +368,8 @@ namespace IsThereAnyDeal.Views
             ListBox elParent = UI.FindParent<ListBox>(sender as Button);
             StorePriceSelected = (ItadGameInfo)elParent.Items[index];
             lbWishlist.ItemsSource = null;
-#if DEBUG
-            logger.Debug($"IsThereAnyDeal - BtHideWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
-#endif
+            Common.LogDebug(true, $"BtHideWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
+
             var RessultDialog = _PlayniteApi.Dialogs.ShowMessage(
                 string.Format(resources.GetString("LOCItadHideOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
                 "IsThereAnyDeal",
