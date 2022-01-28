@@ -39,6 +39,9 @@
 
     <!-- IsThereAnyDealView -->
 
+    <sys:String x:Key="LOCITADOrderPriceCut">Price cut</sys:String>
+    <sys:String x:Key="LOCITADOrderPrice">Price</sys:String>
+    
     <sys:String x:Key="LOCITADFilterSource">Filtruj wg sklepu(ów)</sys:String>
     <sys:String x:Key="LOCITADPercentage">Minimalny procent rabatu</sys:String>
     <sys:String x:Key="LOCITADPrice">Price inferior</sys:String>
@@ -58,6 +61,7 @@
     <sys:String x:Key="LOCItadWhishListOptions">Opcje listy życze</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Dołącz gry z biblioteki</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Dołącz gry bez danych IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Only games in library</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>
