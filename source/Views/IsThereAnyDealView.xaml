@@ -30,74 +30,127 @@
                 <DockPanel Name="dpData">
                     <Border DockPanel.Dock="Top" BorderThickness="{DynamicResource PopupBorderThickness}" BorderBrush="{DynamicResource NormalBorderBrush}" Margin="0,0,0,10">
                         <Grid Margin="10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="6" />
-                                <ColumnDefinition Width="140" />
-                                <ColumnDefinition Width="15" />
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="6" />
-                                <ColumnDefinition Width="140" />
-                                <ColumnDefinition Width="15" />
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="6" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="45" />
-                                <ColumnDefinition Width="15" />
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="6" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="45" />
-                                <ColumnDefinition Width="6" />
-                                <ColumnDefinition Width="auto" />
-                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="6" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
 
-                            <Label Grid.Column="0" Content="{DynamicResource LOCSearchLabel}" FontSize="16" />
-                            <TextBox Grid.Column="2" x:Name="TextboxSearch" TextWrapping="NoWrap" KeyUp="TextboxSearch_KeyUp" />
+                                <Grid Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="150" />
+                                    </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="4" Content="{DynamicResource LOCITADFilterSource}" FontSize="16" />
-                            <ComboBox Grid.Column="6" Name="FilterStore" IsEditable="True" IsReadOnly="True">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <CheckBox Name="chkStore" Checked="ChkStore_Checked" Unchecked="ChkStore_Unchecked" Tag="{Binding StoreName}" 
+                                    <Label Grid.Column="0" Content="{DynamicResource LOCSearchLabel}" FontSize="16" />
+                                    <TextBox Grid.Column="2" x:Name="TextboxSearch" TextWrapping="NoWrap" KeyUp="TextboxSearch_KeyUp" />
+                                </Grid>
+
+                                <Grid Grid.Column="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="150" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Grid.Column="0" Content="{DynamicResource LOCITADFilterSource}" FontSize="16" />
+                                    <ComboBox Grid.Column="2" Name="FilterStore" IsEditable="True" IsReadOnly="True">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <CheckBox Name="chkStore" Checked="ChkStore_Checked" Unchecked="ChkStore_Unchecked" Tag="{Binding StoreName}" 
                                                   Content="{Binding StoreNameDisplay}" IsChecked="{Binding IsCheck}" FontFamily="{DynamicResource CommonFont}" />
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </Grid>
 
-                            <Label Grid.Column="8" Content="{DynamicResource LOCITADPercentage}" FontSize="16" />
-                            <Slider Grid.Column="10" Minimum="0" Maximum="100" Value="0" VerticalAlignment="Center" IsSnapToTickEnabled="True" 
-                                    TickFrequency="1" Name="sPercentage"
-                                    ValueChanged="Slider_ValueChanged" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
-                            <Label Grid.Column="11" Name="lPercentage" Content="0%" Margin="5,0,0,0" HorizontalAlignment="Center" />
+                                <Grid Grid.Column="4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="300" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="50" />
+                                    </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="13" Content="{DynamicResource LOCITADPrice}" FontSize="16" />
-                            <Slider Grid.Column="15" Minimum="0" Maximum="100" Value="100" VerticalAlignment="Center" IsSnapToTickEnabled="True" 
-                                    TickFrequency="1" Name="sPrice"
-                                    ValueChanged="Slider_ValueChangedPrice" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
-                            <Label Grid.Column="16" Name="lPrice" Content="100€" Margin="5,0,0,0" HorizontalAlignment="Center" />
+                                    <Label Grid.Column="0" Content="{DynamicResource LOCITADPercentage}" FontSize="16" />
+                                    <Slider Grid.Column="2" Minimum="0" Maximum="100" Value="0" VerticalAlignment="Center" IsSnapToTickEnabled="True" 
+                                        TickFrequency="1" Name="sPercentage"
+                                        ValueChanged="Slider_ValueChanged" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
+                                    <Label Grid.Column="4" Name="lPercentage" Content="0%" Margin="5,0,0,0" HorizontalAlignment="Right" />
+                                </Grid>
 
-                            <Label Grid.Column="18" FontFamily="{DynamicResource CommonFont}" Content="" Name="ItadInfo">
-                                <Label.ToolTip>
-                                    <ToolTip>
-                                        <ListBox Name="tpListBox" BorderThickness="0">
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="*" />
-                                                        </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="4" Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="300" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="50" />
+                                    </Grid.ColumnDefinitions>
 
-                                                        <Label Grid.Column="0" Content="{Binding StoreName}" />
-                                                        <Label Grid.Column="1" HorizontalAlignment="Right" Content="{Binding Count}" Margin="10,0,0,0" />
-                                                    </Grid>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
-                                    </ToolTip>
-                                </Label.ToolTip>
-                            </Label>
+                                    <Label Grid.Column="0" Content="{DynamicResource LOCITADPrice}" FontSize="16" />
+                                    <Slider Grid.Column="2" Minimum="0" Maximum="100" Value="100" VerticalAlignment="Center" IsSnapToTickEnabled="True" 
+                                        TickFrequency="1" Name="sPrice"
+                                        ValueChanged="Slider_ValueChangedPrice" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
+                                    <Label Grid.Column="4" Name="lPrice" Content="100€" Margin="5,0,0,0" HorizontalAlignment="Right" />
+                                </Grid>
+
+                                <Label Grid.Column="18" FontFamily="{DynamicResource CommonFont}" Content="" Name="ItadInfo">
+                                    <Label.ToolTip>
+                                        <ToolTip>
+                                            <ListBox Name="tpListBox" BorderThickness="0">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" Content="{Binding StoreName}" />
+                                                            <Label Grid.Column="1" HorizontalAlignment="Right" Content="{Binding Count}" Margin="10,0,0,0" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </ToolTip>
+                                    </Label.ToolTip>
+                                </Label>
+                            </Grid>
+
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="6" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="6" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="6" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="6" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="6" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                            </Grid>
                         </Grid>
                     </Border>
 
