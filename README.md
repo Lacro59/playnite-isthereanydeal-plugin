@@ -4,5 +4,5 @@ This plugin gets [IsThereAnyDeal](https://isthereanydeal.com/) data in applicati
 
 More information [here](https://playnite.link/forum/thread-323.html).
 
-Remember to support the [Playnite](https://www.patreon.com/playnite) project and the [data site](https://isthereanydeal.com).  
+Remember to support [Playnite](https://www.patreon.com/playnite) and the [data site](https://isthereanydeal.com).  
 And if you like my work, you can [support me](https://www.paypal.me/lacro59).
