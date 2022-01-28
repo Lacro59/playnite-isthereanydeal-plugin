@@ -4,6 +4,8 @@ using CommonPluginsShared;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using CommonPluginsShared.Extensions;
 
 namespace IsThereAnyDeal.Models
 {
@@ -20,7 +22,15 @@ namespace IsThereAnyDeal.Models
         public DateTime ReleaseDate { get; set; }
         public string Capsule { get; set; }
         public string Plain { get; set; }
-        public bool InLibrary { get; set; }
+
+        [DontSerialize]
+        public bool InLibrary {
+            get
+            {
+                return API.Instance.Database.Games.Where(x => x.Name.IsEqual(Name) && !x.Hidden)?.Count() > 0;
+            }
+        }
+
         public bool IsActive { get; set; }
         public ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos { get; set; }
 

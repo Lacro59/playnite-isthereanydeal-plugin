@@ -601,9 +601,6 @@ namespace IsThereAnyDeal.Services
                                     ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
                                     List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
 
-                                    bool InLibrary = PlayniteApi.Database.Games.Where(a => a.Name.ToLower() == wishlist.Name.ToLower() && a.Hidden == false)?.Count() > 0;
-                                    wishlist.InLibrary = InLibrary;
-
                                     try
                                     {
                                         string ListPrice = Serialization.ToJson((dynamic)datasObj["data"][wishlist.Plain]["list"]);

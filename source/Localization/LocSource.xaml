@@ -58,6 +58,7 @@
     <sys:String x:Key="LOCItadWhishListOptions">Wishlist options</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Include games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Include games without IsThereAnyDeal data</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Only games in library</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>

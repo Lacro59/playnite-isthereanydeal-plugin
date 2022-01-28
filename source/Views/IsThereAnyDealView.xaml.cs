@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using IsThereAnyDeal.Clients;
 using CommonPluginsShared.Extensions;
+using System.Windows.Controls.Primitives;
 
 namespace IsThereAnyDeal.Views
 {
@@ -412,13 +413,20 @@ namespace IsThereAnyDeal.Views
             List<Wishlist> tempList = lbWishlistItems;
 
             // List options
-            if (!(bool)PART_TbIncludeInLibrary.IsChecked)
+            if ((bool)PART_TbOnlyInLibrary.IsChecked)
             {
-                tempList = tempList.FindAll(x => x.InLibrary == false).ToList();
+                tempList = tempList.FindAll(x => x.InLibrary).ToList();
             }
-            if (!(bool)PART_TbIncludeWithoutData.IsChecked)
+            else
             {
-                tempList = tempList.FindAll(x => x.HasItadData).ToList();
+                if (!(bool)PART_TbIncludeInLibrary.IsChecked)
+                {
+                    tempList = tempList.FindAll(x => !x.InLibrary).ToList();
+                }
+                if (!(bool)PART_TbIncludeWithoutData.IsChecked)
+                {
+                    tempList = tempList.FindAll(x => x.HasItadData).ToList();
+                }
             }
 
 
@@ -519,8 +527,20 @@ namespace IsThereAnyDeal.Views
             }
         }
 
-        private void PART_TbInclude_Click(object sender, RoutedEventArgs e)
+
+        private void PART_Tb_Click(object sender, RoutedEventArgs e)
         {
+            ToggleButton tb = sender as ToggleButton;
+            if (tb.Name == "PART_TbOnlyInLibrary")
+            {
+                PART_TbIncludeInLibrary.IsChecked = false;
+                PART_TbIncludeWithoutData.IsChecked = false;
+            }
+            else
+            {
+                PART_TbOnlyInLibrary.IsChecked = false;
+            }
+
             GetListGame();
         }
         #endregion
