@@ -1,5 +1,5 @@
 # playnite-istheranydeal-plugin
-Generic plugin for [Playnite](https://playnite).  
+Generic plugin for [Playnite](https://playnite.link/).  
 This plugin gets [IsThereAnyDeal](https://isthereanydeal.com/) data in application database from stores wishlist. 
 
 More information [here](https://playnite.link/forum/thread-323.html)
