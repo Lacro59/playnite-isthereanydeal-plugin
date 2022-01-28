@@ -454,6 +454,9 @@ namespace IsThereAnyDeal.Views
                 );
                 return;
             }
+
+            // Order
+            PART_CbOrder_SelectionChanged(null, null);
         }
 
         // Search by name
@@ -535,6 +538,75 @@ namespace IsThereAnyDeal.Views
             }
 
             GetListGame();
+        }
+        #endregion
+
+
+        #region Order
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TabControl tc = sender as TabControl;
+            if (tc.SelectedIndex == 0)
+            {
+                PART_Order.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                PART_Order.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void PART_CbOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (lbWishlist?.ItemsSource != null)
+                {
+                    List<Wishlist> wishlists = (List<Wishlist>)lbWishlist.ItemsSource;
+                    lbWishlist.ItemsSource = null;
+
+                    if (((ComboBoxItem)PART_CbOrder.SelectedItem).Tag.ToString() == "0")
+                    {
+                        switch (((ComboBoxItem)PART_CbOrderType.SelectedItem).Tag.ToString())
+                        {
+                            case "0":
+                                wishlists = wishlists.OrderBy(x => x.Name).ToList();
+                                break;
+
+                            case "1":
+                                wishlists = wishlists.OrderBy(x => x.ItadBestPrice.PriceCut).ToList();
+                                break;
+
+                            case "2":
+                                wishlists = wishlists.OrderBy(x => x.ItadBestPrice.PriceNew).ToList();
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (((ComboBoxItem)PART_CbOrderType.SelectedItem).Tag.ToString())
+                        {
+                            case "0":
+                                wishlists = wishlists.OrderByDescending(x => x.Name).ToList();
+                                break;
+
+                            case "1":
+                                wishlists = wishlists.OrderByDescending(x => x.ItadBestPrice.PriceCut).ToList();
+                                break;
+
+                            case "2":
+                                wishlists = wishlists.OrderByDescending(x => x.ItadBestPrice.PriceNew).ToList();
+                                break;
+                        }
+                    }
+
+                    lbWishlist.ItemsSource = wishlists;
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, false);
+            }
         }
         #endregion
     }
