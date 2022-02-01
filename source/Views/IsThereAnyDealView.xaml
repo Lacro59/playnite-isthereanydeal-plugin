@@ -43,7 +43,7 @@
                                         <ColumnDefinition Width="auto" />
                                         <ColumnDefinition Width="10" />
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="100" />
                                         <ColumnDefinition Width="auto" />
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
@@ -113,7 +113,7 @@
                                         <Label Grid.Column="4" Name="lPrice" Content="100€" Margin="5,0,0,0" HorizontalAlignment="Right" />
                                     </Grid>
 
-                                    <Label Grid.Column="18" FontFamily="{DynamicResource CommonFont}" Content="" Name="ItadInfo">
+                                    <Label Grid.Column="18" FontFamily="{DynamicResource CommonFont}" Content="" Name="ItadInfo" FontSize="22">
                                         <Label.ToolTip>
                                             <ToolTip>
                                                 <ListBox Name="tpListBox" BorderThickness="0">
