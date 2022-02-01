@@ -35,5 +35,11 @@ namespace IsThereAnyDeal.Models
         public Region us { get; set; }
         public Region br { get; set; }
         public Region au { get; set; }
+        public Region ca { get; set; }
+        public Region au2 { get; set; }
+        public Region br2 { get; set; }
+        public Region ru { get; set; }
+        public Region tr { get; set; }
+        public Region cn { get; set; }
     }
 }
