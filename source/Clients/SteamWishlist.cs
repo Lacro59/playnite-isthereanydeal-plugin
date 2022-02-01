@@ -46,14 +46,17 @@ namespace IsThereAnyDeal.Services
         private static string SteamUser { get; set; } = string.Empty;
 
 
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
             List<Wishlist> ResultLoad = LoadWishlists("Steam", PluginUserDataPath);
             if (ResultLoad != null && CacheOnly)
             {
-                ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                if (ForcePrice)
+                {
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                }
                 SaveWishlist("Steam", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
             }
@@ -87,7 +90,7 @@ namespace IsThereAnyDeal.Services
                 ));
 
                 ResultLoad = LoadWishlists("Steam", PluginUserDataPath, true);
-                if (ResultLoad != null && CacheOnly)
+                if (ResultLoad != null)
                 {
                     ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                     SaveWishlist("Steam", PluginUserDataPath, ResultLoad);
@@ -194,9 +197,8 @@ namespace IsThereAnyDeal.Services
                     catch (Exception ex)
                     {
                         Common.LogError(ex, false, "Error in parse Steam wishlist", true, "IsThereAnyDeal");
-
                         ResultLoad = LoadWishlists("Steam", PluginUserDataPath, true);
-                        if (ResultLoad != null && CacheOnly)
+                        if (ResultLoad != null)
                         {
                             ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                             SaveWishlist("Steam", PluginUserDataPath, ResultLoad);

@@ -14,14 +14,17 @@ namespace IsThereAnyDeal.Clients
 {
     class XboxWishlist : GenericWishlist
     {
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
             List<Wishlist> ResultLoad = LoadWishlists("Xbox", PluginUserDataPath);
             if (ResultLoad != null && CacheOnly)
             {
-                ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                if (ForcePrice)
+                {
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                }
                 SaveWishlist("Xbox", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
             }
@@ -43,7 +46,7 @@ namespace IsThereAnyDeal.Clients
                 ));
 
                 ResultLoad = LoadWishlists("Xbox", PluginUserDataPath, true);
-                if (ResultLoad != null && CacheOnly)
+                if (ResultLoad != null)
                 {
                     ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                     SaveWishlist("Xbox", PluginUserDataPath, ResultLoad);
@@ -107,7 +110,6 @@ namespace IsThereAnyDeal.Clients
                 catch (Exception ex)
                 {
                     Common.LogError(ex, true, "Error in parse Xbox wishlist");
-
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Xbox-Error",
                         "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Xbox"),
@@ -115,7 +117,7 @@ namespace IsThereAnyDeal.Clients
                     ));
 
                     ResultLoad = LoadWishlists("Xbox", PluginUserDataPath, true);
-                    if (ResultLoad != null && CacheOnly)
+                    if (ResultLoad != null)
                     {
                         ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                         SaveWishlist("Xbox", PluginUserDataPath, ResultLoad);

@@ -38,14 +38,17 @@ namespace IsThereAnyDeal.Services
 
         }
 
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
             List<Wishlist> ResultLoad = LoadWishlists("Gog", PluginUserDataPath);
             if (ResultLoad != null && CacheOnly)
             {
-                ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                if (ForcePrice)
+                {
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                }
                 SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
             }
@@ -138,7 +141,6 @@ namespace IsThereAnyDeal.Services
                             catch (Exception ex)
                             {
                                 Common.LogError(ex, false, $"Error in parse GOG wishlist", true, "IsThereAnyDeal");
-
                                 if (ResultLoad != null)
                                 {
                                     ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);

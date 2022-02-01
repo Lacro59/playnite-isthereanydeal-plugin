@@ -39,14 +39,17 @@ namespace IsThereAnyDeal.Clients
         private string urlWishlistDelete = "https://api2.origin.com/gifting/users/{0}/wishlist?offerId={1}";
 
 
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
             List<Wishlist> ResultLoad = LoadWishlists("Origin", PluginUserDataPath);
             if (ResultLoad != null && CacheOnly)
             {
-                ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                if (ForcePrice)
+                {
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                }
                 SaveWishlist("Origin", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
             }

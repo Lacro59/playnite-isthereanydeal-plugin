@@ -13,6 +13,8 @@ using System.Windows.Controls;
 using IsThereAnyDeal.Clients;
 using CommonPluginsShared.Extensions;
 using System.Windows.Controls.Primitives;
+using CommonPluginsShared.Converters;
+using System.Globalization;
 
 namespace IsThereAnyDeal.Views
 {
@@ -28,7 +30,6 @@ namespace IsThereAnyDeal.Views
         private readonly IsThereAnyDeal _plugin;
 
         public string CurrencySign { get; set; }
-        public string _PlainSelected { get; set; }
 
         private List<Wishlist> lbWishlistItems = new List<Wishlist>();
         private List<string> SearchStores = new List<string>();
@@ -42,14 +43,13 @@ namespace IsThereAnyDeal.Views
         public IsThereAnyDealView(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
             InitializeComponent();
-
-            _PlainSelected = PlainSelected;
+            
             _settings = settings;
             _plugin = plugin;
             _PlayniteApi = PlayniteApi;
 
             // Load data
-            RefreshData();
+            RefreshData(PlainSelected);
 
             GetListGiveaways(PlayniteApi, PluginUserDataPath);
 
@@ -62,10 +62,12 @@ namespace IsThereAnyDeal.Views
             DataContext = this;
         }
 
-        private void RefreshData()
+        private void RefreshData(string PlainSelected, bool CachOnly = true, bool ForcePrice = false)
         {
+            DataLoadWishlist.Visibility = Visibility.Visible;
+            lbWishlist.ItemsSource = null;
             dpData.IsEnabled = false;
-            var task = Task.Run(() => LoadData(_PlayniteApi, _plugin.GetPluginUserDataPath(), _settings, _PlainSelected))
+            var task = Task.Run(() => LoadData(_PlayniteApi, _plugin.GetPluginUserDataPath(), _settings, PlainSelected, CachOnly, ForcePrice))
                 .ContinueWith(antecedent =>
                 {
                     this.Dispatcher?.Invoke(new Action(() => {
@@ -75,12 +77,12 @@ namespace IsThereAnyDeal.Views
                             GetListGame();
                             SetInfos();
 
-                            if (!_PlainSelected.IsNullOrEmpty())
+                            if (!PlainSelected.IsNullOrEmpty())
                             {
                                 int index = 0;
                                 foreach (Wishlist wishlist in lbWishlist.ItemsSource)
                                 {
-                                    if (wishlist.Plain.IsEqual(_PlainSelected))
+                                    if (wishlist.Plain.IsEqual(PlainSelected))
                                     {
                                         index = ((List<Wishlist>)lbWishlist.ItemsSource).FindIndex(x => x == wishlist);
                                         lbWishlist.SelectedIndex = index;
@@ -89,6 +91,7 @@ namespace IsThereAnyDeal.Views
                                     }
                                 }
                             }
+                            PART_DateData.Content = new LocalDateTimeConverter().Convert(_settings.LastRefresh, null, null, CultureInfo.CurrentCulture);
                             DataLoadWishlist.Visibility = Visibility.Collapsed;
                             dpData.IsEnabled = true;
                         }
@@ -138,9 +141,9 @@ namespace IsThereAnyDeal.Views
         }
 
 
-        private async Task<List<Wishlist>> LoadData (IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
+        private async Task<List<Wishlist>> LoadData (IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "", bool CachOnly = true, bool ForcePrice = false)
         {
-            List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(_plugin, PlayniteApi, settings, PluginUserDataPath, true);
+            List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(_plugin, settings, PluginUserDataPath, CachOnly, ForcePrice);
             return ListWishlist;
         }
 
@@ -339,7 +342,7 @@ namespace IsThereAnyDeal.Views
                         if (IsDeleted)
                         {
                             Common.LogDebug(true, $"IsDeleted");
-                            RefreshData();
+                            RefreshData(string.Empty);
                         }
                         else
                         {
@@ -609,6 +612,17 @@ namespace IsThereAnyDeal.Views
             }
         }
         #endregion
+
+
+        private void ButtonData_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshData(string.Empty, false);
+        }
+
+        private void ButtonPrice_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshData(string.Empty, true, true);
+        }
     }
 
 

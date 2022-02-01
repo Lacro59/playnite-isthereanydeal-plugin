@@ -11,14 +11,17 @@ namespace IsThereAnyDeal.Services
 {
     class HumbleBundleWishlist : GenericWishlist
     {
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string HumbleBundleId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string HumbleBundleId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
             List<Wishlist> ResultLoad = LoadWishlists("HumbleBundle", PluginUserDataPath);
             if (ResultLoad != null && CacheOnly)
             {
-                ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                if (ForcePrice)
+                {
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                }
                 SaveWishlist("HumbleBundle", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
             }
@@ -102,7 +105,7 @@ namespace IsThereAnyDeal.Services
                     Common.LogError(ex, false, "Error in download HumbleBundle wishlist", true, "IsThereAnyDeal");
 
                     ResultLoad = LoadWishlists("Humble", PluginUserDataPath, true);
-                    if (ResultLoad != null && CacheOnly)
+                    if (ResultLoad != null)
                     {
                         ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                         SaveWishlist("Humble", PluginUserDataPath, ResultLoad);

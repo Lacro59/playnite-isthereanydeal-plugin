@@ -30,7 +30,7 @@ namespace IsThereAnyDeal.Services
 
         public List<CountData> countDatas = new List<CountData>();
 
-        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false)
+        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false, bool ForcePrice = false)
         {
             Guid SteamId = new Guid();
             Guid GogId = new Guid();
@@ -39,7 +39,7 @@ namespace IsThereAnyDeal.Services
             Guid XboxId = new Guid();
             Guid OriginId = new Guid();
 
-            foreach (var Source in PlayniteApi.Database.Sources)
+            foreach (var Source in API.Instance.Database.Sources)
             {
                 if (Source.Equals("steam"))
                 {
@@ -81,7 +81,7 @@ namespace IsThereAnyDeal.Services
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("SteamLibrary"))
                     {
                         SteamWishlist steamWishlist = new SteamWishlist();
-                        ListWishlistSteam = steamWishlist.GetWishlist(PlayniteApi, SteamId, PluginUserDataPath, settings, CacheOnly);
+                        ListWishlistSteam = steamWishlist.GetWishlist(API.Instance, SteamId, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlistSteam == null)
                         {
                             ListWishlistSteam = new List<Wishlist>();
@@ -95,7 +95,7 @@ namespace IsThereAnyDeal.Services
                     else
                     {
                         logger.Warn("Steam is enable then disabled");
-                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                        API.Instance.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-Steam-disabled",
                             "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorSteam"),
                             NotificationType.Error,
@@ -116,8 +116,8 @@ namespace IsThereAnyDeal.Services
                 {
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("GogLibrary"))
                     {
-                        GogWishlist gogWishlist = new GogWishlist(PlayniteApi);
-                        ListWishlistGog = gogWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
+                        GogWishlist gogWishlist = new GogWishlist(API.Instance);
+                        ListWishlistGog = gogWishlist.GetWishlist(API.Instance, GogId, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlistGog == null)
                         {
                             ListWishlistGog = new List<Wishlist>();
@@ -131,7 +131,7 @@ namespace IsThereAnyDeal.Services
                     else
                     {
                         logger.Warn("GOG is enable then disabled");
-                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                        API.Instance.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-GOG-disabled",
                             "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorGog"),
                             NotificationType.Error,
@@ -153,7 +153,7 @@ namespace IsThereAnyDeal.Services
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("EpicLibrary"))
                     {
                         EpicWishlist epicWishlist = new EpicWishlist();
-                        ListWishlistEpic = epicWishlist.GetWishlist(PlayniteApi, GogId, PluginUserDataPath, settings, CacheOnly);
+                        ListWishlistEpic = epicWishlist.GetWishlist(API.Instance, GogId, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlistEpic == null)
                         {
                             ListWishlistEpic = new List<Wishlist>();
@@ -167,7 +167,7 @@ namespace IsThereAnyDeal.Services
                     else
                     {
                         logger.Warn("Epic Game Store is enable then disabled");
-                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                        API.Instance.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-EpicGameStore-disabled",
                             "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorEpic"),
                             NotificationType.Error,
@@ -189,7 +189,7 @@ namespace IsThereAnyDeal.Services
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("HumbleLibrary"))
                     {
                         HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
-                        ListWishlistHumble = humbleBundleWishlist.GetWishlist(PlayniteApi, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly);
+                        ListWishlistHumble = humbleBundleWishlist.GetWishlist(API.Instance, HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlistHumble == null)
                         {
                             ListWishlistHumble = new List<Wishlist>();
@@ -203,7 +203,7 @@ namespace IsThereAnyDeal.Services
                     else
                     {
                         logger.Warn("Humble Bundle is enable then disabled");
-                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                        API.Instance.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-HumbleBundle-disabled",
                             "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorHumble"),
                             NotificationType.Error,
@@ -225,7 +225,7 @@ namespace IsThereAnyDeal.Services
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("XboxLibrary"))
                     {
                         XboxWishlist xboxWishlist = new XboxWishlist();
-                        ListWishlistXbox = xboxWishlist.GetWishlist(PlayniteApi, XboxId, PluginUserDataPath, settings, CacheOnly);
+                        ListWishlistXbox = xboxWishlist.GetWishlist(API.Instance, XboxId, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlistXbox == null)
                         {
                             ListWishlistXbox = new List<Wishlist>();
@@ -239,7 +239,7 @@ namespace IsThereAnyDeal.Services
                     else
                     {
                         logger.Warn("Xbox is enable then disabled");
-                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                        API.Instance.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-Xbox-disabled",
                             "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorXbox"),
                             NotificationType.Error,
@@ -261,7 +261,7 @@ namespace IsThereAnyDeal.Services
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("OriginLibrary"))
                     {
                         OriginWishlist originWishlist = new OriginWishlist();
-                        ListWishlisOrigin = originWishlist.GetWishlist(PlayniteApi, OriginId, PluginUserDataPath, settings, CacheOnly);
+                        ListWishlisOrigin = originWishlist.GetWishlist(API.Instance, OriginId, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlisOrigin == null)
                         {
                             ListWishlisOrigin = new List<Wishlist>();
@@ -275,7 +275,7 @@ namespace IsThereAnyDeal.Services
                     else
                     {
                         logger.Warn("Origin is enable then disabled");
-                        PlayniteApi.Notifications.Add(new NotificationMessage(
+                        API.Instance.Notifications.Add(new NotificationMessage(
                             $"IsThereAnyDeal-Origin-disabled",
                             "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorOrigin"),
                             NotificationType.Error,
@@ -328,6 +328,14 @@ namespace IsThereAnyDeal.Services
                     }
                 }
             }
+
+
+            if (!CacheOnly || ForcePrice)
+            {
+                settings.LastRefresh = DateTime.Now.ToUniversalTime();
+                plugin.SavePluginSettings(settings);
+            }
+
 
             return ListWishlist.OrderBy(wishlist => wishlist.Name).ToList();
         }
@@ -813,7 +821,7 @@ namespace IsThereAnyDeal.Services
 
                 if (settings.EnableNotification)
                 {
-                    List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, PlayniteApi, settings, plugin.GetPluginUserDataPath(), true);
+                    List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, settings, plugin.GetPluginUserDataPath(), true, true);
                     foreach (Wishlist wishlist in ListWishlist)
                     {
                         if (wishlist.GetNotification(settings.NotificationCriterias))
@@ -887,7 +895,7 @@ namespace IsThereAnyDeal.Services
 
                 try
                 {
-                    isThereAnyDealApi.LoadWishlist(plugin, PlayniteApi, settings, plugin.GetPluginUserDataPath());
+                    isThereAnyDealApi.LoadWishlist(plugin, settings, plugin.GetPluginUserDataPath());
                 }
                 catch (Exception ex)
                 {

@@ -1,6 +1,7 @@
 ﻿using IsThereAnyDeal.Models;
 using Playnite.SDK;
 using Playnite.SDK.Data;
+using System;
 using System.Collections.Generic;
 
 namespace IsThereAnyDeal
@@ -11,6 +12,8 @@ namespace IsThereAnyDeal
         public bool MenuInExtensions { get; set; } = true;
         public bool EnableIntegrationButtonHeader { get; set; } = false;
         public bool EnableIntegrationButtonSide { get; set; } = true;
+
+        public DateTime? LastRefresh { get; set; }
 
         public List<WishlistIgnore> wishlistIgnores { get; set; } = new List<WishlistIgnore>();
 

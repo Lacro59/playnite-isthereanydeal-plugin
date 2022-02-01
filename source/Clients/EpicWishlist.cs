@@ -80,14 +80,17 @@ namespace IsThereAnyDeal.Services
         }
 
 
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false)
+        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
             List<Wishlist> ResultLoad = LoadWishlists("Epic", PluginUserDataPath);
             if (ResultLoad != null && CacheOnly)
             {
-                ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                if (ForcePrice)
+                {
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                }
                 SaveWishlist("Epic", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
             }
@@ -98,7 +101,6 @@ namespace IsThereAnyDeal.Services
             if (!EpicAPI.GetIsUserLoggedIn())
             {
                 logger.Warn($"Epic user is not authenticated");
-
                 PlayniteApi.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-epic-noauthenticate",
                     $"IsThereAnyDeal\r\nEpic - {resources.GetString("LOCLoginRequired")}",
@@ -112,7 +114,6 @@ namespace IsThereAnyDeal.Services
             if (tokens.access_token.IsNullOrEmpty())
             {
                 logger.Warn($"Epic user is not authenticated");
-
                 PlayniteApi.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-epic-noauthenticate",
                     $"IsThereAnyDeal\r\nEpic - {resources.GetString("LOCLoginRequired")}",
@@ -199,7 +200,7 @@ namespace IsThereAnyDeal.Services
                     ));
 
                     ResultLoad = LoadWishlists("Epic", PluginUserDataPath, true);
-                    if (ResultLoad != null && CacheOnly)
+                    if (ResultLoad != null)
                     {
                         ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
                         SaveWishlist("Epic", PluginUserDataPath, ResultLoad);
