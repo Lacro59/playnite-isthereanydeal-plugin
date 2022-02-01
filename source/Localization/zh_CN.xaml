@@ -39,6 +39,8 @@
 
     <!-- IsThereAnyDealView -->
 
+    <sys:String x:Key="LOCITADRefreshPrice">刷新价格</sys:String>
+    
     <sys:String x:Key="LOCITADOrderPriceCut">价格折扣</sys:String>
     <sys:String x:Key="LOCITADOrderPrice">价格</sys:String>
     
