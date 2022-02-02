@@ -614,6 +614,7 @@ namespace IsThereAnyDeal.Views
         #endregion
 
 
+        #region Data refresh
         private void ButtonData_Click(object sender, RoutedEventArgs e)
         {
             RefreshData(string.Empty, false);
@@ -623,6 +624,7 @@ namespace IsThereAnyDeal.Views
         {
             RefreshData(string.Empty, true, true);
         }
+        #endregion
     }
 
 
