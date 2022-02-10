@@ -7,89 +7,89 @@
 
     <!-- IsThereAnyDealSettingsView -->
 
-    <sys:String x:Key="LOCItadExclusionList">Exclusion list</sys:String>
+    <sys:String x:Key="LOCItadExclusionList">قائمة الاستبعاد</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist">Wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableSteam">Enable Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableGog">Enable GOG wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableEpic">Enable Epic Games Store wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableHumble">Enable Humble wishlist</sys:String>
+    <sys:String x:Key="LOCItadSettingWishlist">قائمة الرغبات</sys:String>
+    <sys:String x:Key="LOCItadEnableSteam">تمكين قائمة رغبات Steam</sys:String>
+    <sys:String x:Key="LOCItadEnableGog">تمكين قائمة رغبات GOG</sys:String>
+    <sys:String x:Key="LOCItadEnableEpic">تمكين قائمة رغبات Epic Games</sys:String>
+    <sys:String x:Key="LOCItadEnableHumble">تمكين قائمة رغبات Humble</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
-    <sys:String x:Key="LOCItadEnableXbox">Enable Xbox wishlist</sys:String>
-    <sys:String x:Key="LOCItadXboxWishlistLink">Wishlist link</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Enable Origin wishlist</sys:String>
+    <sys:String x:Key="LOCItadEnableXbox">تمكين قائمة رغبات Xbox</sys:String>
+    <sys:String x:Key="LOCItadXboxWishlistLink">رابط قائمة الرغبات</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">تمكين قائمة رغبات Origin</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
-    <sys:String x:Key="LOCItadRegion">Region</sys:String>
-    <sys:String x:Key="LOCItadCountry">Country</sys:String>
-    <sys:String x:Key="LOCItadStores">Store(s)</sys:String>
+    <sys:String x:Key="LOCItadRegion">المنطقة</sys:String>
+    <sys:String x:Key="LOCItadCountry">الدولة</sys:String>
+    <sys:String x:Key="LOCItadStores">المتاجر</sys:String>
 
-    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Enable notifications of giveaways</sys:String>
-    <sys:String x:Key="LOCItadEnableNotification">Enable notifications</sys:String>
+    <sys:String x:Key="LOCItadEnableNotificationGiveaways">تفعيل اإشعارات الهدايا</sys:String>
+    <sys:String x:Key="LOCItadEnableNotification">تفعيل اإشعارات</sys:String>
     <sys:String x:Key="LOCItadLimitNotification">Price cut</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPrice">السعر أقل من</sys:String>
 
-    <sys:String x:Key="LOCItadSettingPrice">Define limit to price slider</sys:String>
-    <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
-    <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
+    <sys:String x:Key="LOCItadSettingPrice">حدود شريط تمرير السعر</sys:String>
+    <sys:String x:Key="LOCItadMinimum">الحد الادنى</sys:String>
+    <sys:String x:Key="LOCItadMaximum">الحد الاقصى</sys:String>
 
-    <sys:String x:Key="LOCItadSettingsNotifications">Notifications</sys:String>
+    <sys:String x:Key="LOCItadSettingsNotifications">الإشعارات</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationAt">Price cut at</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPriceAt">Price inferior at</sys:String>
 
     <!-- IsThereAnyDealView -->
 
-    <sys:String x:Key="LOCITADRefreshPrice">Refresh price</sys:String>
+    <sys:String x:Key="LOCITADRefreshPrice">تحديث السعر</sys:String>
     
     <sys:String x:Key="LOCITADOrderPriceCut">Price cut</sys:String>
-    <sys:String x:Key="LOCITADOrderPrice">Price</sys:String>
+    <sys:String x:Key="LOCITADOrderPrice">السعر</sys:String>
     
-    <sys:String x:Key="LOCITADFilterSource">Filter by store(s)</sys:String>
+    <sys:String x:Key="LOCITADFilterSource">تصفية حسب المتجر</sys:String>
     <sys:String x:Key="LOCITADPercentage">Minimum discount percentage</sys:String>
     <sys:String x:Key="LOCITADPrice">Price inferior</sys:String>
 
     <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
-    <sys:String x:Key="LOCItadCurrentStore">Current store wishlist</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">قائمة رغبات المتجر الحالي</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy best</sys:String>
-    <sys:String x:Key="LOCItadStore">Store</sys:String>
-    <sys:String x:Key="LOCItadNoData">No data for selected store in settings</sys:String>
-    <sys:String x:Key="LOCItadInLibrary">In library</sys:String>
+    <sys:String x:Key="LOCItadStore">المتجر</sys:String>
+    <sys:String x:Key="LOCItadNoData">لا توجد بيانات للمتجر المحدد في الإعدادات</sys:String>
+    <sys:String x:Key="LOCItadInLibrary">في المكتبة</sys:String>
     <sys:String x:Key="LOCItadNotActive">Not active on IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadNotFind">Not found on IsThereAnyDeal</sys:String>
 
-    <sys:String x:Key="LOCItadDeleteOnStoreWishList">Delete {0} on {1}?</sys:String>
-    <sys:String x:Key="LOCItadHideOnStoreWishList">Exclude {0} on {1}?</sys:String>
+    <sys:String x:Key="LOCItadDeleteOnStoreWishList">حذف {0} في {1}؟</sys:String>
+    <sys:String x:Key="LOCItadHideOnStoreWishList">استبعاد {0} في {1}؟</sys:String>
 
-    <sys:String x:Key="LOCItadWhishListOptions">Wishlist options</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptions">خيارات قائمة الرغبات</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Include games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Include games without IsThereAnyDeal data</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Only games in library</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">فقط الألعاب في المكتبة</sys:String>
 
-    <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>
-    <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlist">استيراد قائمة رغبات Steam</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">رابط قائمة رغبات Steam</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">تم الاستيراد بنجاح</sys:String>
     <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
 
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal data</sys:String>
-    <sys:String x:Key="LOCItadCheckNotifications">Check notifications</sys:String>
+    <sys:String x:Key="LOCItadCheckNotifications">فحص الإشعارات</sys:String>
     <sys:String x:Key="LOCItadUpdateDatas">Update IsThereAnyDeal data</sys:String>
     <sys:String x:Key="LOCITADDataDownloading">Downloading IsThereAnyDeal data...</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Giveaway notification for {0} ({1} game(s))</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">Price notification for {0} - {1}{2} ({3}%)</sys:String>
 
-    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">An error occurred while retrieving the wishlist from {0}.
-Try login in with your account.</sys:String>
+    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">حدث خطأ أثناء استرداد قائمة الأمنيات من {0}.
+جرب تسجيل الدخول مع حسابك.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Humble Bundle is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam has not been correctly configured in settings</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam wishlist is private. You must use authenticate buton in Steam Library plugin</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">قائمة رغبات Steam مخفية. يجب عليك استخدام زر المصادقة في إعدادات إضافة مكتبة Steam</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">There is no Xbox wishlist link.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">لا يوجد رابط قائمة رغبات Xbox.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Origin is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
 
 </ResourceDictionary>
