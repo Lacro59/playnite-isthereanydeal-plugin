@@ -39,7 +39,7 @@
 
     <!-- IsThereAnyDealView -->
 
-    <sys:String x:Key="LOCITADRefreshPrice">Refresh price</sys:String>
+    <sys:String x:Key="LOCITADRefreshPrice">Actualizar precio</sys:String>
     
     <sys:String x:Key="LOCITADOrderPriceCut">Price cut</sys:String>
     <sys:String x:Key="LOCITADOrderPrice">Price</sys:String>

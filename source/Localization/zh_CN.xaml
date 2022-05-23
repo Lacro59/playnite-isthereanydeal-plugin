@@ -11,7 +11,7 @@
 
     <sys:String x:Key="LOCItadSettingWishlist">愿望单</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">启用 Steam 愿望单</sys:String>
-    <sys:String x:Key="LOCItadEnableGog">启用 Steam 愿望单</sys:String>
+    <sys:String x:Key="LOCItadEnableGog">启用 GOG 愿望单</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">启用 Epic 游戏商店愿望单</sys:String>
     <sys:String x:Key="LOCItadEnableHumble">启用 Humble 愿望单</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Humble ID</sys:String>
@@ -52,17 +52,17 @@
     <sys:String x:Key="LOCItadCurrentStore">当前商店愿望单</sys:String>
     <sys:String x:Key="LOCItadBuy">购买最佳</sys:String>
     <sys:String x:Key="LOCItadStore">商店</sys:String>
-    <sys:String x:Key="LOCItadNoData">设置中没有所选商店的数据</sys:String>
+    <sys:String x:Key="LOCItadNoData">没有设置中所选商店的数据</sys:String>
     <sys:String x:Key="LOCItadInLibrary">在库中</sys:String>
-    <sys:String x:Key="LOCItadNotActive">在 IsThereAnyDeal 上未激活</sys:String>
-    <sys:String x:Key="LOCItadNotFind">在 IsThereAnyDeal 上未找到</sys:String>
+    <sys:String x:Key="LOCItadNotActive">在有折扣吗上处于非活动状态</sys:String>
+    <sys:String x:Key="LOCItadNotFind">在有折扣吗上未找到</sys:String>
 
     <sys:String x:Key="LOCItadDeleteOnStoreWishList">删除 {1} 上的 {0} 吗？</sys:String>
     <sys:String x:Key="LOCItadHideOnStoreWishList">排除 {1} 上的 {0} 吗？</sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">愿望单选项</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">包含库中的游戏</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">包括没有 IsThereAnyDeal 数据的游戏</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">包含没有有折扣吗数据的游戏</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">仅库中的游戏</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">导入 Steam 愿望单</sys:String>
@@ -72,10 +72,10 @@
 
     <!-- IsThereAnyDeal -->
 
-    <sys:String x:Key="LOCItadPluginView">查看 IsThereAnyDeal 数据</sys:String>
+    <sys:String x:Key="LOCItadPluginView">查看有折扣吗数据</sys:String>
     <sys:String x:Key="LOCItadCheckNotifications">检查通知</sys:String>
-    <sys:String x:Key="LOCItadUpdateDatas">更新 IsThereAnyDeal 数据</sys:String>
-    <sys:String x:Key="LOCITADDataDownloading">正在下载 IsThereAnyDeal 数据...</sys:String>
+    <sys:String x:Key="LOCItadUpdateDatas">更新有折扣吗数据</sys:String>
+    <sys:String x:Key="LOCITADDataDownloading">正在下载有折扣吗数据...</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">{0}（{1} 个游戏）的赠送通知</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">{0} - {1}{2} 的价格通知（{3}%）</sys:String>
