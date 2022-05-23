@@ -10,10 +10,10 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using CommonPlayniteShared.PluginLibrary.SteamLibrary.SteamShared;
-using CommonPluginsStores;
 using AngleSharp.Parser.Html;
 using AngleSharp.Dom.Html;
 using System.Text.RegularExpressions;
+using CommonPluginsStores.Steam;
 
 namespace IsThereAnyDeal.Services
 {
@@ -26,15 +26,12 @@ namespace IsThereAnyDeal.Services
             {
                 if (_steamApi == null)
                 {
-                    _steamApi = new SteamApi();
+                    _steamApi = new SteamApi("IsThereAnyDeal");
                 }
                 return _steamApi;
             }
 
-            set
-            {
-                _steamApi = value;
-            }
+            set => _steamApi = value;
         }
 
         private const string UrlProfil = @"https://steamcommunity.com/my/profile";
