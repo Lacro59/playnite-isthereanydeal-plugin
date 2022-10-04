@@ -7,89 +7,89 @@
 
     <!-- IsThereAnyDealSettingsView -->
 
-    <sys:String x:Key="LOCItadExclusionList">Exclusion list</sys:String>
+    <sys:String x:Key="LOCItadExclusionList">Eksklusjonsliste</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist">Wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableSteam">Enable Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableGog">Enable GOG wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableEpic">Enable Epic Games Store wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableHumble">Enable Humble wishlist</sys:String>
+    <sys:String x:Key="LOCItadSettingWishlist">Ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadEnableSteam">Aktiver Steam-ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadEnableGog">Aktiver GOG-ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadEnableEpic">Aktiver Epic Games Store-ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadEnableHumble">Aktiver Humble-ønskeliste</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
-    <sys:String x:Key="LOCItadEnableXbox">Enable Xbox wishlist</sys:String>
-    <sys:String x:Key="LOCItadXboxWishlistLink">Wishlist link</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Enable Origin wishlist</sys:String>
+    <sys:String x:Key="LOCItadEnableXbox">Aktiver Xbox-ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadXboxWishlistLink">Lenke til ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">Aktiver Origin-ønskeliste</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">Region</sys:String>
-    <sys:String x:Key="LOCItadCountry">Country</sys:String>
-    <sys:String x:Key="LOCItadStores">Store(s)</sys:String>
+    <sys:String x:Key="LOCItadCountry">Land</sys:String>
+    <sys:String x:Key="LOCItadStores">Butikk(er)</sys:String>
 
-    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Enable notifications of giveaways</sys:String>
-    <sys:String x:Key="LOCItadEnableNotification">Enable notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotification">Price cut</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Aktiver varsler for gratis spill</sys:String>
+    <sys:String x:Key="LOCItadEnableNotification">Aktiver varsler</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Priskutt</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPrice">Lavere pris enn</sys:String>
 
-    <sys:String x:Key="LOCItadSettingPrice">Define limit to price slider</sys:String>
+    <sys:String x:Key="LOCItadSettingPrice">Definer grense for pris</sys:String>
     <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
-    <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
+    <sys:String x:Key="LOCItadMaximum">Maksimalt</sys:String>
 
-    <sys:String x:Key="LOCItadSettingsNotifications">Notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationAt">Price cut at</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Price inferior at</sys:String>
+    <sys:String x:Key="LOCItadSettingsNotifications">Varsler</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationAt">Priskutt på</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Pris lavere enn</sys:String>
 
     <!-- IsThereAnyDealView -->
 
-    <sys:String x:Key="LOCITADRefreshPrice">Refresh price</sys:String>
+    <sys:String x:Key="LOCITADRefreshPrice">Oppdater pris</sys:String>
     
-    <sys:String x:Key="LOCITADOrderPriceCut">Price cut</sys:String>
-    <sys:String x:Key="LOCITADOrderPrice">Price</sys:String>
+    <sys:String x:Key="LOCITADOrderPriceCut">Priskutt</sys:String>
+    <sys:String x:Key="LOCITADOrderPrice">Pris</sys:String>
     
-    <sys:String x:Key="LOCITADFilterSource">Filter by store(s)</sys:String>
-    <sys:String x:Key="LOCITADPercentage">Minimum discount percentage</sys:String>
-    <sys:String x:Key="LOCITADPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCITADFilterSource">Filtrer etter butikk(er)</sys:String>
+    <sys:String x:Key="LOCITADPercentage">Minimum rabattprosent</sys:String>
+    <sys:String x:Key="LOCITADPrice">Lavere pris enn</sys:String>
 
-    <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
-    <sys:String x:Key="LOCItadCurrentStore">Current store wishlist</sys:String>
-    <sys:String x:Key="LOCItadBuy">Buy best</sys:String>
-    <sys:String x:Key="LOCItadStore">Store</sys:String>
-    <sys:String x:Key="LOCItadNoData">No data for selected store in settings</sys:String>
-    <sys:String x:Key="LOCItadInLibrary">In library</sys:String>
-    <sys:String x:Key="LOCItadNotActive">Not active on IsThereAnyDeal</sys:String>
-    <sys:String x:Key="LOCItadNotFind">Not found on IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCItadCurrentBest">Nåværende beste</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">Gjeldende butikks ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadBuy">Kjøp beste</sys:String>
+    <sys:String x:Key="LOCItadStore">Butikk</sys:String>
+    <sys:String x:Key="LOCItadNoData">Ingen data for valgt butikk i innstillingene</sys:String>
+    <sys:String x:Key="LOCItadInLibrary">I biblioteket</sys:String>
+    <sys:String x:Key="LOCItadNotActive">Ikke aktiv på IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCItadNotFind">Ikke funnet på IsThereAnyDeal</sys:String>
 
-    <sys:String x:Key="LOCItadDeleteOnStoreWishList">Delete {0} on {1}?</sys:String>
-    <sys:String x:Key="LOCItadHideOnStoreWishList">Exclude {0} on {1}?</sys:String>
+    <sys:String x:Key="LOCItadDeleteOnStoreWishList">Slette {0} på {1}?</sys:String>
+    <sys:String x:Key="LOCItadHideOnStoreWishList">Ekskluder {0} på {1}?</sys:String>
 
-    <sys:String x:Key="LOCItadWhishListOptions">Wishlist options</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Include games in library</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Include games without IsThereAnyDeal data</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Only games in library</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptions">Alternativer for ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Inkluder spill i biblioteket</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Inkluder spill uten IsThereAnyDeal-data</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Bare spill i biblioteket</sys:String>
 
-    <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>
-    <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
-    <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlist">Importer Steam-ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">Link til Steam-ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">Importering var vellykket</sys:String>
+    <sys:String x:Key="LOCItadImportError">Umulig å importere ønskeliste-fil</sys:String>
 
     <!-- IsThereAnyDeal -->
 
-    <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal data</sys:String>
-    <sys:String x:Key="LOCItadCheckNotifications">Check notifications</sys:String>
-    <sys:String x:Key="LOCItadUpdateDatas">Update IsThereAnyDeal data</sys:String>
-    <sys:String x:Key="LOCITADDataDownloading">Downloading IsThereAnyDeal data...</sys:String>
+    <sys:String x:Key="LOCItadPluginView">Vis IsThereAnyDeal-data</sys:String>
+    <sys:String x:Key="LOCItadCheckNotifications">Sjekk varslinger</sys:String>
+    <sys:String x:Key="LOCItadUpdateDatas">Oppdater IsThereAnyDeal-data</sys:String>
+    <sys:String x:Key="LOCITADDataDownloading">Laster ned IsThereAnyDeal-data...</sys:String>
 
-    <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Giveaway notification for {0} ({1} game(s))</sys:String>
-    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Price notification for {0} - {1}{2} ({3}%)</sys:String>
+    <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Varsel om gratis spill: {0} ({1} spill)</sys:String>
+    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Prisvarsling for {0} - {1}{2} ({3}%)</sys:String>
 
-    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">An error occurred while retrieving the wishlist from {0}.
-Try login in with your account.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Humble Bundle is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam has not been correctly configured in settings</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam wishlist is private. You must use authenticate buton in Steam Library plugin</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">There is no Xbox wishlist link.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Origin is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Det oppstod en feil under henting av ønskelisten fra {0}.
+Prøv å logge inn med kontoen din.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Humble Bundle er aktivert i IsThereAnyDeal-utvidelsen, men biblioteksutvidelsen er skrudd av i Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic er aktivert i IsThereAnyDeal-utvidelsen, men biblioteksutvidelsen er deaktivert i Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG er aktivert i IsThereAnyDeal-utvidelsen, men biblioteksutvidelsen er deaktivert i Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Stem er aktivert i IsThereAnyDeal-utvidelsen, men biblioteksutvidelsen er deaktivert i Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam har ikke blitt riktig konfigurert i innstillingene</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam-ønskelisten er privat. Du må bruke autentiseringsknappen i Steam-bibliotekutvidelsen</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox er aktivert i IsThereAnyDeal-utvidelsen, men bibliotekutvidelsen er deaktivert i Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Det finnes ingen lenke for Xbox-ønskelisten.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Origin er aktivert i IsThereAnyDeal-utvidelsen, men biblioteksutvidelsen er deaktivert i Playnite.</sys:String>
 
 </ResourceDictionary>

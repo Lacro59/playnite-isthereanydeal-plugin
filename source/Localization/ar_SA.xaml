@@ -7,7 +7,7 @@
 
     <!-- IsThereAnyDealSettingsView -->
 
-    <sys:String x:Key="LOCItadExclusionList">قائمة الاستبعاد</sys:String>
+    <sys:String x:Key="LOCItadExclusionList">قائمة الاستبعا</sys:String>
 
     <sys:String x:Key="LOCItadSettingWishlist">قائمة الرغبات</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">تمكين قائمة رغبات Steam</sys:String>
@@ -20,18 +20,18 @@
     <sys:String x:Key="LOCItadEnableOrigin">تمكين قائمة رغبات Origin</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
-    <sys:String x:Key="LOCItadRegion">المنطقة</sys:String>
-    <sys:String x:Key="LOCItadCountry">الدولة</sys:String>
+    <sys:String x:Key="LOCItadRegion">المنطق</sys:String>
+    <sys:String x:Key="LOCItadCountry">الدول</sys:String>
     <sys:String x:Key="LOCItadStores">المتاجر</sys:String>
 
     <sys:String x:Key="LOCItadEnableNotificationGiveaways">تفعيل اإشعارات الهدايا</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">تفعيل اإشعارات</sys:String>
     <sys:String x:Key="LOCItadLimitNotification">Price cut</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPrice">السعر أقل من</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPrice">السعر أقل م</sys:String>
 
     <sys:String x:Key="LOCItadSettingPrice">حدود شريط تمرير السعر</sys:String>
-    <sys:String x:Key="LOCItadMinimum">الحد الادنى</sys:String>
-    <sys:String x:Key="LOCItadMaximum">الحد الاقصى</sys:String>
+    <sys:String x:Key="LOCItadMinimum">الحد الادن</sys:String>
+    <sys:String x:Key="LOCItadMaximum">الحد الاقص</sys:String>
 
     <sys:String x:Key="LOCItadSettingsNotifications">الإشعارات</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationAt">Price cut at</sys:String>
@@ -41,29 +41,29 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">تحديث السعر</sys:String>
     
-    <sys:String x:Key="LOCITADOrderPriceCut">Price cut</sys:String>
+    <sys:String x:Key="LOCITADOrderPriceCut">خفض السعر</sys:String>
     <sys:String x:Key="LOCITADOrderPrice">السعر</sys:String>
     
     <sys:String x:Key="LOCITADFilterSource">تصفية حسب المتجر</sys:String>
     <sys:String x:Key="LOCITADPercentage">Minimum discount percentage</sys:String>
-    <sys:String x:Key="LOCITADPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCITADPrice">السعر أقل</sys:String>
 
     <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
-    <sys:String x:Key="LOCItadCurrentStore">قائمة رغبات المتجر الحالي</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">قائمة رغبات المتجر الحال</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy best</sys:String>
     <sys:String x:Key="LOCItadStore">المتجر</sys:String>
     <sys:String x:Key="LOCItadNoData">لا توجد بيانات للمتجر المحدد في الإعدادات</sys:String>
-    <sys:String x:Key="LOCItadInLibrary">في المكتبة</sys:String>
+    <sys:String x:Key="LOCItadInLibrary">في المكتب</sys:String>
     <sys:String x:Key="LOCItadNotActive">Not active on IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadNotFind">Not found on IsThereAnyDeal</sys:String>
 
-    <sys:String x:Key="LOCItadDeleteOnStoreWishList">حذف {0} في {1}؟</sys:String>
-    <sys:String x:Key="LOCItadHideOnStoreWishList">استبعاد {0} في {1}؟</sys:String>
+    <sys:String x:Key="LOCItadDeleteOnStoreWishList">حذف {0} في {1}</sys:String>
+    <sys:String x:Key="LOCItadHideOnStoreWishList">استبعاد {0} في {1}</sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">خيارات قائمة الرغبات</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Include games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Include games without IsThereAnyDeal data</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">فقط الألعاب في المكتبة</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">فقط الألعاب في المكتب</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">استيراد قائمة رغبات Steam</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">رابط قائمة رغبات Steam</sys:String>
@@ -72,7 +72,7 @@
 
     <!-- IsThereAnyDeal -->
 
-    <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal data</sys:String>
+    <sys:String x:Key="LOCItadPluginView">عرض بيانات IsthereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadCheckNotifications">فحص الإشعارات</sys:String>
     <sys:String x:Key="LOCItadUpdateDatas">Update IsThereAnyDeal data</sys:String>
     <sys:String x:Key="LOCITADDataDownloading">Downloading IsThereAnyDeal data...</sys:String>
