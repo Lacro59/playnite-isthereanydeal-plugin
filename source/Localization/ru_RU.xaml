@@ -3,7 +3,7 @@
 
     <!-- MainView -->
 
-    <sys:String x:Key="LOCItad">Есть предложение!</sys:String>
+    <sys:String x:Key="LOCItad">IsThereAnyDeal</sys:String>
 
     <!-- IsThereAnyDealSettingsView -->
 
@@ -24,7 +24,7 @@
     <sys:String x:Key="LOCItadCountry">Страна</sys:String>
     <sys:String x:Key="LOCItadStores">Магазин(ы)</sys:String>
 
-    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Включить уведомления о бесплатных раздачах игр</sys:String>
+    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Включить уведомления о бесплатных раздачах иг</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">Включить уведомления</sys:String>
     <sys:String x:Key="LOCItadLimitNotification">Скидки</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">Самая низкая цена</sys:String>
@@ -48,7 +48,7 @@
     <sys:String x:Key="LOCITADPercentage">Минимальный процент скидки</sys:String>
     <sys:String x:Key="LOCITADPrice">Самая низкая цена</sys:String>
 
-    <sys:String x:Key="LOCItadCurrentBest">Лучшая на данный момент</sys:String>
+    <sys:String x:Key="LOCItadCurrentBest">Лучшая на данный момен</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Текущий список желаемого</sys:String>
     <sys:String x:Key="LOCItadBuy">Купить лучше</sys:String>
     <sys:String x:Key="LOCItadStore">Магазин</sys:String>
@@ -86,7 +86,7 @@
     <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic включен в плагине IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG включен в плагине IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam включен в плагине IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam не был правильно настроен в настройках</sys:String>
+    <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam не был правильно настроен в настройка</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Список желаний Steam является закрытым. Вы должны использовать кнопку аутентификации в плагине библиотеки Steam.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox включен в плагине IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Отстутствует ссылка на список желемого Xbox.</sys:String>
