@@ -35,3 +35,10 @@ Packages:
       - Fixed missing ITAG regions
       - Added new filters options in ITAD view
       - Optimized data loading
+  - Version: 3.0
+    RequiredApiVersion: 6.5.0
+    ReleaseDate: 2022-10-04
+    PackageUrl: https://github.com/Lacro59/playnite-isthereanydeal-plugin/releases/download/v3.0/playnite-isthereanydeal-plugin_3_0.pext
+    Changelog:
+      - Playnite 10 only
+      - Updated localizations
