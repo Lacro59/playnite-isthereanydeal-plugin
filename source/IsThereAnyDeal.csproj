@@ -44,8 +44,8 @@
       <HintPath>packages\AngleSharp.0.9.9\lib\net45\AngleSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Playnite.SDK, Version=6.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\PlayniteSDK.6.2.2\lib\net462\Playnite.SDK.dll</HintPath>
+    <Reference Include="Playnite.SDK, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\PlayniteSDK.6.5.0\lib\net462\Playnite.SDK.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -62,6 +62,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Abstractions, Version=2.1.0.227, Culture=neutral, PublicKeyToken=96bf224d23c43e59, processorArchitecture=MSIL">
       <HintPath>packages\System.IO.Abstractions.2.1.0.227\lib\net40\System.IO.Abstractions.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -80,6 +81,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="YamlDotNet, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\YamlDotNet.5.4.0\lib\net45\YamlDotNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
