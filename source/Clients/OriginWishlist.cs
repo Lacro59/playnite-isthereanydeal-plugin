@@ -106,7 +106,7 @@ namespace IsThereAnyDeal.Clients
                                 Result.Add(new Wishlist
                                 {
                                     StoreId = StoreId,
-                                    StoreName = "Origin",
+                                    StoreName = "EA app",
                                     ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
                                     StoreUrl = string.Empty,
                                     Name = Name,
@@ -119,7 +119,7 @@ namespace IsThereAnyDeal.Clients
                             }
                             catch (Exception ex)
                             {
-                                Common.LogError(ex, true, $"Error in parse Origin wishlist - {Name}");
+                                Common.LogError(ex, true, $"Error in parse EA app wishlist - {Name}");
                                 logger.Warn($"Error in parse Origin wishlist - {Name}");
                             }
                         }
