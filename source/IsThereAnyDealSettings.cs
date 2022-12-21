@@ -59,15 +59,7 @@ namespace IsThereAnyDeal
         private IsThereAnyDealSettings EditingClone { get; set; }
 
         private IsThereAnyDealSettings _Settings;
-        public IsThereAnyDealSettings Settings
-        {
-            get => _Settings;
-            set
-            {
-                _Settings = value;
-                OnPropertyChanged();
-            }
-        }
+        public IsThereAnyDealSettings Settings { get => _Settings; set => SetValue(ref _Settings, value); }
 
 
         public IsThereAnyDealSettingsViewModel(IsThereAnyDeal plugin)
@@ -76,17 +68,10 @@ namespace IsThereAnyDeal
             Plugin = plugin;
 
             // Load saved settings.
-            var savedSettings = plugin.LoadPluginSettings<IsThereAnyDealSettings>();
+            IsThereAnyDealSettings savedSettings = plugin.LoadPluginSettings<IsThereAnyDealSettings>();
 
             // LoadPluginSettings returns null if not saved data is available.
-            if (savedSettings != null)
-            {
-                Settings = savedSettings;
-            }
-            else
-            {
-                Settings = new IsThereAnyDealSettings();
-            }
+            Settings = savedSettings ?? new IsThereAnyDealSettings();
         }
 
         // Code executed when settings view is opened and user starts editing values.

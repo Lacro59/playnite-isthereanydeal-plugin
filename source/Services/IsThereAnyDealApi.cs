@@ -17,18 +17,20 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Threading;
 using CommonPluginsShared.Extensions;
+using Playnite.SDK.Models;
 
 namespace IsThereAnyDeal.Services
 {
     class IsThereAnyDealApi
     {
-        private static readonly ILogger logger = LogManager.GetLogger();
-        private static IResourceProvider resources = new ResourceProvider();
+        private static ILogger logger => LogManager.GetLogger();
+        private static IResourceProvider resources => new ResourceProvider();
 
-        private readonly string baseAddress = "https://api.isthereanydeal.com/";
-        private readonly string key = "fa49308286edcaf76fea58926fd2ea2d216a17ff";
+        private string baseAddress => "https://api.isthereanydeal.com/";
+        private string key => "fa49308286edcaf76fea58926fd2ea2d216a17ff";
 
-        public List<CountData> countDatas = new List<CountData>();
+        public List<CountData> countDatas { get; set; } = new List<CountData>();
+
 
         public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false, bool ForcePrice = false)
         {
@@ -39,7 +41,7 @@ namespace IsThereAnyDeal.Services
             Guid XboxId = new Guid();
             Guid OriginId = new Guid();
 
-            foreach (var Source in API.Instance.Database.Sources)
+            foreach (GameSource Source in API.Instance.Database.Sources)
             {
                 if (Source.Equals("steam"))
                 {
@@ -301,11 +303,11 @@ namespace IsThereAnyDeal.Services
 
             // Group same game
             var listDuplicates = ListWishlist.GroupBy(c => PlayniteTools.NormalizeGameName(c.Name).ToLower()).Where(g => g.Skip(1).Any());
-            foreach (var duplicates in listDuplicates)
+            foreach (IGrouping<string, Wishlist> duplicates in listDuplicates)
             {
                 bool isFirst = true;
                 Wishlist keep = new Wishlist();
-                foreach(var wish in duplicates)
+                foreach(Wishlist wish in duplicates)
                 {
                     if (isFirst)
                     {
@@ -365,7 +367,7 @@ namespace IsThereAnyDeal.Services
                         var Key = dataObj.Name;
                         var Value = dataObj.GetValue(datasObj.data, null);
 
-                        if (Value is Region region)
+                        if (Value is Models.Region region)
                         {
                             List<string> countries = new List<string>();
                             foreach (string country in region.countries)
@@ -907,17 +909,5 @@ namespace IsThereAnyDeal.Services
                 logger.Info($"Task UpdateDatas() - {String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
             }, globalProgressOptions);
         }
-    }
-
-    public class PlainData
-    {
-        public string Plain { get; set; } = string.Empty;
-        public bool IsActive { get; set; } = false;
-    }
-
-    public class CountData
-    {
-        public string StoreName { get; set; }
-        public int Count { get; set; }
     }
 }
