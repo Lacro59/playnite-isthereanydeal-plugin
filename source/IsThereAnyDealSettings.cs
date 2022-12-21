@@ -27,6 +27,7 @@ namespace IsThereAnyDeal
         public bool EnableHumble { get; set; } = false;
         public bool EnableEpic { get; set; } = false;
         public bool EnableXbox { get; set; } = true;
+        public bool EnableUbisoft { get; set; } = true;
         public bool EnableOrigin { get; set; } = true;
 
         public bool EnableNotificationGiveaways { get; set; } = false;
@@ -41,6 +42,7 @@ namespace IsThereAnyDeal
 
         public string HumbleKey { get; set; } = string.Empty;
         public string XboxLink { get; set; } = string.Empty;
+        public string UbisoftLink { get; set; } = string.Empty;
 
         public List<ItadNotificationCriteria> NotificationCriterias { get; set; } = new List<ItadNotificationCriteria>();
         #endregion

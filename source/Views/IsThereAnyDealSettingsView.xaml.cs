@@ -204,12 +204,9 @@ namespace IsThereAnyDeal.Views
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            try
+            if (lLimitNotification != null)
             {
                 lLimitNotification.Content = ((Slider)sender).Value + "%";
-            }
-            catch
-            {
             }
         }
 
@@ -308,8 +305,16 @@ namespace IsThereAnyDeal.Views
 
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
-            Hyperlink link = (Hyperlink)sender;
-            Process.Start((string)link.Tag);
+            if (sender is Hyperlink)
+            {
+                Hyperlink link = (Hyperlink)sender;
+                Process.Start((string)link.Tag);
+            }
+            if (sender is FrameworkElement)
+            {
+                FrameworkElement link = (FrameworkElement)sender;
+                Process.Start((string)link.Tag);
+            }
         }
 
         private void ButtonImportSteam_Click(object sender, RoutedEventArgs e)

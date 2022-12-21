@@ -40,37 +40,43 @@ namespace IsThereAnyDeal.Services
             Guid HumbleId = new Guid();
             Guid XboxId = new Guid();
             Guid OriginId = new Guid();
+            Guid UbisoftId = new Guid();
 
             foreach (GameSource Source in API.Instance.Database.Sources)
             {
-                if (Source.Equals("steam"))
+                if (Source.Name.IsEqual("Steam"))
                 {
                     SteamId = Source.Id;
                 }
 
-                if (Source.Equals("gog"))
+                if (Source.Name.IsEqual("GOG"))
                 {
                     GogId = Source.Id;
                 }
 
-                if (Source.Equals("epic"))
+                if (Source.Name.IsEqual("Epic"))
                 {
                     EpicId = Source.Id;
                 }
 
-                if (Source.Equals("humble"))
+                if (Source.Name.IsEqual("Humble"))
                 {
                     HumbleId = Source.Id;
                 }
 
-                if (Source.Equals("xbox"))
+                if (Source.Name.IsEqual("Xbox"))
                 {
                     XboxId = Source.Id;
                 }
 
-                if (Source.Equals("origin"))
+                if (Source.Name.IsEqual("Origin") || Source.Name.IsEqual("EA app"))
                 {
                     OriginId = Source.Id;
+                }
+
+                if (Source.Name.IsEqual("Ubisoft Connect") || Source.Name.IsEqual("Ubisoft") || Source.Name.IsEqual("UPlay"))
+                {
+                    UbisoftId = Source.Id;
                 }
             }
 
@@ -255,6 +261,42 @@ namespace IsThereAnyDeal.Services
                 }
             }
 
+            List<Wishlist> ListWishlistUbisoft = new List<Wishlist>();
+            if (settings.EnableUbisoft)
+            {
+                try
+                {
+                    if (!PlayniteTools.IsDisabledPlaynitePlugins("UbisoftLibrary"))
+                    {
+                        UbisoftWishlist ubisoftWishlist = new UbisoftWishlist();
+                        ListWishlistUbisoft = ubisoftWishlist.GetWishlist(API.Instance, UbisoftId, PluginUserDataPath, settings, CacheOnly, ForcePrice);
+                        if (ListWishlistUbisoft == null)
+                        {
+                            ListWishlistUbisoft = new List<Wishlist>();
+                        }
+                        countDatas.Add(new CountData
+                        {
+                            StoreName = "Ubisoft Connect",
+                            Count = ListWishlistUbisoft.Count
+                        });
+                    }
+                    else
+                    {
+                        logger.Warn("Ubisoft is enable then disabled");
+                        API.Instance.Notifications.Add(new NotificationMessage(
+                            $"IsThereAnyDeal-Ubisoft-disabled",
+                            "IsThereAnyDeal\r\n" + resources.GetString("LOCItadNotificationErrorUbisoft"),
+                            NotificationType.Error,
+                            () => plugin.OpenSettingsView()
+                        ));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, false, "Error on ListWishlistUbisoft", true, "IsThereAnyDeal");
+                }
+            }
+
             List<Wishlist> ListWishlisOrigin = new List<Wishlist>();
             if (settings.EnableOrigin)
             {
@@ -298,6 +340,7 @@ namespace IsThereAnyDeal.Services
                 .Concat(ListWishlistEpic)
                 .Concat(ListWishlistXbox)
                 .Concat(ListWishlisOrigin)
+                .Concat(ListWishlistUbisoft)
                 .ToList();
 
 

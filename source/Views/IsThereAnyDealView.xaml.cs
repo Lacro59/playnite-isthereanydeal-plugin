@@ -126,9 +126,13 @@ namespace IsThereAnyDeal.Views
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "Microsoft Store", StoreNameDisplay = (TransformIcon.Get("Xbox") + " Microsoft Store").Trim(), IsCheck = false });
             }
+            if (_settings.EnableUbisoft)
+            {
+                FilterStoreItems.Add(new ListStore { StoreName = "Ubisoft Connect", StoreNameDisplay = (TransformIcon.Get("Ubisoft Connect") + " Ubisoft Connect").Trim(), IsCheck = false });
+            }
             if (_settings.EnableOrigin)
             {
-                FilterStoreItems.Add(new ListStore { StoreName = "Origin", StoreNameDisplay = (TransformIcon.Get("Origin") + " Origin").Trim(), IsCheck = false });
+                FilterStoreItems.Add(new ListStore { StoreName = "EA app", StoreNameDisplay = (TransformIcon.Get("EA app") + " EA app").Trim(), IsCheck = false });
             }
             FilterStoreItems.Sort((x, y) => string.Compare(x.StoreName, y.StoreName));
             FilterStore.ItemsSource = FilterStoreItems;
@@ -515,14 +519,11 @@ namespace IsThereAnyDeal.Views
         // Search price
         private void Slider_ValueChangedPrice(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            try
+            if (lPrice != null)
             {
                 SearchPrice = (int)((Slider)sender).Value;
                 lPrice.Content = SearchPrice + _settings.CurrencySign;
                 GetListGame();
-            }
-            catch
-            {
             }
         }
 

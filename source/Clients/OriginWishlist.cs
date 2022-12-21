@@ -101,7 +101,7 @@ namespace IsThereAnyDeal.Clients
 
                                 PlainData plainData = isThereAnyDealApi.GetPlain(Name);
 
-                                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("origin") > -1);
+                                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("origin") > -1 || x.Id.ToLower().IndexOf("ea app") > -1);
 
                                 Result.Add(new Wishlist
                                 {

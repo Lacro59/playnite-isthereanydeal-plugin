@@ -252,7 +252,16 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="{DynamicResource LOCItadSettingWishlist}">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{DynamicResource LOCItadSettingWishlist}" />
+                    <Button Content="&#xefca;" FontFamily="{DynamicResource FontIcoFont}"
+                            FontSize="6" Margin="10,0,0,0"
+                            Click="Hyperlink_Click" Tag="https://github.com/Lacro59/playnite-isthereanydeal-plugin/wiki/Configure-some-wish-lists" />
+                    </StackPanel>
+                </TabItem.Header>
+
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -262,6 +271,8 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
@@ -303,6 +314,7 @@
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
+
                         <Label Grid.Column="0" Content="{DynamicResource LOCItadXboxWishlistLink}" IsEnabled="{Binding ElementName=chk_Xbox, Path=IsChecked}" VerticalAlignment="Center" />
 
                         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Name="scv" Grid.Column="2">
@@ -315,8 +327,26 @@
                         <Label Content="{DynamicResource LOCItadEnableOrigin}" />
                     </CheckBox>
 
+                    <CheckBox Name="chk_Ubisoft" Grid.Column="0" Grid.Row="7" IsChecked="{Binding Settings.EnableUbisoft}" VerticalAlignment="Center">
+                        <Label Content="{DynamicResource LOCItadEnableUbisoft}" />
+                    </CheckBox>
+                    <Grid Grid.Column="0" Grid.Row="8" Grid.ColumnSpan="5" Margin="50,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <Label Grid.Column="0" Content="{DynamicResource LOCItadUbisoftWishlistLink}" IsEnabled="{Binding ElementName=chk_Ubisoft, Path=IsChecked}" VerticalAlignment="Center" />
 
-                    <Grid Grid.Column="0" Grid.Row="8" Grid.ColumnSpan="10">
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Name="scv2" Grid.Column="2">
+                            <TextBox Text="{Binding Settings.UbisoftLink}" IsEnabled="{Binding ElementName=chk_Ubisoft, Path=IsChecked}" 
+                                     MaxWidth="{Binding ElementName=scv2, Path=ActualWidth}" VerticalAlignment="Center" />
+                        </ScrollViewer>
+                    </Grid>
+
+
+                    <Grid Grid.Column="0" Grid.Row="20" Grid.ColumnSpan="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="10" />
