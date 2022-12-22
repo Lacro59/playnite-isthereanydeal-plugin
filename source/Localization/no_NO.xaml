@@ -17,9 +17,9 @@
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Aktiver Xbox-ønskeliste</sys:String>
     <sys:String x:Key="LOCItadXboxWishlistLink">Lenke til ønskeliste</sys:String>
-    <sys:String x:Key="LOCItadEnableUbisoft">Enable Ubisoft wishlist</sys:String>
-    <sys:String x:Key="LOCItadUbisoftWishlistLink">Wishlist link</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Enable EA app wishlist</sys:String>
+    <sys:String x:Key="LOCItadEnableUbisoft">Aktiver Ubisoft-ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadUbisoftWishlistLink">Lenke til ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">Aktiver EA app-ønskeliste</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">Region</sys:String>
