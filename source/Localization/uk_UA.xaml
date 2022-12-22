@@ -17,9 +17,9 @@
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Увімкнути список бажаного Xbox</sys:String>
     <sys:String x:Key="LOCItadXboxWishlistLink">Посилання на список бажаного</sys:String>
-    <sys:String x:Key="LOCItadEnableUbisoft">Enable Ubisoft wishlist</sys:String>
-    <sys:String x:Key="LOCItadUbisoftWishlistLink">Wishlist link</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Enable EA app wishlist</sys:String>
+    <sys:String x:Key="LOCItadEnableUbisoft">Увімкнути список бажаного Ubisoft</sys:String>
+    <sys:String x:Key="LOCItadUbisoftWishlistLink">Посилання на список бажаного</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">Увімкнути список бажаного EA app</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">Регіон</sys:String>
@@ -91,9 +91,9 @@
     <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam неправильно налаштований в налаштуваннях</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Список бажань Steam приватний. Скористайтеся кнопкою &quot;Автентифікація&quot; у плагіні бібліотеки Steam</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox увімкнено у плагіні IsThereAnyDeal, але розширення бібліотеки було вимкнено в Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Немає посилання на списком бажаного Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
-    <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">There is no Ubisoft wishlist link.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Немає посилання на список бажаного Xbox.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisoft увімкнено у плагіні IsThereAnyDeal, але розширення бібліотеки було вимкнено в Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Немає посилання на список бажаного Ubisoft.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA app увімкнено у плагіні IsThereAnyDeal, але розширення бібліотеки було вимкнено в Playnite.</sys:String>
 
 </ResourceDictionary>
