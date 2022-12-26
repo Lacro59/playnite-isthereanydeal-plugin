@@ -229,17 +229,13 @@ namespace IsThereAnyDeal.Views
         // Active store button
         private void LbStorePrice_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
+            if (((ListBox)sender).SelectedItem != null)
             {
                 StorePriceSelected = (ItadGameInfo)((ListBox)sender).SelectedItem;
 
                 Button bt = (Button)((Grid)((Grid)((ListBox)sender).Parent).Parent).FindName("btStore");
                 bt.IsEnabled = true;
                 bt.Tag = StorePriceSelected.UrlBuy;
-            }
-            catch (Exception ex)
-            {
-
             }
         }
 
@@ -254,7 +250,7 @@ namespace IsThereAnyDeal.Views
             lbWishlist.ItemsSource = null;
             Common.LogDebug(true, $"BtRemoveWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
 
-            var RessultDialog = _PlayniteApi.Dialogs.ShowMessage(
+            MessageBoxResult RessultDialog = _PlayniteApi.Dialogs.ShowMessage(
                 string.Format(resources.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName), 
                 "IsThereAnyDeal", 
                 MessageBoxButton.YesNo
@@ -264,7 +260,7 @@ namespace IsThereAnyDeal.Views
                 DataLoadWishlist.Visibility = Visibility.Visible;
                 dpData.IsEnabled = false;
 
-                var task = Task.Run(() =>
+                Task.Run(() =>
                 {
                     try
                     {
