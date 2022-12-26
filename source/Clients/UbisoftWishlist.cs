@@ -15,7 +15,7 @@ namespace IsThereAnyDeal.Clients
 {
     class UbisoftWishlist : GenericWishlist
     {
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
+        public List<Wishlist> GetWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
@@ -24,7 +24,7 @@ namespace IsThereAnyDeal.Clients
             {
                 if (ForcePrice)
                 {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
                 }
                 SaveWishlist("Ubisoft", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
@@ -39,7 +39,7 @@ namespace IsThereAnyDeal.Clients
             {
                 logger.Error($"No Ubisoft wish list link");
 
-                PlayniteApi.Notifications.Add(new NotificationMessage(
+                API.Instance.Notifications.Add(new NotificationMessage(
                     $"IsThereAnyDeal-Ubisoft-Error",
                     "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationErrorUbisoftNoLink"), "Ubisoft"),
                     NotificationType.Error
@@ -48,7 +48,7 @@ namespace IsThereAnyDeal.Clients
                 ResultLoad = LoadWishlists("Ubisoft", PluginUserDataPath, true);
                 if (ResultLoad != null)
                 {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
                     SaveWishlist("Ubisoft", PluginUserDataPath, ResultLoad);
                     return ResultLoad;
                 }
@@ -80,7 +80,7 @@ namespace IsThereAnyDeal.Clients
                             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                             PlainData plainData = isThereAnyDealApi.GetPlain(Name);
 
-                            var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("ubisoft") > -1 || x.Id.ToLower().IndexOf("ubisoft connect") > -1 || x.Id.ToLower().IndexOf("uplay") > -1);
+                            ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("ubisoft") > -1 || x.Id.ToLower().IndexOf("ubisoft connect") > -1 || x.Id.ToLower().IndexOf("uplay") > -1);
 
                             Result.Add(new Wishlist
                             {
@@ -106,7 +106,7 @@ namespace IsThereAnyDeal.Clients
                 catch (Exception ex)
                 {
                     Common.LogError(ex, true, "Error in parse Ubisoft wishlist");
-                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                    API.Instance.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Ubisoft-Error",
                         "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Ubisoft"),
                         NotificationType.Error
@@ -115,7 +115,7 @@ namespace IsThereAnyDeal.Clients
                     ResultLoad = LoadWishlists("Ubisoft", PluginUserDataPath, true);
                     if (ResultLoad != null)
                     {
-                        ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                        ResultLoad = SetCurrentPrice(ResultLoad, settings);
                         SaveWishlist("Ubisoft", PluginUserDataPath, ResultLoad);
                         return ResultLoad;
                     }
@@ -123,7 +123,7 @@ namespace IsThereAnyDeal.Clients
                 }
             }
 
-            Result = SetCurrentPrice(Result, settings, PlayniteApi);
+            Result = SetCurrentPrice(Result, settings);
             SaveWishlist("Ubisoft", PluginUserDataPath, Result);
             return Result;
         }

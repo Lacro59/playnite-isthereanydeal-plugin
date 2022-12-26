@@ -89,10 +89,10 @@ namespace IsThereAnyDeal.Services
         }
 
 
-        public List<Wishlist> SetCurrentPrice(List<Wishlist> ListWishlist, IsThereAnyDealSettings settings, IPlayniteAPI PlayniteApi)
+        public List<Wishlist> SetCurrentPrice(List<Wishlist> ListWishlist, IsThereAnyDealSettings settings)
         {
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-            return isThereAnyDealApi.GetCurrentPrice(ListWishlist, settings, PlayniteApi);
+            return isThereAnyDealApi.GetCurrentPrice(ListWishlist, settings);
         }
     }
 }

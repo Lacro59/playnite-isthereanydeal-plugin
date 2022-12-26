@@ -33,12 +33,12 @@ namespace IsThereAnyDeal.Services
         }
 
 
-        public GogWishlist(IPlayniteAPI PlayniteApi)
+        public GogWishlist()
         {
 
         }
 
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
+        public List<Wishlist> GetWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
@@ -47,7 +47,7 @@ namespace IsThereAnyDeal.Services
             {
                 if (ForcePrice)
                 {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
                 }
                 SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
@@ -143,7 +143,7 @@ namespace IsThereAnyDeal.Services
                                 Common.LogError(ex, false, $"Error in parse GOG wishlist", true, "IsThereAnyDeal");
                                 if (ResultLoad != null)
                                 {
-                                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
                                     SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
                                     return ResultLoad;
                                 }
@@ -161,7 +161,7 @@ namespace IsThereAnyDeal.Services
                     Common.LogError(ex, false, "Error in download GOG wishlist", true, "IsThereAnyDeal");
                     if (ResultLoad != null)
                     {
-                        ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                        ResultLoad = SetCurrentPrice(ResultLoad, settings);
                         SaveWishlist("Gog", PluginUserDataPath, ResultLoad);
                         return ResultLoad;
                     }
@@ -171,14 +171,14 @@ namespace IsThereAnyDeal.Services
             else
             {
                 logger.Warn($"GOG user is not authenticated");
-                PlayniteApi.Notifications.Add(new NotificationMessage(
+                API.Instance.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-gog-noauthenticate",
                     $"IsThereAnyDeal\r\nGOG - {resources.GetString("LOCLoginRequired")}",
                     NotificationType.Error
                 ));
             }
 
-            Result = SetCurrentPrice(Result, settings, PlayniteApi);
+            Result = SetCurrentPrice(Result, settings);
             SaveWishlist("Gog", PluginUserDataPath, Result);
             return Result;
         }

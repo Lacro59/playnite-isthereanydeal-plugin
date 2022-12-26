@@ -23,7 +23,7 @@ namespace IsThereAnyDeal.Clients
             {
                 if (ForcePrice)
                 {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
                 }
                 SaveWishlist("Xbox", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
@@ -48,7 +48,7 @@ namespace IsThereAnyDeal.Clients
                 ResultLoad = LoadWishlists("Xbox", PluginUserDataPath, true);
                 if (ResultLoad != null)
                 {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
                     SaveWishlist("Xbox", PluginUserDataPath, ResultLoad);
                     return ResultLoad;
                 }
@@ -119,7 +119,7 @@ namespace IsThereAnyDeal.Clients
                     ResultLoad = LoadWishlists("Xbox", PluginUserDataPath, true);
                     if (ResultLoad != null)
                     {
-                        ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                        ResultLoad = SetCurrentPrice(ResultLoad, settings);
                         SaveWishlist("Xbox", PluginUserDataPath, ResultLoad);
                         return ResultLoad;
                     }
@@ -127,7 +127,7 @@ namespace IsThereAnyDeal.Clients
                 }
             }
 
-            Result = SetCurrentPrice(Result, settings, PlayniteApi);
+            Result = SetCurrentPrice(Result, settings);
             SaveWishlist("Xbox", PluginUserDataPath, Result);
             return Result;
         }

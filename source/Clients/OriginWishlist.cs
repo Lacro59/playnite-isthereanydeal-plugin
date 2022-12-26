@@ -39,7 +39,7 @@ namespace IsThereAnyDeal.Clients
         private string urlWishlistDelete = "https://api2.origin.com/gifting/users/{0}/wishlist?offerId={1}";
 
 
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
+        public List<Wishlist> GetWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
@@ -48,7 +48,7 @@ namespace IsThereAnyDeal.Clients
             {
                 if (ForcePrice)
                 {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
                 }
                 SaveWishlist("Origin", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
@@ -57,7 +57,7 @@ namespace IsThereAnyDeal.Clients
             logger.Info($"Load from web for EA app");
 
             // Get wishlist
-            var view = PlayniteApi.WebViews.CreateOffscreenView();
+            IWebView view = API.Instance.WebViews.CreateOffscreenView();
             OriginAPI = new OriginAccountClient(view);
 
             // Only if user is logged. 
@@ -92,7 +92,7 @@ namespace IsThereAnyDeal.Clients
                             try
                             {
                                 string offerId = item.offerId;
-                                var gameData = GetGameStoreData(offerId, PlayniteApi);
+                                var gameData = GetGameStoreData(offerId);
 
                                 StoreId = gameData.offerId;
                                 Capsule = gameData.imageServer + gameData.i18n.packArtLarge;
@@ -145,37 +145,37 @@ namespace IsThereAnyDeal.Clients
             else
             {
                 logger.Warn($"EA app user is not authenticated");
-                PlayniteApi.Notifications.Add(new NotificationMessage(
+                API.Instance.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-origin-noauthenticate",
                     $"IsThereAnyDeal\r\nEA app - {resources.GetString("LOCLoginRequired")}",
                     NotificationType.Error
                 ));
             }
 
-            Result = SetCurrentPrice(Result, settings, PlayniteApi);
+            Result = SetCurrentPrice(Result, settings);
             SaveWishlist("Origin", PluginUserDataPath, Result);
             return Result;
         }
 
-        public bool RemoveWishlist(string StoreId, IPlayniteAPI PlayniteApi)
+        public bool RemoveWishlist(string StoreId)
         {
             // Only if user is logged. 
             if (OriginAPI.GetIsUserLoggedIn())
             {
                 // Get informations from Origin plugin.
                 string accessToken = OriginAPI.GetAccessToken().access_token;
-                var userId = OriginAPI.GetAccountInfo(OriginAPI.GetAccessToken()).pid.pidId;
+                long userId = OriginAPI.GetAccountInfo(OriginAPI.GetAccessToken()).pid.pidId;
 
                 string url = string.Format(urlWishlistDelete, userId, StoreId);
 
-                using (var webClient = new WebClient { Encoding = Encoding.UTF8 })
+                using (WebClient webClient = new WebClient { Encoding = Encoding.UTF8 })
                 {
                     try
                     {
                         webClient.Headers.Add("authToken", accessToken);
                         webClient.Headers.Add("accept", "application/vnd.origin.v3+json; x-cache/force-write");
-                        
-                        var stringData = Encoding.UTF8.GetString(webClient.UploadValues(url, "DELETE", new NameValueCollection()));
+
+                        string stringData = Encoding.UTF8.GetString(webClient.UploadValues(url, "DELETE", new NameValueCollection()));
                         return stringData.Contains("\"ok\"");
                     }
                     catch (WebException ex)
@@ -189,10 +189,10 @@ namespace IsThereAnyDeal.Clients
         }
 
 
-        private static GameStoreDataResponse GetGameStoreData(string gameId, IPlayniteAPI PlayniteApi)
+        private static GameStoreDataResponse GetGameStoreData(string gameId)
         {
-            string lang = CodeLang.GetOriginLang(PlayniteApi.ApplicationSettings.Language);
-            string langShort = CodeLang.GetOriginLangCountry(PlayniteApi.ApplicationSettings.Language);
+            string lang = CodeLang.GetOriginLang(API.Instance.ApplicationSettings.Language);
+            string langShort = CodeLang.GetOriginLangCountry(API.Instance.ApplicationSettings.Language);
 
             var url = string.Format(@"https://api2.origin.com/ecommerce2/public/supercat/{0}/{1}?country={2}", gameId, lang, langShort);
 

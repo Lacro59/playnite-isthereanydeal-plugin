@@ -25,7 +25,6 @@ namespace IsThereAnyDeal.Views
     {
         private static readonly ILogger logger = LogManager.GetLogger();
         private static IResourceProvider resources = new ResourceProvider();
-        private IPlayniteAPI _PlayniteApi;
         private readonly IsThereAnyDealSettings _settings;
         private readonly IsThereAnyDeal _plugin;
 
@@ -38,19 +37,17 @@ namespace IsThereAnyDeal.Views
         private ItadGameInfo StorePriceSelected { get; set; }
 
 
-        public IsThereAnyDealView(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
+        public IsThereAnyDealView(IsThereAnyDeal plugin, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
             InitializeComponent();
             
             _settings = settings;
             _plugin = plugin;
-            _PlayniteApi = PlayniteApi;
 
             // Load data
             RefreshData(PlainSelected);
 
-            GetListGiveaways(PlayniteApi, PluginUserDataPath);
-
+            GetListGiveaways(PluginUserDataPath);
             SetFilterStore();
 
             lPrice.Content = settings.MaxPrice + _settings.CurrencySign;
@@ -65,7 +62,7 @@ namespace IsThereAnyDeal.Views
             DataLoadWishlist.Visibility = Visibility.Visible;
             lbWishlist.ItemsSource = null;
             dpData.IsEnabled = false;
-            var task = Task.Run(() => LoadData(_PlayniteApi, _plugin.GetPluginUserDataPath(), _settings, PlainSelected, CachOnly, ForcePrice))
+            var task = Task.Run(() => LoadData(_plugin.GetPluginUserDataPath(), _settings, PlainSelected, CachOnly, ForcePrice))
                 .ContinueWith(antecedent =>
                 {
                     this.Dispatcher?.Invoke(new Action(() => {
@@ -143,22 +140,22 @@ namespace IsThereAnyDeal.Views
         }
 
 
-        private async Task<List<Wishlist>> LoadData (IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "", bool CachOnly = true, bool ForcePrice = false)
+        private async Task<List<Wishlist>> LoadData (string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "", bool CachOnly = true, bool ForcePrice = false)
         {
             List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(_plugin, settings, PluginUserDataPath, CachOnly, ForcePrice);
             return ListWishlist;
         }
 
-        private async Task<List<ItadGiveaway>> LoadDatatGiveaways(IPlayniteAPI PlayniteApi, string PluginUserDataPath)
+        private async Task<List<ItadGiveaway>> LoadDatatGiveaways(string PluginUserDataPath)
         {
-            List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PlayniteApi, PluginUserDataPath);
+            List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PluginUserDataPath);
             return itadGiveaways;
         }
 
 
-        private void GetListGiveaways(IPlayniteAPI PlayniteApi, string PluginUserDataPath)
+        private void GetListGiveaways(string PluginUserDataPath)
         {
-            var task = Task.Run(() => LoadDatatGiveaways(PlayniteApi, PluginUserDataPath))
+            var task = Task.Run(() => LoadDatatGiveaways(PluginUserDataPath))
                 .ContinueWith(antecedent =>
                 {
                     Application.Current.Dispatcher.Invoke(new Action(() => {
@@ -248,7 +245,7 @@ namespace IsThereAnyDeal.Views
             lbWishlist.ItemsSource = null;
             Common.LogDebug(true, $"BtRemoveWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
 
-            MessageBoxResult RessultDialog = _PlayniteApi.Dialogs.ShowMessage(
+            MessageBoxResult RessultDialog = API.Instance.Dialogs.ShowMessage(
                 string.Format(resources.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName), 
                 "IsThereAnyDeal", 
                 MessageBoxButton.YesNo
@@ -273,7 +270,7 @@ namespace IsThereAnyDeal.Views
                                     IsDeleted = steamWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        steamWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
+                                        steamWishlist.GetWishlist(StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
 #endif
                                     break;
@@ -285,7 +282,7 @@ namespace IsThereAnyDeal.Views
                                     IsDeleted = epicWishlist.RemoveWishlist(StorePriceSelected.StoreId, _plugin.GetPluginUserDataPath());
                                     if (IsDeleted)
                                     {
-                                        epicWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
+                                        epicWishlist.GetWishlist(StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
                                     break;
 
@@ -293,21 +290,21 @@ namespace IsThereAnyDeal.Views
                                     Common.LogDebug(true, $"Is Humble Store");
 
                                     HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
-                                    IsDeleted = humbleBundleWishlist.RemoveWishlist(_PlayniteApi, StorePriceSelected.StoreId);
+                                    IsDeleted = humbleBundleWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        humbleBundleWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _settings.HumbleKey, _plugin.GetPluginUserDataPath(), _settings, false);
+                                        humbleBundleWishlist.GetWishlist(StorePriceSelected.SourceId, _settings.HumbleKey, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
                                     break;
 
                                 case "gog":
                                     Common.LogDebug(true, $"Is GOG");
 
-                                    GogWishlist gogWishlist = new GogWishlist(_PlayniteApi);
+                                    GogWishlist gogWishlist = new GogWishlist();
                                     IsDeleted = gogWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        gogWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
+                                        gogWishlist.GetWishlist(StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
                                     break;
 
@@ -319,10 +316,10 @@ namespace IsThereAnyDeal.Views
                                     Common.LogDebug(true, $"Is origin");
 
                                     OriginWishlist originWishlist = new OriginWishlist();
-                                    IsDeleted = originWishlist.RemoveWishlist(StorePriceSelected.StoreId, _PlayniteApi);
+                                    IsDeleted = originWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        originWishlist.GetWishlist(_PlayniteApi, StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
+                                        originWishlist.GetWishlist(StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
                                     }
                                     break;
                             }
@@ -371,7 +368,7 @@ namespace IsThereAnyDeal.Views
             lbWishlist.ItemsSource = null;
             Common.LogDebug(true, $"BtHideWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
 
-            var RessultDialog = _PlayniteApi.Dialogs.ShowMessage(
+            var RessultDialog = API.Instance.Dialogs.ShowMessage(
                 string.Format(resources.GetString("LOCItadHideOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
                 "IsThereAnyDeal",
                 MessageBoxButton.YesNo

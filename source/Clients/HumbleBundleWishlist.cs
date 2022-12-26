@@ -11,7 +11,7 @@ namespace IsThereAnyDeal.Services
 {
     class HumbleBundleWishlist : GenericWishlist
     {
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string HumbleBundleId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
+        public List<Wishlist> GetWishlist(Guid SourceId, string HumbleBundleId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
@@ -20,7 +20,7 @@ namespace IsThereAnyDeal.Services
             {
                 if (ForcePrice)
                 {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
                 }
                 SaveWishlist("HumbleBundle", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
@@ -107,7 +107,7 @@ namespace IsThereAnyDeal.Services
                     ResultLoad = LoadWishlists("Humble", PluginUserDataPath, true);
                     if (ResultLoad != null)
                     {
-                        ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                        ResultLoad = SetCurrentPrice(ResultLoad, settings);
                         SaveWishlist("Humble", PluginUserDataPath, ResultLoad);
                         return ResultLoad;
                     }
@@ -115,14 +115,14 @@ namespace IsThereAnyDeal.Services
                 }
             }
 
-            Result = SetCurrentPrice(Result, settings, PlayniteApi);
+            Result = SetCurrentPrice(Result, settings);
             SaveWishlist("HumbleBundle", PluginUserDataPath, Result);
             return Result;
         }
 
-        public bool RemoveWishlist(IPlayniteAPI PlayniteApi, string StoreId)
+        public bool RemoveWishlist(string StoreId)
         {
-            var view = PlayniteApi.WebViews.CreateOffscreenView();
+            IWebView view = API.Instance.WebViews.CreateOffscreenView();
             HumbleAccountClientExtand humbleAccountClient = new HumbleAccountClientExtand(view);
             //if (humbleAccountClient.GetIsUserLoggedIn())
             //{

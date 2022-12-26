@@ -43,7 +43,7 @@ namespace IsThereAnyDeal.Services
         private static string SteamUser { get; set; } = string.Empty;
 
 
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
+        public List<Wishlist> GetWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
@@ -52,7 +52,7 @@ namespace IsThereAnyDeal.Services
             {
                 if (ForcePrice)
                 {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
                 }
                 SaveWishlist("Steam", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
@@ -80,7 +80,7 @@ namespace IsThereAnyDeal.Services
             if (SteamId.IsNullOrEmpty())
             {
                 logger.Error($"No Steam configuration.");
-                PlayniteApi.Notifications.Add(new NotificationMessage(
+                API.Instance.Notifications.Add(new NotificationMessage(
                     $"IsThereAnyDeal-Steam-Error",
                     "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationsSteamBadConfig"), "Steam"),
                     NotificationType.Error
@@ -89,7 +89,7 @@ namespace IsThereAnyDeal.Services
                 ResultLoad = LoadWishlists("Steam", PluginUserDataPath, true);
                 if (ResultLoad != null)
                 {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
                     SaveWishlist("Steam", PluginUserDataPath, ResultLoad);
                     return ResultLoad;
                 }
@@ -123,7 +123,7 @@ namespace IsThereAnyDeal.Services
                 if (ResultWeb.ToLower().Contains("{\"success\":2}"))
                 {
                     logger.Warn($"Private wishlist for {SteamId}?");
-                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                    API.Instance.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Steam-Error",
                         "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationErrorSteamPrivate"), "Steam"),
                         NotificationType.Error
@@ -197,7 +197,7 @@ namespace IsThereAnyDeal.Services
                         ResultLoad = LoadWishlists("Steam", PluginUserDataPath, true);
                         if (ResultLoad != null)
                         {
-                            ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                            ResultLoad = SetCurrentPrice(ResultLoad, settings);
                             SaveWishlist("Steam", PluginUserDataPath, ResultLoad);
                             return ResultLoad;
                         }
@@ -206,7 +206,7 @@ namespace IsThereAnyDeal.Services
                 }
             }
 
-            Result = SetCurrentPrice(Result, settings, PlayniteApi);
+            Result = SetCurrentPrice(Result, settings);
             SaveWishlist("Steam", PluginUserDataPath, Result);
             return Result;
         }
@@ -341,7 +341,7 @@ namespace IsThereAnyDeal.Services
                         }
                     }
 
-                    Result = SetCurrentPrice(Result, settings, PlayniteApi);
+                    Result = SetCurrentPrice(Result, settings);
                     SaveWishlist("Steam", PluginUserDataPath, Result);
 
                     return true;

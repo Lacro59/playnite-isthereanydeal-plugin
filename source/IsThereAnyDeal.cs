@@ -70,7 +70,7 @@ namespace IsThereAnyDeal
                             Height = 740
                         };
 
-                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), PluginSettings.Settings);
+                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, this.GetPluginUserDataPath(), PluginSettings.Settings);
                         Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
                         windowExtension.ShowDialog();
                     },
@@ -151,7 +151,7 @@ namespace IsThereAnyDeal
                             Width = 1280,
                             Height = 740
                         };
-                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, PlayniteApi, this.GetPluginUserDataPath(), PluginSettings.Settings);
+                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, this.GetPluginUserDataPath(), PluginSettings.Settings);
                         Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
                         windowExtension.ShowDialog();
                     }

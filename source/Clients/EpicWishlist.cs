@@ -80,7 +80,7 @@ namespace IsThereAnyDeal.Services
         }
 
 
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
+        public List<Wishlist> GetWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
@@ -89,7 +89,7 @@ namespace IsThereAnyDeal.Services
             {
                 if (ForcePrice)
                 {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
                 }
                 SaveWishlist("Epic", PluginUserDataPath, ResultLoad);
                 return ResultLoad;
@@ -101,7 +101,7 @@ namespace IsThereAnyDeal.Services
             if (!EpicAPI.GetIsUserLoggedIn())
             {
                 logger.Warn($"Epic user is not authenticated");
-                PlayniteApi.Notifications.Add(new NotificationMessage(
+                API.Instance.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-epic-noauthenticate",
                     $"IsThereAnyDeal\r\nEpic - {resources.GetString("LOCLoginRequired")}",
                     NotificationType.Error
@@ -114,7 +114,7 @@ namespace IsThereAnyDeal.Services
             if (tokens.access_token.IsNullOrEmpty())
             {
                 logger.Warn($"Epic user is not authenticated");
-                PlayniteApi.Notifications.Add(new NotificationMessage(
+                API.Instance.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-epic-noauthenticate",
                     $"IsThereAnyDeal\r\nEpic - {resources.GetString("LOCLoginRequired")}",
                     NotificationType.Error
@@ -193,7 +193,7 @@ namespace IsThereAnyDeal.Services
                 catch (Exception ex)
                 {
                     Common.LogError(ex, true, "Error in parse Epic wishlist");
-                    PlayniteApi.Notifications.Add(new NotificationMessage(
+                    API.Instance.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Epic-Error",
                         "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Epic Game Store"),
                         NotificationType.Error
@@ -202,7 +202,7 @@ namespace IsThereAnyDeal.Services
                     ResultLoad = LoadWishlists("Epic", PluginUserDataPath, true);
                     if (ResultLoad != null)
                     {
-                        ResultLoad = SetCurrentPrice(ResultLoad, settings, PlayniteApi);
+                        ResultLoad = SetCurrentPrice(ResultLoad, settings);
                         SaveWishlist("Epic", PluginUserDataPath, ResultLoad);
                         return ResultLoad;
                     }
@@ -211,7 +211,7 @@ namespace IsThereAnyDeal.Services
                 }
             }
 
-            Result = SetCurrentPrice(Result, settings, PlayniteApi);
+            Result = SetCurrentPrice(Result, settings);
             SaveWishlist("Epic", PluginUserDataPath, Result);
             return Result;
         }

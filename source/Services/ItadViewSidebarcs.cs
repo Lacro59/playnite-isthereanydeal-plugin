@@ -33,7 +33,7 @@ namespace IsThereAnyDeal.Services
                 {
                     sidebarItemControl = new SidebarItemControl(API.Instance);
                     sidebarItemControl.SetTitle(resources.GetString("LOCItad"));
-                    sidebarItemControl.AddContent(new IsThereAnyDealView(plugin, API.Instance, plugin.GetPluginUserDataPath(), plugin.PluginSettings.Settings));
+                    sidebarItemControl.AddContent(new IsThereAnyDealView(plugin, plugin.GetPluginUserDataPath(), plugin.PluginSettings.Settings));
                 }
                 return sidebarItemControl;
             };
