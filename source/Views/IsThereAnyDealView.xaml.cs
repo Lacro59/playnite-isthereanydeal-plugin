@@ -29,15 +29,13 @@ namespace IsThereAnyDeal.Views
         private readonly IsThereAnyDealSettings _settings;
         private readonly IsThereAnyDeal _plugin;
 
-        public string CurrencySign { get; set; }
+        private List<Wishlist> lbWishlistItems { get; set; } = new List<Wishlist>();
+        private List<string> SearchStores { get; set; } = new List<string>();
+        private int SearchPercentage { get; set; } = 0;
+        private int SearchPrice { get; set; } = 100;
 
-        private List<Wishlist> lbWishlistItems = new List<Wishlist>();
-        private List<string> SearchStores = new List<string>();
-        private int SearchPercentage = 0;
-        private int SearchPrice = 100;
-
-        private IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-        private ItadGameInfo StorePriceSelected;
+        private IsThereAnyDealApi isThereAnyDealApi { get; set; } = new IsThereAnyDealApi();
+        private ItadGameInfo StorePriceSelected { get; set; }
 
 
         public IsThereAnyDealView(IsThereAnyDeal plugin, IPlayniteAPI PlayniteApi, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
@@ -405,58 +403,13 @@ namespace IsThereAnyDeal.Views
         // Get list
         private void GetListGame()
         {
-            lbWishlistItems = lbWishlistItems.Where(x => _settings.wishlistIgnores.All(y => y.StoreId != x.StoreId && y.Plain != x.Plain)).ToList();
-            List<Wishlist> tempList = lbWishlistItems;
-
-            // List options
-            if ((bool)PART_TbOnlyInLibrary.IsChecked)
-            {
-                tempList = tempList.FindAll(x => x.InLibrary).ToList();
-            }
-            else
-            {
-                if (!(bool)PART_TbIncludeInLibrary.IsChecked)
-                {
-                    tempList = tempList.FindAll(x => !x.InLibrary).ToList();
-                }
-                if (!(bool)PART_TbIncludeWithoutData.IsChecked)
-                {
-                    tempList = tempList.FindAll(x => x.HasItadData).ToList();
-                }
-            }
-
-
-            lbWishlist.ItemsSource = tempList.FindAll(
-                x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.ItadBestPrice.PriceNew <= SearchPrice
+            lbWishlist.ItemsSource = lbWishlistItems.FindAll(
+                x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.ItadBestPrice.PriceNew <= SearchPrice &&
+                (TextboxSearch.Text.IsNullOrEmpty() ? true : x.Name.Contains(TextboxSearch.Text, StringComparison.InvariantCultureIgnoreCase)) &&
+                (SearchStores.Count == 0 ? true : ((SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0))) &&
+                _settings.wishlistIgnores.All(y => y.StoreId != x.StoreId && y.Plain != x.Plain) &&
+                ((bool)PART_TbOnlyInLibrary.IsChecked ? x.InLibrary : ((!(bool)PART_TbIncludeInLibrary.IsChecked ? !x.InLibrary : true || !(bool)PART_TbIncludeWithoutData.IsChecked ? x.HasItadData : true)))
             );
-
-            if (!TextboxSearch.Text.IsNullOrEmpty() && SearchStores.Count != 0)
-            {
-                lbWishlist.ItemsSource = tempList.FindAll(
-                    x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.ItadBestPrice.PriceNew <= SearchPrice && 
-                    x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1 &&
-                    (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
-                );
-                return;
-            }
-
-            if (!TextboxSearch.Text.IsNullOrEmpty())
-            {
-                lbWishlist.ItemsSource = tempList.FindAll(
-                    x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.ItadBestPrice.PriceNew <= SearchPrice &&
-                    x.Name.ToLower().IndexOf(TextboxSearch.Text) > -1
-                );
-                return;
-            }
-
-            if (SearchStores.Count != 0)
-            {
-                lbWishlist.ItemsSource = tempList.FindAll(
-                    x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.ItadBestPrice.PriceNew <= SearchPrice && 
-                    (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
-                );
-                return;
-            }
 
             // Order
             PART_CbOrder_SelectionChanged(null, null);

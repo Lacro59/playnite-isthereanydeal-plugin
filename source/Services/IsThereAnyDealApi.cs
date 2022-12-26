@@ -620,7 +620,7 @@ namespace IsThereAnyDeal.Services
                 {
                     // Check if in library (exclude game emulated)
                     List<Guid> ListEmulators = new List<Guid>();
-                    foreach (var item in PlayniteApi.Database.Emulators)
+                    foreach (Emulator item in PlayniteApi.Database.Emulators)
                     {
                         ListEmulators.Add(item.Id);
                     }
@@ -629,7 +629,7 @@ namespace IsThereAnyDeal.Services
                     {
                         try
                         {
-                            Thread.Sleep(1000);
+                            Thread.Sleep(1500);
                             string url = baseAddress + $"v01/game/prices/?key={key}&plains={plainData}&region{settings.Region}&country={settings.Country}&shops={shops}";
                             string responseData = string.Empty;
                             try
@@ -654,7 +654,7 @@ namespace IsThereAnyDeal.Services
 
                                     try
                                     {
-                                        string ListPrice = Serialization.ToJson((dynamic)datasObj["data"][wishlist.Plain]["list"]);
+                                        string ListPrice = Serialization.ToJson((dynamic)datasObj["data"]?[wishlist.Plain]?["list"]);
                                         List<ItadPrice> itadPrices = Serialization.FromJson<List<ItadPrice>>(ListPrice);
 
                                         if (itadPrices?.Count > 0)
@@ -690,10 +690,13 @@ namespace IsThereAnyDeal.Services
                                             itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
                                             wishlist.itadGameInfos = itadGameInfos;
                                         }
+                                        else
+                                        {
+                                            Common.LogDebug(true, $"No data for {wishlist.Name} - {plainData}");
+                                        }
                                     }
                                     catch (Exception ex)
                                     {
-                                        logger.Warn($"No data for {wishlist.Name} - {plainData}");
                                         Common.LogError(ex, true);
                                     }
                                 }
