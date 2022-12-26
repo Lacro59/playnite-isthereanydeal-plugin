@@ -54,7 +54,7 @@ namespace IsThereAnyDeal.Clients
                 return ResultLoad;
             }
 
-            logger.Info($"Load from web for Origin");
+            logger.Info($"Load from web for EA app");
 
             // Get wishlist
             var view = PlayniteApi.WebViews.CreateOffscreenView();
@@ -120,7 +120,7 @@ namespace IsThereAnyDeal.Clients
                             catch (Exception ex)
                             {
                                 Common.LogError(ex, true, $"Error in parse EA app wishlist - {Name}");
-                                logger.Warn($"Error in parse Origin wishlist - {Name}");
+                                logger.Warn($"Error in parse EA app wishlist - {Name}");
                             }
                         }
                     }
@@ -144,10 +144,10 @@ namespace IsThereAnyDeal.Clients
             }
             else
             {
-                logger.Warn($"Origin user is not authenticated");
+                logger.Warn($"EA app user is not authenticated");
                 PlayniteApi.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-origin-noauthenticate",
-                    $"IsThereAnyDeal\r\nGOrigin - {resources.GetString("LOCLoginRequired")}",
+                    $"IsThereAnyDeal\r\nEA app - {resources.GetString("LOCLoginRequired")}",
                     NotificationType.Error
                 ));
             }

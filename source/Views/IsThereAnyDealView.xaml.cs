@@ -463,7 +463,7 @@ namespace IsThereAnyDeal.Views
         }
 
         // Search by name
-        private void TextboxSearch_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void TextboxSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             GetListGame();
         }
