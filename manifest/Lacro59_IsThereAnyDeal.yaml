@@ -42,3 +42,12 @@ Packages:
     Changelog:
       - Playnite 10 only
       - Updated localizations
+  - Version: 3.1
+    RequiredApiVersion: 6.8.0
+    ReleaseDate: 2022-10-04
+    PackageUrl: https://github.com/Lacro59/playnite-isthereanydeal-plugin/releases/download/v3.1/playnite-isthereanydeal-plugin_3_1.pext
+    Changelog:
+      - Added Ubisoft wishlist
+      - Updated localizations
+      - Updated store name
+      - Minors optimizations
