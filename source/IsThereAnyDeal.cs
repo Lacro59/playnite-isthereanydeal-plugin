@@ -13,6 +13,8 @@ using System.Windows.Media;
 using CommonPluginsShared.Controls;
 using System.IO;
 using System.Reflection;
+using CommonPlayniteShared;
+using CommonPlayniteShared.Common;
 
 namespace IsThereAnyDeal
 {
@@ -26,6 +28,10 @@ namespace IsThereAnyDeal
 
         public IsThereAnyDeal(IPlayniteAPI api) : base(api)
         {
+            string PluginCachePath = Path.Combine(PlaynitePaths.DataCachePath, "IsThereAnyDeal");
+            HttpFileCachePlugin.CacheDirectory = PluginCachePath;
+            FileSystem.CreateDirectory(PluginCachePath);
+
             // Manual dll load
             try
             {

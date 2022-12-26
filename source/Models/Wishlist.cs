@@ -6,13 +6,14 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using CommonPluginsShared.Extensions;
+using CommonPlayniteShared;
+using System.Windows.Media.Imaging;
+using System.Drawing.Imaging;
 
 namespace IsThereAnyDeal.Models
 {
     public class Wishlist
     {
-        private static readonly ILogger logger = LogManager.GetLogger();
-
         public string StoreId { get; set; }
         public string StoreName { get; set; }
         public string ShopColor { get; set; }
@@ -21,15 +22,12 @@ namespace IsThereAnyDeal.Models
         public Guid SourceId { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Capsule { get; set; }
+        [DontSerialize]
+        public BitmapImage CapsuleImage => ImageSourceManagerPlugin.GetImage(Capsule, false, new BitmapLoadProperties(200, 200));
         public string Plain { get; set; }
 
         [DontSerialize]
-        public bool InLibrary {
-            get
-            {
-                return API.Instance.Database.Games.Where(x => x.Name.IsEqual(Name) && !x.Hidden)?.Count() > 0;
-            }
-        }
+        public bool InLibrary => API.Instance.Database.Games.Where(x => x.Name.IsEqual(Name) && !x.Hidden)?.Count() > 0;
 
         public bool IsActive { get; set; }
         public ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos { get; set; }
@@ -108,22 +106,10 @@ namespace IsThereAnyDeal.Models
         }
 
         [DontSerialize]
-        public bool HasItadData
-        {
-            get
-            {
-                return (ItadBestPrice.CurrencySign != null && !ItadBestPrice.CurrencySign.IsNullOrEmpty());
-            }
-        }
+        public bool HasItadData => ItadBestPrice.CurrencySign != null && !ItadBestPrice.CurrencySign.IsNullOrEmpty();
 
         [DontSerialize]
-        public string UrlGame
-        {
-            get
-            {
-                return string.Format("https://isthereanydeal.com/game/{0}/info/", Plain);
-            }
-        }
+        public string UrlGame => string.Format("https://isthereanydeal.com/game/{0}/info/", Plain);
 
         [DontSerialize]
         public List<Wishlist> Duplicates = new List<Wishlist>();
