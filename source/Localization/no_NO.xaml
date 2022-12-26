@@ -17,7 +17,9 @@
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Aktiver Xbox-ønskeliste</sys:String>
     <sys:String x:Key="LOCItadXboxWishlistLink">Lenke til ønskeliste</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Aktiver Origin-ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadEnableUbisoft">Aktiver Ubisoft-ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadUbisoftWishlistLink">Lenke til ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">Aktiver EA app-ønskeliste</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">Region</sys:String>
@@ -90,6 +92,8 @@ Prøv å logge inn med kontoen din.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam-ønskelisten er privat. Du må bruke autentiseringsknappen i Steam-bibliotekutvidelsen</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox er aktivert i IsThereAnyDeal-utvidelsen, men bibliotekutvidelsen er deaktivert i Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Det finnes ingen lenke for Xbox-ønskelisten.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Origin er aktivert i IsThereAnyDeal-utvidelsen, men biblioteksutvidelsen er deaktivert i Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">There is no Ubisoft wishlist link.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
 
 </ResourceDictionary>
