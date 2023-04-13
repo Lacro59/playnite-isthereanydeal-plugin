@@ -80,7 +80,7 @@
     <sys:String x:Key="LOCITADDataDownloading">Scaricamento dati IsThereAnyDeal...</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Notifica di giveaway per {0} ({1} gioco/chi)</sys:String>
-    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Notifica di presso per {0} - {1}{2} ({3}%)</sys:String>
+    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Notifica di prezzo per {0} - {1}{2} ({3}%)</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Si è verificato un errore durante il recupero della lista dei desideri da {0}.
 Prova ad accedere con il tuo account.</sys:String>
