@@ -17,9 +17,9 @@
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Xbox Wunschliste aktivieren</sys:String>
     <sys:String x:Key="LOCItadXboxWishlistLink">Wunschlisten Link</sys:String>
-    <sys:String x:Key="LOCItadEnableUbisoft">Ubisoft-Wunschliste aktivieren</sys:String>
-    <sys:String x:Key="LOCItadUbisoftWishlistLink">Wunschlisten-Link</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">EA App-Wunschliste aktivieren</sys:String>
+    <sys:String x:Key="LOCItadEnableUbisoft">Ubisoft Wunschliste aktivieren</sys:String>
+    <sys:String x:Key="LOCItadUbisoftWishlistLink">Wunschzettel Link</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">EA App Wunschliste aktivieren</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">Region</sys:String>
@@ -93,7 +93,7 @@ Versuchen Sie, sich mit Ihrem Konto anzumelden.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox ist im IsThereAnyDeal Plugin aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Der Link zur Xbox Wunschliste konnte nicht gefunden werden.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisoft ist im IsThereAnyDeal Plugin aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert.</sys:String>    
-    <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Es gibt keinen Ubisoft-Wunschlistenlink.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Es gibt keinen Ubisoft Wunschzettel Link.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA App ist im IsThereAnyDeal Plugin aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert.</sys:String>
 
 </ResourceDictionary>
