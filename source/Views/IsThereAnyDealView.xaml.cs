@@ -1,20 +1,21 @@
-﻿using IsThereAnyDeal.Services;
-using IsThereAnyDeal.Models;
-using Playnite.SDK;
-using Playnite.SDK.Data;
-using CommonPluginsShared;
-using System;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using IsThereAnyDeal.Clients;
-using CommonPluginsShared.Extensions;
 using System.Windows.Controls.Primitives;
+using CommonPluginsShared;
 using CommonPluginsShared.Converters;
-using System.Globalization;
+using CommonPluginsShared.Extensions;
+using IsThereAnyDeal.Clients;
+using IsThereAnyDeal.Models;
+using IsThereAnyDeal.Services;
+using Playnite.SDK;
+using Playnite.SDK.Data;
 
 namespace IsThereAnyDeal.Views
 {
@@ -27,6 +28,7 @@ namespace IsThereAnyDeal.Views
         private static IResourceProvider resources = new ResourceProvider();
         private readonly IsThereAnyDealSettings _settings;
         private readonly IsThereAnyDeal _plugin;
+        private readonly Timer _sliderDelayTimer = new Timer(500);
 
         private List<Wishlist> lbWishlistItems { get; set; } = new List<Wishlist>();
         private List<string> SearchStores { get; set; } = new List<string>();
@@ -36,11 +38,10 @@ namespace IsThereAnyDeal.Views
         private IsThereAnyDealApi isThereAnyDealApi { get; set; } = new IsThereAnyDealApi();
         private ItadGameInfo StorePriceSelected { get; set; }
 
-
         public IsThereAnyDealView(IsThereAnyDeal plugin, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
             InitializeComponent();
-            
+
             _settings = settings;
             _plugin = plugin;
 
@@ -55,6 +56,9 @@ namespace IsThereAnyDeal.Views
             sPrice.Maximum = settings.MaxPrice;
 
             DataContext = this;
+
+            _sliderDelayTimer.AutoReset = false;
+            _sliderDelayTimer.Elapsed += OnSliderDelayTimer_Elapsed;
         }
 
         private void RefreshData(string PlainSelected, bool CachOnly = true, bool ForcePrice = false)
@@ -65,7 +69,8 @@ namespace IsThereAnyDeal.Views
             var task = Task.Run(() => LoadData(_plugin.GetPluginUserDataPath(), _settings, PlainSelected, CachOnly, ForcePrice))
                 .ContinueWith(antecedent =>
                 {
-                    this.Dispatcher?.Invoke(new Action(() => {
+                    this.Dispatcher?.Invoke(new Action(() =>
+                    {
                         try
                         {
                             lbWishlistItems = antecedent.Result;
@@ -104,7 +109,7 @@ namespace IsThereAnyDeal.Views
             if (_settings.EnableSteam)
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "Steam", StoreNameDisplay = (TransformIcon.Get("Steam") + " Steam").Trim(), IsCheck = false });
-                }
+            }
             if (_settings.EnableGog)
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "GOG", StoreNameDisplay = (TransformIcon.Get("GOG") + " GOG").Trim(), IsCheck = false });
@@ -139,8 +144,7 @@ namespace IsThereAnyDeal.Views
             tpListBox.ItemsSource = isThereAnyDealApi.countDatas;
         }
 
-
-        private async Task<List<Wishlist>> LoadData (string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "", bool CachOnly = true, bool ForcePrice = false)
+        private async Task<List<Wishlist>> LoadData(string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "", bool CachOnly = true, bool ForcePrice = false)
         {
             List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(_plugin, settings, PluginUserDataPath, CachOnly, ForcePrice);
             return ListWishlist;
@@ -152,13 +156,13 @@ namespace IsThereAnyDeal.Views
             return itadGiveaways;
         }
 
-
         private void GetListGiveaways(string PluginUserDataPath)
         {
             var task = Task.Run(() => LoadDatatGiveaways(PluginUserDataPath))
                 .ContinueWith(antecedent =>
                 {
-                    Application.Current.Dispatcher.Invoke(new Action(() => {
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
                         List<ItadGiveaway> itadGiveaways = antecedent.Result;
                         int row = 0;
                         int col = 0;
@@ -210,8 +214,8 @@ namespace IsThereAnyDeal.Views
             Process.Start((string)((Button)sender).Tag);
         }
 
-
         #region Button for each game in wishlist
+
         private void ButtonWeb_Click(object sender, RoutedEventArgs e)
         {
             string Tag = (string)((Button)sender).Tag;
@@ -246,8 +250,8 @@ namespace IsThereAnyDeal.Views
             Common.LogDebug(true, $"BtRemoveWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
 
             MessageBoxResult RessultDialog = API.Instance.Dialogs.ShowMessage(
-                string.Format(resources.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName), 
-                "IsThereAnyDeal", 
+                string.Format(resources.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
+                "IsThereAnyDeal",
                 MessageBoxButton.YesNo
             );
             if (RessultDialog == MessageBoxResult.Yes)
@@ -344,7 +348,7 @@ namespace IsThereAnyDeal.Views
                             Common.LogDebug(true, $"IsNotDeleted");
                             GetListGame();
                         }
-                        
+
                         DataLoadWishlist.Visibility = Visibility.Collapsed;
                         dpData.IsEnabled = true;
                     }));
@@ -393,10 +397,11 @@ namespace IsThereAnyDeal.Views
                 }
             }
         }
-        #endregion
 
+        #endregion Button for each game in wishlist
 
         #region Search
+
         // Get list
         private void GetListGame()
         {
@@ -423,10 +428,12 @@ namespace IsThereAnyDeal.Views
         {
             FilterCbStore((CheckBox)sender);
         }
+
         private void ChkStore_Unchecked(object sender, RoutedEventArgs e)
         {
             FilterCbStore((CheckBox)sender);
         }
+
         private void FilterCbStore(CheckBox sender)
         {
             FilterStore.Text = string.Empty;
@@ -455,7 +462,7 @@ namespace IsThereAnyDeal.Views
             {
                 SearchPercentage = (int)((Slider)sender).Value;
                 lPercentage.Content = SearchPercentage + "%";
-                GetListGame();
+                GetGamesListWithDelay();
             }
             catch
             {
@@ -469,10 +476,20 @@ namespace IsThereAnyDeal.Views
             {
                 SearchPrice = (int)((Slider)sender).Value;
                 lPrice.Content = SearchPrice + _settings.CurrencySign;
-                GetListGame();
+                GetGamesListWithDelay();
             }
         }
 
+        private void GetGamesListWithDelay()
+        {
+            _sliderDelayTimer.Stop();
+            _sliderDelayTimer.Start();
+        }
+
+        private void OnSliderDelayTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(GetListGame);
+        }
 
         private void PART_Tb_Click(object sender, RoutedEventArgs e)
         {
@@ -489,10 +506,11 @@ namespace IsThereAnyDeal.Views
 
             GetListGame();
         }
-        #endregion
 
+        #endregion Search
 
         #region Order
+
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TabControl tc = sender as TabControl;
@@ -558,10 +576,11 @@ namespace IsThereAnyDeal.Views
                 Common.LogError(ex, false);
             }
         }
-        #endregion
 
+        #endregion Order
 
         #region Data refresh
+
         private void ButtonData_Click(object sender, RoutedEventArgs e)
         {
             RefreshData(string.Empty, false);
@@ -571,9 +590,9 @@ namespace IsThereAnyDeal.Views
         {
             RefreshData(string.Empty, true, true);
         }
-        #endregion
-    }
 
+        #endregion Data refresh
+    }
 
     public class ListStore
     {
