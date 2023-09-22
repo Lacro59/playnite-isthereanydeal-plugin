@@ -1,0 +1,99 @@
+﻿<?xml version="1.0"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- MainView -->
+
+    <sys:String x:Key="LOCItad">IsThereAnyDeal</sys:String>
+
+    <!-- IsThereAnyDealSettingsView -->
+
+    <sys:String x:Key="LOCItadExclusionList">Dışlama listesi</sys:String>
+
+    <sys:String x:Key="LOCItadSettingWishlist">İstek listesi</sys:String>
+    <sys:String x:Key="LOCItadEnableSteam">Steam istek listesini etkinleştir</sys:String>
+    <sys:String x:Key="LOCItadEnableGog">GOG istek listesini etkinleştir</sys:String>
+    <sys:String x:Key="LOCItadEnableEpic">Epic Games Mağazası istek listesini etkinleştir</sys:String>
+    <sys:String x:Key="LOCItadEnableHumble">Humble istek listesini etkinleştir</sys:String>
+    <sys:String x:Key="LOCItadHumbleKey">Humble kimliği</sys:String>
+    <sys:String x:Key="LOCItadEnableXbox">Xbox istek listesini etkinleştir</sys:String>
+    <sys:String x:Key="LOCItadXboxWishlistLink">İstek listesi bağlantısı</sys:String>
+    <sys:String x:Key="LOCItadEnableUbisoft">Ubisoft istek listesini etkinleştir</sys:String>
+    <sys:String x:Key="LOCItadUbisoftWishlistLink">İstek listesi bağlantısı</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">EA uygulaması istek listesini etkinleştir</sys:String>
+
+    <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
+    <sys:String x:Key="LOCItadRegion">Bölge</sys:String>
+    <sys:String x:Key="LOCItadCountry">Ülke</sys:String>
+    <sys:String x:Key="LOCItadStores">Mağaza(lar)</sys:String>
+
+    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Ücretsiz dağıtılanlar bildirimlerini etkinleştir</sys:String>
+    <sys:String x:Key="LOCItadEnableNotification">Bildirimleri etkinleştir</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Fiyat iskontosu</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPrice">Düşük fiyat</sys:String>
+
+    <sys:String x:Key="LOCItadSettingPrice">Fiyat kaydırıcıya sınır belirle</sys:String>
+    <sys:String x:Key="LOCItadMinimum">En düşük</sys:String>
+    <sys:String x:Key="LOCItadMaximum">En Fazla</sys:String>
+
+    <sys:String x:Key="LOCItadSettingsNotifications">Bildirimler</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationAt">Fiyat iskontosu</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Düşük fiyat</sys:String>
+
+    <!-- IsThereAnyDealView -->
+
+    <sys:String x:Key="LOCITADRefreshPrice">Fiyat yenile</sys:String>
+    
+    <sys:String x:Key="LOCITADOrderPriceCut">Fiyat iskontosu</sys:String>
+    <sys:String x:Key="LOCITADOrderPrice">Fiyat</sys:String>
+    
+    <sys:String x:Key="LOCITADFilterSource">Mağaza(lar) bazında filtrele</sys:String>
+    <sys:String x:Key="LOCITADPercentage">En az indirim yüzdesi</sys:String>
+    <sys:String x:Key="LOCITADPrice">Düşük fiyat</sys:String>
+
+    <sys:String x:Key="LOCItadCurrentBest">Şu anki en iyi</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">Şu anki mağaza istek listesi</sys:String>
+    <sys:String x:Key="LOCItadBuy">En iyi satın alım</sys:String>
+    <sys:String x:Key="LOCItadStore">Mağaza</sys:String>
+    <sys:String x:Key="LOCItadNoData">Ayarlardaki seçilen mağazaya ait veri yok</sys:String>
+    <sys:String x:Key="LOCItadInLibrary">Kütüphanede</sys:String>
+    <sys:String x:Key="LOCItadNotActive">IsThereAnyDeal üstünde etkin değil</sys:String>
+    <sys:String x:Key="LOCItadNotFind">IsThereAnyDeal üstünde bulunamadı</sys:String>
+
+    <sys:String x:Key="LOCItadDeleteOnStoreWishList">{1} üstünde {0} silinsin mi?</sys:String>
+    <sys:String x:Key="LOCItadHideOnStoreWishList">{1} üstünde {0} hariç bırakılsın mı?</sys:String>
+
+    <sys:String x:Key="LOCItadWhishListOptions">İstek listesi seçenekleri</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Kütüphanedeki oyunları dahil et</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">IsThereAnyDeal verisi bulunmayan oyunları dahil et</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Sadece kütüphanedeki oyunlar</sys:String>
+
+    <sys:String x:Key="LOCItadImportSteamWishlist">Steam istek listesini içe aktar</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam istek listesi bağlantısı</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">İçe aktarma başarılı</sys:String>
+    <sys:String x:Key="LOCItadImportError">İstek listesi dosyasını içe aktarmak imkansız</sys:String>
+
+    <!-- IsThereAnyDeal -->
+
+    <sys:String x:Key="LOCItadPluginView">IsThereAnyDeal verisini görüntüle</sys:String>
+    <sys:String x:Key="LOCItadCheckNotifications">Bildirimleri denetle</sys:String>
+    <sys:String x:Key="LOCItadUpdateDatas">IsThereAnyDeal verisini güncelle</sys:String>
+    <sys:String x:Key="LOCITADDataDownloading">IsThereAnyDeal verisi indiriliyor...</sys:String>
+
+    <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">{0} için ücretsiz dağıtım bildirimi ({1} oyun(lar))</sys:String>
+    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Şunun için fiyat bildirimi: {0} - {1}{2} (% {3})</sys:String>
+
+    <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">{0} üzerinden istek listesi getirilirken hata oluştu.
+Hesabınıza giriş yapmayı deneyin.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">IsThereAnyDeal eklentisinde Humble Bundle etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">IsThereAnyDeal eklentisinde Epic etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">IsThereAnyDeal eklentisinde GOG etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">IsThereAnyDeal eklentisinde Steam etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
+    <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam ayarlarda düzgün yapılandırılmamış</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam istek listesi gizli. Steam Kütüphanesi eklentisinde kimlik doğrulama düğmesini kullanmalısınız</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">IsThereAnyDeal eklentisinde Xbox etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Xbox istek listesi bağlantısı yok.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">IsThereAnyDeal eklentisinde Ubisoft etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Ubisoft istek listesi bağlantısı yok.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">IsThereAnyDeal eklentisinde EA uygulaması etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
+
+</ResourceDictionary>

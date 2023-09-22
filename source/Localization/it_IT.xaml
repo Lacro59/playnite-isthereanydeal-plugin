@@ -17,9 +17,9 @@
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Abilita la lista dei desideri della Xbox</sys:String>
     <sys:String x:Key="LOCItadXboxWishlistLink">Collegamento lista dei desideri</sys:String>
-    <sys:String x:Key="LOCItadEnableUbisoft">Enable Ubisoft wishlist</sys:String>
-    <sys:String x:Key="LOCItadUbisoftWishlistLink">Wishlist link</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Enable EA app wishlist</sys:String>
+    <sys:String x:Key="LOCItadEnableUbisoft">Abilita la lista dei desideri Ubisoft</sys:String>
+    <sys:String x:Key="LOCItadUbisoftWishlistLink">Link della lista dei desideri</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">Abilita lista dei desideri dell'app EA</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">Regione</sys:String>
@@ -80,7 +80,7 @@
     <sys:String x:Key="LOCITADDataDownloading">Scaricamento dati IsThereAnyDeal...</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Notifica di giveaway per {0} ({1} gioco/chi)</sys:String>
-    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Notifica di presso per {0} - {1}{2} ({3}%)</sys:String>
+    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Notifica di prezzo per {0} - {1}{2} ({3}%)</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Si è verificato un errore durante il recupero della lista dei desideri da {0}.
 Prova ad accedere con il tuo account.</sys:String>
@@ -92,8 +92,8 @@ Prova ad accedere con il tuo account.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">La lista dei desideri di Steam è privata. È necessario utilizzare il pulsante di autenticazione nel plugin Libreria di Steam</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox è attivato nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disattivata in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Non c'è nessun link alla lista dei desideri Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
-    <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">There is no Ubisoft wishlist link.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisoft è abilitato nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disabilitata in Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Non c'è alcun link alla lista dei desideri Ubisoft.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">L'app EA è abilitata nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disabilitata in Playnite.</sys:String>
 
 </ResourceDictionary>
