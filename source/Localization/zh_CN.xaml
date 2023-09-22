@@ -84,13 +84,13 @@
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">从 {0} 检索愿望单时发生错误。
 请尝试使用您的帐户登录</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Humble Bundle 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中启</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中启</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中启</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中启</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Humble Bundle 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中</sys:String>
     <sys:String x:Key="LOCItadNotificationsSteamBadConfig">未在设置中正确配置 Steam</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam 愿望单是私有的。您必须在 Steam 库插件中使用身份验证按钮</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中启</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">没有 Xbox 愿望单链接</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">There is no Ubisoft wishlist link.</sys:String>
