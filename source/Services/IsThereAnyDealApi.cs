@@ -573,7 +573,7 @@ namespace IsThereAnyDeal.Services
                 int countString = 0;
                 foreach (Wishlist wishlist in wishlists)
                 {
-                    if (countString == 200)
+                    if (countString == 150)
                     {
                         plains.Add(plain);
                         countString = 0;
@@ -586,6 +586,11 @@ namespace IsThereAnyDeal.Services
 
                     if (!wishlist.itadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true)
                     {
+                        if (string.IsNullOrWhiteSpace(wishlist.Plain))
+                        {
+                            continue;
+                        }
+
                         if (plain == string.Empty)
                         {
                             plain += wishlist.Plain;
@@ -663,23 +668,20 @@ namespace IsThereAnyDeal.Services
                                             {
                                                 try
                                                 {
-                                                    if (dataObj.price_new != 0 && itadPrices.Where(x => x.price_new > 0).Count() > 1)
-                                                    { 
-                                                        dataCurrentPrice.Add(new ItadGameInfo
-                                                        {
-                                                            Name = wishlist.Name,
-                                                            StoreId = wishlist.StoreId,
-                                                            SourceId = wishlist.SourceId,
-                                                            Plain = wishlist.Plain,
-                                                            PriceNew = Math.Round(dataObj.price_new, 2),
-                                                            PriceOld = Math.Round(dataObj.price_old, 2),
-                                                            PriceCut = dataObj.price_cut,
-                                                            CurrencySign = settings.CurrencySign,
-                                                            ShopName = dataObj.shop.name,
-                                                            ShopColor = GetShopColor(dataObj.shop.name, settings.Stores),
-                                                            UrlBuy = dataObj.url
-                                                        });
-                                                    }
+                                                    dataCurrentPrice.Add(new ItadGameInfo
+                                                    {
+                                                        Name = wishlist.Name,
+                                                        StoreId = wishlist.StoreId,
+                                                        SourceId = wishlist.SourceId,
+                                                        Plain = wishlist.Plain,
+                                                        PriceNew = Math.Round(dataObj.price_new, 2),
+                                                        PriceOld = Math.Round(dataObj.price_old, 2),
+                                                        PriceCut = dataObj.price_cut,
+                                                        CurrencySign = settings.CurrencySign,
+                                                        ShopName = dataObj.shop.name,
+                                                        ShopColor = GetShopColor(dataObj.shop.name, settings.Stores),
+                                                        UrlBuy = dataObj.url
+                                                    });
                                                 }
                                                 catch (Exception ex)
                                                 {
