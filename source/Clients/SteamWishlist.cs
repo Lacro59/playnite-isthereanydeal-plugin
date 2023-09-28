@@ -14,6 +14,7 @@ using AngleSharp.Parser.Html;
 using AngleSharp.Dom.Html;
 using System.Text.RegularExpressions;
 using CommonPluginsStores.Steam;
+using AngleSharp.Dom;
 
 namespace IsThereAnyDeal.Services
 {
@@ -168,7 +169,7 @@ namespace IsThereAnyDeal.Services
 
                                 PlainData plainData = isThereAnyDealApi.GetPlain(Name);
 
-                                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1);
+                                ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1);
 
                                 Result.Add(new Wishlist
                                 {
@@ -225,7 +226,7 @@ namespace IsThereAnyDeal.Services
                     HtmlParser parser = new HtmlParser();
                     IHtmlDocument htmlDocument = parser.Parse(ResultWeb);
 
-                    var el = htmlDocument.QuerySelector(".actual_persona_name");
+                    IElement el = htmlDocument.QuerySelector(".actual_persona_name");
                     if (el != null)
                     {
                         SteamUser = el.InnerHtml;
@@ -255,7 +256,7 @@ namespace IsThereAnyDeal.Services
 
         public bool RemoveWishlist(string StoreId)
         {
-            string Url = @"https://store.steampowered.com/wishlist/profiles/{0}/remove/";
+            //string Url = @"https://store.steampowered.com/wishlist/profiles/{0}/remove/";
             return false;
         }
 
@@ -271,8 +272,8 @@ namespace IsThereAnyDeal.Services
                     
                     dynamic jObject = Serialization.FromJsonFile<dynamic>(FilePath);
 
-                    var rgWishlist = jObject["rgWishlist"];
-                    foreach(var el in rgWishlist)
+                    dynamic rgWishlist = jObject["rgWishlist"];
+                    foreach(dynamic el in rgWishlist)
                     {
                         // Respect API limitation
                         Thread.Sleep(1000);
@@ -299,8 +300,8 @@ namespace IsThereAnyDeal.Services
                             {
                                 StoreId = (string)el;
 
-                                var parsedData = Serialization.FromJson<Dictionary<string, StoreAppDetailsResult>>(ResultWeb);
-                                var AppDetails = parsedData[el.ToString()].data;
+                                Dictionary<string, StoreAppDetailsResult> parsedData = Serialization.FromJson<Dictionary<string, StoreAppDetailsResult>>(ResultWeb);
+                                dynamic AppDetails = parsedData[el.ToString()].data;
 
                                 if (AppDetails == null)
                                 {
@@ -318,7 +319,7 @@ namespace IsThereAnyDeal.Services
 
                                 PlainData plainData = isThereAnyDealApi.GetPlain(Name);
 
-                                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1);
+                                ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1);
 
                                 Result.Add(new Wishlist
                                 {

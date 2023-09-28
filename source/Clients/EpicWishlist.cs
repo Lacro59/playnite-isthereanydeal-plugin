@@ -31,10 +31,7 @@ namespace IsThereAnyDeal.Services
                 return _EpicAPI;
             }
 
-            set
-            {
-                _EpicAPI = value;
-            }
+            set => _EpicAPI = value;
         }
 
         public const string GraphQLEndpoint = @"https://graphql.epicgames.com/graphql";
@@ -42,9 +39,9 @@ namespace IsThereAnyDeal.Services
 
         public async Task<string> QuerySearchWishList(string query, dynamic variables, string token)
         {
-            
 
-            var client = new HttpClient();
+
+            HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
                 
             var queryObject = new
@@ -52,9 +49,9 @@ namespace IsThereAnyDeal.Services
                 query = query,
                 variables = variables
             };
-            var content = new StringContent(Serialization.ToJson(queryObject), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(GraphQLEndpoint, content).ConfigureAwait(false);
-            var str = await response.Content.ReadAsStringAsync();
+            StringContent content = new StringContent(Serialization.ToJson(queryObject), Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync(GraphQLEndpoint, content).ConfigureAwait(false);
+            string str = await response.Content.ReadAsStringAsync();
 
             return str;
         }
@@ -110,7 +107,7 @@ namespace IsThereAnyDeal.Services
                 return ResultLoad;
             }
 
-            var tokens = EpicAPI.loadTokens();
+            CommonPlayniteShared.PluginLibrary.EpicLibrary.Models.OauthResponse tokens = EpicAPI.loadTokens();
             if (tokens.access_token.IsNullOrEmpty())
             {
                 logger.Warn($"Epic user is not authenticated");
@@ -166,7 +163,7 @@ namespace IsThereAnyDeal.Services
 
                                 PlainData plainData = isThereAnyDealApi.GetPlain(Name);
 
-                                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("epic") > -1);
+                                ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("epic") > -1);
 
                                 Result.Add(new Wishlist
                                 {

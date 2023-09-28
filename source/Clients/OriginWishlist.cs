@@ -28,10 +28,7 @@ namespace IsThereAnyDeal.Clients
                 return _OriginAPI;
             }
 
-            set
-            {
-                _OriginAPI = value;
-            }
+            set => _OriginAPI = value;
         }
 
         private string urlBase = "https://www.origin.com/";
@@ -65,10 +62,10 @@ namespace IsThereAnyDeal.Clients
             {
                 // Get informations from Origin plugin.
                 string accessToken = OriginAPI.GetAccessToken().access_token;
-                var userId = OriginAPI.GetAccountInfo(OriginAPI.GetAccessToken()).pid.pidId;
+                long userId = OriginAPI.GetAccountInfo(OriginAPI.GetAccessToken()).pid.pidId;
                 string url = string.Format(urlWishlist, userId);
 
-                using (var webClient = new WebClient { Encoding = Encoding.UTF8 })
+                using (WebClient webClient = new WebClient { Encoding = Encoding.UTF8 })
                 {
                     try
                     {
@@ -101,7 +98,7 @@ namespace IsThereAnyDeal.Clients
 
                                 PlainData plainData = isThereAnyDealApi.GetPlain(Name);
 
-                                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("origin") > -1 || x.Id.ToLower().IndexOf("ea app") > -1);
+                                ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("origin") > -1 || x.Id.ToLower().IndexOf("ea app") > -1);
 
                                 Result.Add(new Wishlist
                                 {
@@ -128,7 +125,7 @@ namespace IsThereAnyDeal.Clients
                     {
                         if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                         {
-                            var resp = (HttpWebResponse)ex.Response;
+                            HttpWebResponse resp = (HttpWebResponse)ex.Response;
                             switch (resp.StatusCode)
                             {
                                 case HttpStatusCode.NotFound: // HTTP 404
@@ -194,7 +191,7 @@ namespace IsThereAnyDeal.Clients
             string lang = CodeLang.GetOriginLang(API.Instance.ApplicationSettings.Language);
             string langShort = CodeLang.GetOriginLangCountry(API.Instance.ApplicationSettings.Language);
 
-            var url = string.Format(@"https://api2.origin.com/ecommerce2/public/supercat/{0}/{1}?country={2}", gameId, lang, langShort);
+            string url = string.Format(@"https://api2.origin.com/ecommerce2/public/supercat/{0}/{1}?country={2}", gameId, lang, langShort);
 
             string stringData = Web.DownloadStringData(url).GetAwaiter().GetResult();
             return Serialization.FromJson<GameStoreDataResponse>(stringData);

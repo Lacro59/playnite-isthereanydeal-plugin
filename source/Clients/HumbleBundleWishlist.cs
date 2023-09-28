@@ -74,7 +74,7 @@ namespace IsThereAnyDeal.Services
 
                             PlainData plainData = isThereAnyDealApi.GetPlain(Name);
 
-                            var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("humble") > -1);
+                            ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("humble") > -1);
 
                             Result.Add(new Wishlist
                             {

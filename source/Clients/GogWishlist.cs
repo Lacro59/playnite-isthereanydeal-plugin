@@ -26,10 +26,7 @@ namespace IsThereAnyDeal.Services
                 return _GogAPI;
             }
 
-            set
-            {
-                _GogAPI = value;
-            }
+            set => _GogAPI = value;
         }
 
 
@@ -209,7 +206,7 @@ namespace IsThereAnyDeal.Services
 
                 PlainData plainData = isThereAnyDealApi.GetPlain(Name);
 
-                var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("gog") > -1);
+                ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("gog") > -1);
 
                 return new Wishlist
                 {

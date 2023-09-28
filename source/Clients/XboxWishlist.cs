@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AngleSharp.Dom;
 
 namespace IsThereAnyDeal.Clients
 {
@@ -55,7 +56,7 @@ namespace IsThereAnyDeal.Clients
                 return Result;
             }
 
-            var view = PlayniteApi.WebViews.CreateOffscreenView();
+            IWebView view = PlayniteApi.WebViews.CreateOffscreenView();
             view.NavigateAndWait(url);
             string ResultWeb = view.GetPageSource();
 
@@ -66,7 +67,7 @@ namespace IsThereAnyDeal.Clients
                     HtmlParser parser = new HtmlParser();
                     IHtmlDocument HtmlRequirement = parser.Parse(ResultWeb);
 
-                    foreach (var SearchElement in HtmlRequirement.QuerySelectorAll("li.product-wishlist-item"))
+                    foreach (IElement SearchElement in HtmlRequirement.QuerySelectorAll("li.product-wishlist-item"))
                     {
                         string StoreId = string.Empty;
                         string StoreUrl = string.Empty;
@@ -84,7 +85,7 @@ namespace IsThereAnyDeal.Clients
                             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                             PlainData plainData = isThereAnyDealApi.GetPlain(Name);
 
-                            var tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("microsoft") > -1);
+                            ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("microsoft") > -1);
 
                             Result.Add(new Wishlist
                             {
