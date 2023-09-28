@@ -10,7 +10,7 @@
 Extension for [Playnite](https://playnite.link).  
 
 ## Informations
-This plugin gets [IsThereAnyDeal](https://isthereanydeal.com) data in application database from stores wishlist. 
+This plugin gets [IsThereAnyDeal](https://isthereanydeal.com) data in application database from stores wishlist.  
 The plugin is a alternative version to [bburky](https://github.com/bburky/isthereanydeal-playnite).
 
 <a href="https://github.com/Lacro59/playnite-isthereanydeal-plugin/blob/master/forum/main_01.jpg?raw=true">
