@@ -6,8 +6,11 @@
              xmlns:local="clr-namespace:IsThereAnyDeal.Views"
              xmlns:converters="clr-namespace:CommonPlayniteShared.Converters"
              xmlns:converters1="clr-namespace:CommonPluginsShared.Converters"
-             xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel" xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls"
-             mc:Ignorable="d" d:DesignHeight="740" d:DesignWidth="1280" Background="{DynamicResource WindowBackgourndBrush}">
+             xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel" 
+             xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls"
+             mc:Ignorable="d" d:DesignHeight="740" d:DesignWidth="1280" 
+             d:DataContext="{d:DesignInstance Type=local:ItadDataContext, IsDesignTimeCreatable=True}"
+             Background="{DynamicResource WindowBackgourndBrush}">
 
     <UserControl.Resources>
         <converters:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
@@ -71,7 +74,8 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label Grid.Column="0" Content="{DynamicResource LOCITADFilterSource}" FontSize="16" />
-                                        <ComboBox Grid.Column="2" Name="FilterStore" IsEditable="True" IsReadOnly="True">
+                                        <ComboBox Grid.Column="2" Name="FilterStore" IsEditable="True" IsReadOnly="True"
+                                                  ItemsSource="{Binding FilterStoreItems}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <CheckBox Name="chkStore" Checked="ChkStore_Checked" Unchecked="ChkStore_Unchecked" Tag="{Binding StoreName}" 
@@ -91,10 +95,20 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label Grid.Column="0" Content="{DynamicResource LOCITADPercentage}" FontSize="16" />
-                                        <Slider Grid.Column="2" Minimum="0" Maximum="100" Value="0" VerticalAlignment="Center" IsSnapToTickEnabled="True" 
+                                        <Slider Grid.Column="2" Minimum="0" Maximum="100" 
+                                                AutoToolTipPlacement="TopLeft"
+                                                Value="{Binding DiscountPercent, Delay=500}" 
+                                                VerticalAlignment="Center" IsSnapToTickEnabled="True" 
                                                 TickFrequency="1" Name="sPercentage"
-                                                ValueChanged="Slider_ValueChanged" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
-                                        <Label Grid.Column="4" Name="lPercentage" Content="0%" Margin="5,0,0,0" HorizontalAlignment="Right" />
+                                                Thumb.DragCompleted="on_DragCompleted"
+                                                ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
+                                        <TextBlock Grid.Column="4" Margin="5,0,0,0" HorizontalAlignment="Right">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0}%">
+                                                    <Binding Path="DiscountPercent" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
                                     </Grid>
 
                                     <Grid Grid.Column="4" Grid.Row="2">
@@ -107,10 +121,23 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label Grid.Column="0" Content="{DynamicResource LOCITADPrice}" FontSize="16" />
-                                        <Slider Grid.Column="2" Minimum="0" Maximum="100" Value="100" VerticalAlignment="Center" IsSnapToTickEnabled="True" 
+                                        <Slider Grid.Column="2"
+                                                AutoToolTipPlacement="TopLeft"
+                                                Minimum="{Binding MinPrice}"
+                                                Maximum="{Binding MaxPrice}"
+                                                Value="{Binding PriceLimit, Delay=500}" 
+                                                VerticalAlignment="Center" IsSnapToTickEnabled="True" 
                                                 TickFrequency="1" Name="sPrice"
-                                                ValueChanged="Slider_ValueChangedPrice" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
-                                        <Label Grid.Column="4" Name="lPrice" Content="100€" Margin="5,0,0,0" HorizontalAlignment="Right" />
+                                                Thumb.DragCompleted="on_DragCompleted"
+                                                ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
+                                        <TextBlock Grid.Column="4" Margin="5,0,0,0" HorizontalAlignment="Right">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0}{1}">
+                                                    <Binding Path="PriceLimit" />
+                                                    <Binding Path="CurrencySign" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
                                     </Grid>
 
                                     <Label Grid.Column="18" FontFamily="{DynamicResource CommonFont}" Content="" Name="ItadInfo" FontSize="22">
@@ -673,6 +700,8 @@
                 <ColumnDefinition Width="160" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="160" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
             <Label Grid.Column="1" Content="{DynamicResource LOCSettingsTopPanelSortingItem}" />
@@ -687,6 +716,14 @@
                 <ComboBoxItem Content="{DynamicResource LOCMenuSortAscending}" Tag="0" IsSelected="True" />
                 <ComboBoxItem Content="{DynamicResource LOCMenuSortDescending}" Tag="1" />
             </ComboBox>
+
+            <StackPanel Grid.Column="7" Orientation="Horizontal">
+                <TextBlock Style="{DynamicResource BaseTextBlockStyle}" Text="{DynamicResource LOCCommonTotalFound}" 
+                                   VerticalAlignment="Center" />
+                <TextBlock Style="{DynamicResource BaseTextBlockStyle}" Name="PART_TotalFoundCount" 
+                                   Text="{Binding ElementName=lbWishlist, Path=ItemsSource.Count, FallbackValue=0}"
+                                   VerticalAlignment="Center" Width="40" TextAlignment="Right" />
+            </StackPanel>
         </Grid>
 
     </Grid>

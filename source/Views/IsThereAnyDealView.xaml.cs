@@ -30,17 +30,18 @@ namespace IsThereAnyDeal.Views
 
         private List<Wishlist> lbWishlistItems { get; set; } = new List<Wishlist>();
         private List<string> SearchStores { get; set; } = new List<string>();
-        private int SearchPercentage { get; set; } = 0;
-        private int SearchPrice { get; set; } = 100;
 
         private IsThereAnyDealApi isThereAnyDealApi { get; set; } = new IsThereAnyDealApi();
         private ItadGameInfo StorePriceSelected { get; set; }
 
 
+        private ItadDataContext itadDataContext = new ItadDataContext();
+
+
         public IsThereAnyDealView(IsThereAnyDeal plugin, string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "")
         {
             InitializeComponent();
-            
+
             _settings = settings;
             _plugin = plugin;
 
@@ -50,11 +51,10 @@ namespace IsThereAnyDeal.Views
             GetListGiveaways(PluginUserDataPath);
             SetFilterStore();
 
-            lPrice.Content = settings.MaxPrice + _settings.CurrencySign;
-            sPrice.Minimum = settings.MinPrice;
-            sPrice.Maximum = settings.MaxPrice;
-
-            DataContext = this;
+            DataContext = itadDataContext;
+            itadDataContext.CurrencySign = _settings.CurrencySign;
+            itadDataContext.MinPrice = _settings.MinPrice;
+            itadDataContext.MaxPrice = _settings.MaxPrice;
         }
 
         private void RefreshData(string PlainSelected, bool CachOnly = true, bool ForcePrice = false)
@@ -62,7 +62,8 @@ namespace IsThereAnyDeal.Views
             DataLoadWishlist.Visibility = Visibility.Visible;
             lbWishlist.ItemsSource = null;
             dpData.IsEnabled = false;
-            var task = Task.Run(() => LoadData(_plugin.GetPluginUserDataPath(), _settings, PlainSelected, CachOnly, ForcePrice))
+
+            Task task = Task.Run(() => LoadData(_plugin.GetPluginUserDataPath(), _settings, PlainSelected, CachOnly, ForcePrice))
                 .ContinueWith(antecedent =>
                 {
                     this.Dispatcher?.Invoke(new Action(() => {
@@ -130,7 +131,7 @@ namespace IsThereAnyDeal.Views
                 FilterStoreItems.Add(new ListStore { StoreName = "EA app", StoreNameDisplay = (TransformIcon.Get("EA app") + " EA app").Trim(), IsCheck = false });
             }
             FilterStoreItems.Sort((x, y) => string.Compare(x.StoreName, y.StoreName));
-            FilterStore.ItemsSource = FilterStoreItems;
+            itadDataContext.FilterStoreItems = FilterStoreItems;
         }
 
         private void SetInfos()
@@ -140,13 +141,13 @@ namespace IsThereAnyDeal.Views
         }
 
 
-        private async Task<List<Wishlist>> LoadData (string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "", bool CachOnly = true, bool ForcePrice = false)
+        private List<Wishlist> LoadData(string PluginUserDataPath, IsThereAnyDealSettings settings, string PlainSelected = "", bool CachOnly = true, bool ForcePrice = false)
         {
             List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(_plugin, settings, PluginUserDataPath, CachOnly, ForcePrice);
             return ListWishlist;
         }
 
-        private async Task<List<ItadGiveaway>> LoadDatatGiveaways(string PluginUserDataPath)
+        private List<ItadGiveaway> LoadDatatGiveaways(string PluginUserDataPath)
         {
             List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PluginUserDataPath);
             return itadGiveaways;
@@ -155,7 +156,7 @@ namespace IsThereAnyDeal.Views
 
         private void GetListGiveaways(string PluginUserDataPath)
         {
-            var task = Task.Run(() => LoadDatatGiveaways(PluginUserDataPath))
+            Task task = Task.Run(() => LoadDatatGiveaways(PluginUserDataPath))
                 .ContinueWith(antecedent =>
                 {
                     Application.Current.Dispatcher.Invoke(new Action(() => {
@@ -168,21 +169,21 @@ namespace IsThereAnyDeal.Views
                             {
                                 col = 0;
                                 row += 1;
-                                var rowAuto = new RowDefinition();
+                                RowDefinition rowAuto = new RowDefinition();
                                 rowAuto.Height = new GridLength(40);
                                 gGiveaways.RowDefinitions.Add(rowAuto);
                             }
 
-                            var dp = new DockPanel();
+                            DockPanel dp = new DockPanel();
                             dp.Width = 540;
 
-                            var tb = new TextBlock();
+                            TextBlock tb = new TextBlock();
                             tb.Text = itadGiveaway.TitleAll;
                             tb.VerticalAlignment = VerticalAlignment.Center;
                             tb.Width = 440;
                             tb.VerticalAlignment = VerticalAlignment.Center;
 
-                            var bt = new Button();
+                            Button bt = new Button();
                             bt.Content = resources.GetString("LOCWebsiteLabel");
                             bt.Tag = itadGiveaway.Link;
                             bt.Click += new RoutedEventHandler(webGiveaway);
@@ -401,11 +402,11 @@ namespace IsThereAnyDeal.Views
         private void GetListGame()
         {
             lbWishlist.ItemsSource = lbWishlistItems.FindAll(
-                x => x.ItadBestPrice.PriceCut >= SearchPercentage && x.ItadBestPrice.PriceNew <= SearchPrice &&
+                x => x.ItadBestPrice.PriceCut >= itadDataContext.DiscountPercent && x.ItadBestPrice.PriceNew <= itadDataContext.PriceLimit &&
                 (TextboxSearch.Text.IsNullOrEmpty() ? true : x.Name.Contains(TextboxSearch.Text, StringComparison.InvariantCultureIgnoreCase)) &&
-                (SearchStores.Count == 0 ? true : ((SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0))) &&
+                (SearchStores.Count == 0 ? true : (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)) &&
                 _settings.wishlistIgnores.All(y => y.StoreId != x.StoreId && y.Plain != x.Plain) &&
-                ((bool)PART_TbOnlyInLibrary.IsChecked ? x.InLibrary : ((!(bool)PART_TbIncludeInLibrary.IsChecked ? !x.InLibrary : true || !(bool)PART_TbIncludeWithoutData.IsChecked ? x.HasItadData : true)))
+                ((bool)PART_TbOnlyInLibrary.IsChecked ? x.InLibrary : (!(bool)PART_TbIncludeInLibrary.IsChecked ? !x.InLibrary : true || !(bool)PART_TbIncludeWithoutData.IsChecked ? x.HasItadData : true))
             );
 
             // Order
@@ -448,32 +449,6 @@ namespace IsThereAnyDeal.Views
             GetListGame();
         }
 
-        // Search percentage
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            try
-            {
-                SearchPercentage = (int)((Slider)sender).Value;
-                lPercentage.Content = SearchPercentage + "%";
-                GetListGame();
-            }
-            catch
-            {
-            }
-        }
-
-        // Search price
-        private void Slider_ValueChangedPrice(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (lPrice != null)
-            {
-                SearchPrice = (int)((Slider)sender).Value;
-                lPrice.Content = SearchPrice + _settings.CurrencySign;
-                GetListGame();
-            }
-        }
-
-
         private void PART_Tb_Click(object sender, RoutedEventArgs e)
         {
             ToggleButton tb = sender as ToggleButton;
@@ -496,14 +471,7 @@ namespace IsThereAnyDeal.Views
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TabControl tc = sender as TabControl;
-            if (tc.SelectedIndex == 0)
-            {
-                PART_Order.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                PART_Order.Visibility = Visibility.Collapsed;
-            }
+            PART_Order.Visibility = tc.SelectedIndex == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void PART_CbOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -530,6 +498,9 @@ namespace IsThereAnyDeal.Views
                             case "2":
                                 wishlists = wishlists.OrderBy(x => x.ItadBestPrice.PriceNew).ToList();
                                 break;
+
+                            default:
+                                break;
                         }
                     }
                     else
@@ -546,6 +517,9 @@ namespace IsThereAnyDeal.Views
 
                             case "2":
                                 wishlists = wishlists.OrderByDescending(x => x.ItadBestPrice.PriceNew).ToList();
+                                break;
+
+                            default:
                                 break;
                         }
                     }
@@ -572,6 +546,38 @@ namespace IsThereAnyDeal.Views
             RefreshData(string.Empty, true, true);
         }
         #endregion
+
+
+        // Search price
+        // Search percentage
+        private void on_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            GetListGame();
+        }
+    }
+
+
+    public class ItadDataContext : ObservableObject
+    {
+        private string _CurrencySign = "$";
+        public string CurrencySign { get => _CurrencySign; set => SetValue(ref _CurrencySign, value); }
+
+        private double _MinPrice = 0;
+        public double MinPrice { get => _MinPrice; set => SetValue(ref _MinPrice, value); }
+
+        private double _MaxPrice = 250;
+        public double MaxPrice { get => _MaxPrice; set => SetValue(ref _MaxPrice, value); }
+
+
+
+        private double _DiscountPercent = 0;
+        public double DiscountPercent { get => _DiscountPercent; set => SetValue(ref _DiscountPercent, value); }
+
+        private double _PriceLimit = 100;
+        public double PriceLimit { get => _PriceLimit; set => SetValue(ref _PriceLimit, value); }
+
+        private List<ListStore> _FilterStoreItems = new List<ListStore>();
+        public List<ListStore> FilterStoreItems { get => _FilterStoreItems; set => SetValue(ref _FilterStoreItems, value); }
     }
 
 
