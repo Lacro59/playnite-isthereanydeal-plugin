@@ -12,7 +12,7 @@
     <sys:String x:Key="LOCItadSettingWishlist">Liste de souhaits</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Activer la liste de souhaits Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Activer la liste de souhaits GOG</sys:String>
-    <sys:String x:Key="LOCItadEnableEpic">Activer la liste de souhaits Epic Game Store</sys:String>
+    <sys:String x:Key="LOCItadEnableEpic">Activer la liste de souhaits Epic Games</sys:String>
     <sys:String x:Key="LOCItadEnableHumble">Activer la liste de souhaits Humble</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Id Humble</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Activer la liste de souhaits Xbox</sys:String>
