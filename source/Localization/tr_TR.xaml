@@ -88,7 +88,7 @@ Hesabınıza giriş yapmayı deneyin.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">IsThereAnyDeal eklentisinde Epic etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">IsThereAnyDeal eklentisinde GOG etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">IsThereAnyDeal eklentisinde Steam etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
-    <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam ayarlarda düzgün yapılandırılmamış</sys:String>
+    <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam ayarlarda düzgün yapılandırılmamı</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam istek listesi gizli. Steam Kütüphanesi eklentisinde kimlik doğrulama düğmesini kullanmalısınız</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">IsThereAnyDeal eklentisinde Xbox etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Xbox istek listesi bağlantısı yok.</sys:String>
