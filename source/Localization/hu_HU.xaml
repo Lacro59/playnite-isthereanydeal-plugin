@@ -7,75 +7,75 @@
 
     <!-- IsThereAnyDealSettingsView -->
 
-    <sys:String x:Key="LOCItadExclusionList">Exclusion list</sys:String>
+    <sys:String x:Key="LOCItadExclusionList">Kizárási lista</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist">Wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableSteam">Enable Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableGog">Enable GOG wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableEpic">Enable Epic Games Store wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableHumble">Enable Humble wishlist</sys:String>
-    <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
-    <sys:String x:Key="LOCItadEnableXbox">Enable Xbox wishlist</sys:String>
-    <sys:String x:Key="LOCItadXboxWishlistLink">Wishlist link</sys:String>
-    <sys:String x:Key="LOCItadEnableUbisoft">Enable Ubisoft wishlist</sys:String>
-    <sys:String x:Key="LOCItadUbisoftWishlistLink">Wishlist link</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Enable EA app wishlist</sys:String>
+    <sys:String x:Key="LOCItadSettingWishlist">Kívánságlista</sys:String>
+    <sys:String x:Key="LOCItadEnableSteam">Steam kívánságlista engedélyezése</sys:String>
+    <sys:String x:Key="LOCItadEnableGog">GOG kívánságlista engedélyezése</sys:String>
+    <sys:String x:Key="LOCItadEnableEpic">Epic Games Store kívánságlista engedélyezése</sys:String>
+    <sys:String x:Key="LOCItadEnableHumble">Humble kívánságlista engedélyezése</sys:String>
+    <sys:String x:Key="LOCItadHumbleKey">Humble azonosító</sys:String>
+    <sys:String x:Key="LOCItadEnableXbox">Xbox kívánságlista engedélyezése</sys:String>
+    <sys:String x:Key="LOCItadXboxWishlistLink">Kívánságlista linkje</sys:String>
+    <sys:String x:Key="LOCItadEnableUbisoft">Ubisoft kívánságlista engedélyezése</sys:String>
+    <sys:String x:Key="LOCItadUbisoftWishlistLink">Kívánságlista linkje</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">EA app kívánságlista engedélyezése</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
-    <sys:String x:Key="LOCItadRegion">Region</sys:String>
-    <sys:String x:Key="LOCItadCountry">Country</sys:String>
-    <sys:String x:Key="LOCItadStores">Store(s)</sys:String>
+    <sys:String x:Key="LOCItadRegion">Régió</sys:String>
+    <sys:String x:Key="LOCItadCountry">Ország</sys:String>
+    <sys:String x:Key="LOCItadStores">Bolt(ok)</sys:String>
 
-    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Enable notifications of giveaways</sys:String>
-    <sys:String x:Key="LOCItadEnableNotification">Enable notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotification">Price cut</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Értesítések engedélyezése az ajándékokról</sys:String>
+    <sys:String x:Key="LOCItadEnableNotification">Értesítések engedélyezése</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Árcsökkentés</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPrice">Alacsonyabb ár</sys:String>
 
     <sys:String x:Key="LOCItadSettingPrice">Define limit to price slider</sys:String>
     <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
     <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
 
-    <sys:String x:Key="LOCItadSettingsNotifications">Notifications</sys:String>
+    <sys:String x:Key="LOCItadSettingsNotifications">Értesítések</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationAt">Price cut at</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPriceAt">Price inferior at</sys:String>
 
     <!-- IsThereAnyDealView -->
 
-    <sys:String x:Key="LOCITADRefreshPrice">Refresh price</sys:String>
+    <sys:String x:Key="LOCITADRefreshPrice">Új ára</sys:String>
     
-    <sys:String x:Key="LOCITADOrderPriceCut">Price cut</sys:String>
-    <sys:String x:Key="LOCITADOrderPrice">Price</sys:String>
+    <sys:String x:Key="LOCITADOrderPriceCut">Árcsökkentés</sys:String>
+    <sys:String x:Key="LOCITADOrderPrice">Ár</sys:String>
     
-    <sys:String x:Key="LOCITADFilterSource">Filter by store(s)</sys:String>
+    <sys:String x:Key="LOCITADFilterSource">Szűrés bolt(ok) szerint</sys:String>
     <sys:String x:Key="LOCITADPercentage">Minimum discount percentage</sys:String>
-    <sys:String x:Key="LOCITADPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCITADPrice">Alacsonyabb ár</sys:String>
 
-    <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
-    <sys:String x:Key="LOCItadCurrentStore">Current store wishlist</sys:String>
+    <sys:String x:Key="LOCItadCurrentBest">Jelenleg a legjobb</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">Jelenlegi bolt kívánságlistája</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy best</sys:String>
-    <sys:String x:Key="LOCItadStore">Store</sys:String>
+    <sys:String x:Key="LOCItadStore">Bolt</sys:String>
     <sys:String x:Key="LOCItadNoData">No data for selected store in settings</sys:String>
-    <sys:String x:Key="LOCItadInLibrary">In library</sys:String>
+    <sys:String x:Key="LOCItadInLibrary">Könyvtárban</sys:String>
     <sys:String x:Key="LOCItadNotActive">Not active on IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadNotFind">Not found on IsThereAnyDeal</sys:String>
 
     <sys:String x:Key="LOCItadDeleteOnStoreWishList">Delete {0} on {1}?</sys:String>
     <sys:String x:Key="LOCItadHideOnStoreWishList">Exclude {0} on {1}?</sys:String>
 
-    <sys:String x:Key="LOCItadWhishListOptions">Wishlist options</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptions">Kívánságlista beállításai</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Include games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Include games without IsThereAnyDeal data</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Only games in library</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Csak a könyvtárban lévő játékok</sys:String>
 
-    <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>
-    <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlist">Steam kívánságlista importálása</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam kívánságlista linkje</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">Importálás sikeres</sys:String>
     <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
 
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal data</sys:String>
-    <sys:String x:Key="LOCItadCheckNotifications">Check notifications</sys:String>
+    <sys:String x:Key="LOCItadCheckNotifications">Értesítések ellenőrzése</sys:String>
     <sys:String x:Key="LOCItadUpdateDatas">Update IsThereAnyDeal data</sys:String>
     <sys:String x:Key="LOCITADDataDownloading">Downloading IsThereAnyDeal data...</sys:String>
 
