@@ -15,7 +15,7 @@ using IsThereAnyDeal.Models.Api;
 
 namespace IsThereAnyDeal.Clients
 {
-    class OriginWishlist : GenericWishlist
+    public class OriginWishlist : GenericWishlist
     {
         protected static OriginAccountClient _OriginAPI;
         internal static OriginAccountClient OriginAPI
@@ -36,6 +36,10 @@ namespace IsThereAnyDeal.Clients
         private string urlWishlist = "https://api2.origin.com/gifting/users/{0}/wishlist";
         private string urlWishlistDelete = "https://api2.origin.com/gifting/users/{0}/wishlist?offerId={1}";
 
+
+        public OriginWishlist(IsThereAnyDeal plugin) : base(plugin)
+        {
+        }
 
         public List<Wishlist> GetWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {

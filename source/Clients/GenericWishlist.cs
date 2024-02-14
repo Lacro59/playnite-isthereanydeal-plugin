@@ -14,6 +14,8 @@ namespace IsThereAnyDeal.Services
         internal static readonly ILogger logger = LogManager.GetLogger();
         internal static readonly IResourceProvider resourceProvider = new ResourceProvider();
 
+        internal IsThereAnyDeal Plugin { get; set; }
+
         protected static IWebView _WebViewOffscreen;
         internal static IWebView WebViewOffscreen
         {
@@ -29,8 +31,13 @@ namespace IsThereAnyDeal.Services
             set => _WebViewOffscreen = value;
         }
 
-        internal static string PluginUserDataPath;
+        internal static string PluginUserDataPath { get; set; }
 
+
+        public GenericWishlist(IsThereAnyDeal plugin)
+        {
+            Plugin = plugin;
+        }
 
         public List<Wishlist> LoadWishlists(string clientName, string pluginUserDataPath, bool force = false)
         {

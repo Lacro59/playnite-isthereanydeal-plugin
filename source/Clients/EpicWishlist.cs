@@ -15,7 +15,7 @@ using IsThereAnyDeal.Models.Api;
 
 namespace IsThereAnyDeal.Services
 {
-    class EpicWishlist : GenericWishlist
+    public class EpicWishlist : GenericWishlist
     {
         protected static EpicAccountClient _EpicAPI;
         internal static EpicAccountClient EpicAPI
@@ -36,6 +36,11 @@ namespace IsThereAnyDeal.Services
         }
 
         public const string GraphQLEndpoint = @"https://graphql.epicgames.com/graphql";
+
+
+        public EpicWishlist(IsThereAnyDeal plugin) : base(plugin)
+        {
+        }
 
 
         public async Task<string> QuerySearchWishList(string query, dynamic variables, string token)

@@ -14,8 +14,12 @@ using IsThereAnyDeal.Models.Api;
 
 namespace IsThereAnyDeal.Clients
 {
-    class XboxWishlist : GenericWishlist
+    public class XboxWishlist : GenericWishlist
     {
+        public XboxWishlist(IsThereAnyDeal plugin) : base(plugin)
+        {
+        }
+
         public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();

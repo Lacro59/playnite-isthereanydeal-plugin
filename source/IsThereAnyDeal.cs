@@ -69,7 +69,7 @@ namespace IsThereAnyDeal
                             Height = 740
                         };
 
-                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, GetPluginUserDataPath(), PluginSettings.Settings);
+                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, PluginSettings.Settings);
                         Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
                         _ = windowExtension.ShowDialog();
                     },
@@ -148,7 +148,7 @@ namespace IsThereAnyDeal
                             Width = 1280,
                             Height = 740
                         };
-                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, GetPluginUserDataPath(), PluginSettings.Settings);
+                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, PluginSettings.Settings);
                         Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
                         windowExtension.ShowDialog();
                     }
@@ -258,7 +258,7 @@ namespace IsThereAnyDeal
 
         public override UserControl GetSettingsView(bool firstRunSettings)
         {
-            return new IsThereAnyDealSettingsView(PluginSettings.Settings, GetPluginUserDataPath());
+            return new IsThereAnyDealSettingsView(PluginSettings.Settings, this, GetPluginUserDataPath());
         }
         #endregion
     }

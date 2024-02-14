@@ -10,40 +10,36 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using CommonPlayniteShared.PluginLibrary.SteamLibrary.SteamShared;
-using AngleSharp.Parser.Html;
-using AngleSharp.Dom.Html;
-using System.Text.RegularExpressions;
 using CommonPluginsStores.Steam;
-using AngleSharp.Dom;
 using IsThereAnyDeal.Models.Api;
+using System.Collections.ObjectModel;
+using CommonPluginsStores.Models;
 
 namespace IsThereAnyDeal.Services
 {
-    class SteamWishlist : GenericWishlist
+    public class SteamWishlist : GenericWishlist
     {
-        protected static SteamApi _steamApi;
-        internal static SteamApi steamApi
+        protected static SteamApi _SteamApi;
+        internal static SteamApi SteamApi
         {
             get
             {
-                if (_steamApi == null)
+                if (_SteamApi == null)
                 {
-                    _steamApi = new SteamApi("IsThereAnyDeal");
+                    _SteamApi = new SteamApi("IsThereAnyDeal");
                 }
-                return _steamApi;
+                return _SteamApi;
             }
 
-            set => _steamApi = value;
+            set => _SteamApi = value;
         }
 
-        private const string UrlProfil = @"https://steamcommunity.com/my/profile";
-        public readonly string UrlWishlist = @"https://store.steampowered.com/wishlist/profiles/{0}/wishlistdata/?p={1}&v=";
-        private readonly string UrlAppData = @"https://store.steampowered.com/api/appdetails?appids={0}";
+        private string UrlAppData => @"https://store.steampowered.com/api/appdetails?appids={0}";
 
-        private static string SteamId { get; set; } = string.Empty;
-        private static string SteamApiKey { get; set; } = string.Empty;
-        private static string SteamUser { get; set; } = string.Empty;
 
+        public SteamWishlist(IsThereAnyDeal plugin) : base(plugin)
+        {
+        }
 
         public List<Wishlist> GetWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
@@ -62,32 +58,17 @@ namespace IsThereAnyDeal.Services
 
             logger.Info($"Load from web for Steam");
 
-            // Get Steam configuration if exist.
-            try
-            {
-                if (File.Exists(PluginUserDataPath + "\\..\\CB91DFC9-B977-43BF-8E70-55F46E410FAB\\config.json"))
-                {
-                    dynamic SteamConfig = Serialization.FromJsonFile<dynamic>(PluginUserDataPath + "\\..\\CB91DFC9-B977-43BF-8E70-55F46E410FAB\\config.json");
-                    SteamId = (string)SteamConfig["UserId"];
-                    SteamApiKey = (string)SteamConfig["ApiKey"];
-                    SteamUser = steamApi.GetSteamUsers()?.First()?.PersonaName;
-                }
-
-                SteamUserAndSteamIdByWeb();
-            }
-            catch
-            {
-            }
-
-            if (SteamId.IsNullOrEmpty())
+            if (!SteamApi.IsUserLoggedIn)
             {
                 logger.Error($"No Steam configuration.");
                 API.Instance.Notifications.Add(new NotificationMessage(
                     $"IsThereAnyDeal-Steam-Error",
                     "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationsSteamBadConfig"), "Steam"),
-                    NotificationType.Error
+                    NotificationType.Error,
+                    () => Plugin.OpenSettingsView()
                 ));
 
+                // Load in cache
                 ResultLoad = LoadWishlists("Steam", PluginUserDataPath, true);
                 if (ResultLoad != null)
                 {
@@ -98,162 +79,33 @@ namespace IsThereAnyDeal.Services
                 return Result;
             }
 
+            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+            ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("steam") > -1);
 
-            string ResultWeb = string.Empty;
-            string url = string.Empty;
-
-            for (int iPage = 0; iPage < 10; iPage++)
+            ObservableCollection<AccountWishlist> accountWishlist = SteamApi.GetWishlist(SteamApi.CurrentAccountInfos);
+            accountWishlist.ForEach(x =>
             {
-                url = string.Format(UrlWishlist, SteamId, iPage);
-
-                WebViewOffscreen.NavigateAndWait(url);
-                ResultWeb = WebViewOffscreen.GetPageText();
-
-                //try
-                //{
-                //    ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
-                //}
-                //catch (WebException ex)
-                //{
-                //    if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
-                //    {
-                //        Common.LogError(ex, false, $"Error download Steam wishlist for page {iPage}", true, "IsThereAnyDeal");
-                //        return Result;
-                //    }
-                //}
-                
-                if (ResultWeb.ToLower().Contains("{\"success\":2}"))
+                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
+                Result.Add(new Wishlist
                 {
-                    logger.Warn($"Private wishlist for {SteamId}?");
-                    API.Instance.Notifications.Add(new NotificationMessage(
-                        $"IsThereAnyDeal-Steam-Error",
-                        "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationErrorSteamPrivate"), "Steam"),
-                        NotificationType.Error
-                    ));
-                }
-
-
-                if (!ResultWeb.IsNullOrEmpty())
-                {
-                    dynamic resultObj = null;
-
-                    if (ResultWeb == "[]")
-                    {
-                        logger.Info($"No result after page {iPage} for Steam wishlist");
-                        break;
-                    }
-
-                    try
-                    {
-                        resultObj = Serialization.FromJson<dynamic>(ResultWeb);
-
-                        IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                        foreach (dynamic gameWishlist in resultObj)
-                        {
-                            string StoreId = string.Empty;
-                            string Name = string.Empty;
-                            DateTime ReleaseDate = default;
-                            string Capsule = string.Empty;
-
-                            try
-                            {
-                                dynamic gameWishlistData = (dynamic)gameWishlist.Value;
-
-                                StoreId = gameWishlist.Name;
-                                Name = WebUtility.HtmlDecode((string)gameWishlistData["name"]);
-
-                                string release_date = ((string)gameWishlistData["release_date"])?.Split('.')[0];
-                                _ = int.TryParse(release_date, out int release_date_int);
-                                ReleaseDate = (release_date_int == 0) ? default(DateTime) : new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(release_date_int);
-
-                                Capsule = (string)gameWishlistData["capsule"];
-
-                                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(StoreId)).GetAwaiter().GetResult();
-
-                                ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("steam") > -1);
-
-                                Result.Add(new Wishlist
-                                {
-                                    StoreId = StoreId,
-                                    StoreName = "Steam",
-                                    ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
-                                    StoreUrl = "https://store.steampowered.com/app/" + StoreId,
-                                    Name = Name,
-                                    SourceId = SourceId,
-                                    ReleaseDate = ReleaseDate.ToUniversalTime(),
-                                    Capsule = Capsule,
-                                    Game = gamesLookup.Found ? gamesLookup.Game : null,
-                                    IsActive = true
-                                });
-                            }
-                            catch (Exception ex)
-                            {
-                                Common.LogError(ex, true, $"Error in parse Steam wishlist - {Name}");
-                                logger.Warn($"Error in parse Steam wishlist - {Name}");
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Common.LogError(ex, false, "Error in parse Steam wishlist", true, "IsThereAnyDeal");
-                        ResultLoad = LoadWishlists("Steam", PluginUserDataPath, true);
-                        if (ResultLoad != null)
-                        {
-                            ResultLoad = SetCurrentPrice(ResultLoad, settings);
-                            SaveWishlist("Steam", PluginUserDataPath, ResultLoad);
-                            return ResultLoad;
-                        }
-                        return Result;
-                    }
-                }
-            }
+                    StoreId = x.Id,
+                    StoreName = "Steam",
+                    ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
+                    StoreUrl = x.Link,
+                    Name = x.Name,
+                    SourceId = SourceId,
+                    ReleaseDate = x.Released,
+                    Added = x.Added,
+                    Capsule = x.Image,
+                    Game = gamesLookup.Found ? gamesLookup.Game : null,
+                    IsActive = true
+                });
+            });
 
             Result = SetCurrentPrice(Result, settings);
             SaveWishlist("Steam", PluginUserDataPath, Result);
             return Result;
         }
-
-
-        private void SteamUserAndSteamIdByWeb()
-        {
-            if (SteamUser.IsNullOrEmpty() || SteamId.IsNullOrEmpty())
-            {
-                WebViewOffscreen.NavigateAndWait(UrlProfil);
-                WebViewOffscreen.NavigateAndWait(WebViewOffscreen.GetCurrentAddress());
-                string ResultWeb = WebViewOffscreen.GetPageSource();
-
-                if (SteamUser.IsNullOrEmpty())
-                {
-                    HtmlParser parser = new HtmlParser();
-                    IHtmlDocument htmlDocument = parser.Parse(ResultWeb);
-
-                    IElement el = htmlDocument.QuerySelector(".actual_persona_name");
-                    if (el != null)
-                    {
-                        SteamUser = el.InnerHtml;
-                    }
-                }
-
-                if (SteamId.IsNullOrEmpty())
-                {
-                    int index = ResultWeb.IndexOf("g_steamID = ");
-                    if (index > -1)
-                    {
-                        ResultWeb = ResultWeb.Substring(index + "g_steamID  = ".Length);
-
-                        index = ResultWeb.IndexOf("g_strLanguage =");
-                        ResultWeb = ResultWeb.Substring(0, index).Trim();
-
-                        ResultWeb = ResultWeb.Substring(0, ResultWeb.Length - 1).Trim();
-
-                        SteamId = Regex.Replace(ResultWeb, @"[^\d]", string.Empty);
-                    }
-                }
-            }
-        }
-
-
-
 
         public bool RemoveWishlist(string StoreId)
         {
@@ -265,43 +117,37 @@ namespace IsThereAnyDeal.Services
         {
             List<Wishlist> Result = new List<Wishlist>();
 
-            if (File.Exists(FilePath))
+            if (File.Exists(FilePath) && Serialization.TryFromJsonFile(FilePath, out dynamic jObject))
             {
                 try
                 {
                     IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                    
-                    dynamic jObject = Serialization.FromJsonFile<dynamic>(FilePath);
-
                     dynamic rgWishlist = jObject["rgWishlist"];
+
                     foreach(dynamic el in rgWishlist)
                     {
                         // Respect API limitation
                         Thread.Sleep(1000);
 
-                        string ResultWeb = string.Empty;
+                        string response = string.Empty;
                         try
                         {
-                            ResultWeb = Web.DownloadStringData(string.Format(UrlAppData, (string)el)).GetAwaiter().GetResult();
+                            response = Web.DownloadStringData(string.Format(UrlAppData, (string)el)).GetAwaiter().GetResult();
                         }
-                        catch (WebException ex)
+                        catch (Exception ex)
                         {
-                            if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
-                            {
-                                Common.LogError(ex, false, $"Error download Steam app data - {el.ToString()}", true, "IsThereAnyDeal");
-                                return false;
-                            }
+                            Common.LogError(ex, false, $"Error download Steam app data - {el.ToString()}", true, "IsThereAnyDeal");
+                            return false;
                         }
 
-                        if (!ResultWeb.IsNullOrEmpty())
+                        if (!response.IsNullOrEmpty())
                         {
                             string StoreId = string.Empty;
-
                             try
                             {
                                 StoreId = (string)el;
 
-                                Dictionary<string, StoreAppDetailsResult> parsedData = Serialization.FromJson<Dictionary<string, StoreAppDetailsResult>>(ResultWeb);
+                                Dictionary<string, StoreAppDetailsResult> parsedData = Serialization.FromJson<Dictionary<string, StoreAppDetailsResult>>(response);
                                 dynamic AppDetails = parsedData[el.ToString()].data;
 
                                 if (AppDetails == null)
@@ -310,16 +156,9 @@ namespace IsThereAnyDeal.Services
                                 }
                                 
                                 string Name = WebUtility.HtmlDecode(AppDetails.name);
-
-                                if (!DateTime.TryParse(AppDetails?.release_date?.date, out DateTime ReleaseDate))
-                                {
-                                    ReleaseDate = default;
-                                }
-
                                 string Capsule = AppDetails.header_image;
 
                                 GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(StoreId)).GetAwaiter().GetResult();
-
                                 ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("steam") > -1);
 
                                 Result.Add(new Wishlist
@@ -330,7 +169,7 @@ namespace IsThereAnyDeal.Services
                                     StoreUrl = "https://store.steampowered.com/app/" + (string)el,
                                     Name = Name,
                                     SourceId = SourceId,
-                                    ReleaseDate = ReleaseDate.ToUniversalTime(),
+                                    ReleaseDate = DateTime.TryParse(AppDetails?.release_date?.date, out DateTime ReleaseDate),
                                     Capsule = Capsule,
                                     Game = gamesLookup.Game,
                                     IsActive = true

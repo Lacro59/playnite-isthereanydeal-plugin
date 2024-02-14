@@ -31,10 +31,10 @@ namespace IsThereAnyDeal.Services
         }
 
 
-        public GogWishlist()
+        public GogWishlist(IsThereAnyDeal plugin) : base(plugin)
         {
-
         }
+
 
         public List<Wishlist> GetWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {

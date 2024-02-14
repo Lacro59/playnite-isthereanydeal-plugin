@@ -10,8 +10,12 @@ using IsThereAnyDeal.Models.Api;
 
 namespace IsThereAnyDeal.Services
 {
-    class HumbleBundleWishlist : GenericWishlist
+    public class HumbleBundleWishlist : GenericWishlist
     {
+        public HumbleBundleWishlist(IsThereAnyDeal plugin) : base(plugin)
+        {
+        }
+
         public List<Wishlist> GetWishlist(Guid SourceId, string HumbleBundleId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();

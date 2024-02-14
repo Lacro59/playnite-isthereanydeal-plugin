@@ -21,7 +21,8 @@ namespace IsThereAnyDeal.Models
         public string StoreUrl { get; set; }
         public string Name { get; set; }
         public Guid SourceId { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
+        public DateTime? Added { get; set; }
         public string Capsule { get; set; }
         [DontSerialize]
         public BitmapImage CapsuleImage => ImageSourceManagerPlugin.GetImage(Capsule, false, new BitmapLoadProperties(200, 200));

@@ -3,12 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:pcmd="clr-namespace:CommonPluginsShared"
              xmlns:AttachedProperties="clr-namespace:CommonPluginsShared.Controls"
-             xmlns:views="clr-namespace:IsThereAnyDeal.Views;assembly=IsThereAnyDeal"
              xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls"
              xmlns:converters="clr-namespace:CommonPluginsShared.Converters" 
              xmlns:isthereanydeal="clr-namespace:IsThereAnyDeal" 
+             xmlns:Steam="clr-namespace:CommonPluginsControls.Stores.Steam"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=isthereanydeal:IsThereAnyDealSettingsViewModel}">
 
@@ -424,6 +423,10 @@
                         </Grid>
                     </StackPanel>
                 </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="{DynamicResource LOCLibraries}">
+                <Steam:PanelView x:Name="SteamPanel" UseApi="False" />
             </TabItem>
         </TabControl>
     </Grid>

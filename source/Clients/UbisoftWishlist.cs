@@ -14,8 +14,12 @@ using System.Threading.Tasks;
 
 namespace IsThereAnyDeal.Clients
 {
-    class UbisoftWishlist : GenericWishlist
+    public class UbisoftWishlist : GenericWishlist
     {
+        public UbisoftWishlist(IsThereAnyDeal plugin) : base(plugin)
+        {
+        }
+
         public List<Wishlist> GetWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
         {
             List<Wishlist> Result = new List<Wishlist>();

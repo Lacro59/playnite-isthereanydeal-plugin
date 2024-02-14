@@ -24,9 +24,10 @@ namespace IsThereAnyDeal.Views
     public partial class IsThereAnyDealView : UserControl
     {
         private static readonly ILogger logger = LogManager.GetLogger();
-        private static IResourceProvider resources = new ResourceProvider();
-        private readonly IsThereAnyDealSettings _settings;
-        private readonly IsThereAnyDeal _plugin;
+        private static readonly IResourceProvider resourceProvider = new ResourceProvider();
+
+        private readonly IsThereAnyDealSettings Settings;
+        private readonly IsThereAnyDeal Plugin;
 
         private List<Wishlist> lbWishlistItems { get; set; } = new List<Wishlist>();
         private List<string> SearchStores { get; set; } = new List<string>();
@@ -38,12 +39,12 @@ namespace IsThereAnyDeal.Views
         private ItadDataContext itadDataContext = new ItadDataContext();
 
 
-        public IsThereAnyDealView(IsThereAnyDeal plugin, string PluginUserDataPath, IsThereAnyDealSettings settings, string id = "")
+        public IsThereAnyDealView(IsThereAnyDeal plugin, IsThereAnyDealSettings settings, string id = "")
         {
             InitializeComponent();
 
-            _settings = settings;
-            _plugin = plugin;
+            Settings = settings;
+            Plugin = plugin;
 
             // Load data
             RefreshData(id);
@@ -52,8 +53,8 @@ namespace IsThereAnyDeal.Views
             SetFilterStore();
 
             DataContext = itadDataContext;
-            itadDataContext.MinPrice = _settings.MinPrice;
-            itadDataContext.MaxPrice = _settings.MaxPrice;
+            itadDataContext.MinPrice = Settings.MinPrice;
+            itadDataContext.MaxPrice = Settings.MaxPrice;
         }
 
         private void RefreshData(string id, bool CachOnly = true, bool ForcePrice = false)
@@ -62,7 +63,7 @@ namespace IsThereAnyDeal.Views
             lbWishlist.ItemsSource = null;
             dpData.IsEnabled = false;
 
-            Task task = Task.Run(() => LoadData(_plugin.GetPluginUserDataPath(), _settings, CachOnly, ForcePrice))
+            Task task = Task.Run(() => LoadData(Plugin.GetPluginUserDataPath(), Settings, CachOnly, ForcePrice))
                 .ContinueWith(antecedent =>
                 {
                     this.Dispatcher?.Invoke(new Action(() => 
@@ -89,7 +90,7 @@ namespace IsThereAnyDeal.Views
                                     }
                                 }
                             }
-                            PART_DateData.Content = new LocalDateTimeConverter().Convert(_settings.LastRefresh, null, null, CultureInfo.CurrentCulture);
+                            PART_DateData.Content = new LocalDateTimeConverter().Convert(Settings.LastRefresh, null, null, CultureInfo.CurrentCulture);
                             DataLoadWishlist.Visibility = Visibility.Collapsed;
                             dpData.IsEnabled = true;
                         }
@@ -104,31 +105,31 @@ namespace IsThereAnyDeal.Views
         private void SetFilterStore()
         {
             List<ListStore> FilterStoreItems = new List<ListStore>();
-            if (_settings.EnableSteam)
+            if (Settings.EnableSteam)
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "Steam", StoreNameDisplay = (TransformIcon.Get("Steam") + " Steam").Trim(), IsCheck = false });
             }
-            if (_settings.EnableGog)
+            if (Settings.EnableGog)
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "GOG", StoreNameDisplay = (TransformIcon.Get("GOG") + " GOG").Trim(), IsCheck = false });
             }
-            if (_settings.EnableHumble)
+            if (Settings.EnableHumble)
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "Humble", StoreNameDisplay = (TransformIcon.Get("Humble") + " Humble").Trim(), IsCheck = false });
             }
-            if (_settings.EnableEpic)
+            if (Settings.EnableEpic)
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "Epic", StoreNameDisplay = (TransformIcon.Get("Epic") + " Epic").Trim(), IsCheck = false });
             }
-            if (_settings.EnableXbox)
+            if (Settings.EnableXbox)
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "Microsoft Store", StoreNameDisplay = (TransformIcon.Get("Xbox") + " Microsoft Store").Trim(), IsCheck = false });
             }
-            if (_settings.EnableUbisoft)
+            if (Settings.EnableUbisoft)
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "Ubisoft Connect", StoreNameDisplay = (TransformIcon.Get("Ubisoft Connect") + " Ubisoft Connect").Trim(), IsCheck = false });
             }
-            if (_settings.EnableOrigin)
+            if (Settings.EnableOrigin)
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "EA app", StoreNameDisplay = (TransformIcon.Get("EA app") + " EA app").Trim(), IsCheck = false });
             }
@@ -145,7 +146,7 @@ namespace IsThereAnyDeal.Views
 
         private List<Wishlist> LoadData(string PluginUserDataPath, IsThereAnyDealSettings settings, bool CachOnly = true, bool ForcePrice = false)
         {
-            List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(_plugin, settings, PluginUserDataPath, CachOnly, ForcePrice);
+            List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(Plugin, settings, PluginUserDataPath, CachOnly, ForcePrice);
             return ListWishlist;
         }
 
@@ -256,7 +257,7 @@ namespace IsThereAnyDeal.Views
             Common.LogDebug(true, $"BtRemoveWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
 
             MessageBoxResult RessultDialog = API.Instance.Dialogs.ShowMessage(
-                string.Format(resources.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
+                string.Format(resourceProvider.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
                 "IsThereAnyDeal", 
                 MessageBoxButton.YesNo
             );
@@ -276,11 +277,11 @@ namespace IsThereAnyDeal.Views
                                 case "steam":
                                     Common.LogDebug(true, $"Is Steam");
 #if DEBUG
-                                    SteamWishlist steamWishlist = new SteamWishlist();
+                                    SteamWishlist steamWishlist = new SteamWishlist(Plugin);
                                     IsDeleted = steamWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        steamWishlist.GetWishlist(StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
+                                        steamWishlist.GetWishlist(StorePriceSelected.SourceId, Plugin.GetPluginUserDataPath(), Settings, false);
                                     }
 #endif
                                     break;
@@ -288,48 +289,48 @@ namespace IsThereAnyDeal.Views
                                 case "epic game store":
                                     Common.LogDebug(true, $"Is Epic");
 
-                                    EpicWishlist epicWishlist = new EpicWishlist();
-                                    IsDeleted = epicWishlist.RemoveWishlist(StorePriceSelected.StoreId, _plugin.GetPluginUserDataPath());
+                                    EpicWishlist epicWishlist = new EpicWishlist(Plugin);
+                                    IsDeleted = epicWishlist.RemoveWishlist(StorePriceSelected.StoreId, Plugin.GetPluginUserDataPath());
                                     if (IsDeleted)
                                     {
-                                        epicWishlist.GetWishlist(StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
+                                        epicWishlist.GetWishlist(StorePriceSelected.SourceId, Plugin.GetPluginUserDataPath(), Settings, false);
                                     }
                                     break;
 
                                 case "humble store":
                                     Common.LogDebug(true, $"Is Humble Store");
 
-                                    HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
+                                    HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist(Plugin);
                                     IsDeleted = humbleBundleWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        humbleBundleWishlist.GetWishlist(StorePriceSelected.SourceId, _settings.HumbleKey, _plugin.GetPluginUserDataPath(), _settings, false);
+                                        humbleBundleWishlist.GetWishlist(StorePriceSelected.SourceId, Settings.HumbleKey, Plugin.GetPluginUserDataPath(), Settings, false);
                                     }
                                     break;
 
                                 case "gog":
                                     Common.LogDebug(true, $"Is GOG");
 
-                                    GogWishlist gogWishlist = new GogWishlist();
+                                    GogWishlist gogWishlist = new GogWishlist(Plugin);
                                     IsDeleted = gogWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        gogWishlist.GetWishlist(StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
+                                        gogWishlist.GetWishlist(StorePriceSelected.SourceId, Plugin.GetPluginUserDataPath(), Settings, false);
                                     }
                                     break;
 
                                 case "microsoft store":
-                                    Common.LogDebug(true, $" Is xbox");
+                                    Common.LogDebug(true, $"Is xbox");
                                     break;
 
                                 case "origin":
                                     Common.LogDebug(true, $"Is origin");
 
-                                    OriginWishlist originWishlist = new OriginWishlist();
+                                    OriginWishlist originWishlist = new OriginWishlist(Plugin);
                                     IsDeleted = originWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        originWishlist.GetWishlist(StorePriceSelected.SourceId, _plugin.GetPluginUserDataPath(), _settings, false);
+                                        originWishlist.GetWishlist(StorePriceSelected.SourceId, Plugin.GetPluginUserDataPath(), Settings, false);
                                     }
                                     break;
 
@@ -382,7 +383,7 @@ namespace IsThereAnyDeal.Views
             Common.LogDebug(true, $"BtHideWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
 
             MessageBoxResult RessultDialog = API.Instance.Dialogs.ShowMessage(
-                string.Format(resources.GetString("LOCItadHideOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
+                string.Format(resourceProvider.GetString("LOCItadHideOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
                 "IsThereAnyDeal",
                 MessageBoxButton.YesNo
             );
@@ -390,7 +391,7 @@ namespace IsThereAnyDeal.Views
             {
                 try
                 {
-                    _settings.wishlistIgnores.Add(new WishlistIgnore
+                    Settings.wishlistIgnores.Add(new WishlistIgnore
                     {
                         StoreId = StorePriceSelected.StoreId,
                         StoreName = StorePriceSelected.ShopName,
@@ -398,7 +399,7 @@ namespace IsThereAnyDeal.Views
                         Id = StorePriceSelected.Id,
                         Slug = StorePriceSelected.Slug
                     });
-                    _plugin.SavePluginSettings(_settings);
+                    Plugin.SavePluginSettings(Settings);
                     GetListGame();
                 }
                 catch (Exception ex)
@@ -418,7 +419,7 @@ namespace IsThereAnyDeal.Views
                 x => x.ItadBestPrice.PriceCut >= itadDataContext.DiscountPercent && x.ItadBestPrice.PriceNew <= itadDataContext.PriceLimit &&
                 (TextboxSearch.Text.IsNullOrEmpty() ? true : x.Name.Contains(TextboxSearch.Text, StringComparison.InvariantCultureIgnoreCase)) &&
                 (SearchStores.Count == 0 ? true : (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)) &&
-                _settings.wishlistIgnores.All(y => y.StoreId != x.StoreId && y.Id != x.Game.Id) &&
+                Settings.wishlistIgnores.All(y => y.StoreId != x.StoreId && y.Id != x.Game.Id) &&
                 ((bool)PART_TbOnlyInLibrary.IsChecked ? x.InLibrary : (!(bool)PART_TbIncludeInLibrary.IsChecked ? !x.InLibrary : true || !(bool)PART_TbIncludeWithoutData.IsChecked ? x.HasItadData : true))
             );
 

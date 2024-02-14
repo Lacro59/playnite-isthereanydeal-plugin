@@ -163,7 +163,7 @@ namespace IsThereAnyDeal.Services
                 {
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("SteamLibrary"))
                     {
-                        SteamWishlist steamWishlist = new SteamWishlist();
+                        SteamWishlist steamWishlist = new SteamWishlist(plugin);
                         ListWishlistSteam = steamWishlist.GetWishlist(SteamId, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlistSteam == null)
                         {
@@ -199,7 +199,7 @@ namespace IsThereAnyDeal.Services
                 {
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("GogLibrary"))
                     {
-                        GogWishlist gogWishlist = new GogWishlist();
+                        GogWishlist gogWishlist = new GogWishlist(plugin);
                         ListWishlistGog = gogWishlist.GetWishlist(GogId, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlistGog == null)
                         {
@@ -235,7 +235,7 @@ namespace IsThereAnyDeal.Services
                 {
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("EpicLibrary"))
                     {
-                        EpicWishlist epicWishlist = new EpicWishlist();
+                        EpicWishlist epicWishlist = new EpicWishlist(plugin);
                         ListWishlistEpic = epicWishlist.GetWishlist(GogId, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlistEpic == null)
                         {
@@ -271,7 +271,7 @@ namespace IsThereAnyDeal.Services
                 {
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("HumbleLibrary"))
                     {
-                        HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist();
+                        HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist(plugin);
                         ListWishlistHumble = humbleBundleWishlist.GetWishlist(HumbleId, settings.HumbleKey, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlistHumble == null)
                         {
@@ -307,7 +307,7 @@ namespace IsThereAnyDeal.Services
                 {
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("XboxLibrary"))
                     {
-                        XboxWishlist xboxWishlist = new XboxWishlist();
+                        XboxWishlist xboxWishlist = new XboxWishlist(plugin);
                         ListWishlistXbox = xboxWishlist.GetWishlist(API.Instance, XboxId, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlistXbox == null)
                         {
@@ -343,7 +343,7 @@ namespace IsThereAnyDeal.Services
                 {
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("UbisoftLibrary"))
                     {
-                        UbisoftWishlist ubisoftWishlist = new UbisoftWishlist();
+                        UbisoftWishlist ubisoftWishlist = new UbisoftWishlist(plugin);
                         ListWishlistUbisoft = ubisoftWishlist.GetWishlist(UbisoftId, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlistUbisoft == null)
                         {
@@ -379,7 +379,7 @@ namespace IsThereAnyDeal.Services
                 {
                     if (!PlayniteTools.IsDisabledPlaynitePlugins("OriginLibrary"))
                     {
-                        OriginWishlist originWishlist = new OriginWishlist();
+                        OriginWishlist originWishlist = new OriginWishlist(plugin);
                         ListWishlisOrigin = originWishlist.GetWishlist(OriginId, PluginUserDataPath, settings, CacheOnly, ForcePrice);
                         if (ListWishlisOrigin == null)
                         {
@@ -720,7 +720,7 @@ namespace IsThereAnyDeal.Services
                                               Height = 740
                                           };
 
-                                          IsThereAnyDealView ViewExtension = new IsThereAnyDealView(plugin, plugin.GetPluginUserDataPath(), settings, x.Game.Id);
+                                          IsThereAnyDealView ViewExtension = new IsThereAnyDealView(plugin, settings, x.Game.Id);
                                           Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(API.Instance, ResourceProvider.GetString("LOCItad"), ViewExtension, windowOptions);
                                           _ = windowExtension.ShowDialog();
                                       }

@@ -18,30 +18,32 @@ namespace IsThereAnyDeal.Views
     public partial class IsThereAnyDealSettingsView : UserControl
     {
         private static readonly ILogger logger = LogManager.GetLogger();
-        private static IResourceProvider resources = new ResourceProvider();
+        private static readonly IResourceProvider resources = new ResourceProvider();
 
-        private IsThereAnyDealSettings _settings;
-        private string _PluginUserDataPath;
+        private IsThereAnyDealSettings Settings;
+        private IsThereAnyDeal Plugin;
+        private string PluginUserDataPath;
 
         private List<ItadShops> StoresItems = new List<ItadShops>();
-        private IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+        private readonly IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
         private bool IsFirst = true;
 
 
-        public IsThereAnyDealSettingsView(IsThereAnyDealSettings settings, string PluginUserDataPath)
+        public IsThereAnyDealSettingsView(IsThereAnyDealSettings settings, IsThereAnyDeal plugin, string PluginUserDataPath)
         {
-            _settings = settings;
-            _PluginUserDataPath = PluginUserDataPath;
+            Settings = settings;
+            Plugin = plugin;
+            this.PluginUserDataPath = PluginUserDataPath;
 
             InitializeComponent();
 
-            _settings.wishlistIgnores = _settings.wishlistIgnores.OrderBy(x => x.StoreName).ThenBy(x => x.Name).ToList();
-            lvIgnoreList.ItemsSource = _settings.wishlistIgnores;
+            Settings.wishlistIgnores = Settings.wishlistIgnores.OrderBy(x => x.StoreName).ThenBy(x => x.Name).ToList();
+            lvIgnoreList.ItemsSource = Settings.wishlistIgnores;
 
             DataContext = this;
             IsFirst = false;
 
-            PART_LimitNotificationPrice.LongValue = _settings.LimitNotificationPrice;
+            PART_LimitNotificationPrice.LongValue = Settings.LimitNotificationPrice;
 
 
             lLimitNotification.Content = PART_sPriceCut.Value + "%";
@@ -51,7 +53,7 @@ namespace IsThereAnyDeal.Views
         {
             if (PART_SelectCountry.SelectedItem != null)
             {
-                _settings.Country = ((ComboBoxItem)PART_SelectCountry.SelectedItem).Content.ToString();
+                Settings.Country = ((ComboBoxItem)PART_SelectCountry.SelectedItem).Content.ToString();
                 if (!IsFirst)
                 {
                     ListStores.Text = string.Empty;
@@ -61,7 +63,7 @@ namespace IsThereAnyDeal.Views
 
                     Task.Run(() =>
                     {
-                        StoresItems = isThereAnyDealApi.GetShops(_settings.Country).GetAwaiter().GetResult();
+                        StoresItems = isThereAnyDealApi.GetShops(Settings.Country).GetAwaiter().GetResult();
 
                         this.Dispatcher?.BeginInvoke((Action)delegate
                         {
@@ -113,7 +115,7 @@ namespace IsThereAnyDeal.Views
                     }
                 }
             }
-            _settings.Stores = StoresItems;
+            Settings.Stores = StoresItems;
         }
 
         private void ChkStore_Unchecked(object sender, RoutedEventArgs e)
@@ -152,7 +154,7 @@ namespace IsThereAnyDeal.Views
                     }
                 }
             }
-            _settings.Stores = StoresItems;
+            Settings.Stores = StoresItems;
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -167,9 +169,9 @@ namespace IsThereAnyDeal.Views
         private void BtShow_Click(object sender, RoutedEventArgs e)
         {
             int index = int.Parse(((Button)sender).Tag.ToString());
-            _settings.wishlistIgnores.RemoveAt(index);
+            Settings.wishlistIgnores.RemoveAt(index);
             lvIgnoreList.ItemsSource = null;
-            lvIgnoreList.ItemsSource = _settings.wishlistIgnores;
+            lvIgnoreList.ItemsSource = Settings.wishlistIgnores;
         }
 
 
@@ -216,12 +218,12 @@ namespace IsThereAnyDeal.Views
             if (sender is Hyperlink)
             {
                 Hyperlink link = (Hyperlink)sender;
-                Process.Start((string)link.Tag);
+                _ = Process.Start((string)link.Tag);
             }
             if (sender is FrameworkElement)
             {
                 FrameworkElement link = (FrameworkElement)sender;
-                Process.Start((string)link.Tag);
+                _ = Process.Start((string)link.Tag);
             }
         }
 
@@ -244,23 +246,21 @@ namespace IsThereAnyDeal.Views
                         Stopwatch stopWatch = new Stopwatch();
                         stopWatch.Start();
 
-
-                        GameSource gameSource = API.Instance.Database.Sources.Where(x => x.Name.ToLower().IndexOf("steam") > -1).FirstOrDefault();
-
+                        GameSource gameSource = API.Instance.Database.Sources.FirstOrDefault(x => x.Name.ToLower().IndexOf("steam") > -1);
                         if (gameSource != null)
                         {
                             Guid SteamID = gameSource.Id;
 
-                            SteamWishlist steamWishlist = new SteamWishlist();
+                            SteamWishlist steamWishlist = new SteamWishlist(Plugin);
 
-                            if (steamWishlist.ImportWishlist(SteamID, _PluginUserDataPath, _settings, targetPath))
+                            if (steamWishlist.ImportWishlist(SteamID, PluginUserDataPath, Settings, targetPath))
                             {
                                 if (activateGlobalProgress.CancelToken.IsCancellationRequested)
                                 {
                                     return;
                                 }
 
-                                API.Instance.Dialogs.ShowMessage(resources.GetString("LOCItadImportSuccessful"), "IsThereAnyDeal");
+                                _ = API.Instance.Dialogs.ShowMessage(resources.GetString("LOCItadImportSuccessful"), "IsThereAnyDeal");
                             }
                             else
                             {
@@ -268,8 +268,7 @@ namespace IsThereAnyDeal.Views
                                 {
                                     return;
                                 }
-
-                                API.Instance.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
+                                _ = API.Instance.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
                             }
                         }
                         else
@@ -278,8 +277,7 @@ namespace IsThereAnyDeal.Views
                             {
                                 return;
                             }
-
-                            API.Instance.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
+                            _ = API.Instance.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
                         }
 
                         stopWatch.Stop();
@@ -294,7 +292,7 @@ namespace IsThereAnyDeal.Views
                         {
                             return;
                         }
-                        API.Instance.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
+                        _ = API.Instance.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
                     }
                 }, globalProgressOptions);
             }
