@@ -110,8 +110,7 @@ namespace IsThereAnyDeal.Services
 
         public bool RemoveWishlist(string StoreId)
         {
-            //string Url = @"https://store.steampowered.com/wishlist/profiles/{0}/remove/";
-            return false;
+            return SteamApi.RemoveWishlist(StoreId);
         }
 
         public bool ImportWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, string FilePath)
