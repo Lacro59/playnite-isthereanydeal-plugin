@@ -92,7 +92,6 @@ namespace IsThereAnyDeal.Services
             }
         }
 
-
         public List<Wishlist> SetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings)
         {
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();

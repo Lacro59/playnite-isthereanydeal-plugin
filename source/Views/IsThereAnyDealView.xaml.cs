@@ -290,7 +290,7 @@ namespace IsThereAnyDeal.Views
                                     Common.LogDebug(true, $"Is Epic");
 
                                     EpicWishlist epicWishlist = new EpicWishlist(Plugin);
-                                    IsDeleted = epicWishlist.RemoveWishlist(StorePriceSelected.StoreId, Plugin.GetPluginUserDataPath());
+                                    IsDeleted = epicWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
                                         epicWishlist.GetWishlist(StorePriceSelected.SourceId, Plugin.GetPluginUserDataPath(), Settings, false);

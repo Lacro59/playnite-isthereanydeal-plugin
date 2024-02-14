@@ -60,10 +60,11 @@ namespace IsThereAnyDeal.Services
 
             if (!SteamApi.IsUserLoggedIn)
             {
-                logger.Error($"No Steam configuration.");
+                logger.Error($"Steam user is not authenticated");
                 API.Instance.Notifications.Add(new NotificationMessage(
-                    $"IsThereAnyDeal-Steam-Error",
-                    "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationsSteamBadConfig"), "Steam"),
+                    $"IsThereAnyDeal-Steam-NoAuthenticate",
+                    "IsThereAnyDeal" + Environment.NewLine 
+                        + string.Format(resourceProvider.GetString("LOCCommonStoresNoAuthenticate"), "Steam"),
                     NotificationType.Error,
                     () => Plugin.OpenSettingsView()
                 ));
