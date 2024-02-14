@@ -17,10 +17,8 @@ namespace IsThereAnyDeal
 
         public List<WishlistIgnore> wishlistIgnores { get; set; } = new List<WishlistIgnore>();
 
-        public string Region { get; set; } = "us";
         public string Country { get; set; } = "US";
-        public string CurrencySign { get; set; } = "$";
-        public List<ItadStore> Stores { get; set; } = new List<ItadStore>();
+        public List<ItadShops> Stores { get; set; } = new List<ItadShops>();
 
         public bool EnableSteam { get; set; } = false;
         public bool EnableGog { get; set; } = false;
@@ -97,8 +95,8 @@ namespace IsThereAnyDeal
 
             if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
             {
-                Plugin.topPanelItem.Visible = Settings.EnableIntegrationButtonHeader;
-                Plugin.itadViewSidebar.Visible = Settings.EnableIntegrationButtonSide;
+                Plugin.TopPanelItem.Visible = Settings.EnableIntegrationButtonHeader;
+                Plugin.ItadViewSidebar.Visible = Settings.EnableIntegrationButtonSide;
             }
         }
 

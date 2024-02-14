@@ -7,7 +7,10 @@
              xmlns:AttachedProperties="clr-namespace:CommonPluginsShared.Controls"
              xmlns:views="clr-namespace:IsThereAnyDeal.Views;assembly=IsThereAnyDeal"
              xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls"
-             xmlns:converters="clr-namespace:CommonPluginsShared.Converters">
+             xmlns:converters="clr-namespace:CommonPluginsShared.Converters" 
+             xmlns:isthereanydeal="clr-namespace:IsThereAnyDeal" 
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=isthereanydeal:IsThereAnyDealSettingsViewModel}">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -46,8 +49,6 @@
                                         <RowDefinition Height="auto" />
                                         <RowDefinition Height="10" />
                                         <RowDefinition Height="auto" />
-                                        <RowDefinition Height="10" />
-                                        <RowDefinition Height="auto" />
                                     </Grid.RowDefinitions>
 
                                     <CheckBox Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" IsChecked="{Binding Settings.MenuInExtensions}" Margin="0,0,0,0" 
@@ -55,9 +56,9 @@
                                         <Label Content="{DynamicResource LOCCommonMenuInExtensions}" />
                                     </CheckBox>
 
-                                    <CheckBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" IsChecked="{Binding Settings.EnableNotificationGiveaways}" VerticalAlignment="Center">
+                                    <!--CheckBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" IsChecked="{Binding Settings.EnableNotificationGiveaways}" VerticalAlignment="Center">
                                         <Label Content="{DynamicResource LOCItadEnableNotificationGiveaways}" />
-                                    </CheckBox>
+                                    </CheckBox-->
 
                                     <CheckBox Name="chk_Notification" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" IsChecked="{Binding Settings.EnableNotification}" VerticalAlignment="Center">
                                         <Label Content="{DynamicResource LOCItadEnableNotification}" />
@@ -76,42 +77,29 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="30" />
+                                        <RowDefinition Height="auto" />
                                         <RowDefinition Height="10" />
-                                        <RowDefinition Height="30" />
-                                        <RowDefinition Height="10" />
-                                        <RowDefinition Height="30" />
+                                        <RowDefinition Height="auto" />
                                     </Grid.RowDefinitions>
 
-                                    <Label Grid.Column="0" Grid.Row="0" Content="{DynamicResource LOCItadRegion}" />
-                                    <ComboBox Name="ItadSelectRegion" Grid.Column="2" Grid.Row="0" Width="250" Height="30" 
-                                              IsEditable="True" IsReadOnly="True" HorizontalAlignment="Right"
-                                              SelectionChanged="ItadSelectRegion_SelectionChanged">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="50" />
-                                                        <ColumnDefinition Width="10" />
-                                                        <ColumnDefinition Width="150" />
-                                                        <ColumnDefinition Width="10" />
-                                                        <ColumnDefinition Width="30" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Region}" />
-                                                    <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding CurrencyName}" />
-                                                    <TextBlock Grid.Column="4" Grid.Row="0" Text="{Binding CurrencySign}" />
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
+                                    <Label Grid.Column="0" Grid.Row="0" Content="{DynamicResource LOCItadCountry}" />
+                                    <ComboBox Name="PART_SelectCountry" Grid.Column="2" Grid.Row="0" Width="250"
+                                              IsReadOnly="True" HorizontalAlignment="Right"
+                                              SelectedValue="{Binding Settings.Country, Mode=TwoWay}"
+                                              SelectedValuePath="Content"
+                                              SelectionChanged="PART_SelectCountry_SelectionChanged">
+                                        <ComboBoxItem>AU</ComboBoxItem>
+                                        <ComboBoxItem>BR</ComboBoxItem>
+                                        <ComboBoxItem>CA</ComboBoxItem>
+                                        <ComboBoxItem>CN</ComboBoxItem>
+                                        <ComboBoxItem>FR</ComboBoxItem>
+                                        <ComboBoxItem>GB</ComboBoxItem>
+                                        <ComboBoxItem>US</ComboBoxItem>
+                                        <ComboBoxItem>TR</ComboBoxItem>
                                     </ComboBox>
 
-                                    <Label Grid.Column="0" Grid.Row="2" Content="{DynamicResource LOCItadCountry}" IsEnabled="{Binding ElementName=ItadSelectRegion, Path=Text, Converter={StaticResource StringToBooleanConverter}}" />
-                                    <ComboBox Name="ItadSelectCountry" Grid.Column="2" Grid.Row="2" Width="250" Height="30" 
-                                              IsEditable="True" IsReadOnly="True" HorizontalAlignment="Right"
-                                              IsEnabled="{Binding ElementName=ItadSelectRegion, Path=Text, Converter={StaticResource StringToBooleanConverter}}" SelectionChanged="ItadSelectCountry_SelectionChanged" />
-
-                                    <Label Grid.Column="0" Grid.Row="4" Content="{DynamicResource LOCItadStores}" IsEnabled="{Binding ElementName=ItadSelectCountry, Path=Text, Converter={StaticResource StringToBooleanConverter}}" />
-                                    <ComboBox Name="ListStores" Grid.Column="2" Grid.Row="4" Height="30" IsEditable="True" IsReadOnly="True" IsEnabled="{Binding ElementName=ItadSelectCountry, Path=Text, Converter={StaticResource StringToBooleanConverter}}" >
+                                    <Label Grid.Column="0" Grid.Row="2" Content="{DynamicResource LOCItadStores}" IsEnabled="{Binding ElementName=PART_SelectCountry, Path=Text, Converter={StaticResource StringToBooleanConverter}}" />
+                                    <ComboBox Name="ListStores" Grid.Column="2" Grid.Row="2" IsReadOnly="True" IsEnabled="{Binding ElementName=PART_SelectCountry, Path=Text, Converter={StaticResource StringToBooleanConverter}}" >
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <CheckBox Name="chkStore" Content="{Binding Title}" IsChecked="{Binding IsCheck}" Checked="ChkStore_Checked" Unchecked="ChkStore_Unchecked" />

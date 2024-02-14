@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace IsThereAnyDeal.Models
 {
-    class EpicWishlistResult
+    public class EpicWishlistResult
     {
         public EpicData data { get; set; }
         public Extensions extensions { get; set; }
     }
-    
+
     public class KeyImage
     {
         public string type { get; set; }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AngleSharp.Dom;
+using IsThereAnyDeal.Models.Api;
 
 namespace IsThereAnyDeal.Clients
 {
@@ -42,7 +43,7 @@ namespace IsThereAnyDeal.Clients
 
                 PlayniteApi.Notifications.Add(new NotificationMessage(
                     $"IsThereAnyDeal-Xbox-Error",
-                    "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationErrorXboxNoLink"), "Xbox"),
+                    "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationErrorXboxNoLink"), "Xbox"),
                     NotificationType.Error
                 ));
 
@@ -67,12 +68,13 @@ namespace IsThereAnyDeal.Clients
                     HtmlParser parser = new HtmlParser();
                     IHtmlDocument HtmlRequirement = parser.Parse(ResultWeb);
 
+                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                     foreach (IElement SearchElement in HtmlRequirement.QuerySelectorAll("li.product-wishlist-item"))
                     {
                         string StoreId = string.Empty;
                         string StoreUrl = string.Empty;
                         string Name = string.Empty;
-                        DateTime ReleaseDate = default(DateTime);
+                        DateTime ReleaseDate = default;
                         string Capsule = string.Empty;
 
                         try
@@ -81,11 +83,10 @@ namespace IsThereAnyDeal.Clients
                             Capsule = SearchElement.QuerySelector("img.c-image").GetAttribute("data-src");
                             Name = SearchElement.QuerySelector("h3.c-heading").InnerHtml.Trim();
                             StoreUrl = SearchElement.QuerySelector("a.c-button").GetAttribute("href");
+                            
+                            GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
 
-                            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
-
-                            ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("microsoft") > -1);
+                            ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("microsoft") > -1);
 
                             Result.Add(new Wishlist
                             {
@@ -97,8 +98,8 @@ namespace IsThereAnyDeal.Clients
                                 SourceId = SourceId,
                                 ReleaseDate = ReleaseDate.ToUniversalTime(),
                                 Capsule = Capsule.Trim(),
-                                Plain = plainData.Plain.Trim(),
-                                IsActive = plainData.IsActive
+                                Game = gamesLookup.Game,
+                                IsActive = true
                             });
                         }
                         catch (Exception ex)
@@ -113,7 +114,7 @@ namespace IsThereAnyDeal.Clients
                     Common.LogError(ex, true, "Error in parse Xbox wishlist");
                     PlayniteApi.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Xbox-Error",
-                        "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Xbox"),
+                        "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationError"), "Xbox"),
                         NotificationType.Error
                     ));
 

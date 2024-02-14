@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using CommonPluginsShared;
+using IsThereAnyDeal.Models.Api;
 
 namespace IsThereAnyDeal.Services
 {
@@ -72,9 +73,9 @@ namespace IsThereAnyDeal.Services
                             Name = WebUtility.HtmlDecode((string)gameWish["human_name"]);
                             Capsule = (string)gameWish["standard_carousel_image"];
 
-                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+                            GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
 
-                            ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("humble") > -1);
+                            ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("humble") > -1);
 
                             Result.Add(new Wishlist
                             {
@@ -86,8 +87,8 @@ namespace IsThereAnyDeal.Services
                                 SourceId = SourceId,
                                 ReleaseDate = ReleaseDate.ToUniversalTime(),
                                 Capsule = Capsule,
-                                Plain = plainData.Plain,
-                                IsActive = plainData.IsActive
+                                Game = gamesLookup.Game,
+                                IsActive = true
                             });
                         }
                         catch(Exception ex)

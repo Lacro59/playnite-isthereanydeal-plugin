@@ -11,6 +11,7 @@ using System.Net;
 using System.Collections.Specialized;
 using CommonPlayniteShared.PluginLibrary.OriginLibrary.Services;
 using CommonPlayniteShared.PluginLibrary.OriginLibrary.Models;
+using IsThereAnyDeal.Models.Api;
 
 namespace IsThereAnyDeal.Clients
 {
@@ -78,27 +79,27 @@ namespace IsThereAnyDeal.Clients
 
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
 
-                        foreach (var item in WishlistData)
+                        foreach (WishlistData item in WishlistData)
                         {
                             string StoreId = string.Empty;
                             string StoreUrl = string.Empty;
                             string Name = string.Empty;
-                            DateTime ReleaseDate = default(DateTime);
+                            DateTime ReleaseDate = default;
                             string Capsule = string.Empty;
 
                             try
                             {
                                 string offerId = item.offerId;
-                                var gameData = GetGameStoreData(offerId);
+                                GameStoreDataResponse gameData = GetGameStoreData(offerId);
 
                                 StoreId = gameData.offerId;
                                 Capsule = gameData.imageServer + gameData.i18n.packArtLarge;
                                 Name = gameData.i18n.displayName;
                                 StoreUrl = urlBase + gameData.offerPath;
 
-                                PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+                                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
 
-                                ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("origin") > -1 || x.Id.ToLower().IndexOf("ea app") > -1);
+                                ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("origin") > -1 || x.Title.ToLower().IndexOf("ea app") > -1);
 
                                 Result.Add(new Wishlist
                                 {
@@ -110,8 +111,8 @@ namespace IsThereAnyDeal.Clients
                                     SourceId = SourceId,
                                     ReleaseDate = ReleaseDate.ToUniversalTime(),
                                     Capsule = Capsule,
-                                    Plain = plainData.Plain,
-                                    IsActive = plainData.IsActive
+                                    Game = gamesLookup.Game,
+                                    IsActive = true
                                 });
                             }
                             catch (Exception ex)
@@ -144,7 +145,7 @@ namespace IsThereAnyDeal.Clients
                 logger.Warn($"EA app user is not authenticated");
                 API.Instance.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-origin-noauthenticate",
-                    $"IsThereAnyDeal\r\nEA app - {resources.GetString("LOCLoginRequired")}",
+                    $"IsThereAnyDeal\r\nEA app - {resourceProvider.GetString("LOCLoginRequired")}",
                     NotificationType.Error
                 ));
             }

@@ -9,32 +9,33 @@ namespace IsThereAnyDeal.Models
 {
     public class ItadNotificationCriteria
     {
-        private static IResourceProvider resources = new ResourceProvider();
+        private static readonly IResourceProvider resourceProvider = new ResourceProvider();
 
 
         public int PriceCut { get; set; } = -1;
         public int PriceInferior { get; set; } = -1;
 
         [DontSerialize]
-        public string Criteria {
+        public string Criteria
+        {
             get
             {
                 string CriteriaString = string.Empty;
 
                 if (PriceCut > -1)
                 {
-                    CriteriaString = resources.GetString("LOCItadLimitNotificationAt") + " " + PriceCut + " %";
+                    CriteriaString = resourceProvider.GetString("LOCItadLimitNotificationAt") + " " + PriceCut + " %";
                 }
 
                 if (PriceInferior > -1)
                 {
                     if (CriteriaString.IsNullOrEmpty())
                     {
-                        CriteriaString = resources.GetString("LOCItadLimitNotificationPriceAt") + " " + PriceInferior;
+                        CriteriaString = resourceProvider.GetString("LOCItadLimitNotificationPriceAt") + " " + PriceInferior;
                     }
                     else
                     {
-                        CriteriaString += " & " + resources.GetString("LOCItadLimitNotificationPriceAt") + " " + PriceInferior;
+                        CriteriaString += " & " + resourceProvider.GetString("LOCItadLimitNotificationPriceAt") + " " + PriceInferior;
                     }
                 }
 

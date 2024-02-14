@@ -10,7 +10,6 @@ using System.Windows;
 using CommonPluginsShared.PlayniteExtended;
 using Playnite.SDK.Events;
 using System.Windows.Media;
-using CommonPluginsShared.Controls;
 using System.IO;
 using System.Reflection;
 using CommonPlayniteShared;
@@ -22,8 +21,8 @@ namespace IsThereAnyDeal
     {
         public override Guid Id { get; } = Guid.Parse("7d5cbee9-3c86-4389-ac7b-9abe3da4c9cd");
 
-        internal TopPanelItem topPanelItem { get; set; }
-        internal ItadViewSidebar itadViewSidebar { get; set; }
+        internal TopPanelItem TopPanelItem { get; set; }
+        internal ItadViewSidebar ItadViewSidebar { get; set; }
 
 
         public IsThereAnyDeal(IPlayniteAPI api) : base(api)
@@ -39,18 +38,18 @@ namespace IsThereAnyDeal
                 string PathDLL = Path.Combine(PluginPath, "VirtualizingWrapPanel.dll");
                 if (File.Exists(PathDLL))
                 {
-                    var DLL = Assembly.LoadFile(PathDLL);
+                    Assembly DLL = Assembly.LoadFile(PathDLL);
                 }
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false, true, "SuccessStory");
+                Common.LogError(ex, false, true, "IsThereAnyDeal");
             }
 
             // Initialize top & side bar
             if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
             {
-                topPanelItem = new TopPanelItem()
+                TopPanelItem = new TopPanelItem()
                 {
                     Icon = new TextBlock
                     {
@@ -70,14 +69,14 @@ namespace IsThereAnyDeal
                             Height = 740
                         };
 
-                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, this.GetPluginUserDataPath(), PluginSettings.Settings);
+                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, GetPluginUserDataPath(), PluginSettings.Settings);
                         Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
-                        windowExtension.ShowDialog();
+                        _ = windowExtension.ShowDialog();
                     },
                     Visible = PluginSettings.Settings.EnableIntegrationButtonHeader
                 };
 
-                itadViewSidebar = new ItadViewSidebar(this);
+                ItadViewSidebar = new ItadViewSidebar(this);
             }
         }
 
@@ -86,7 +85,7 @@ namespace IsThereAnyDeal
         // Button on top panel
         public override IEnumerable<TopPanelItem> GetTopPanelItems()
         {
-            yield return topPanelItem;
+            yield return TopPanelItem;
         }
 
         // List custom controls
@@ -98,10 +97,7 @@ namespace IsThereAnyDeal
         // Sidebar
         public override IEnumerable<SidebarItem> GetSidebarItems()
         {
-            return new List<SidebarItem>
-            {
-                itadViewSidebar
-            };
+            yield return ItadViewSidebar;
         }
         #endregion
 
@@ -148,31 +144,34 @@ namespace IsThereAnyDeal
                             ShowMinimizeButton = false,
                             ShowMaximizeButton = false,
                             ShowCloseButton = true,
+                            CanBeResizable = true,
                             Width = 1280,
                             Height = 740
                         };
-                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, this.GetPluginUserDataPath(), PluginSettings.Settings);
+                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, GetPluginUserDataPath(), PluginSettings.Settings);
                         Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
                         windowExtension.ShowDialog();
                     }
                 },
+
                 new MainMenuItem
                 {
                     MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
                     Description = resources.GetString("LOCItadCheckNotifications"),
                     Action = (mainMenuItem) =>
                     {
-                        IsThereAnyDealApi.CheckNotifications(PlayniteApi, PluginSettings.Settings, this);
+                        _ = IsThereAnyDealApi.CheckNotifications(PluginSettings.Settings, this);
                     }
                 },
+
                 new MainMenuItem
                 {
                     MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
                     Description = resources.GetString("LOCItadUpdateDatas"),
                     Action = (mainMenuItem) =>
                     {
-                        itadViewSidebar.ResetView();
-                        IsThereAnyDealApi.UpdateDatas(PlayniteApi, PluginSettings.Settings, this);
+                        ItadViewSidebar.ResetView();
+                        IsThereAnyDealApi.UpdateDatas(PluginSettings.Settings, this);
                     }
                 }
             };
@@ -233,7 +232,7 @@ namespace IsThereAnyDeal
         // Add code to be executed when Playnite is initialized.
         public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
         {
-            IsThereAnyDealApi.CheckNotifications(PlayniteApi, PluginSettings.Settings, this);
+            _ = IsThereAnyDealApi.CheckNotifications(PluginSettings.Settings, this);
         }
 
         // Add code to be executed when Playnite is shutting down.
@@ -259,7 +258,7 @@ namespace IsThereAnyDeal
 
         public override UserControl GetSettingsView(bool firstRunSettings)
         {
-            return new IsThereAnyDealSettingsView(PlayniteApi, PluginSettings.Settings, this.GetPluginUserDataPath());
+            return new IsThereAnyDealSettingsView(PluginSettings.Settings, GetPluginUserDataPath());
         }
         #endregion
     }

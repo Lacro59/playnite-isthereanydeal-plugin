@@ -11,6 +11,7 @@ using System.Net;
 using CommonPlayniteShared.Common;
 using System.Security.Principal;
 using CommonPlayniteShared.PluginLibrary.EpicLibrary;
+using IsThereAnyDeal.Models.Api;
 
 namespace IsThereAnyDeal.Services
 {
@@ -39,8 +40,6 @@ namespace IsThereAnyDeal.Services
 
         public async Task<string> QuerySearchWishList(string query, dynamic variables, string token)
         {
-
-
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
                 
@@ -100,7 +99,7 @@ namespace IsThereAnyDeal.Services
                 logger.Warn($"Epic user is not authenticated");
                 API.Instance.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-epic-noauthenticate",
-                    $"IsThereAnyDeal\r\nEpic - {resources.GetString("LOCLoginRequired")}",
+                    $"IsThereAnyDeal\r\nEpic - {resourceProvider.GetString("LOCLoginRequired")}",
                     NotificationType.Error
                 ));
 
@@ -113,7 +112,7 @@ namespace IsThereAnyDeal.Services
                 logger.Warn($"Epic user is not authenticated");
                 API.Instance.Notifications.Add(new NotificationMessage(
                     $"isthereanydeal-epic-noauthenticate",
-                    $"IsThereAnyDeal\r\nEpic - {resources.GetString("LOCLoginRequired")}",
+                    $"IsThereAnyDeal\r\nEpic - {resourceProvider.GetString("LOCLoginRequired")}",
                     NotificationType.Error
                 ));
 
@@ -138,11 +137,11 @@ namespace IsThereAnyDeal.Services
                         && resultObj.data.Wishlist.wishlistItems != null && resultObj.data.Wishlist.wishlistItems.elements != null) {
 
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                        foreach (Element gameWishlist in resultObj.data.Wishlist.wishlistItems.elements)
+                        foreach (Models.Element gameWishlist in resultObj.data.Wishlist.wishlistItems.elements)
                         {
                             string StoreId = string.Empty;
                             string Name = string.Empty;
-                            DateTime ReleaseDate = default(DateTime);
+                            DateTime ReleaseDate = default;
                             string Capsule = string.Empty;
 
                             try
@@ -153,7 +152,7 @@ namespace IsThereAnyDeal.Services
                                 Capsule = string.Empty;
 
                                 Name = WebUtility.HtmlDecode(gameWishlist.offer.title);
-                                foreach (var keyImages in gameWishlist.offer.keyImages)
+                                foreach (KeyImage keyImages in gameWishlist.offer.keyImages)
                                 {
                                     if (keyImages.type == "Thumbnail")
                                     {
@@ -161,9 +160,9 @@ namespace IsThereAnyDeal.Services
                                     }
                                 }
 
-                                PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+                                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
 
-                                ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("epic") > -1);
+                                ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("epic") > -1);
 
                                 Result.Add(new Wishlist
                                 {
@@ -175,8 +174,8 @@ namespace IsThereAnyDeal.Services
                                     SourceId = SourceId,
                                     ReleaseDate = ReleaseDate.ToUniversalTime(),
                                     Capsule = Capsule,
-                                    Plain = plainData.Plain,
-                                    IsActive = plainData.IsActive
+                                    Game = gamesLookup.Game,
+                                    IsActive = true
                                 });
                             }
                             catch (Exception ex)
@@ -192,7 +191,7 @@ namespace IsThereAnyDeal.Services
                     Common.LogError(ex, true, "Error in parse Epic wishlist");
                     API.Instance.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Epic-Error",
-                        "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Epic Game Store"),
+                        "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationError"), "Epic Game Store"),
                         NotificationType.Error
                     ));
 

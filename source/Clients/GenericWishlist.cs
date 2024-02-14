@@ -12,7 +12,7 @@ namespace IsThereAnyDeal.Services
     public class GenericWishlist
     {
         internal static readonly ILogger logger = LogManager.GetLogger();
-        internal static readonly IResourceProvider resources = new ResourceProvider();
+        internal static readonly IResourceProvider resourceProvider = new ResourceProvider();
 
         protected static IWebView _WebViewOffscreen;
         internal static IWebView WebViewOffscreen
@@ -26,61 +26,58 @@ namespace IsThereAnyDeal.Services
                 return _WebViewOffscreen;
             }
 
-            set
-            {
-                _WebViewOffscreen = value;
-            }
+            set => _WebViewOffscreen = value;
         }
 
         internal static string PluginUserDataPath;
 
 
-        public List<Wishlist> LoadWishlists(string clientName, string PluginUserDataPath, bool force = false)
+        public List<Wishlist> LoadWishlists(string clientName, string pluginUserDataPath, bool force = false)
         {
-            GenericWishlist.PluginUserDataPath = PluginUserDataPath;
+            GenericWishlist.PluginUserDataPath = pluginUserDataPath;
 
             try
             {
-                string DirPath = Path.Combine(PluginUserDataPath, "IsThereAnyDeal");
+                string DirPath = Path.Combine(pluginUserDataPath, "IsThereAnyDeal");
                 string FilePath = Path.Combine(DirPath, $"{clientName}.json");
 
-                if (!Directory.Exists(DirPath))
-                {
-                    Directory.CreateDirectory(DirPath);
-                    return null;
-                }
+                FileSystem.CreateDirectory(DirPath, false);
 
                 if (!File.Exists(FilePath))
                 {
                     return null;
                 }
-                else if (File.GetLastWriteTime(FilePath).AddDays(1) < DateTime.Now)
+                else if (File.GetLastWriteTime(FilePath).AddDays(1) < DateTime.Now && !force)
                 {
-                    if (!force)
-                    {
-                        return null;
-                    }
+                    return null;
                 }
 
                 logger.Info($"Load wishlist from local for {clientName}");
-
-                return Serialization.FromJsonFile<List<Wishlist>>(FilePath);
+                if (Serialization.TryFromJsonFile(FilePath, out List<Wishlist> wishlists))
+                {
+                    return wishlists;
+                }
+                else
+                {
+                    logger.Error($"Failed to load wishlist from local for {clientName}");
+                }
             }
             catch (Exception ex)
             {
                 Common.LogError(ex, false, $"Error for load {clientName} wishlist", true, "IsThereAnyDeal");
-                return null;
             }
+
+            return null;
         }
 
-        public void SaveWishlist(string clientName, string PluginUserDataPath, List<Wishlist> Wishlist)
+        public void SaveWishlist(string clientName, string pluginUserDataPath, List<Wishlist> wishlists)
         {
             try
             {
-                string DirPath = Path.Combine(PluginUserDataPath, "IsThereAnyDeal");
+                string DirPath = Path.Combine(pluginUserDataPath, "IsThereAnyDeal");
                 string FilePath = Path.Combine(DirPath, $"{clientName}.json");
 
-                FileSystem.WriteStringToFile(FilePath, Serialization.ToJson(Wishlist));
+                FileSystem.WriteStringToFile(FilePath, Serialization.ToJson(wishlists));
             }
             catch (Exception ex)
             {
@@ -89,10 +86,10 @@ namespace IsThereAnyDeal.Services
         }
 
 
-        public List<Wishlist> SetCurrentPrice(List<Wishlist> ListWishlist, IsThereAnyDealSettings settings)
+        public List<Wishlist> SetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings)
         {
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-            return isThereAnyDealApi.GetCurrentPrice(ListWishlist, settings);
+            return isThereAnyDealApi.GetCurrentPrice(wishlists, settings).GetAwaiter().GetResult();
         }
     }
 }

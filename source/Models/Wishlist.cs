@@ -9,6 +9,7 @@ using CommonPluginsShared.Extensions;
 using CommonPlayniteShared;
 using System.Windows.Media.Imaging;
 using System.Drawing.Imaging;
+using IsThereAnyDeal.Models.Api;
 
 namespace IsThereAnyDeal.Models
 {
@@ -24,11 +25,12 @@ namespace IsThereAnyDeal.Models
         public string Capsule { get; set; }
         [DontSerialize]
         public BitmapImage CapsuleImage => ImageSourceManagerPlugin.GetImage(Capsule, false, new BitmapLoadProperties(200, 200));
-        public string Plain { get; set; }
+        public Game Game { get; set; }
 
         [DontSerialize]
         public bool InLibrary => API.Instance.Database.Games.Where(x => x.Name.IsEqual(Name) && !x.Hidden)?.Count() > 0;
 
+        // TODO
         public bool IsActive { get; set; }
         public ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos { get; set; }
 
@@ -40,7 +42,7 @@ namespace IsThereAnyDeal.Models
                 string storeNameIcon = TransformIcon.Get(StoreName);
                 if (hasDuplicates)
                 {
-                    foreach (var duplicate in Duplicates)
+                    foreach (Wishlist duplicate in Duplicates)
                     {
                         storeNameIcon += " " + TransformIcon.Get(duplicate.StoreName);
                     }
@@ -58,7 +60,7 @@ namespace IsThereAnyDeal.Models
 
                 if (itadGameInfos != null)
                 {
-                    foreach (var item in itadGameInfos)
+                    foreach (KeyValuePair<string, List<ItadGameInfo>> item in itadGameInfos)
                     {
                         if (Convert.ToDateTime(item.Key) > last)
                         {
@@ -77,7 +79,7 @@ namespace IsThereAnyDeal.Models
             {
                 ItadGameInfo Result = new ItadGameInfo();
                 double last = 5000;
-                foreach (var item in ItadLastPrice)
+                foreach (ItadGameInfo item in ItadLastPrice)
                 {
                     if (item.PriceNew < last)
                     {
@@ -94,7 +96,7 @@ namespace IsThereAnyDeal.Models
             get
             {
                 ItadGameInfo Result = new ItadGameInfo();
-                foreach (var item in ItadLastPrice)
+                foreach (ItadGameInfo item in ItadLastPrice)
                 {
                     if (item.ShopName.ToLower().IndexOf(StoreName.ToLower()) > -1)
                     {
@@ -109,7 +111,7 @@ namespace IsThereAnyDeal.Models
         public bool HasItadData => ItadBestPrice.CurrencySign != null && !ItadBestPrice.CurrencySign.IsNullOrEmpty();
 
         [DontSerialize]
-        public string UrlGame => string.Format("https://isthereanydeal.com/game/{0}/info/", Plain);
+        public string UrlGame => string.Format("https://isthereanydeal.com/game/{0}/info/", Game.Slug);
 
         [DontSerialize]
         public List<Wishlist> Duplicates = new List<Wishlist>();
@@ -124,7 +126,7 @@ namespace IsThereAnyDeal.Models
                 list.Add(ItadPriceForWishlistStore);
                 if (hasDuplicates)
                 {
-                    foreach(var duplicate in Duplicates)
+                    foreach(Wishlist duplicate in Duplicates)
                     {
                         list.Add(duplicate.ItadPriceForWishlistStore);
                     }
@@ -198,13 +200,5 @@ namespace IsThereAnyDeal.Models
             }
             return false;
         }
-    }
-
-    public class WishlistIgnore
-    {
-        public string StoreId { get; set; }
-        public string StoreName { get; set; }
-        public string Name { get; set; }
-        public string Plain { get; set; }
     }
 }

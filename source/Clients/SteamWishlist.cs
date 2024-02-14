@@ -15,6 +15,7 @@ using AngleSharp.Dom.Html;
 using System.Text.RegularExpressions;
 using CommonPluginsStores.Steam;
 using AngleSharp.Dom;
+using IsThereAnyDeal.Models.Api;
 
 namespace IsThereAnyDeal.Services
 {
@@ -83,7 +84,7 @@ namespace IsThereAnyDeal.Services
                 logger.Error($"No Steam configuration.");
                 API.Instance.Notifications.Add(new NotificationMessage(
                     $"IsThereAnyDeal-Steam-Error",
-                    "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationsSteamBadConfig"), "Steam"),
+                    "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationsSteamBadConfig"), "Steam"),
                     NotificationType.Error
                 ));
 
@@ -126,7 +127,7 @@ namespace IsThereAnyDeal.Services
                     logger.Warn($"Private wishlist for {SteamId}?");
                     API.Instance.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Steam-Error",
-                        "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationErrorSteamPrivate"), "Steam"),
+                        "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationErrorSteamPrivate"), "Steam"),
                         NotificationType.Error
                     ));
                 }
@@ -147,11 +148,11 @@ namespace IsThereAnyDeal.Services
                         resultObj = Serialization.FromJson<dynamic>(ResultWeb);
 
                         IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                        foreach (var gameWishlist in resultObj)
+                        foreach (dynamic gameWishlist in resultObj)
                         {
                             string StoreId = string.Empty;
                             string Name = string.Empty;
-                            DateTime ReleaseDate = default(DateTime);
+                            DateTime ReleaseDate = default;
                             string Capsule = string.Empty;
 
                             try
@@ -162,14 +163,14 @@ namespace IsThereAnyDeal.Services
                                 Name = WebUtility.HtmlDecode((string)gameWishlistData["name"]);
 
                                 string release_date = ((string)gameWishlistData["release_date"])?.Split('.')[0];
-                                int.TryParse(release_date, out int release_date_int);
+                                _ = int.TryParse(release_date, out int release_date_int);
                                 ReleaseDate = (release_date_int == 0) ? default(DateTime) : new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(release_date_int);
 
                                 Capsule = (string)gameWishlistData["capsule"];
 
-                                PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+                                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(StoreId)).GetAwaiter().GetResult();
 
-                                ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1);
+                                ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("steam") > -1);
 
                                 Result.Add(new Wishlist
                                 {
@@ -181,8 +182,8 @@ namespace IsThereAnyDeal.Services
                                     SourceId = SourceId,
                                     ReleaseDate = ReleaseDate.ToUniversalTime(),
                                     Capsule = Capsule,
-                                    Plain = plainData.Plain,
-                                    IsActive = plainData.IsActive
+                                    Game = gamesLookup.Found ? gamesLookup.Game : null,
+                                    IsActive = true
                                 });
                             }
                             catch (Exception ex)
@@ -260,7 +261,7 @@ namespace IsThereAnyDeal.Services
             return false;
         }
 
-        public bool ImportWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, string FilePath)
+        public bool ImportWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, string FilePath)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
@@ -312,14 +313,14 @@ namespace IsThereAnyDeal.Services
 
                                 if (!DateTime.TryParse(AppDetails?.release_date?.date, out DateTime ReleaseDate))
                                 {
-                                    ReleaseDate = default(DateTime);
+                                    ReleaseDate = default;
                                 }
 
                                 string Capsule = AppDetails.header_image;
 
-                                PlainData plainData = isThereAnyDealApi.GetPlain(Name);
+                                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(StoreId)).GetAwaiter().GetResult();
 
-                                ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("steam") > -1);
+                                ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("steam") > -1);
 
                                 Result.Add(new Wishlist
                                 {
@@ -331,8 +332,8 @@ namespace IsThereAnyDeal.Services
                                     SourceId = SourceId,
                                     ReleaseDate = ReleaseDate.ToUniversalTime(),
                                     Capsule = Capsule,
-                                    Plain = plainData.Plain,
-                                    IsActive = plainData.IsActive
+                                    Game = gamesLookup.Game,
+                                    IsActive = true
                                 });
                             }
                             catch(Exception ex)

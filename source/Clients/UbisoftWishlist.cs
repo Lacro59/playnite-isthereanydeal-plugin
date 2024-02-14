@@ -3,6 +3,7 @@ using AngleSharp.Dom.Html;
 using AngleSharp.Parser.Html;
 using CommonPluginsShared;
 using IsThereAnyDeal.Models;
+using IsThereAnyDeal.Models.Api;
 using IsThereAnyDeal.Services;
 using Playnite.SDK;
 using System;
@@ -41,7 +42,7 @@ namespace IsThereAnyDeal.Clients
 
                 API.Instance.Notifications.Add(new NotificationMessage(
                     $"IsThereAnyDeal-Ubisoft-Error",
-                    "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationErrorUbisoftNoLink"), "Ubisoft"),
+                    "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationErrorUbisoftNoLink"), "Ubisoft"),
                     NotificationType.Error
                 ));
 
@@ -64,6 +65,7 @@ namespace IsThereAnyDeal.Clients
                     HtmlParser parser = new HtmlParser();
                     IHtmlDocument HtmlRequirement = parser.Parse(ResultWeb);
 
+                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                     foreach (IElement SearchElement in HtmlRequirement.QuerySelectorAll(".wishlist-items-list li"))
                     {
                         string StoreId = string.Empty;
@@ -76,11 +78,10 @@ namespace IsThereAnyDeal.Clients
                             StoreId = SearchElement.QuerySelector("div.wishlist-product-tile.product-tile").GetAttribute("data-itemid");
                             Capsule = SearchElement.QuerySelector("img").GetAttribute("data-src");
                             Name = SearchElement.QuerySelector("div.wishlist-product-tile.product-tile .prod-title").InnerHtml.Trim();
+                            
+                            GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
 
-                            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                            PlainData plainData = isThereAnyDealApi.GetPlain(Name);
-
-                            ItadStore tempShopColor = settings.Stores.Find(x => x.Id.ToLower().IndexOf("ubisoft") > -1 || x.Id.ToLower().IndexOf("ubisoft connect") > -1 || x.Id.ToLower().IndexOf("uplay") > -1);
+                            ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("ubisoft") > -1 || x.Title.ToLower().IndexOf("ubisoft connect") > -1 || x.Title.ToLower().IndexOf("uplay") > -1);
 
                             Result.Add(new Wishlist
                             {
@@ -92,8 +93,8 @@ namespace IsThereAnyDeal.Clients
                                 SourceId = SourceId,
                                 ReleaseDate = ReleaseDate.ToUniversalTime(),
                                 Capsule = Capsule.Trim(),
-                                Plain = plainData.Plain.Trim(),
-                                IsActive = plainData.IsActive
+                                Game = gamesLookup.Game,
+                                IsActive = true
                             });
                         }
                         catch (Exception ex)
@@ -108,7 +109,7 @@ namespace IsThereAnyDeal.Clients
                     Common.LogError(ex, true, "Error in parse Ubisoft wishlist");
                     API.Instance.Notifications.Add(new NotificationMessage(
                         $"IsThereAnyDeal-Ubisoft-Error",
-                        "IsThereAnyDeal\r\n" + string.Format(resources.GetString("LOCItadNotificationError"), "Ubisoft"),
+                        "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationError"), "Ubisoft"),
                         NotificationType.Error
                     ));
 

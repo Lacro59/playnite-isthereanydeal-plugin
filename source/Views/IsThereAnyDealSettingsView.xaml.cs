@@ -20,25 +20,20 @@ namespace IsThereAnyDeal.Views
         private static readonly ILogger logger = LogManager.GetLogger();
         private static IResourceProvider resources = new ResourceProvider();
 
-        private IPlayniteAPI _PlayniteApi;
         private IsThereAnyDealSettings _settings;
         private string _PluginUserDataPath;
 
-        private List<ItadRegion> RegionsData;
-        private List<ItadStore> StoresItems = new List<ItadStore>();
+        private List<ItadShops> StoresItems = new List<ItadShops>();
         private IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
         private bool IsFirst = true;
 
 
-        public IsThereAnyDealSettingsView(IPlayniteAPI PlayniteApi, IsThereAnyDealSettings settings, string PluginUserDataPath)
+        public IsThereAnyDealSettingsView(IsThereAnyDealSettings settings, string PluginUserDataPath)
         {
-            _PlayniteApi = PlayniteApi;
             _settings = settings;
             _PluginUserDataPath = PluginUserDataPath;
-            
-            InitializeComponent();
 
-            GetDataRegion();
+            InitializeComponent();
 
             _settings.wishlistIgnores = _settings.wishlistIgnores.OrderBy(x => x.StoreName).ThenBy(x => x.Name).ToList();
             lvIgnoreList.ItemsSource = _settings.wishlistIgnores;
@@ -52,65 +47,23 @@ namespace IsThereAnyDeal.Views
             lLimitNotification.Content = PART_sPriceCut.Value + "%";
         }
 
-        private void ItadSelectRegion_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void PART_SelectCountry_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ItadSelectRegion.SelectedItem != null)
+            if (PART_SelectCountry.SelectedItem != null)
             {
-                string regionSelected = ((ItadRegion)ItadSelectRegion.SelectedItem).Region;
-                _settings.Region = regionSelected;
-
-                ItadSelectCountry.ItemsSource = ((ItadRegion)ItadSelectRegion.SelectedItem).Countries;
-
-                ListStores.Text = string.Empty;
-
-
-                lLimitNotificationPrice.Content = GetInfosRegion(_settings.Region, true);
-            }
-        }
-
-
-        private string GetInfosRegion(string RegionName, bool CurrencySignOnly = false)
-        {
-            for (int i = 0; i < RegionsData.Count; i++)
-            {
-                if (RegionName == RegionsData[i].Region)
-                {
-                    _settings.CurrencySign = RegionsData[i].CurrencySign;
-
-                    if (!CurrencySignOnly)
-                    {
-                        return RegionsData[i].Region + " - " + RegionsData[i].CurrencyName + " - " + RegionsData[i].CurrencySign;
-                    }
-                    else
-                    {
-                        return RegionsData[i].CurrencySign;
-                    }
-                }
-            }
-
-            return string.Empty;
-        }
-
-        private void ItadSelectCountry_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (ItadSelectCountry.SelectedItem != null)
-            {
-                _settings.Country = (string)ItadSelectCountry.SelectedItem;
-                GetInfosRegion(_settings.Region);
+                _settings.Country = ((ComboBoxItem)PART_SelectCountry.SelectedItem).Content.ToString();
                 if (!IsFirst)
                 {
                     ListStores.Text = string.Empty;
 
-
                     PART_DataLoad.Visibility = Visibility.Visible;
                     PART_Data.Visibility = Visibility.Hidden;
 
-                    var TaskView = Task.Run(() =>
+                    Task.Run(() =>
                     {
-                        StoresItems = isThereAnyDealApi.GetRegionStores(_settings.Region, _settings.Country);
-                        Common.LogDebug(true, $"StoresItems: {Serialization.ToJson(StoresItems)}");
+                        StoresItems = isThereAnyDealApi.GetShops(_settings.Country).GetAwaiter().GetResult();
 
-                        this.Dispatcher.BeginInvoke((Action)delegate
+                        this.Dispatcher?.BeginInvoke((Action)delegate
                         {
                             ListStores.ItemsSource = StoresItems;
                             ListStores.UpdateLayout();
@@ -135,7 +88,7 @@ namespace IsThereAnyDeal.Views
 
                     if (StoresItems[i].IsCheck)
                     {
-                        if (ListStores.Text == string.Empty)
+                        if (ListStores.Text.IsNullOrEmpty())
                         {
                             ListStores.Text = StoresItems[i].Title;
                         }
@@ -149,7 +102,7 @@ namespace IsThereAnyDeal.Views
                 {
                     if (StoresItems[i].IsCheck)
                     {
-                        if (ListStores.Text == string.Empty)
+                        if (ListStores.Text.IsNullOrEmpty())
                         {
                             ListStores.Text = StoresItems[i].Title;
                         }
@@ -174,7 +127,7 @@ namespace IsThereAnyDeal.Views
 
                     if (StoresItems[i].IsCheck)
                     {
-                        if (ListStores.Text == string.Empty)
+                        if (ListStores.Text.IsNullOrEmpty())
                         {
                             ListStores.Text = StoresItems[i].Title;
                         }
@@ -188,7 +141,7 @@ namespace IsThereAnyDeal.Views
                 {
                     if (StoresItems[i].IsCheck)
                     {
-                        if (ListStores.Text == string.Empty)
+                        if (ListStores.Text.IsNullOrEmpty())
                         {
                             ListStores.Text = StoresItems[i].Title;
                         }
@@ -220,57 +173,12 @@ namespace IsThereAnyDeal.Views
         }
 
 
-        private void GetDataRegion()
-        {
-            PART_DataLoad.Visibility = Visibility.Visible;
-            PART_Data.Visibility = Visibility.Hidden;
-
-            var TaskView = Task.Run(() =>
-            {
-                RegionsData = isThereAnyDealApi.GetCoveredRegions();
-                Common.LogDebug(true, $"RegionsData: {Serialization.ToJson(RegionsData)}");
-
-                this.Dispatcher.BeginInvoke((Action)delegate
-                {
-                    ItadSelectRegion.ItemsSource = RegionsData;
-                    ItadSelectRegion.Text = GetInfosRegion(_settings.Region);
-
-                    ItadSelectCountry.Text = _settings.Country;
-                    StoresItems = _settings.Stores;
-                    ListStores.ItemsSource = StoresItems;
-
-                    foreach (ItadStore store in StoresItems)
-                    {
-                        if (store.IsCheck)
-                        {
-                            if (ListStores.Text == string.Empty)
-                            {
-                                ListStores.Text += store.Title;
-                            }
-                            else
-                            {
-                                ListStores.Text += ", " + store.Title;
-                            }
-                        }
-                    }
-
-                    lLimitNotificationPrice.Content = GetInfosRegion(_settings.Region, true);
-
-                    PART_DataLoad.Visibility = Visibility.Hidden;
-                    PART_Data.Visibility = Visibility.Visible;
-                });
-            });
-        }
-
-
         private void ButtonRemove_Click(object sender, RoutedEventArgs e)
         {
             if (!((string)((Button)sender).Tag).IsNullOrEmpty())
             {
                 int.TryParse((string)((Button)sender).Tag, out int index);
-
                 ((List<ItadNotificationCriteria>)PART_LbNotifications.ItemsSource).RemoveAt(index);
-
                 PART_LbNotifications.Items.Refresh();
             }
         }
@@ -319,7 +227,7 @@ namespace IsThereAnyDeal.Views
 
         private void ButtonImportSteam_Click(object sender, RoutedEventArgs e)
         {
-            string targetPath = _PlayniteApi.Dialogs.SelectFile("json file|*.json");
+            string targetPath = API.Instance.Dialogs.SelectFile("json file|*.json");
 
             if (!targetPath.IsNullOrEmpty())
             {
@@ -329,7 +237,7 @@ namespace IsThereAnyDeal.Views
                 );
                 globalProgressOptions.IsIndeterminate = true;
 
-                _PlayniteApi.Dialogs.ActivateGlobalProgress((activateGlobalProgress) =>
+                API.Instance.Dialogs.ActivateGlobalProgress((activateGlobalProgress) =>
                 {
                     try
                     {
@@ -337,7 +245,7 @@ namespace IsThereAnyDeal.Views
                         stopWatch.Start();
 
 
-                        GameSource gameSource = _PlayniteApi.Database.Sources.Where(x => x.Name.ToLower().IndexOf("steam") > -1).FirstOrDefault();
+                        GameSource gameSource = API.Instance.Database.Sources.Where(x => x.Name.ToLower().IndexOf("steam") > -1).FirstOrDefault();
 
                         if (gameSource != null)
                         {
@@ -345,14 +253,14 @@ namespace IsThereAnyDeal.Views
 
                             SteamWishlist steamWishlist = new SteamWishlist();
 
-                            if (steamWishlist.ImportWishlist(_PlayniteApi, SteamID, _PluginUserDataPath, _settings, targetPath))
+                            if (steamWishlist.ImportWishlist(SteamID, _PluginUserDataPath, _settings, targetPath))
                             {
                                 if (activateGlobalProgress.CancelToken.IsCancellationRequested)
                                 {
                                     return;
                                 }
 
-                                _PlayniteApi.Dialogs.ShowMessage(resources.GetString("LOCItadImportSuccessful"), "IsThereAnyDeal");
+                                API.Instance.Dialogs.ShowMessage(resources.GetString("LOCItadImportSuccessful"), "IsThereAnyDeal");
                             }
                             else
                             {
@@ -361,7 +269,7 @@ namespace IsThereAnyDeal.Views
                                     return;
                                 }
 
-                                _PlayniteApi.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
+                                API.Instance.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
                             }
                         }
                         else
@@ -371,7 +279,7 @@ namespace IsThereAnyDeal.Views
                                 return;
                             }
 
-                            _PlayniteApi.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
+                            API.Instance.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
                         }
 
                         stopWatch.Stop();
@@ -386,7 +294,7 @@ namespace IsThereAnyDeal.Views
                         {
                             return;
                         }
-                        _PlayniteApi.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
+                        API.Instance.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
                     }
                 }, globalProgressOptions);
             }

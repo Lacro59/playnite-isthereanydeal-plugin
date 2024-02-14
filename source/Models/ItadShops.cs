@@ -1,6 +1,6 @@
 ﻿namespace IsThereAnyDeal.Models
 {
-    public class ItadStore
+    public class ItadShops
     {
         public string Id { get; set; }
         public string Title { get; set; }
