@@ -396,7 +396,7 @@
                                                                 </Style>
                                                             </StackPanel.Style>
 
-                                                            <TextBlock Text="{Binding ItadBestPrice.PriceNew}" />
+                                                            <TextBlock Text="{Binding ItadBestPrice.PriceNew}" Margin="0,0,5,0" />
                                                             <TextBlock Text="{Binding ItadBestPrice.CurrencySign}" />
                                                         </StackPanel>
                                                         <StackPanel Grid.Column="4" Orientation="Horizontal">
@@ -520,7 +520,7 @@
                                                                             </Style>
                                                                         </StackPanel.Style>
 
-                                                                        <TextBlock Text="{Binding PriceNew}" />
+                                                                        <TextBlock Text="{Binding PriceNew}" Margin="0,0,5,0" />
                                                                         <TextBlock Text="{Binding CurrencySign}" />
                                                                     </StackPanel>
                                                                     <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" >
