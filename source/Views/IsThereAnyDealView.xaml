@@ -97,10 +97,10 @@
                                         <Label Grid.Column="0" Content="{DynamicResource LOCITADPercentage}" FontSize="16" />
                                         <Slider Grid.Column="2" Minimum="0" Maximum="100" 
                                                 AutoToolTipPlacement="TopLeft"
-                                                Value="{Binding DiscountPercent, Delay=500}" 
+                                                Value="{Binding DiscountPercent}" 
                                                 VerticalAlignment="Center" IsSnapToTickEnabled="True" 
                                                 TickFrequency="1" Name="sPercentage"
-                                                Thumb.DragCompleted="on_DragCompleted"
+                                                Thumb.DragCompleted="On_DragCompleted"
                                                 ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
                                         <TextBlock Grid.Column="4" Margin="5,0,0,0" HorizontalAlignment="Right">
                                             <TextBlock.Text>
@@ -125,10 +125,10 @@
                                                 AutoToolTipPlacement="TopLeft"
                                                 Minimum="{Binding MinPrice}"
                                                 Maximum="{Binding MaxPrice}"
-                                                Value="{Binding PriceLimit, Delay=500}" 
+                                                Value="{Binding PriceLimit}" 
                                                 VerticalAlignment="Center" IsSnapToTickEnabled="True" 
                                                 TickFrequency="1" Name="sPrice"
-                                                Thumb.DragCompleted="on_DragCompleted"
+                                                Thumb.DragCompleted="On_DragCompleted"
                                                 ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
                                         <TextBlock Grid.Column="4" Margin="5,0,0,0" HorizontalAlignment="Right">
                                             <TextBlock.Text>
@@ -227,7 +227,7 @@
                         </Border>
 
                         <Grid Name="DataLoaded">
-                            <ListBox Name="lbWishlist" 
+                            <ListBox Name="lbWishlist" ItemsSource="{Binding ItemsSource}"
                                      Height="{Binding ElementName=DataLoaded, Path=ActualHeight}"
                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                 <!-- Force the style because HorizontalContentAlignment not work. -->
@@ -450,7 +450,7 @@
                                                                        Visibility="{Binding IsActive, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
 
                                                             <TextBlock Text="{DynamicResource LOCItadNotFind}" 
-                                                                       Visibility="{Binding Plain, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}, ConverterParameter=Inverted}" />
+                                                                       Visibility="{Binding IsFind, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
                                                             <TextBlock Text="{DynamicResource LOCItadInLibrary}" 
                                                                        Visibility="{Binding InLibrary, Converter={StaticResource BooleanToVisibilityConverter}}" />
 

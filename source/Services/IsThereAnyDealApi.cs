@@ -143,14 +143,6 @@ namespace IsThereAnyDeal.Services
         #region Plugin
         public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false, bool ForcePrice = false)
         {
-            Guid SteamId = PlayniteTools.GetPluginId(PlayniteTools.ExternalPlugin.SteamLibrary);
-            Guid GogId = PlayniteTools.GetPluginId(PlayniteTools.ExternalPlugin.GogLibrary);
-            Guid EpicId = PlayniteTools.GetPluginId(PlayniteTools.ExternalPlugin.EpicLibrary);
-            Guid HumbleId = PlayniteTools.GetPluginId(PlayniteTools.ExternalPlugin.HumbleLibrary);
-            Guid XboxId = PlayniteTools.GetPluginId(PlayniteTools.ExternalPlugin.XboxLibrary);
-            Guid OriginId = PlayniteTools.GetPluginId(PlayniteTools.ExternalPlugin.OriginLibrary);
-            Guid UbisoftId = PlayniteTools.GetPluginId(PlayniteTools.ExternalPlugin.UplayLibrary);
-
             List<Wishlist> ListWishlistSteam = new List<Wishlist>();
             if (settings.EnableSteam)
             {
@@ -693,7 +685,7 @@ namespace IsThereAnyDeal.Services
                 if (settings.EnableNotification)
                 {
                     List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, settings, plugin.GetPluginUserDataPath(), true, true);
-                    ListWishlist.Where(x => x.GetNotification(settings.NotificationCriterias))
+                    ListWishlist.Where(x => x.Game != null && x.GetNotification(settings.NotificationCriterias))
                       .ForEach(x =>
                       {
                           API.Instance.Notifications.Add(new NotificationMessage(
@@ -710,7 +702,7 @@ namespace IsThereAnyDeal.Services
                                               ShowMinimizeButton = false,
                                               ShowMaximizeButton = false,
                                               ShowCloseButton = true,
-                                              CanBeResizable = true,
+                                              CanBeResizable = false,
                                               Width = 1280,
                                               Height = 740
                                           };

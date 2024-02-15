@@ -65,6 +65,7 @@ namespace IsThereAnyDeal
                             ShowMinimizeButton = false,
                             ShowMaximizeButton = false,
                             ShowCloseButton = true,
+                            CanBeResizable = false,
                             Width = 1280,
                             Height = 740
                         };
@@ -144,7 +145,7 @@ namespace IsThereAnyDeal
                             ShowMinimizeButton = false,
                             ShowMaximizeButton = false,
                             ShowCloseButton = true,
-                            CanBeResizable = true,
+                            CanBeResizable = false,
                             Width = 1280,
                             Height = 740
                         };

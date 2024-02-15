@@ -33,6 +33,8 @@ namespace IsThereAnyDeal.Models
 
         // TODO
         public bool IsActive { get; set; }
+        [DontSerialize]
+        public bool IsFind => Game != null;
         public ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos { get; set; }
 
         [DontSerialize]
@@ -112,7 +114,7 @@ namespace IsThereAnyDeal.Models
         public bool HasItadData => ItadBestPrice.CurrencySign != null && !ItadBestPrice.CurrencySign.IsNullOrEmpty();
 
         [DontSerialize]
-        public string UrlGame => string.Format("https://isthereanydeal.com/game/{0}/info/", Game.Slug);
+        public string UrlGame => Game == null ? string.Empty : string.Format("https://isthereanydeal.com/game/{0}/info/", Game.Slug);
 
         [DontSerialize]
         public List<Wishlist> Duplicates = new List<Wishlist>();
