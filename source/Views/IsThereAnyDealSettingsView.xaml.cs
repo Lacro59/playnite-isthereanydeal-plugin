@@ -253,7 +253,7 @@ namespace IsThereAnyDeal.Views
 
                             SteamWishlist steamWishlist = new SteamWishlist(Plugin);
 
-                            if (steamWishlist.ImportWishlist(SteamID, PluginUserDataPath, Settings, targetPath))
+                            if (steamWishlist.ImportWishlist(targetPath))
                             {
                                 if (activateGlobalProgress.CancelToken.IsCancellationRequested)
                                 {

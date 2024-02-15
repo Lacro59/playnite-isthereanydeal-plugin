@@ -10,130 +10,84 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace IsThereAnyDeal.Clients
 {
     public class UbisoftWishlist : GenericWishlist
     {
-        public UbisoftWishlist(IsThereAnyDeal plugin) : base(plugin)
+        public UbisoftWishlist(IsThereAnyDeal plugin) : base(plugin, "Ubisoft")
         {
+            ExternalPlugin = PlayniteTools.ExternalPlugin.UplayLibrary;
         }
 
-        public List<Wishlist> GetWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
+        internal override List<Wishlist> GetStoreWishlist(List<Wishlist> cachedData)
         {
-            List<Wishlist> Result = new List<Wishlist>();
+            Logger.Info($"Load data from web for {ClientName}");
 
-            List<Wishlist> ResultLoad = LoadWishlists("Ubisoft", PluginUserDataPath);
-            if (ResultLoad != null && CacheOnly)
+            if (Settings.UbisoftLink.IsNullOrEmpty())
             {
-                if (ForcePrice)
-                {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
-                }
-                SaveWishlist("Ubisoft", PluginUserDataPath, ResultLoad);
-                return ResultLoad;
-            }
-
-            logger.Info($"Load from web for Ubisoft");
-
-            // Get wishlist
-            string url = settings.UbisoftLink;
-
-            if (url.IsNullOrEmpty())
-            {
-                logger.Error($"No Ubisoft wish list link");
-
+                Logger.Error($"{ClientName}: No url");
                 API.Instance.Notifications.Add(new NotificationMessage(
-                    $"IsThereAnyDeal-Ubisoft-Error",
-                    "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationErrorUbisoftNoLink"), "Ubisoft"),
-                    NotificationType.Error
+                    $"IsThereAnyDeal-{ClientName}-Url",
+                    "IsThereAnyDeal" + Environment.NewLine
+                        + string.Format(ResourceProvider.GetString("LOCCommonStoreBadConfiguration"), ClientName),
+                    NotificationType.Error,
+                    () => Plugin.OpenSettingsView()
                 ));
 
-                ResultLoad = LoadWishlists("Ubisoft", PluginUserDataPath, true);
-                if (ResultLoad != null)
-                {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
-                    SaveWishlist("Ubisoft", PluginUserDataPath, ResultLoad);
-                    return ResultLoad;
-                }
-                return Result;
+                return cachedData;
             }
 
-            string ResultWeb = Web.DownloadStringData(settings.UbisoftLink).GetAwaiter().GetResult();
+            List<Wishlist> Result = new List<Wishlist>();
 
-            if (!ResultWeb.IsNullOrEmpty())
+            // Get wishlist
+            string response = Web.DownloadStringData(Settings.UbisoftLink).GetAwaiter().GetResult();
+
+            if (!response.IsNullOrEmpty())
             {
-                try
+                HtmlParser parser = new HtmlParser();
+                IHtmlDocument HtmlRequirement = parser.Parse(response);
+
+                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                foreach (IElement SearchElement in HtmlRequirement.QuerySelectorAll(".wishlist-items-list li"))
                 {
-                    HtmlParser parser = new HtmlParser();
-                    IHtmlDocument HtmlRequirement = parser.Parse(ResultWeb);
+                    string StoreId = string.Empty;
+                    string Name = string.Empty;
+                    DateTime ReleaseDate = default;
+                    string Capsule = string.Empty;
 
-                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                    foreach (IElement SearchElement in HtmlRequirement.QuerySelectorAll(".wishlist-items-list li"))
+                    StoreId = SearchElement.QuerySelector("div.wishlist-product-tile.product-tile").GetAttribute("data-itemid");
+                    Capsule = SearchElement.QuerySelector("img").GetAttribute("data-src");
+                    Name = SearchElement.QuerySelector("div.wishlist-product-tile.product-tile .prod-title").InnerHtml.Trim();
+
+                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
+
+                    Result.Add(new Wishlist
                     {
-                        string StoreId = string.Empty;
-                        string Name = string.Empty;
-                        DateTime ReleaseDate = default(DateTime);
-                        string Capsule = string.Empty;
-
-                        try
-                        {
-                            StoreId = SearchElement.QuerySelector("div.wishlist-product-tile.product-tile").GetAttribute("data-itemid");
-                            Capsule = SearchElement.QuerySelector("img").GetAttribute("data-src");
-                            Name = SearchElement.QuerySelector("div.wishlist-product-tile.product-tile .prod-title").InnerHtml.Trim();
-                            
-                            GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
-
-                            ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("ubisoft") > -1 || x.Title.ToLower().IndexOf("ubisoft connect") > -1 || x.Title.ToLower().IndexOf("uplay") > -1);
-
-                            Result.Add(new Wishlist
-                            {
-                                StoreId = StoreId.Trim(),
-                                StoreName = "Ubisoft Connect",
-                                ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
-                                StoreUrl = @"https://store.ubi.com/fr/game?pid=" + StoreId.Trim(),
-                                Name = Name.Trim(),
-                                SourceId = SourceId,
-                                ReleaseDate = ReleaseDate.ToUniversalTime(),
-                                Capsule = Capsule.Trim(),
-                                Game = gamesLookup.Game,
-                                IsActive = true
-                            });
-                        }
-                        catch (Exception ex)
-                        {
-                            Common.LogError(ex, true, $"Error in parse Ubisoft Store wishlist - {Name}");
-                            logger.Warn($"Error in parse Ubisoft Store wishlist - {Name}");
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Common.LogError(ex, true, "Error in parse Ubisoft wishlist");
-                    API.Instance.Notifications.Add(new NotificationMessage(
-                        $"IsThereAnyDeal-Ubisoft-Error",
-                        "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationError"), "Ubisoft"),
-                        NotificationType.Error
-                    ));
-
-                    ResultLoad = LoadWishlists("Ubisoft", PluginUserDataPath, true);
-                    if (ResultLoad != null)
-                    {
-                        ResultLoad = SetCurrentPrice(ResultLoad, settings);
-                        SaveWishlist("Ubisoft", PluginUserDataPath, ResultLoad);
-                        return ResultLoad;
-                    }
-                    return Result;
+                        StoreId = StoreId.Trim(),
+                        StoreName = "Ubisoft Connect",
+                        ShopColor = GetShopColor(),
+                        StoreUrl = @"https://store.ubi.com/fr/game?pid=" + StoreId.Trim(),
+                        Name = Name.Trim(),
+                        SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
+                        ReleaseDate = ReleaseDate.ToUniversalTime(),
+                        Capsule = Capsule.Trim(),
+                        Game = gamesLookup.Found ? gamesLookup.Game : null,
+                        IsActive = true
+                    });
                 }
             }
+            else
+            {
+                return cachedData;
+            }
 
-            Result = SetCurrentPrice(Result, settings);
-            SaveWishlist("Ubisoft", PluginUserDataPath, Result);
+            Result = SetCurrentPrice(Result);
+            SaveWishlist(Result);
             return Result;
         }
 
-        public bool RemoveWishlist(string StoreId, string PluginUserDataPath)
+        public override bool RemoveWishlist(string StoreId)
         {
             return false;
         }

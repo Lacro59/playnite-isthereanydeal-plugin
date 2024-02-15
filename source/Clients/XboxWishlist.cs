@@ -16,129 +16,85 @@ namespace IsThereAnyDeal.Clients
 {
     public class XboxWishlist : GenericWishlist
     {
-        public XboxWishlist(IsThereAnyDeal plugin) : base(plugin)
+        public XboxWishlist(IsThereAnyDeal plugin) : base(plugin, "Xbox")
         {
+            ExternalPlugin = PlayniteTools.ExternalPlugin.XboxLibrary;
         }
 
-        public List<Wishlist> GetWishlist(IPlayniteAPI PlayniteApi, Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
+        internal override List<Wishlist> GetStoreWishlist(List<Wishlist> cachedData)
         {
-            List<Wishlist> Result = new List<Wishlist>();
+            Logger.Info($"Load data from web for {ClientName}");
 
-            List<Wishlist> ResultLoad = LoadWishlists("Xbox", PluginUserDataPath);
-            if (ResultLoad != null && CacheOnly)
+            if (Settings.XboxLink.IsNullOrEmpty())
             {
-                if (ForcePrice)
-                {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
-                }
-                SaveWishlist("Xbox", PluginUserDataPath, ResultLoad);
-                return ResultLoad;
-            }
-
-            logger.Info($"Load from web for Xbox");
-
-            // Get wishlist
-            string url = settings.XboxLink;
-            string baseUrl = "https://www.microsoft.com";
-
-            if (url.IsNullOrEmpty())
-            {
-                logger.Error($"No Xbox wish list link");
-
-                PlayniteApi.Notifications.Add(new NotificationMessage(
-                    $"IsThereAnyDeal-Xbox-Error",
-                    "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationErrorXboxNoLink"), "Xbox"),
-                    NotificationType.Error
+                Logger.Error($"{ClientName}: No url");
+                API.Instance.Notifications.Add(new NotificationMessage(
+                    $"IsThereAnyDeal-{ClientName}-Url",
+                    "IsThereAnyDeal" + Environment.NewLine
+                        + string.Format(ResourceProvider.GetString("LOCCommonStoreBadConfiguration"), ClientName),
+                    NotificationType.Error,
+                    () => Plugin.OpenSettingsView()
                 ));
 
-                ResultLoad = LoadWishlists("Xbox", PluginUserDataPath, true);
-                if (ResultLoad != null)
-                {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
-                    SaveWishlist("Xbox", PluginUserDataPath, ResultLoad);
-                    return ResultLoad;
-                }
-                return Result;
+                return cachedData;
             }
 
-            IWebView view = PlayniteApi.WebViews.CreateOffscreenView();
-            view.NavigateAndWait(url);
+            List<Wishlist> Result = new List<Wishlist>();
+
+            // Get wishlist
+            string baseUrl = "https://www.microsoft.com";
+
+            IWebView view = API.Instance.WebViews.CreateOffscreenView();
+            view.NavigateAndWait(Settings.XboxLink);
             string ResultWeb = view.GetPageSource();
 
             if (!ResultWeb.IsNullOrEmpty())
             {
-                try
+                HtmlParser parser = new HtmlParser();
+                IHtmlDocument HtmlRequirement = parser.Parse(ResultWeb);
+
+                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                foreach (IElement SearchElement in HtmlRequirement.QuerySelectorAll("li.product-wishlist-item"))
                 {
-                    HtmlParser parser = new HtmlParser();
-                    IHtmlDocument HtmlRequirement = parser.Parse(ResultWeb);
+                    string StoreId = string.Empty;
+                    string StoreUrl = string.Empty;
+                    string Name = string.Empty;
+                    DateTime ReleaseDate = default;
+                    string Capsule = string.Empty;
 
-                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                    foreach (IElement SearchElement in HtmlRequirement.QuerySelectorAll("li.product-wishlist-item"))
+                    StoreId = SearchElement.GetAttribute("data-product-id");
+                    Capsule = SearchElement.QuerySelector("img.c-image").GetAttribute("data-src");
+                    Name = SearchElement.QuerySelector("h3.c-heading").InnerHtml.Trim();
+                    StoreUrl = SearchElement.QuerySelector("a.c-button").GetAttribute("href");
+
+                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
+
+                    Result.Add(new Wishlist
                     {
-                        string StoreId = string.Empty;
-                        string StoreUrl = string.Empty;
-                        string Name = string.Empty;
-                        DateTime ReleaseDate = default;
-                        string Capsule = string.Empty;
-
-                        try
-                        {
-                            StoreId = SearchElement.GetAttribute("data-product-id");
-                            Capsule = SearchElement.QuerySelector("img.c-image").GetAttribute("data-src");
-                            Name = SearchElement.QuerySelector("h3.c-heading").InnerHtml.Trim();
-                            StoreUrl = SearchElement.QuerySelector("a.c-button").GetAttribute("href");
-                            
-                            GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
-
-                            ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("microsoft") > -1);
-
-                            Result.Add(new Wishlist
-                            {
-                                StoreId = StoreId.Trim(),
-                                StoreName = "Microsoft Store",
-                                ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
-                                StoreUrl = baseUrl + StoreUrl.Trim(),
-                                Name = Name.Trim(),
-                                SourceId = SourceId,
-                                ReleaseDate = ReleaseDate.ToUniversalTime(),
-                                Capsule = Capsule.Trim(),
-                                Game = gamesLookup.Game,
-                                IsActive = true
-                            });
-                        }
-                        catch (Exception ex)
-                        {
-                            Common.LogError(ex, true, $"Error in parse Microsoft Store wishlist - {Name}");
-                            logger.Warn($"Error in parse Microsoft Store wishlist - {Name}");
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Common.LogError(ex, true, "Error in parse Xbox wishlist");
-                    PlayniteApi.Notifications.Add(new NotificationMessage(
-                        $"IsThereAnyDeal-Xbox-Error",
-                        "IsThereAnyDeal\r\n" + string.Format(resourceProvider.GetString("LOCItadNotificationError"), "Xbox"),
-                        NotificationType.Error
-                    ));
-
-                    ResultLoad = LoadWishlists("Xbox", PluginUserDataPath, true);
-                    if (ResultLoad != null)
-                    {
-                        ResultLoad = SetCurrentPrice(ResultLoad, settings);
-                        SaveWishlist("Xbox", PluginUserDataPath, ResultLoad);
-                        return ResultLoad;
-                    }
-                    return Result;
+                        StoreId = StoreId.Trim(),
+                        StoreName = "Microsoft Store",
+                        ShopColor = GetShopColor(),
+                        StoreUrl = baseUrl + StoreUrl.Trim(),
+                        Name = Name.Trim(),
+                        SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
+                        ReleaseDate = ReleaseDate.ToUniversalTime(),
+                        Capsule = Capsule.Trim(),
+                        Game = gamesLookup.Game,
+                        IsActive = true
+                    });
                 }
             }
+            else
+            {
+                return cachedData;
+            }
 
-            Result = SetCurrentPrice(Result, settings);
-            SaveWishlist("Xbox", PluginUserDataPath, Result);
+            Result = SetCurrentPrice(Result);
+            SaveWishlist(Result);
             return Result;
         }
 
-        public bool RemoveWishlist(string StoreId, string PluginUserDataPath)
+        public override bool RemoveWishlist(string StoreId)
         {
             return false;
         }

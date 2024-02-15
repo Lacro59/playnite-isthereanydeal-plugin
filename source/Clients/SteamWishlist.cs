@@ -37,53 +37,33 @@ namespace IsThereAnyDeal.Services
         private string UrlAppData => @"https://store.steampowered.com/api/appdetails?appids={0}";
 
 
-        public SteamWishlist(IsThereAnyDeal plugin) : base(plugin)
+        public SteamWishlist(IsThereAnyDeal plugin) : base(plugin, "Steam")
         {
+            ExternalPlugin = PlayniteTools.ExternalPlugin.SteamLibrary;
         }
 
-        public List<Wishlist> GetWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
+        internal override List<Wishlist> GetStoreWishlist(List<Wishlist> cachedData)
         {
-            List<Wishlist> Result = new List<Wishlist>();
-
-            List<Wishlist> ResultLoad = LoadWishlists("Steam", PluginUserDataPath);
-            if (ResultLoad != null && CacheOnly)
-            {
-                if (ForcePrice)
-                {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
-                }
-                SaveWishlist("Steam", PluginUserDataPath, ResultLoad);
-                return ResultLoad;
-            }
-
-            logger.Info($"Load from web for Steam");
+            Logger.Info($"Load data from web for {ClientName}");
 
             if (!SteamApi.IsUserLoggedIn)
             {
-                logger.Error($"Steam user is not authenticated");
+                Logger.Warn($"{ClientName}: Not authenticated");
                 API.Instance.Notifications.Add(new NotificationMessage(
-                    $"IsThereAnyDeal-Steam-NoAuthenticate",
-                    "IsThereAnyDeal" + Environment.NewLine 
-                        + string.Format(resourceProvider.GetString("LOCCommonStoresNoAuthenticate"), "Steam"),
+                    $"IsThereAnyDeal-{ClientName}-NotAuthenticate",
+                    "IsThereAnyDeal" + Environment.NewLine
+                        + string.Format(ResourceProvider.GetString("LOCCommonStoresNoAuthenticate"), ClientName),
                     NotificationType.Error,
-                    () => Plugin.OpenSettingsView()
+                    () => PlayniteTools.ShowPluginSettings(ExternalPlugin)
                 ));
 
-                // Load in cache
-                ResultLoad = LoadWishlists("Steam", PluginUserDataPath, true);
-                if (ResultLoad != null)
-                {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
-                    SaveWishlist("Steam", PluginUserDataPath, ResultLoad);
-                    return ResultLoad;
-                }
-                return Result;
+                return cachedData;
             }
 
+            List<Wishlist> Result = new List<Wishlist>();
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-            ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("steam") > -1);
-
             ObservableCollection<AccountWishlist> accountWishlist = SteamApi.GetWishlist(SteamApi.CurrentAccountInfos);
+
             accountWishlist.ForEach(x =>
             {
                 GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
@@ -91,10 +71,10 @@ namespace IsThereAnyDeal.Services
                 {
                     StoreId = x.Id,
                     StoreName = "Steam",
-                    ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
+                    ShopColor = GetShopColor(),
                     StoreUrl = x.Link,
                     Name = x.Name,
-                    SourceId = SourceId,
+                    SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
                     ReleaseDate = x.Released,
                     Added = x.Added,
                     Capsule = x.Image,
@@ -103,17 +83,18 @@ namespace IsThereAnyDeal.Services
                 });
             });
 
-            Result = SetCurrentPrice(Result, settings);
-            SaveWishlist("Steam", PluginUserDataPath, Result);
+            Result = SetCurrentPrice(Result);
+            SaveWishlist(Result);
             return Result;
         }
 
-        public bool RemoveWishlist(string StoreId)
+        public override bool RemoveWishlist(string StoreId)
         {
             return SteamApi.RemoveWishlist(StoreId);
         }
 
-        public bool ImportWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, string FilePath)
+
+        public bool ImportWishlist(string FilePath)
         {
             List<Wishlist> Result = new List<Wishlist>();
 
@@ -157,21 +138,21 @@ namespace IsThereAnyDeal.Services
                                 
                                 string Name = WebUtility.HtmlDecode(AppDetails.name);
                                 string Capsule = AppDetails.header_image;
+                                DateTime.TryParse(AppDetails?.release_date?.date, out DateTime ReleaseDate);
 
                                 GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(StoreId)).GetAwaiter().GetResult();
-                                ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("steam") > -1);
 
                                 Result.Add(new Wishlist
                                 {
                                     StoreId = StoreId,
                                     StoreName = "Steam",
-                                    ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
+                                    ShopColor = GetShopColor(),
                                     StoreUrl = "https://store.steampowered.com/app/" + (string)el,
                                     Name = Name,
-                                    SourceId = SourceId,
-                                    ReleaseDate = DateTime.TryParse(AppDetails?.release_date?.date, out DateTime ReleaseDate),
+                                    SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
+                                    ReleaseDate = ReleaseDate.ToUniversalTime(),
                                     Capsule = Capsule,
-                                    Game = gamesLookup.Game,
+                                    Game = gamesLookup.Found ? gamesLookup.Game : null,
                                     IsActive = true
                                 });
                             }
@@ -182,8 +163,8 @@ namespace IsThereAnyDeal.Services
                         }
                     }
 
-                    Result = SetCurrentPrice(Result, settings);
-                    SaveWishlist("Steam", PluginUserDataPath, Result);
+                    Result = SetCurrentPrice(Result);
+                    SaveWishlist(Result);
 
                     return true;
                 }

@@ -66,7 +66,7 @@ namespace IsThereAnyDeal.Views
             Task task = Task.Run(() => LoadData(Plugin.GetPluginUserDataPath(), Settings, CachOnly, ForcePrice))
                 .ContinueWith(antecedent =>
                 {
-                    this.Dispatcher?.Invoke(new Action(() => 
+                    Application.Current.Dispatcher?.Invoke(new Action(() => 
                     {
                         try
                         {
@@ -253,8 +253,6 @@ namespace IsThereAnyDeal.Views
 
             ListBox elParent = UI.FindParent<ListBox>(sender as Button);
             StorePriceSelected = (ItadGameInfo)elParent.Items[index];
-            lbWishlist.ItemsSource = null;
-            Common.LogDebug(true, $"BtRemoveWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
 
             MessageBoxResult RessultDialog = API.Instance.Dialogs.ShowMessage(
                 string.Format(resourceProvider.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
@@ -266,7 +264,7 @@ namespace IsThereAnyDeal.Views
                 DataLoadWishlist.Visibility = Visibility.Visible;
                 dpData.IsEnabled = false;
 
-                Task.Run(() =>
+                _ = Task.Run(() =>
                 {
                     try
                     {
@@ -275,62 +273,50 @@ namespace IsThereAnyDeal.Views
                             switch (StorePriceSelected.ShopName.ToLower())
                             {
                                 case "steam":
-                                    Common.LogDebug(true, $"Is Steam");
-#if DEBUG
                                     SteamWishlist steamWishlist = new SteamWishlist(Plugin);
                                     IsDeleted = steamWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        steamWishlist.GetWishlist(StorePriceSelected.SourceId, Plugin.GetPluginUserDataPath(), Settings, false);
+                                        _ = steamWishlist.GetWishlist(false);
                                     }
-#endif
                                     break;
 
                                 case "epic game store":
-                                    Common.LogDebug(true, $"Is Epic");
-
                                     EpicWishlist epicWishlist = new EpicWishlist(Plugin);
                                     IsDeleted = epicWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        epicWishlist.GetWishlist(StorePriceSelected.SourceId, Plugin.GetPluginUserDataPath(), Settings, false);
+                                        _ = epicWishlist.GetWishlist(false);
                                     }
                                     break;
 
                                 case "humble store":
-                                    Common.LogDebug(true, $"Is Humble Store");
-
                                     HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist(Plugin);
                                     IsDeleted = humbleBundleWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        humbleBundleWishlist.GetWishlist(StorePriceSelected.SourceId, Settings.HumbleKey, Plugin.GetPluginUserDataPath(), Settings, false);
+                                        _ = humbleBundleWishlist.GetWishlist(false);
                                     }
                                     break;
 
                                 case "gog":
-                                    Common.LogDebug(true, $"Is GOG");
-
                                     GogWishlist gogWishlist = new GogWishlist(Plugin);
                                     IsDeleted = gogWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        gogWishlist.GetWishlist(StorePriceSelected.SourceId, Plugin.GetPluginUserDataPath(), Settings, false);
+                                        _ = gogWishlist.GetWishlist(false);
                                     }
                                     break;
 
                                 case "microsoft store":
-                                    Common.LogDebug(true, $"Is xbox");
                                     break;
 
                                 case "origin":
-                                    Common.LogDebug(true, $"Is origin");
-
                                     OriginWishlist originWishlist = new OriginWishlist(Plugin);
                                     IsDeleted = originWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
-                                        originWishlist.GetWishlist(StorePriceSelected.SourceId, Plugin.GetPluginUserDataPath(), Settings, false);
+                                        _ = originWishlist.GetWishlist(false);
                                     }
                                     break;
 
@@ -346,29 +332,17 @@ namespace IsThereAnyDeal.Views
                 })
                 .ContinueWith(antecedent =>
                 {
-                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    Application.Current.Dispatcher?.Invoke(new Action(() =>
                     {
                         if (IsDeleted)
                         {
-                            Common.LogDebug(true, $"IsDeleted");
                             RefreshData(string.Empty);
                         }
-                        else
-                        {
-                            Common.LogDebug(true, $"IsNotDeleted");
-                            GetListGame();
-                        }
-                        
+
                         DataLoadWishlist.Visibility = Visibility.Collapsed;
                         dpData.IsEnabled = true;
                     }));
                 });
-            }
-            else
-            {
-                GetListGame();
-                DataLoadWishlist.Visibility = Visibility.Collapsed;
-                dpData.IsEnabled = true;
             }
         }
 

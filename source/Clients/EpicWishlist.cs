@@ -28,67 +28,45 @@ namespace IsThereAnyDeal.Services
             set => _EpicApi = value;
         }
 
-        public const string GraphQLEndpoint = @"https://graphql.epicgames.com/graphql";
 
-
-        public EpicWishlist(IsThereAnyDeal plugin) : base(plugin)
+        public EpicWishlist(IsThereAnyDeal plugin) : base(plugin, "Epic")
         {
+            ExternalPlugin = PlayniteTools.ExternalPlugin.EpicLibrary;
         }
 
-        public List<Wishlist> GetWishlist(Guid SourceId, string PluginUserDataPath, IsThereAnyDealSettings settings, bool CacheOnly = false, bool ForcePrice = false)
+        internal override List<Wishlist> GetStoreWishlist(List<Wishlist> cachedData)
         {
-            List<Wishlist> Result = new List<Wishlist>();
-
-            List<Wishlist> ResultLoad = LoadWishlists("Epic", PluginUserDataPath);
-            if (ResultLoad != null && CacheOnly)
-            {
-                if (ForcePrice)
-                {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
-                }
-                SaveWishlist("Epic", PluginUserDataPath, ResultLoad);
-                return ResultLoad;
-            }
-
-            logger.Info($"Load from web for Epic");
+            Logger.Info($"Load data from web for {ClientName}");
 
             if (!EpicApi.IsUserLoggedIn)
             {
-                logger.Warn($"Epic user is not authenticated");
+                Logger.Warn($"{ClientName}: Not authenticated");
                 API.Instance.Notifications.Add(new NotificationMessage(
-                    $"IsThereAnyDeal-Epic-NoAuthenticate",
+                    $"IsThereAnyDeal-{ClientName}-NotAuthenticate",
                     "IsThereAnyDeal" + Environment.NewLine
-                        + string.Format(resourceProvider.GetString("LOCCommonStoresNoAuthenticate"), "Epic"),
+                        + string.Format(ResourceProvider.GetString("LOCCommonStoresNoAuthenticate"), ClientName),
                     NotificationType.Error,
-                    () => PlayniteTools.ShowPluginSettings(PlayniteTools.ExternalPlugin.EpicLibrary)
+                    () => PlayniteTools.ShowPluginSettings(ExternalPlugin)
                 ));
 
-                // Load in cache
-                ResultLoad = LoadWishlists("Epic", PluginUserDataPath, true);
-                if (ResultLoad != null)
-                {
-                    ResultLoad = SetCurrentPrice(ResultLoad, settings);
-                    SaveWishlist("Epic", PluginUserDataPath, ResultLoad);
-                    return ResultLoad;
-                }
-                return Result;
+                return cachedData;
             }
 
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-            ItadShops tempShopColor = settings.Stores.Find(x => x.Title.ToLower().IndexOf("epic") > -1);
-
+            List<Wishlist> wishlists = new List<Wishlist>();
             ObservableCollection<AccountWishlist> accountWishlist = EpicApi.GetWishlist(EpicApi.CurrentAccountInfos);
+
             accountWishlist.ForEach(x =>
             {
                 GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
-                Result.Add(new Wishlist
+                wishlists.Add(new Wishlist
                 {
                     StoreId = x.Id,
                     StoreName = "Epic",
-                    ShopColor = (tempShopColor == null) ? string.Empty : tempShopColor.Color,
+                    ShopColor = GetShopColor(),
                     StoreUrl = x.Link,
                     Name = x.Name,
-                    SourceId = SourceId,
+                    SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
                     ReleaseDate = x.Released,
                     Added = x.Added,
                     Capsule = x.Image,
@@ -97,12 +75,12 @@ namespace IsThereAnyDeal.Services
                 });
             });
 
-            Result = SetCurrentPrice(Result, settings);
-            SaveWishlist("Epic", PluginUserDataPath, Result);
-            return Result;
+            wishlists = SetCurrentPrice(wishlists);
+            SaveWishlist(wishlists);
+            return wishlists;
         }
 
-        public bool RemoveWishlist(string StoreId)
+        public override bool RemoveWishlist(string StoreId)
         {
             return EpicApi.RemoveWishlist(StoreId);
         }
