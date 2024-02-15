@@ -415,13 +415,13 @@ namespace IsThereAnyDeal.Views
         // Get list
         private void GetListGame()
         {
-            lbWishlist.ItemsSource = lbWishlistItems.FindAll(
+            lbWishlist.ItemsSource = lbWishlistItems.Where(x => x.Game != null).Where(
                 x => x.ItadBestPrice.PriceCut >= itadDataContext.DiscountPercent && x.ItadBestPrice.PriceNew <= itadDataContext.PriceLimit &&
                 (TextboxSearch.Text.IsNullOrEmpty() ? true : x.Name.Contains(TextboxSearch.Text, StringComparison.InvariantCultureIgnoreCase)) &&
                 (SearchStores.Count == 0 ? true : (SearchStores.Contains(x.StoreName) || x.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)) &&
                 Settings.wishlistIgnores.All(y => y.StoreId != x.StoreId && y.Id != x.Game.Id) &&
                 ((bool)PART_TbOnlyInLibrary.IsChecked ? x.InLibrary : (!(bool)PART_TbIncludeInLibrary.IsChecked ? !x.InLibrary : true || !(bool)PART_TbIncludeWithoutData.IsChecked ? x.HasItadData : true))
-            );
+            ).ToList();
 
             // Order
             PART_CbOrder_SelectionChanged(null, null);

@@ -49,7 +49,7 @@ namespace IsThereAnyDeal.Services
             try
             {
                 string url = ApiUrl + $"/service/shops/v1?country={country}";
-                string data = data = await Web.DownloadStringData(url);
+                string data = await Web.DownloadStringData(url).ConfigureAwait(false);
 
                 _ = Serialization.TryFromJson(data, out List<ServiceShop> serviceShops);
                 return serviceShops;
@@ -481,7 +481,7 @@ namespace IsThereAnyDeal.Services
             {
                 // Games list
                 List<string> gamesId = wishlists
-                    .Where(x => (!x.itadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true) && x.Game.Id.IsNullOrEmpty())
+                    .Where(x => (!x.itadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true) && (!x.Game?.Id?.IsNullOrEmpty() ?? false))
                     .Select(x => x.Game.Id)
                     .ToList();
 
@@ -495,7 +495,7 @@ namespace IsThereAnyDeal.Services
 
                     List<GamePrices> gamesPrices = await GetGamesPrices(settings.Country, shopsId, gamesId);
 
-                    wishlists.Where(x => !x.itadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true)
+                    wishlists.Where(x => (!x.itadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true) && (!x.Game?.Id?.IsNullOrEmpty() ?? false))
                         .ForEach(y =>
                         {
                             ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();

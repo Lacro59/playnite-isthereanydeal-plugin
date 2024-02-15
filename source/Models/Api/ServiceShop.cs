@@ -22,6 +22,6 @@ namespace IsThereAnyDeal.Models.Api
         public int Games { get; set; }
 
         [SerializationPropertyName("update")]
-        public DateTime Update { get; set; }
+        public DateTime? Update { get; set; }
     }
 }

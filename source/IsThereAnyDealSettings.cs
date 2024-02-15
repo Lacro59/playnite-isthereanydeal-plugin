@@ -2,7 +2,11 @@
 using Playnite.SDK;
 using Playnite.SDK.Data;
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using IsThereAnyDeal.Services;
+using IsThereAnyDeal.Models.Api;
+using CommonPluginsShared.Extensions;
 
 namespace IsThereAnyDeal
 {
@@ -72,6 +76,24 @@ namespace IsThereAnyDeal
 
             // LoadPluginSettings returns null if not saved data is available.
             Settings = savedSettings ?? new IsThereAnyDealSettings();
+
+            // TEMP
+            if (Settings.Stores.Count > 0)
+            {
+                if (!int.TryParse(Settings.Stores.First().Id, out int i))
+                {
+                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                    List<ServiceShop> serviceShops = isThereAnyDealApi.GetServiceShops(Settings.Country).GetAwaiter().GetResult();
+                    List<ItadShops> itadShops = serviceShops?.Select(x => new ItadShops
+                    {
+                        Id = x.Id.ToString(),
+                        Title = x.Title,
+                        IsCheck = Settings.Stores.Where(y => y.Title.IsEqual(x.Title))?.FirstOrDefault()?.IsCheck ?? false,
+                        Color = Settings.Stores.Where(y => y.Title.IsEqual(x.Title))?.FirstOrDefault()?.Color ?? string.Empty,
+                    }).ToList();
+                    Settings.Stores = itadShops;
+                }
+            }
         }
 
         // Code executed when settings view is opened and user starts editing values.

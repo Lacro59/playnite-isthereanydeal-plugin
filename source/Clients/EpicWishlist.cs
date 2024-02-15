@@ -1,15 +1,9 @@
 ﻿using Playnite.SDK;
-using Playnite.SDK.Data;
 using IsThereAnyDeal.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
-using System.Net.Http;
 using CommonPluginsShared;
-using System.Net;
-using CommonPlayniteShared.Common;
-using System.Security.Principal;
 using IsThereAnyDeal.Models.Api;
 using CommonPluginsStores.Epic;
 using System.Collections.ObjectModel;
@@ -65,7 +59,8 @@ namespace IsThereAnyDeal.Services
                     $"IsThereAnyDeal-Epic-NoAuthenticate",
                     "IsThereAnyDeal" + Environment.NewLine
                         + string.Format(resourceProvider.GetString("LOCCommonStoresNoAuthenticate"), "Epic"),
-                    NotificationType.Error
+                    NotificationType.Error,
+                    () => PlayniteTools.ShowPluginSettings(PlayniteTools.ExternalPlugin.EpicLibrary)
                 ));
 
                 // Load in cache
@@ -85,7 +80,7 @@ namespace IsThereAnyDeal.Services
             ObservableCollection<AccountWishlist> accountWishlist = EpicApi.GetWishlist(EpicApi.CurrentAccountInfos);
             accountWishlist.ForEach(x =>
             {
-                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
+                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
                 Result.Add(new Wishlist
                 {
                     StoreId = x.Id,
