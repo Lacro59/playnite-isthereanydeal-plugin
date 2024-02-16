@@ -96,7 +96,6 @@
     <Compile Include="Models\Api\GamePrices.cs" />
     <Compile Include="Models\Api\ServiceShop.cs" />
     <Compile Include="Models\CountData.cs" />
-    <Compile Include="Models\GogWishlistResult.cs" />
     <Compile Include="Models\ItadNotificationCriteria.cs" />
     <Compile Include="Models\Wishlist.cs" />
     <Compile Include="Models\WishlistIgnore.cs" />

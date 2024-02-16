@@ -317,6 +317,7 @@ namespace IsThereAnyDeal.Views
                                     break;
 
                                 case "origin":
+                                case "ea app":
                                     OriginWishlist originWishlist = new OriginWishlist(Plugin);
                                     IsDeleted = originWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
