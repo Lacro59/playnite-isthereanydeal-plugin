@@ -559,7 +559,21 @@
                                                                                 ToolTip="{DynamicResource LOCRemoveTitle}"
                                                                                 Content="" FontFamily="{DynamicResource CommonFont}" Margin="6,0,0,0"
                                                                                 Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Mode=OneWay, Converter={StaticResource IndexConverter}}"
-                                                                                Name="BtRemoveWishList" VerticalAlignment="Center" />
+                                                                                Name="BtRemoveWishList" VerticalAlignment="Center">
+                                                                            <Button.Style>
+                                                                                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                                                                    <Setter Property="IsEnabled" Value="True" />
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding ShopName}" Value="Xbox">
+                                                                                            <Setter Property="IsEnabled" Value="False" />
+                                                                                        </DataTrigger>
+                                                                                        <DataTrigger Binding="{Binding ShopName}" Value="Microsoft Store">
+                                                                                            <Setter Property="IsEnabled" Value="False" />
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Button.Style>
+                                                                        </Button>
                                                                     </StackPanel>
                                                                 </Grid>
                                                             </DataTemplate>

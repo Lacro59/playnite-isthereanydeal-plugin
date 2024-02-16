@@ -1,21 +1,36 @@
-﻿using AngleSharp.Dom.Html;
-using AngleSharp.Parser.Html;
-using IsThereAnyDeal.Models;
+﻿using IsThereAnyDeal.Models;
 using IsThereAnyDeal.Services;
 using Playnite.SDK;
-using Playnite.SDK.Data;
 using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AngleSharp.Dom;
 using IsThereAnyDeal.Models.Api;
+using System.Collections.ObjectModel;
+using CommonPluginsStores.Models;
+using CommonPluginsStores.Xbox;
 
 namespace IsThereAnyDeal.Clients
 {
     public class XboxWishlist : GenericWishlist
     {
+        protected static XboxApi _XboxApi;
+        internal static XboxApi XboxApi
+        {
+            get
+            {
+                if (_XboxApi == null)
+                {
+                    _XboxApi = new XboxApi("IsThereAnyDeals");
+                }
+                return _XboxApi;
+            }
+
+            set => _XboxApi = value;
+        }
+
+
         public XboxWishlist(IsThereAnyDeal plugin) : base(plugin, "Xbox")
         {
             ExternalPlugin = PlayniteTools.ExternalPlugin.XboxLibrary;
@@ -25,7 +40,7 @@ namespace IsThereAnyDeal.Clients
         {
             Logger.Info($"Load data from web for {ClientName}");
 
-            if (Settings.XboxLink.IsNullOrEmpty())
+            if (Settings.XboxLink.IsNullOrEmpty() && !Settings.XboxLink.StartsWith("https://www.microsoft.com/store/wishlist?id=", StringComparison.InvariantCultureIgnoreCase))
             {
                 Logger.Error($"{ClientName}: No url");
                 API.Instance.Notifications.Add(new NotificationMessage(
@@ -39,59 +54,32 @@ namespace IsThereAnyDeal.Clients
                 return cachedData;
             }
 
-            List<Wishlist> Result = new List<Wishlist>();
+            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+            List<Wishlist> wishlists = new List<Wishlist>();
+            ObservableCollection<AccountWishlist> accountWishlist = XboxApi.GetWishlist(new AccountInfos { Link = Settings.XboxLink });
 
-            // Get wishlist
-            string baseUrl = "https://www.microsoft.com";
-
-            IWebView view = API.Instance.WebViews.CreateOffscreenView();
-            view.NavigateAndWait(Settings.XboxLink);
-            string ResultWeb = view.GetPageSource();
-
-            if (!ResultWeb.IsNullOrEmpty())
+            accountWishlist.ForEach(x =>
             {
-                HtmlParser parser = new HtmlParser();
-                IHtmlDocument HtmlRequirement = parser.Parse(ResultWeb);
-
-                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                foreach (IElement SearchElement in HtmlRequirement.QuerySelectorAll("li.product-wishlist-item"))
+                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                wishlists.Add(new Wishlist
                 {
-                    string StoreId = string.Empty;
-                    string StoreUrl = string.Empty;
-                    string Name = string.Empty;
-                    DateTime ReleaseDate = default;
-                    string Capsule = string.Empty;
+                    StoreId = x.Id,
+                    StoreName = "Microsoft Store",
+                    ShopColor = GetShopColor(),
+                    StoreUrl = x.Link,
+                    Name = x.Name,
+                    SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
+                    ReleaseDate = x.Released,
+                    Added = x.Added,
+                    Capsule = x.Image,
+                    Game = gamesLookup.Found ? gamesLookup.Game : null,
+                    IsActive = true
+                });
+            });
 
-                    StoreId = SearchElement.GetAttribute("data-product-id");
-                    Capsule = SearchElement.QuerySelector("img.c-image").GetAttribute("data-src");
-                    Name = SearchElement.QuerySelector("h3.c-heading").InnerHtml.Trim();
-                    StoreUrl = SearchElement.QuerySelector("a.c-button").GetAttribute("href");
-
-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
-
-                    Result.Add(new Wishlist
-                    {
-                        StoreId = StoreId.Trim(),
-                        StoreName = "Microsoft Store",
-                        ShopColor = GetShopColor(),
-                        StoreUrl = baseUrl + StoreUrl.Trim(),
-                        Name = Name.Trim(),
-                        SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
-                        ReleaseDate = ReleaseDate.ToUniversalTime(),
-                        Capsule = Capsule.Trim(),
-                        Game = gamesLookup.Game,
-                        IsActive = true
-                    });
-                }
-            }
-            else
-            {
-                return cachedData;
-            }
-
-            Result = SetCurrentPrice(Result);
-            SaveWishlist(Result);
-            return Result;
+            wishlists = SetCurrentPrice(wishlists);
+            SaveWishlist(wishlists);
+            return wishlists;
         }
 
         public override bool RemoveWishlist(string StoreId)
