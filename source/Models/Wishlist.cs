@@ -146,22 +146,23 @@ namespace IsThereAnyDeal.Models
                 //When no data or not active
                 if (list.Count == 0 || list[0].ShopName.IsNullOrEmpty())
                 {
-                    list = new List<ItadGameInfo>();
-
-                    // Store
-                    list.Add(new ItadGameInfo
+                    list = new List<ItadGameInfo>
                     {
-                        Name = Name,
-                        StoreId = StoreId,
-                        SourceId = SourceId,
-                        ShopName = StoreName,
-                        UrlBuy = StoreUrl
-                    });
+                        // Store
+                        new ItadGameInfo
+                        {
+                            Name = Name,
+                            StoreId = StoreId,
+                            SourceId = SourceId,
+                            ShopName = StoreName,
+                            UrlBuy = StoreUrl
+                        }
+                    };
 
                     // Duplicate
                     if (hasDuplicates)
                     {
-                        foreach (var duplicate in Duplicates)
+                        foreach (Wishlist duplicate in Duplicates)
                         {
                             list.Add(new ItadGameInfo
                             {

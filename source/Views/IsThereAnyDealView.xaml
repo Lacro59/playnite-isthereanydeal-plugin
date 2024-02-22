@@ -35,39 +35,29 @@
                                 <Grid Grid.Row="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto" />
-                                        <ColumnDefinition Width="10" />
-                                        <ColumnDefinition Width="auto" />
-                                        <ColumnDefinition Width="10" />
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="100" />
                                         <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="6*" />
                                     </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="10" />
-                                        <RowDefinition Height="auto" />
-                                    </Grid.RowDefinitions>
 
                                     <Grid Grid.Column="0">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="10" />
-                                            <ColumnDefinition Width="150" />
+                                            <ColumnDefinition Width="200" />
                                         </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="10" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
 
                                         <Label Grid.Column="0" Content="{DynamicResource LOCSearchLabel}" FontSize="16" />
                                         <playnitecontrols:SearchBox Grid.Column="2" x:Name="TextboxSearch" TextChanged="TextboxSearch_TextChanged" />
-                                    </Grid>
 
-                                    <Grid Grid.Column="2">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="10" />
-                                            <ColumnDefinition Width="150" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Label Grid.Column="0" Content="{DynamicResource LOCITADFilterSource}" FontSize="16" />
-                                        <ComboBox Grid.Column="2" Name="FilterStore" IsEditable="True" IsReadOnly="True"
+                                        <Label Grid.Column="0" Grid.Row="2" Content="{DynamicResource LOCITADFilterSource}" FontSize="16" />
+                                        <ComboBox Grid.Column="2" Grid.Row="2" Name="FilterStore" IsEditable="True" IsReadOnly="True"
                                                   ItemsSource="{Binding FilterStoreItems}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>
@@ -80,12 +70,21 @@
 
                                     <Grid Grid.Column="4">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="300" />
-                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="50" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="5" />
                                             <ColumnDefinition Width="50" />
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="auto" />
                                         </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="10" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
 
                                         <Label Grid.Column="0" Content="{DynamicResource LOCITADPercentage}" FontSize="16" />
                                         <Slider Grid.Column="2" Minimum="0" Maximum="100" 
@@ -102,19 +101,9 @@
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>
-                                    </Grid>
 
-                                    <Grid Grid.Column="4" Grid.Row="2">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="300" />
-                                            <ColumnDefinition Width="10" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="5" />
-                                            <ColumnDefinition Width="50" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Label Grid.Column="0" Content="{DynamicResource LOCITADPrice}" FontSize="16" />
-                                        <Slider Grid.Column="2"
+                                        <Label Grid.Column="0" Grid.Row="2" Content="{DynamicResource LOCITADPrice}" FontSize="16" />
+                                        <Slider Grid.Column="2" Grid.Row="2" 
                                                 AutoToolTipPlacement="TopLeft"
                                                 Minimum="{Binding MinPrice}"
                                                 Maximum="{Binding MaxPrice}"
@@ -123,7 +112,7 @@
                                                 TickFrequency="1" Name="sPrice"
                                                 Thumb.DragCompleted="On_DragCompleted"
                                                 ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}" />
-                                        <TextBlock Grid.Column="4" Margin="5,0,0,0" HorizontalAlignment="Right">
+                                        <TextBlock Grid.Column="4" Grid.Row="2"  Margin="5,0,0,0" HorizontalAlignment="Right">
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="{}{0}{1}">
                                                     <Binding Path="PriceLimit" />
@@ -131,29 +120,11 @@
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>
+
+                                        <Label Grid.Column="6" Content="On:" />
+                                        <RadioButton Name="PART_RbBest" Content="{DynamicResource LOCITADBestPrice}" GroupName="Price" Grid.Column="8" IsChecked="True" Click="PART_Rb_Click" />
+                                        <RadioButton Name="PART_RbStore" Content="{DynamicResource LOCITADStorePrice}" GroupName="Price" Grid.Column="8" Grid.Row="2" Click="PART_Rb_Click" />
                                     </Grid>
-
-                                    <Label Grid.Column="18" FontFamily="{DynamicResource CommonFont}" Content="" Name="ItadInfo" FontSize="22">
-                                        <Label.ToolTip>
-                                            <ToolTip>
-                                                <ListBox Name="tpListBox" BorderThickness="0">
-                                                    <ListBox.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <Grid>
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="*" />
-                                                                    <ColumnDefinition Width="*" />
-                                                                </Grid.ColumnDefinitions>
-
-                                                                <Label Grid.Column="0" Content="{Binding StoreName}" />
-                                                                <Label Grid.Column="1" HorizontalAlignment="Right" Content="{Binding Count}" Margin="10,0,0,0" />
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </ListBox.ItemTemplate>
-                                                </ListBox>
-                                            </ToolTip>
-                                        </Label.ToolTip>
-                                    </Label>
                                 </Grid>
 
                                 <Grid Grid.Row="2">
@@ -718,14 +689,18 @@
                 <ColumnDefinition Width="160" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
             <Label Grid.Column="1" Content="{DynamicResource LOCSettingsTopPanelSortingItem}" />
 
             <ComboBox Grid.Column="3" VerticalAlignment="Center" Name="PART_CbOrderType" SelectionChanged="PART_CbOrder_SelectionChanged">
                 <ComboBoxItem Content="{DynamicResource LOCNameLabel}" Tag="0" IsSelected="True" />
-                <ComboBoxItem Content="{DynamicResource LOCITADOrderPriceCut}" Tag="1" />
-                <ComboBoxItem Content="{DynamicResource LOCITADOrderPrice}" Tag="2" />
+                <ComboBoxItem Content="{DynamicResource LOCITADOrderBestPriceCut}" Tag="1" />
+                <ComboBoxItem Content="{DynamicResource LOCITADOrderBestPrice}" Tag="2" />
+                <ComboBoxItem Content="{DynamicResource LOCITADOrderStorePriceCut}" Tag="3" />
+                <ComboBoxItem Content="{DynamicResource LOCITADOrderStorePrice}" Tag="4" />
             </ComboBox>
 
             <ComboBox Grid.Column="5" VerticalAlignment="Center" Name="PART_CbOrder" SelectionChanged="PART_CbOrder_SelectionChanged">
@@ -740,6 +715,28 @@
                                    Text="{Binding ElementName=lbWishlist, Path=ItemsSource.Count, FallbackValue=0}"
                                    VerticalAlignment="Center" Width="40" TextAlignment="Right" />
             </StackPanel>
+
+            <Label Grid.Column="9" FontFamily="{DynamicResource CommonFont}" Content="" Name="ItadInfo" FontSize="22">
+                <Label.ToolTip>
+                    <ToolTip>
+                        <ListBox Name="tpListBox" BorderThickness="0">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Grid.Column="0" Content="{Binding StoreName}" />
+                                        <Label Grid.Column="1" HorizontalAlignment="Right" Content="{Binding Count}" Margin="10,0,0,0" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ToolTip>
+                </Label.ToolTip>
+            </Label>
         </Grid>
     </Grid>
 </UserControl>

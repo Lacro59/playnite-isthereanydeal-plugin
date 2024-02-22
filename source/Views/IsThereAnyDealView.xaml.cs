@@ -387,8 +387,8 @@ namespace IsThereAnyDeal.Views
         private bool UserFilter(object item)
         {
             Wishlist wishlist = item as Wishlist;
-            return wishlist.ItadBestPrice.PriceCut >= itadDataContext.DiscountPercent
-                && wishlist.ItadBestPrice.PriceNew <= itadDataContext.PriceLimit
+            return ((bool)PART_RbBest.IsChecked ? wishlist.ItadBestPrice.PriceCut >= itadDataContext.DiscountPercent : wishlist.ItadPriceForWishlistStore.PriceCut >= itadDataContext.DiscountPercent)
+                && ((bool)PART_RbBest.IsChecked ? wishlist.ItadBestPrice.PriceNew <= itadDataContext.PriceLimit : wishlist.ItadPriceForWishlistStore.PriceNew <= itadDataContext.PriceLimit)
                 && (TextboxSearch.Text.IsNullOrEmpty() || wishlist.Name.Contains(TextboxSearch.Text, StringComparison.InvariantCultureIgnoreCase))
                 && (SearchStores.Count == 0 || SearchStores.Contains(wishlist.StoreName) || wishlist.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
                 && Settings.wishlistIgnores.All(y => y.StoreId != wishlist.StoreId && !y.Name.IsEqual(wishlist.Name))
@@ -487,6 +487,14 @@ namespace IsThereAnyDeal.Views
                                 lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadBestPrice.PriceNew).ToObservable();
                                 break;
 
+                            case "3":
+                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadPriceForWishlistStore.PriceCut).ToObservable();
+                                break;
+
+                            case "4":
+                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadPriceForWishlistStore.PriceNew).ToObservable();
+                                break;
+
                             default:
                                 break;
                         }
@@ -505,6 +513,14 @@ namespace IsThereAnyDeal.Views
 
                             case "2":
                                 lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadBestPrice.PriceNew).ToObservable();
+                                break;
+
+                            case "3":
+                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadPriceForWishlistStore.PriceCut).ToObservable();
+                                break;
+
+                            case "4":
+                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadPriceForWishlistStore.PriceNew).ToObservable();
                                 break;
 
                             default:
@@ -541,6 +557,11 @@ namespace IsThereAnyDeal.Views
         // Search price
         // Search percentage
         private void On_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            GetListGame();
+        }
+
+        private void PART_Rb_Click(object sender, RoutedEventArgs e)
         {
             GetListGame();
         }

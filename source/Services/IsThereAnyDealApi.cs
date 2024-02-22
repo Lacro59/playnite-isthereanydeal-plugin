@@ -92,7 +92,7 @@ namespace IsThereAnyDeal.Services
                 {
                     string url = ApiUrl + $"/games/lookup/v1?key={Key}&"
                         + (!title.IsNullOrEmpty() 
-                                ? $"title={WebUtility.UrlEncode(WebUtility.HtmlDecode(title))}"
+                                ? $"title={WebUtility.UrlEncode(WebUtility.HtmlDecode(PlayniteTools.RemoveGameEdition(title)))}"
                                 : $"appid={appId}");
                     string data = await Web.DownloadStringData(url);
 
