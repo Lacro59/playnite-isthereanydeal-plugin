@@ -16,7 +16,6 @@
         <converters:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
-        <converters1:IndexConverter x:Key="IndexConverter"/>
         <converters1:ValueOperationConverter x:Key="ValueOperationConverter"/>
     </UserControl.Resources>
 
@@ -24,13 +23,7 @@
         <TabControl SelectionChanged="TabControl_SelectionChanged">
             <TabItem Header="{DynamicResource LOCItadSettingWishlist}" Name="PART_Tb">
                 <Grid Margin="10">
-                    <Grid Name="DataLoadWishlist">
-                        <ProgressBar IsIndeterminate="True" Width="350" Height="40" />
-                        <TextBlock Text="{DynamicResource LOCDownloadingLabel}" Style="{DynamicResource BaseTextBlockStyle}"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Grid>
-
-                    <DockPanel Name="dpData">
+                    <DockPanel Name="dpData" LastChildFill="True">
                         <Border DockPanel.Dock="Top" BorderThickness="{DynamicResource PopupBorderThickness}" BorderBrush="{DynamicResource NormalBorderBrush}" Margin="0,0,0,10">
                             <Grid Margin="10">
                                 <Grid.RowDefinitions>
@@ -227,8 +220,7 @@
                         </Border>
 
                         <Grid Name="DataLoaded">
-                            <ListBox Name="lbWishlist" ItemsSource="{Binding ItemsSource}"
-                                     Height="{Binding ElementName=DataLoaded, Path=ActualHeight}"
+                            <ListBox Name="lbWishlist" Height="{Binding ElementName=DataLoaded, Path=ActualHeight}"
                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                 <!-- Force the style because HorizontalContentAlignment not work. -->
                                 <ListBox.ItemContainerStyle>
@@ -553,12 +545,12 @@
                                                                         <Button Click="BtHideWishList_Click" 
                                                                                 ToolTip="{DynamicResource LOCHideGame}"
                                                                                 Content="" FontFamily="{DynamicResource CommonFont}"
-                                                                                Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Mode=OneWay, Converter={StaticResource IndexConverter}}"
+                                                                                Tag="{Binding}"
                                                                                 Name="BtHideWishList" VerticalAlignment="Center" />
                                                                         <Button Click="BtRemoveWishList_Click"
                                                                                 ToolTip="{DynamicResource LOCRemoveTitle}"
-                                                                                Content="" FontFamily="{DynamicResource CommonFont}" Margin="6,0,0,0"
-                                                                                Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Mode=OneWay, Converter={StaticResource IndexConverter}}"
+                                                                                Content="" FontFamily="{DynamicResource CommonFont}" Margin="6,0,0,0"  
+                                                                                Tag="{Binding}"
                                                                                 Name="BtRemoveWishList" VerticalAlignment="Center">
                                                                             <Button.Style>
                                                                                 <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
@@ -689,6 +681,12 @@
                             </ListBox>
                         </Grid>
                     </DockPanel>
+                    
+                    <Grid Name="DataLoadWishlist">
+                        <ProgressBar IsIndeterminate="True" Width="350" Height="40" />
+                        <TextBlock Text="{DynamicResource LOCDownloadingLabel}" Style="{DynamicResource BaseTextBlockStyle}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Grid>
                 </Grid>
             </TabItem>
 
@@ -705,7 +703,7 @@
                 </Grid>
             </TabItem-->
         </TabControl>
-        
+
         <Grid Name="PART_Order" Height="{Binding ElementName=PART_Tb, Path=ActualHeight}" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -739,6 +737,5 @@
                                    VerticalAlignment="Center" Width="40" TextAlignment="Right" />
             </StackPanel>
         </Grid>
-
     </Grid>
 </UserControl>

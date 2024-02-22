@@ -54,7 +54,7 @@ namespace IsThereAnyDeal.Services
                     "IsThereAnyDeal" + Environment.NewLine
                         + string.Format(ResourceProvider.GetString("LOCCommonStoresNoAuthenticate"), ClientName),
                     NotificationType.Error,
-                    () => PlayniteTools.ShowPluginSettings(ExternalPlugin)
+                    () => Plugin.OpenSettingsView()
                 ));
 
                 return cachedData;
@@ -108,7 +108,7 @@ namespace IsThereAnyDeal.Services
                     foreach(dynamic el in rgWishlist)
                     {
                         // Respect API limitation
-                        Thread.Sleep(1000);
+                        Thread.Sleep(500);
 
                         string response = string.Empty;
                         try

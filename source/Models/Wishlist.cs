@@ -35,7 +35,7 @@ namespace IsThereAnyDeal.Models
         public bool IsActive { get; set; }
         [DontSerialize]
         public bool IsFind => Game != null;
-        public ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos { get; set; }
+        public ConcurrentDictionary<string, List<ItadGameInfo>> ItadGameInfos { get; set; }
 
         [DontSerialize]
         public string StoreNameIcon
@@ -61,9 +61,9 @@ namespace IsThereAnyDeal.Models
                 List<ItadGameInfo> Result = new List<ItadGameInfo>();
                 DateTime last = Convert.ToDateTime("1982-12-15");
 
-                if (itadGameInfos != null)
+                if (ItadGameInfos != null)
                 {
-                    foreach (KeyValuePair<string, List<ItadGameInfo>> item in itadGameInfos)
+                    foreach (KeyValuePair<string, List<ItadGameInfo>> item in ItadGameInfos)
                     {
                         if (Convert.ToDateTime(item.Key) > last)
                         {
@@ -147,7 +147,6 @@ namespace IsThereAnyDeal.Models
                         StoreId = StoreId,
                         SourceId = SourceId,
                         ShopName = StoreName,
-                        ShopColor = ShopColor,
                         UrlBuy = StoreUrl
                     });
 
@@ -162,7 +161,6 @@ namespace IsThereAnyDeal.Models
                                 StoreId = duplicate.StoreId,
                                 SourceId = duplicate.SourceId,
                                 ShopName = duplicate.StoreName,
-                                ShopColor = duplicate.ShopColor,
                                 UrlBuy = duplicate.StoreUrl
                             });
                         }

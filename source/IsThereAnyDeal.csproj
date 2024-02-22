@@ -99,6 +99,12 @@
     <Compile Include="Models\ItadNotificationCriteria.cs" />
     <Compile Include="Models\Wishlist.cs" />
     <Compile Include="Models\WishlistIgnore.cs" />
+    <Compile Include="playnite-plugincommon\CommonPluginsControls\Controls\TextBlockTrimmed.xaml.cs">
+      <DependentUpon>TextBlockTrimmed.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="playnite-plugincommon\CommonPluginsControls\PlayniteControls\DdItemListSelectionBox.xaml.cs">
+      <DependentUpon>DdItemListSelectionBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="playnite-plugincommon\CommonPluginsControls\PlayniteControls\NumericBox.xaml.cs">
       <DependentUpon>NumericBox.xaml</DependentUpon>
     </Compile>
@@ -330,6 +336,14 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Include="playnite-plugincommon\CommonPluginsControls\Controls\TextBlockTrimmed.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="playnite-plugincommon\CommonPluginsControls\PlayniteControls\DdItemListSelectionBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="playnite-plugincommon\CommonPluginsControls\PlayniteControls\NumericBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

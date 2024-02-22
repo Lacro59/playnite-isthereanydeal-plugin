@@ -41,12 +41,14 @@ namespace IsThereAnyDeal.Views
             lvIgnoreList.ItemsSource = Settings.wishlistIgnores;
 
             DataContext = this;
-            IsFirst = false;
+            IsFirst = true;
 
             PART_LimitNotificationPrice.LongValue = Settings.LimitNotificationPrice;
-
-
             lLimitNotification.Content = PART_sPriceCut.Value + "%";
+
+            StoresItems = Settings.Stores;
+            ListStores.ItemsSource = StoresItems;
+            ChkStore_Checked(null, null);
         }
 
         private void PART_SelectCountry_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -56,24 +58,27 @@ namespace IsThereAnyDeal.Views
                 Settings.Country = ((ComboBoxItem)PART_SelectCountry.SelectedItem).Content.ToString();
                 if (!IsFirst)
                 {
-                    ListStores.Text = string.Empty;
+                    StoresText.Text = string.Empty;
 
                     PART_DataLoad.Visibility = Visibility.Visible;
                     PART_Data.Visibility = Visibility.Hidden;
 
-                    Task.Run(() =>
+                    _ = Task.Run(() =>
                     {
                         StoresItems = isThereAnyDealApi.GetShops(Settings.Country).GetAwaiter().GetResult();
-
-                        this.Dispatcher?.BeginInvoke((Action)delegate
+                        _ = (Dispatcher?.BeginInvoke((Action)delegate
                         {
+                            ListStores.ItemsSource = null;
                             ListStores.ItemsSource = StoresItems;
-                            ListStores.UpdateLayout();
 
                             PART_DataLoad.Visibility = Visibility.Hidden;
                             PART_Data.Visibility = Visibility.Visible;
-                        });
+                        }));
                     });
+                }
+                else
+                {
+                    IsFirst = false;
                 }
             }
         }
@@ -81,79 +86,8 @@ namespace IsThereAnyDeal.Views
 
         private void ChkStore_Checked(object sender, RoutedEventArgs e)
         {
-            ListStores.Text = string.Empty;
-            for (int i = 0; i < StoresItems.Count; i++)
-            {
-                if ((string)((CheckBox)sender).Content == StoresItems[i].Title)
-                {
-                    StoresItems[i].IsCheck = (bool)((CheckBox)sender).IsChecked;
-
-                    if (StoresItems[i].IsCheck)
-                    {
-                        if (ListStores.Text.IsNullOrEmpty())
-                        {
-                            ListStores.Text = StoresItems[i].Title;
-                        }
-                        else
-                        {
-                            ListStores.Text += ", " + StoresItems[i].Title;
-                        }
-                    }
-                }
-                else
-                {
-                    if (StoresItems[i].IsCheck)
-                    {
-                        if (ListStores.Text.IsNullOrEmpty())
-                        {
-                            ListStores.Text = StoresItems[i].Title;
-                        }
-                        else
-                        {
-                            ListStores.Text += ", " + StoresItems[i].Title;
-                        }
-                    }
-                }
-            }
-            Settings.Stores = StoresItems;
-        }
-
-        private void ChkStore_Unchecked(object sender, RoutedEventArgs e)
-        {
-            ListStores.Text = string.Empty;
-            for (int i = 0; i < StoresItems.Count; i++)
-            {
-                if ((string)((CheckBox)sender).Content == StoresItems[i].Title)
-                {
-                    StoresItems[i].IsCheck = (bool)((CheckBox)sender).IsChecked;
-
-                    if (StoresItems[i].IsCheck)
-                    {
-                        if (ListStores.Text.IsNullOrEmpty())
-                        {
-                            ListStores.Text = StoresItems[i].Title;
-                        }
-                        else
-                        {
-                            ListStores.Text += ", " + StoresItems[i].Title;
-                        }
-                    }
-                }
-                else
-                {
-                    if (StoresItems[i].IsCheck)
-                    {
-                        if (ListStores.Text.IsNullOrEmpty())
-                        {
-                            ListStores.Text = StoresItems[i].Title;
-                        }
-                        else
-                        {
-                            ListStores.Text += ", " + StoresItems[i].Title;
-                        }
-                    }
-                }
-            }
+            StoresText.Text = string.Join(", ", ((List<ItadShops>)ListStores.ItemsSource)?.Where(x => x.IsCheck).Select(x => x.Title));
+            StoresItems = (List<ItadShops>)ListStores.ItemsSource;
             Settings.Stores = StoresItems;
         }
 
@@ -179,7 +113,7 @@ namespace IsThereAnyDeal.Views
         {
             if (!((string)((Button)sender).Tag).IsNullOrEmpty())
             {
-                int.TryParse((string)((Button)sender).Tag, out int index);
+                _ = int.TryParse((string)((Button)sender).Tag, out int index);
                 ((List<ItadNotificationCriteria>)PART_LbNotifications.ItemsSource).RemoveAt(index);
                 PART_LbNotifications.Items.Refresh();
             }

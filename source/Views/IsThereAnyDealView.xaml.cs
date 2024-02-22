@@ -49,9 +49,7 @@ namespace IsThereAnyDeal.Views
 
             // Load data
             RefreshData(id);
-
-            //GetListGiveaways(PluginUserDataPath);
-            SetFilterStore();
+            //GetListGiveaways(PluginUserDataPath);            
 
             DataContext = itadDataContext;
             itadDataContext.MinPrice = Settings.MinPrice;
@@ -83,7 +81,7 @@ namespace IsThereAnyDeal.Views
                                 int index = 0;
                                 foreach (Wishlist wishlist in lbWishlist.ItemsSource)
                                 {
-                                    if (wishlist.Game.Id.IsEqual(id))
+                                    if (wishlist.Game?.Id?.IsEqual(id) ?? false)
                                     {
                                         index = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).ToList().FindIndex(x => x == wishlist);
                                         lbWishlist.SelectedIndex = index;
@@ -98,6 +96,8 @@ namespace IsThereAnyDeal.Views
 
                             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(lbWishlist.ItemsSource);
                             view.Filter = UserFilter;
+
+                            SetFilterStore();
                         }
                         catch (Exception ex)
                         {
@@ -254,10 +254,7 @@ namespace IsThereAnyDeal.Views
         private void BtRemoveWishList_Click(object sender, RoutedEventArgs e)
         {
             bool IsDeleted = false;
-            int index = int.Parse(((Button)sender).Tag.ToString());
-
-            ListBox elParent = UI.FindParent<ListBox>(sender as Button);
-            StorePriceSelected = (ItadGameInfo)elParent.Items[index];
+            StorePriceSelected = (ItadGameInfo)((Button)sender).Tag;
 
             MessageBoxResult RessultDialog = API.Instance.Dialogs.ShowMessage(
                 string.Format(ResourceProvider.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
@@ -355,12 +352,7 @@ namespace IsThereAnyDeal.Views
         // Hide game
         private void BtHideWishList_Click(object sender, RoutedEventArgs e)
         {
-            int index = int.Parse(((Button)sender).Tag.ToString());
-
-            ListBox elParent = UI.FindParent<ListBox>(sender as Button);
-            StorePriceSelected = (ItadGameInfo)elParent.Items[index];
-            lbWishlist.ItemsSource = null;
-            Common.LogDebug(true, $"BtHideWishList_Click() - StorePriceSelected: {Serialization.ToJson(StorePriceSelected)}");
+            StorePriceSelected = (ItadGameInfo)((Button)sender).Tag;
 
             MessageBoxResult RessultDialog = API.Instance.Dialogs.ShowMessage(
                 string.Format(ResourceProvider.GetString("LOCItadHideOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
@@ -399,7 +391,7 @@ namespace IsThereAnyDeal.Views
                 && wishlist.ItadBestPrice.PriceNew <= itadDataContext.PriceLimit
                 && (TextboxSearch.Text.IsNullOrEmpty() || wishlist.Name.Contains(TextboxSearch.Text, StringComparison.InvariantCultureIgnoreCase))
                 && (SearchStores.Count == 0 || SearchStores.Contains(wishlist.StoreName) || wishlist.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
-                && (wishlist.Game == null || Settings.wishlistIgnores.All(y => y.StoreId != wishlist.StoreId && y.Id != wishlist.Game.Id))
+                && Settings.wishlistIgnores.All(y => y.StoreId != wishlist.StoreId && !y.Name.IsEqual(wishlist.Name))
                 && ((bool)PART_TbOnlyInLibrary.IsChecked ? wishlist.InLibrary : (!(bool)PART_TbIncludeInLibrary.IsChecked ? !wishlist.InLibrary : (false && (bool)PART_TbIncludeWithoutData.IsChecked) || wishlist.HasItadData));
         }
 
@@ -561,9 +553,6 @@ namespace IsThereAnyDeal.Views
 
     public class ItadDataContext : ObservableObject
     {
-        private ObservableCollection<Wishlist> _ItemsSource = new ObservableCollection<Wishlist>();
-        public ObservableCollection<Wishlist> ItemsSource { get => _ItemsSource; set => SetValue(ref _ItemsSource, value); }
-    
         private string _CurrencySign = "$";
         public string CurrencySign { get => _CurrencySign; set => SetValue(ref _CurrencySign, value); }
 

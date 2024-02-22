@@ -1,4 +1,5 @@
-﻿using Playnite.SDK.Data;
+﻿using IsThereAnyDeal.Services;
+using Playnite.SDK.Data;
 using System;
 
 namespace IsThereAnyDeal.Models
@@ -15,7 +16,8 @@ namespace IsThereAnyDeal.Models
         public double PriceCut { get; set; }
         public string CurrencySign { get; set; }
         public string ShopName { get; set; }
-        public string ShopColor { get; set; }
+        [DontSerialize]
+        public string ShopColor => IsThereAnyDealApi.GetShopColor(ShopName);
         public string UrlBuy { get; set; }
 
         [DontSerialize]

@@ -66,8 +66,8 @@ namespace IsThereAnyDeal
                             ShowMaximizeButton = false,
                             ShowCloseButton = true,
                             CanBeResizable = false,
-                            Width = 1280,
-                            Height = 740
+                            Width = 1180,
+                            Height = 720
                         };
 
                         IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, PluginSettings.Settings);
@@ -146,8 +146,8 @@ namespace IsThereAnyDeal
                             ShowMaximizeButton = false,
                             ShowCloseButton = true,
                             CanBeResizable = false,
-                            Width = 1280,
-                            Height = 740
+                            Width = 1180,
+                            Height = 720
                         };
                         IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, PluginSettings.Settings);
                         Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
