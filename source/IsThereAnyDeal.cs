@@ -259,7 +259,7 @@ namespace IsThereAnyDeal
 
         public override UserControl GetSettingsView(bool firstRunSettings)
         {
-            return new IsThereAnyDealSettingsView(PluginSettings.Settings, this, GetPluginUserDataPath());
+            return new IsThereAnyDealSettingsView(PluginSettings.Settings, this);
         }
         #endregion
     }

@@ -92,6 +92,7 @@
     <Compile Include="Clients\XboxWishlist.cs" />
     <Compile Include="Clients\GogWishlist.cs" />
     <Compile Include="Clients\HumbleBundleWishlist.cs" />
+    <Compile Include="Models\ApiWebsite\Country.cs" />
     <Compile Include="Models\Api\GameLookup.cs" />
     <Compile Include="Models\Api\GamePrices.cs" />
     <Compile Include="Models\Api\ServiceShop.cs" />

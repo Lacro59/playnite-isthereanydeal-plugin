@@ -17,6 +17,7 @@ using CommonPluginsShared.Extensions;
 using System.Text;
 using System.Net.Http;
 using IsThereAnyDeal.Models.Api;
+using IsThereAnyDeal.Models.ApiWebsite;
 
 namespace IsThereAnyDeal.Services
 {
@@ -25,6 +26,7 @@ namespace IsThereAnyDeal.Services
         private static ILogger Logger => LogManager.GetLogger();
         private static IResourceProvider ResourceProvider => new ResourceProvider();
 
+        private string BaseUrl => "https://isthereanydeal.com";
         private string ApiUrl => "https://api.isthereanydeal.com";
         private string Key => "fa49308286edcaf76fea58926fd2ea2d216a17ff";
 
@@ -131,6 +133,26 @@ namespace IsThereAnyDeal.Services
             catch (Exception ex)
             {
                 Common.LogError(ex, false, $"Error in GetGamesPrices({country} / {string.Join(",", shopsId)} / {string.Join(",", gamesId)})", true, "IsThereAnyDeal");
+            }
+
+            return null;
+        }
+        #endregion
+
+        #region Api from website
+        public async Task<List<Country>> GetCountries()
+        {
+            try
+            {
+                string url = BaseUrl + $"/api/country/";
+                string data = await Web.DownloadStringData(url);
+
+                _ = Serialization.TryFromJson(data, out List<Country> countries);
+                return countries;
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, false, $"Error in GetCountries()", true, "IsThereAnyDeal");
             }
 
             return null;
@@ -477,7 +499,7 @@ namespace IsThereAnyDeal.Services
                     // Check if in library (exclude game emulated)
                     List<Guid> ListEmulators = API.Instance.Database.Emulators.Select(x => x.Id).ToList();
 
-                    List<GamePrices> gamesPrices = await GetGamesPrices(settings.Country, shopsId, gamesId);
+                    List<GamePrices> gamesPrices = await GetGamesPrices(settings.CountrySelected.Alpha2, shopsId, gamesId);
 
                     wishlists.Where(x => (!x.ItadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true) && (!x.Game?.Id?.IsNullOrEmpty() ?? false))
                         .ForEach(y =>

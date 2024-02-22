@@ -12,6 +12,7 @@ using System;
 using Playnite.SDK.Models;
 using System.Windows.Documents;
 using System.Diagnostics;
+using IsThereAnyDeal.Models.ApiWebsite;
 
 namespace IsThereAnyDeal.Views
 {
@@ -22,18 +23,16 @@ namespace IsThereAnyDeal.Views
 
         private IsThereAnyDealSettings Settings;
         private IsThereAnyDeal Plugin;
-        private string PluginUserDataPath;
 
         private List<ItadShops> StoresItems = new List<ItadShops>();
         private readonly IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
         private bool IsFirst = true;
 
 
-        public IsThereAnyDealSettingsView(IsThereAnyDealSettings settings, IsThereAnyDeal plugin, string PluginUserDataPath)
+        public IsThereAnyDealSettingsView(IsThereAnyDealSettings settings, IsThereAnyDeal plugin)
         {
             Settings = settings;
             Plugin = plugin;
-            this.PluginUserDataPath = PluginUserDataPath;
 
             InitializeComponent();
 
@@ -53,34 +52,34 @@ namespace IsThereAnyDeal.Views
 
         private void PART_SelectCountry_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (PART_SelectCountry.SelectedItem != null)
+            StoresText.Text = string.Empty;
+
+            PART_DataLoad.Visibility = Visibility.Visible;
+            PART_Data.Visibility = Visibility.Hidden;
+
+            _ = Task.Run(() =>
             {
-                Settings.Country = ((ComboBoxItem)PART_SelectCountry.SelectedItem).Content.ToString();
-                if (!IsFirst)
+                StoresItems = isThereAnyDealApi.GetShops(Settings.CountrySelected.Alpha2).GetAwaiter().GetResult();
+                StoresItems.ForEach(x => 
                 {
-                    StoresText.Text = string.Empty;
-
-                    PART_DataLoad.Visibility = Visibility.Visible;
-                    PART_Data.Visibility = Visibility.Hidden;
-
-                    _ = Task.Run(() =>
+                    ItadShops finded = Settings.Stores.Where(y => y.Id == x.Id)?.FirstOrDefault();
+                    if (finded != null)
                     {
-                        StoresItems = isThereAnyDealApi.GetShops(Settings.Country).GetAwaiter().GetResult();
-                        _ = (Dispatcher?.BeginInvoke((Action)delegate
-                        {
-                            ListStores.ItemsSource = null;
-                            ListStores.ItemsSource = StoresItems;
+                        x.IsCheck = finded.IsCheck;
+                    }
+                });
 
-                            PART_DataLoad.Visibility = Visibility.Hidden;
-                            PART_Data.Visibility = Visibility.Visible;
-                        }));
-                    });
-                }
-                else
+                _ = (Dispatcher?.BeginInvoke((Action)delegate
                 {
-                    IsFirst = false;
-                }
-            }
+                    ListStores.ItemsSource = null;
+                    ListStores.ItemsSource = StoresItems;
+
+                    ChkStore_Checked(null, null);
+
+                    PART_DataLoad.Visibility = Visibility.Hidden;
+                    PART_Data.Visibility = Visibility.Visible;
+                }));
+            });
         }
 
 
@@ -230,6 +229,30 @@ namespace IsThereAnyDeal.Views
                     }
                 }, globalProgressOptions);
             }
+        }
+
+        private void PART_BtCountriesRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            PART_DataLoad.Visibility = Visibility.Visible;
+            PART_Data.Visibility = Visibility.Hidden;
+
+            _ = Task.Run(() =>
+            {
+                List<Country> Countries = isThereAnyDealApi.GetCountries().GetAwaiter().GetResult();
+                if (Countries?.Count > 0)
+                {
+                    Settings.Countries = Countries;
+                }
+
+                _ = (Dispatcher?.BeginInvoke((Action)delegate
+                {
+                    PART_SelectCountry.ItemsSource = null;
+                    PART_SelectCountry.ItemsSource = Settings.Countries;
+
+                    PART_DataLoad.Visibility = Visibility.Hidden;
+                    PART_Data.Visibility = Visibility.Visible;
+                }));
+            });
         }
     }
 }
