@@ -443,8 +443,12 @@
 
                                                             <TextBlock Text="{DynamicResource LOCItadNotFind}" 
                                                                        Visibility="{Binding IsFind, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
-                                                            <TextBlock Text="{DynamicResource LOCItadInLibrary}" 
-                                                                       Visibility="{Binding InLibrary, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                            
+                                                            <TextBlock Visibility="{Binding InLibrary, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                                <Hyperlink Command="{Binding GoToGame}" CommandParameter="{Binding GameId}">
+                                                                    <TextBlock Text="{DynamicResource LOCItadInLibrary}" Style="{DynamicResource ListExtendStyleTextBlock}" />
+                                                                </Hyperlink>
+                                                            </TextBlock>
 
                                                             <TextBlock Text="{DynamicResource LOCItadNoData}">
                                                                 <TextBlock.Style>

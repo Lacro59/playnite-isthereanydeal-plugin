@@ -29,7 +29,15 @@ namespace IsThereAnyDeal.Models
         public Game Game { get; set; }
 
         [DontSerialize]
+        public RelayCommand<Guid> GoToGame => new RelayCommand<Guid>((Id) =>
+        {
+            API.Instance.MainView.SelectGame(Id);
+            API.Instance.MainView.SwitchToLibraryView();
+        });
+        [DontSerialize]
         public bool InLibrary => API.Instance.Database.Games.Where(x => x.Name.IsEqual(Name) && !x.Hidden)?.Count() > 0;
+        [DontSerialize]
+        public Guid GameId => API.Instance.Database.Games.Where(x => x.Name.IsEqual(Name) && !x.Hidden)?.FirstOrDefault()?.Id ?? default;
 
         // TODO
         public bool IsActive { get; set; }
