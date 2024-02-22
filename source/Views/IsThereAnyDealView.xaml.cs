@@ -462,7 +462,10 @@ namespace IsThereAnyDeal.Views
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TabControl tc = sender as TabControl;
-            PART_Order.Visibility = tc.SelectedIndex == 0 ? Visibility.Visible : Visibility.Collapsed;
+            if (PART_Order != null)
+            {
+                PART_Order.Visibility = tc.SelectedIndex == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
 
         private void PART_CbOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
