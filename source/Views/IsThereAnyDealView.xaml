@@ -486,16 +486,16 @@
                                                                         <ColumnDefinition Width="auto"/>
                                                                         <ColumnDefinition Width="10"/>
                                                                         <ColumnDefinition Width="auto"/>
-                                                                        <ColumnDefinition Width="10"/>
+                                                                        <ColumnDefinition Width="0"/>
                                                                         <ColumnDefinition Width="auto"/>
-                                                                        <ColumnDefinition Width="10"/>
+                                                                        <ColumnDefinition Width="0"/>
                                                                         <ColumnDefinition Width="auto"/>
                                                                         <ColumnDefinition Width="10"/>
                                                                         <ColumnDefinition Width="*"/>
                                                                     </Grid.ColumnDefinitions>
 
                                                                     <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}" VerticalAlignment="Center" />
-                                                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" >
+                                                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
                                                                         <StackPanel.Style>
                                                                             <Style TargetType="StackPanel">
                                                                                 <Setter Property="Visibility" Value="Visible"/>
@@ -519,7 +519,7 @@
                                                                         <TextBlock Text="{Binding PriceNew}" Margin="0,0,5,0" />
                                                                         <TextBlock Text="{Binding CurrencySign}" />
                                                                     </StackPanel>
-                                                                    <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" >
+                                                                    <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
                                                                         <StackPanel.Style>
                                                                             <Style TargetType="StackPanel">
                                                                                 <Setter Property="Visibility" Value="Visible"/>

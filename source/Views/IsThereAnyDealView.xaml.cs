@@ -71,7 +71,7 @@ namespace IsThereAnyDeal.Views
                         try
                         {
                             lbWishlist.ItemsSource = antecedent.Result;
-                            GetListGame();
+
                             SetInfos();
 
                             itadDataContext.CurrencySign = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource)?.Where(x => x.ItadLastPrice != null && x.ItadLastPrice.Where(y => !y.CurrencySign.IsNullOrEmpty()).Count() > 0)?.FirstOrDefault()?.ItadBestPrice.CurrencySign;
@@ -94,8 +94,8 @@ namespace IsThereAnyDeal.Views
                             DataLoadWishlist.Visibility = Visibility.Collapsed;
                             dpData.IsEnabled = true;
 
-                            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(lbWishlist.ItemsSource);
-                            view.Filter = UserFilter;
+                            // Order
+                            PART_CbOrder_SelectionChanged(null, null);
 
                             SetFilterStore();
                         }
@@ -402,9 +402,6 @@ namespace IsThereAnyDeal.Views
             {
                 CollectionViewSource.GetDefaultView(lbWishlist.ItemsSource).Refresh();
             }
-
-            // Order
-            PART_CbOrder_SelectionChanged(null, null);
         }
 
         // Search by name
@@ -474,23 +471,20 @@ namespace IsThereAnyDeal.Views
             {
                 if (lbWishlist?.ItemsSource != null)
                 {
-                    List<Wishlist> wishlists = (List<Wishlist>)lbWishlist.ItemsSource;
-                    lbWishlist.ItemsSource = null;
-
                     if (((ComboBoxItem)PART_CbOrder.SelectedItem).Tag.ToString() == "0")
                     {
                         switch (((ComboBoxItem)PART_CbOrderType.SelectedItem).Tag.ToString())
                         {
                             case "0":
-                                wishlists = wishlists.OrderBy(x => x.Name).ToList();
+                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.Name).ToObservable();
                                 break;
 
                             case "1":
-                                wishlists = wishlists.OrderBy(x => x.ItadBestPrice.PriceCut).ToList();
+                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadBestPrice.PriceCut).ToObservable();
                                 break;
 
                             case "2":
-                                wishlists = wishlists.OrderBy(x => x.ItadBestPrice.PriceNew).ToList();
+                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadBestPrice.PriceNew).ToObservable();
                                 break;
 
                             default:
@@ -502,15 +496,15 @@ namespace IsThereAnyDeal.Views
                         switch (((ComboBoxItem)PART_CbOrderType.SelectedItem).Tag.ToString())
                         {
                             case "0":
-                                wishlists = wishlists.OrderByDescending(x => x.Name).ToList();
+                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.Name).ToObservable();
                                 break;
 
                             case "1":
-                                wishlists = wishlists.OrderByDescending(x => x.ItadBestPrice.PriceCut).ToList();
+                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadBestPrice.PriceCut).ToObservable();
                                 break;
 
                             case "2":
-                                wishlists = wishlists.OrderByDescending(x => x.ItadBestPrice.PriceNew).ToList();
+                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadBestPrice.PriceNew).ToObservable();
                                 break;
 
                             default:
@@ -518,7 +512,9 @@ namespace IsThereAnyDeal.Views
                         }
                     }
 
-                    lbWishlist.ItemsSource = wishlists;
+                    CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(lbWishlist.ItemsSource);
+                    view.Filter = UserFilter;
+                    GetListGame();
                 }
             }
             catch (Exception ex)

@@ -590,6 +590,7 @@ namespace IsThereAnyDeal.Services
                 { "GameFly", "#f0a690" },
                 { "Direct2Drive", "#1df884" },
                 { "EA Store", "#ddff1c" },
+                { "Ubisoft Store", "#01657a" },
                 { "Uplay", "#01657a" },
                 { "ShinyLoot", "#bfa236" },
                 { "Humble Store", "#ff3e1b" },
@@ -609,6 +610,7 @@ namespace IsThereAnyDeal.Services
                 { "Sila Games", "#f9cf6b" },
                 { "Playfield", "#e84c31" },
                 { "Imperial Games", "#16a085" },
+                { "Itch.io", "#fa5c5c" },
                 { "Itchio", "#fa5c5c" },
                 { "Game Jolt", "#2f7f6f" },
                 { "Digital Download", "#0166ff" },
@@ -633,7 +635,8 @@ namespace IsThereAnyDeal.Services
                 { "GamesLoad", "#b76cc7" },
                 { "JoyBuggy", "#43c68d" },
                 { "Noctre", "#1a83ff" },
-                { "ETailMarket", "#358192" }
+                { "ETailMarket", "#358192" },
+                { "ETail.Market", "#358192" }
             };
 
             return ShopName.IsNullOrEmpty() || !shopColor.TryGetValue(ShopName, out string value) ? "#000000" : value;
