@@ -42,9 +42,15 @@
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADRefreshPrice">価格を更新</sys:String>
+
+    <sys:String x:Key="LOCITADBestPrice">Best price</sys:String>
+    <sys:String x:Key="LOCITADStorePrice">Store price</sys:String>
     
-    <sys:String x:Key="LOCITADOrderPriceCut">値下げ</sys:String>
-    <sys:String x:Key="LOCITADOrderPrice">価格</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPriceCut">Best - Price cut</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPrice">Best - Price</sys:String>
+
+    <sys:String x:Key="LOCITADOrderStorePriceCut">Store - Price cut</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePrice">Store - Price</sys:String>
     
     <sys:String x:Key="LOCITADFilterSource"></sys:String>
     <sys:String x:Key="LOCITADPercentage">最小割引</sys:String>
