@@ -40,7 +40,9 @@ namespace IsThereAnyDeal.Clients
         {
             Logger.Info($"Load data from web for {ClientName}");
 
-            if (Settings.XboxLink.IsNullOrEmpty() && !Settings.XboxLink.StartsWith("https://www.microsoft.com/store/wishlist?id=", StringComparison.InvariantCultureIgnoreCase))
+            if (Settings.XboxLink.IsNullOrEmpty() 
+                && !Settings.XboxLink.StartsWith("https://www.microsoft.com/", StringComparison.InvariantCultureIgnoreCase)
+                && !Settings.XboxLink.Contains("wishlist?id=", StringComparison.InvariantCultureIgnoreCase))
             {
                 Logger.Error($"{ClientName}: No url");
                 API.Instance.Notifications.Add(new NotificationMessage(
