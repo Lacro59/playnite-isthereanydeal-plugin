@@ -43,14 +43,14 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">Odśwież cenę</sys:String>
 
-    <sys:String x:Key="LOCITADBestPrice">Best price</sys:String>
-    <sys:String x:Key="LOCITADStorePrice">Store price</sys:String>
+    <sys:String x:Key="LOCITADBestPrice">Najlepsza cena</sys:String>
+    <sys:String x:Key="LOCITADStorePrice">Cena sklepu</sys:String>
     
-    <sys:String x:Key="LOCITADOrderBestPriceCut">Best - Price cut</sys:String>
-    <sys:String x:Key="LOCITADOrderBestPrice">Best - Price</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPriceCut">Najlepsza obniżka</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPrice">Najlepsza cena</sys:String>
 
-    <sys:String x:Key="LOCITADOrderStorePriceCut">Store - Price cut</sys:String>
-    <sys:String x:Key="LOCITADOrderStorePrice">Store - Price</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePriceCut">Najlepsza obniżka sklepu</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePrice">Najlepsza cena sklepu</sys:String>
     
     <sys:String x:Key="LOCITADFilterSource">Filtruj wg sklepu(ów)</sys:String>
     <sys:String x:Key="LOCITADPercentage">Minimalny procent rabatu</sys:String>
@@ -86,7 +86,7 @@
     <sys:String x:Key="LOCITADDataDownloading">Pobieranie danych IsThereAnyDeal...</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Powiadomienie o loterii dla {0} ({1} gry(gier))</sys:String>
-    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Powiadomienie cenowe dla {0} - {1}{2} ({3}%)</sys:String>
+    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Powiadomienie cenowe dla {0} - {1} {2} ({3}%)</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Wystąpił błąd podczas pobierania listy życzeń z {0}.
 Spróbuj zalogować się na swoje konto.</sys:String>
