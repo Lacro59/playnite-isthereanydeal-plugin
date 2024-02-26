@@ -42,9 +42,15 @@
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADRefreshPrice">Fiyat yenile</sys:String>
+
+    <sys:String x:Key="LOCITADBestPrice">En iyi fiyat</sys:String>
+    <sys:String x:Key="LOCITADStorePrice">Mağaza fiyatı</sys:String>
     
-    <sys:String x:Key="LOCITADOrderPriceCut">Fiyat iskontosu</sys:String>
-    <sys:String x:Key="LOCITADOrderPrice">Fiyat</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPriceCut">En iyi - Fiyat indirimi</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPrice">En iyi - Fiyat</sys:String>
+
+    <sys:String x:Key="LOCITADOrderStorePriceCut">Mağaza - En iyi fiyat</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePrice">Mağaza - Fiyat</sys:String>
     
     <sys:String x:Key="LOCITADFilterSource">Mağaza(lar) bazında filtrele</sys:String>
     <sys:String x:Key="LOCITADPercentage">En az indirim yüzdesi</sys:String>
@@ -88,7 +94,7 @@ Hesabınıza giriş yapmayı deneyin.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">IsThereAnyDeal eklentisinde Epic etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">IsThereAnyDeal eklentisinde GOG etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">IsThereAnyDeal eklentisinde Steam etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
-    <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam ayarlarda düzgün yapılandırılmamış</sys:String>
+    <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam ayarlarda düzgün yapılandırılmamı</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam istek listesi gizli. Steam Kütüphanesi eklentisinde kimlik doğrulama düğmesini kullanmalısınız</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">IsThereAnyDeal eklentisinde Xbox etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Xbox istek listesi bağlantısı yok.</sys:String>

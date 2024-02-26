@@ -42,9 +42,15 @@
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADRefreshPrice">Оновити ціну</sys:String>
+
+    <sys:String x:Key="LOCITADBestPrice">Найкраща ціна</sys:String>
+    <sys:String x:Key="LOCITADStorePrice">Ціна крамниці</sys:String>
     
-    <sys:String x:Key="LOCITADOrderPriceCut">Зниження ціни</sys:String>
-    <sys:String x:Key="LOCITADOrderPrice">Ціна</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPriceCut">Найкраще - Зниження ціни</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPrice">Найкраще - Ціна</sys:String>
+
+    <sys:String x:Key="LOCITADOrderStorePriceCut">Крамниця - Зниження ціни</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePrice">Крамниця - Ціна</sys:String>
     
     <sys:String x:Key="LOCITADFilterSource">Фільтрувати за магазинами</sys:String>
     <sys:String x:Key="LOCITADPercentage">Мінімальний відсоток знижки</sys:String>

@@ -23,16 +23,16 @@
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">المنط</sys:String>
-    <sys:String x:Key="LOCItadCountry">الدو</sys:String>
+    <sys:String x:Key="LOCItadCountry">الد</sys:String>
     <sys:String x:Key="LOCItadStores">المتاجر</sys:String>
 
     <sys:String x:Key="LOCItadEnableNotificationGiveaways">تفعيل اإشعارات الهدايا</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">تفعيل اإشعارات</sys:String>
     <sys:String x:Key="LOCItadLimitNotification">Price cut</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPrice">السعر أقل </sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPrice">السعر أق</sys:String>
 
     <sys:String x:Key="LOCItadSettingPrice">حدود شريط تمرير السعر</sys:String>
-    <sys:String x:Key="LOCItadMinimum">الحد الاد</sys:String>
+    <sys:String x:Key="LOCItadMinimum">الحد الا</sys:String>
     <sys:String x:Key="LOCItadMaximum">الحد الاقص</sys:String>
 
     <sys:String x:Key="LOCItadSettingsNotifications">الإشعارات</sys:String>
@@ -42,13 +42,19 @@
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADRefreshPrice">تحديث السعر</sys:String>
+
+    <sys:String x:Key="LOCITADBestPrice">Best price</sys:String>
+    <sys:String x:Key="LOCITADStorePrice">Store price</sys:String>
     
-    <sys:String x:Key="LOCITADOrderPriceCut">خفض السعر</sys:String>
-    <sys:String x:Key="LOCITADOrderPrice">السعر</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPriceCut">Best - Price cut</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPrice">Best - Price</sys:String>
+
+    <sys:String x:Key="LOCITADOrderStorePriceCut">Store - Price cut</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePrice">Store - Price</sys:String>
     
     <sys:String x:Key="LOCITADFilterSource">تصفية حسب المتجر</sys:String>
     <sys:String x:Key="LOCITADPercentage">Minimum discount percentage</sys:String>
-    <sys:String x:Key="LOCITADPrice">السعر أق</sys:String>
+    <sys:String x:Key="LOCITADPrice">السعر أ</sys:String>
 
     <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">قائمة رغبات المتجر الحا</sys:String>
