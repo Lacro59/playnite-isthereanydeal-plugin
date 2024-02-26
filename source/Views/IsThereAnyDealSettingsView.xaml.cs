@@ -26,7 +26,6 @@ namespace IsThereAnyDeal.Views
 
         private List<ItadShops> StoresItems = new List<ItadShops>();
         private readonly IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-        private bool IsFirst = true;
 
 
         public IsThereAnyDealSettingsView(IsThereAnyDealSettings settings, IsThereAnyDeal plugin)
@@ -40,7 +39,6 @@ namespace IsThereAnyDeal.Views
             lvIgnoreList.ItemsSource = Settings.wishlistIgnores;
 
             DataContext = this;
-            IsFirst = true;
 
             PART_LimitNotificationPrice.LongValue = Settings.LimitNotificationPrice;
             lLimitNotification.Content = PART_sPriceCut.Value + "%";
