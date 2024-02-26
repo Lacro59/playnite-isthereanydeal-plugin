@@ -51,3 +51,16 @@ Packages:
       - Updated localizations
       - Updated store name
       - Minors optimizations
+  - Version: 3.2
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2024-02-26
+    PackageUrl: https://github.com/Lacro59/playnite-isthereanydeal-plugin/releases/download/v3.2/playnite-isthereanydeal-plugin_3_2.pext
+    Changelog:
+      - Updated localizations
+      - Used new ITAD api
+      - Fixed issue with filters
+      - Fixed issue on price
+      - UI optimizations (thanks to SparrowBrain)
+      - Fixed issues on stores wishlist
+      - Fixed crashes
+      - Fixed minors bugs
