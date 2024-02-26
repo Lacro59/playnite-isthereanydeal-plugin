@@ -42,9 +42,15 @@
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADRefreshPrice">Обновить цены</sys:String>
+
+    <sys:String x:Key="LOCITADBestPrice">Best price</sys:String>
+    <sys:String x:Key="LOCITADStorePrice">Store price</sys:String>
     
-    <sys:String x:Key="LOCITADOrderPriceCut">Скидки</sys:String>
-    <sys:String x:Key="LOCITADOrderPrice">Цена</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPriceCut">Best - Price cut</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPrice">Best - Price</sys:String>
+
+    <sys:String x:Key="LOCITADOrderStorePriceCut">Store - Price cut</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePrice">Store - Price</sys:String>
     
     <sys:String x:Key="LOCITADFilterSource">Фильтр по магазинам</sys:String>
     <sys:String x:Key="LOCITADPercentage">Минимальный процент скидки</sys:String>

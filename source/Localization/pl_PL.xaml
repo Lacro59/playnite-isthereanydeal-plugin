@@ -7,19 +7,19 @@
 
     <!-- IsThereAnyDealSettingsView -->
 
-    <sys:String x:Key="LOCItadExclusionList">Lista wyklucze</sys:String>
+    <sys:String x:Key="LOCItadExclusionList">Lista wykluczeń</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist">Lista życze</sys:String>
+    <sys:String x:Key="LOCItadSettingWishlist">Lista życzeń</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Włącz listę życzeń Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Włącz listę życzeń GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Włącz listę życzeń Epic Game Store</sys:String>
     <sys:String x:Key="LOCItadEnableHumble">Włącz listę życzeń Humble</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Identyfikator Humble</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Włącz listę życzeń Xbox</sys:String>
-    <sys:String x:Key="LOCItadXboxWishlistLink">Link do listy życze</sys:String>
-    <sys:String x:Key="LOCItadEnableUbisoft">Enable Ubisoft wishlist</sys:String>
-    <sys:String x:Key="LOCItadUbisoftWishlistLink">Wishlist link</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Enable EA app wishlist</sys:String>
+    <sys:String x:Key="LOCItadXboxWishlistLink">Link do listy życzeń</sys:String>
+    <sys:String x:Key="LOCItadEnableUbisoft">Włącz listę życzeń Ubisoft</sys:String>
+    <sys:String x:Key="LOCItadUbisoftWishlistLink">Link do listy życzeń</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">Włącz listę życzeń EA app</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">Region</sys:String>
@@ -29,26 +29,32 @@
     <sys:String x:Key="LOCItadEnableNotificationGiveaways">Włącz powiadomienia o loteriach</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">Włącz powiadomienia</sys:String>
     <sys:String x:Key="LOCItadLimitNotification">Obniżka ceny</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPrice">Podwyżka ceny</sys:String>
 
-    <sys:String x:Key="LOCItadSettingPrice">Define limit to price slider</sys:String>
-    <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
-    <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
+    <sys:String x:Key="LOCItadSettingPrice">Zdefiniuj limit dla suwaka cenowego</sys:String>
+    <sys:String x:Key="LOCItadMinimum">Minimalnie</sys:String>
+    <sys:String x:Key="LOCItadMaximum">Maksymalnie</sys:String>
 
-    <sys:String x:Key="LOCItadSettingsNotifications">Notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationAt">Price cut at</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Price inferior at</sys:String>
+    <sys:String x:Key="LOCItadSettingsNotifications">Powiadomienia</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationAt">Obniżka ceny o</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Podwyżka ceny o</sys:String>
 
     <!-- IsThereAnyDealView -->
 
-    <sys:String x:Key="LOCITADRefreshPrice">Refresh price</sys:String>
+    <sys:String x:Key="LOCITADRefreshPrice">Odśwież cenę</sys:String>
+
+    <sys:String x:Key="LOCITADBestPrice">Najlepsza cena</sys:String>
+    <sys:String x:Key="LOCITADStorePrice">Cena sklepu</sys:String>
     
-    <sys:String x:Key="LOCITADOrderPriceCut">Price cut</sys:String>
-    <sys:String x:Key="LOCITADOrderPrice">Price</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPriceCut">Najlepsza obniżka</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPrice">Najlepsza cena</sys:String>
+
+    <sys:String x:Key="LOCITADOrderStorePriceCut">Najlepsza obniżka sklepu</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePrice">Najlepsza cena sklepu</sys:String>
     
     <sys:String x:Key="LOCITADFilterSource">Filtruj wg sklepu(ów)</sys:String>
     <sys:String x:Key="LOCITADPercentage">Minimalny procent rabatu</sys:String>
-    <sys:String x:Key="LOCITADPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCITADPrice">Podwyżka ceny</sys:String>
 
     <sys:String x:Key="LOCItadCurrentBest">Najlepsza obecnie</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Lista życzeń wybranego sklepu</sys:String>
@@ -65,12 +71,12 @@
     <sys:String x:Key="LOCItadWhishListOptions">Opcje listy życze</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Dołącz gry z biblioteki</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Dołącz gry bez danych IsThereAnyDeal</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Only games in library</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Tylko gry w bibliotece</sys:String>
 
-    <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>
-    <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
-    <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlist">Importuj listę życzeń Steam</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">Link do listy życzeń Steam</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">Import zakończony powodzeniem</sys:String>
+    <sys:String x:Key="LOCItadImportError">Nie można zaimportować pliku listy życzeń</sys:String>
 
     <!-- IsThereAnyDeal -->
 
@@ -80,7 +86,7 @@
     <sys:String x:Key="LOCITADDataDownloading">Pobieranie danych IsThereAnyDeal...</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Powiadomienie o loterii dla {0} ({1} gry(gier))</sys:String>
-    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Powiadomienie cenowe dla {0} - {1}{2} ({3}%)</sys:String>
+    <sys:String x:Key="LOCItadNotification" xml:space="preserve">Powiadomienie cenowe dla {0} - {1} {2} ({3}%)</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Wystąpił błąd podczas pobierania listy życzeń z {0}.
 Spróbuj zalogować się na swoje konto.</sys:String>
@@ -89,11 +95,11 @@ Spróbuj zalogować się na swoje konto.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG jest włączony we wtyczce IsThereAnyDeal, ale rozszerzenie biblioteki zostało wyłączone w Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam jest włączony we wtyczce IsThereAnyDeal, ale rozszerzenie biblioteki zostało wyłączone w Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam nie został poprawnie skonfigurowany w ustawieniach</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam wishlist is private. You must use authenticate buton in Steam Library plugin</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Lista życzeń Steam jest prywatna. Musisz skorzystać z przycisku uwierzytelniania we wtyczce Steam Library</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox jest włączony we wtyczce IsThereAnyDeal, ale rozszerzenie biblioteki zostało wyłączone w Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Nie ma linku do listy życzeń Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
-    <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">There is no Ubisoft wishlist link.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisof jest włączony we wtyczce IsThereAnyDeal, ale rozszerzenie biblioteki zostało wyłączone w Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Nie ma linku do listy życzeń Ubisoft.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Ea app jest włączona we wtyczce IsThereAnyDeal, ale rozszerzenie biblioteki zostało wyłączone w Playnite.</sys:String>
 
 </ResourceDictionary>
