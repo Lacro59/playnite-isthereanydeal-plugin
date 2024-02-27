@@ -274,7 +274,7 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
 
-                    <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding Settings.EnableSteam}" Name="PART_Steam" VerticalAlignment="Center">
+                    <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding Settings.EnableSteam}" Name="PART_Steam" VerticalAlignment="Center" Checked="PART_Steam_Checked">
                         <Label Content="{DynamicResource LOCItadEnableSteam}" />
                     </CheckBox>
 

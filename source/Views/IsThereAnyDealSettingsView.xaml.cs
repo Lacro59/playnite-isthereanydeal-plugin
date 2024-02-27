@@ -13,6 +13,7 @@ using Playnite.SDK.Models;
 using System.Windows.Documents;
 using System.Diagnostics;
 using IsThereAnyDeal.Models.ApiWebsite;
+using CommonPluginsStores.Steam;
 
 namespace IsThereAnyDeal.Views
 {
@@ -253,6 +254,13 @@ namespace IsThereAnyDeal.Views
                     PART_Data.Visibility = Visibility.Visible;
                 }));
             });
+        }
+
+        private void PART_Steam_Checked(object sender, RoutedEventArgs e)
+        {
+            IsThereAnyDeal.SteamApi = new SteamApi("IsThereAnyDeal");
+            IsThereAnyDeal.SteamApi.SetLanguage(API.Instance.ApplicationSettings.Language);
+            _ = IsThereAnyDeal.SteamApi.CurrentUser;
         }
     }
 }
