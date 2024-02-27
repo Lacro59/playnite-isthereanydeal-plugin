@@ -10,7 +10,6 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using CommonPlayniteShared.PluginLibrary.SteamLibrary.SteamShared;
-using CommonPluginsStores.Steam;
 using IsThereAnyDeal.Models.Api;
 using System.Collections.ObjectModel;
 using CommonPluginsStores.Models;
@@ -19,21 +18,6 @@ namespace IsThereAnyDeal.Services
 {
     public class SteamWishlist : GenericWishlist
     {
-        protected static SteamApi _SteamApi;
-        internal static SteamApi SteamApi
-        {
-            get
-            {
-                if (_SteamApi == null)
-                {
-                    _SteamApi = new SteamApi("IsThereAnyDeal");
-                }
-                return _SteamApi;
-            }
-
-            set => _SteamApi = value;
-        }
-
         private string UrlAppData => @"https://store.steampowered.com/api/appdetails?appids={0}";
 
 
@@ -46,7 +30,7 @@ namespace IsThereAnyDeal.Services
         {
             Logger.Info($"Load data from web for {ClientName}");
 
-            if (!SteamApi.IsUserLoggedIn)
+            if (!IsThereAnyDeal.SteamApi?.IsUserLoggedIn ?? true)
             {
                 Logger.Warn($"{ClientName}: Not authenticated");
                 API.Instance.Notifications.Add(new NotificationMessage(
@@ -62,7 +46,7 @@ namespace IsThereAnyDeal.Services
 
             List<Wishlist> Result = new List<Wishlist>();
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-            ObservableCollection<AccountWishlist> accountWishlist = SteamApi.GetWishlist(SteamApi.CurrentAccountInfos);
+            ObservableCollection<AccountWishlist> accountWishlist = IsThereAnyDeal.SteamApi.GetWishlist(IsThereAnyDeal.SteamApi.CurrentAccountInfos);
 
             accountWishlist.ForEach(x =>
             {
@@ -90,7 +74,7 @@ namespace IsThereAnyDeal.Services
 
         public override bool RemoveWishlist(string StoreId)
         {
-            return SteamApi.RemoveWishlist(StoreId);
+            return IsThereAnyDeal.SteamApi?.RemoveWishlist(StoreId) ?? false;
         }
 
 
@@ -135,7 +119,7 @@ namespace IsThereAnyDeal.Services
                                 {
                                     continue;
                                 }
-                                
+
                                 string Name = WebUtility.HtmlDecode(AppDetails.name);
                                 string Capsule = AppDetails.header_image;
                                 DateTime.TryParse(AppDetails?.release_date?.date, out DateTime ReleaseDate);

@@ -14,6 +14,7 @@ using System.IO;
 using System.Reflection;
 using CommonPlayniteShared;
 using CommonPlayniteShared.Common;
+using CommonPluginsStores.Steam;
 
 namespace IsThereAnyDeal
 {
@@ -23,6 +24,8 @@ namespace IsThereAnyDeal
 
         internal TopPanelItem TopPanelItem { get; set; }
         internal ItadViewSidebar ItadViewSidebar { get; set; }
+
+        public static SteamApi SteamApi { get; set; }
 
 
         public IsThereAnyDeal(IPlayniteAPI api) : base(api)
@@ -234,6 +237,13 @@ namespace IsThereAnyDeal
         public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
         {
             _ = IsThereAnyDealApi.CheckNotifications(PluginSettings.Settings, this);
+
+            SteamApi = new SteamApi("IsThereAnyDeal");
+            SteamApi.SetLanguage(API.Instance.ApplicationSettings.Language);
+            if (PluginSettings.Settings.EnableSteam)
+            {
+                _ = SteamApi.CurrentUser;
+            }
         }
 
         // Add code to be executed when Playnite is shutting down.

@@ -35,6 +35,8 @@ namespace IsThereAnyDeal.Views
 
             InitializeComponent();
 
+            SteamPanel.SteamApi = IsThereAnyDeal.SteamApi;
+
             Settings.wishlistIgnores = Settings.wishlistIgnores.OrderBy(x => x.StoreName).ThenBy(x => x.Name).ToList();
             lvIgnoreList.ItemsSource = Settings.wishlistIgnores;
 
