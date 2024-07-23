@@ -43,14 +43,14 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">Aggiorna prezzo</sys:String>
 
-    <sys:String x:Key="LOCITADBestPrice">Best price</sys:String>
-    <sys:String x:Key="LOCITADStorePrice">Store price</sys:String>
+    <sys:String x:Key="LOCITADBestPrice">Miglior prezzo</sys:String>
+    <sys:String x:Key="LOCITADStorePrice">Prezzo negozio</sys:String>
     
-    <sys:String x:Key="LOCITADOrderBestPriceCut">Best - Price cut</sys:String>
-    <sys:String x:Key="LOCITADOrderBestPrice">Best - Price</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPriceCut">Miglior - Riduzione del prezzo</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPrice">Miglior - Prezzo</sys:String>
 
-    <sys:String x:Key="LOCITADOrderStorePriceCut">Store - Price cut</sys:String>
-    <sys:String x:Key="LOCITADOrderStorePrice">Store - Price</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePriceCut">Negozio - Riduzione di prezzo</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePrice">Negozio - Prezzo</sys:String>
     
     <sys:String x:Key="LOCITADFilterSource">Filtra per negozio/zi</sys:String>
     <sys:String x:Key="LOCITADPercentage">Percentuale di sconto minima</sys:String>
