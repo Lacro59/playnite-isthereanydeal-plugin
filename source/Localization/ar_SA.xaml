@@ -23,13 +23,13 @@
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">المنط</sys:String>
-    <sys:String x:Key="LOCItadCountry">الد</sys:String>
+    <sys:String x:Key="LOCItadCountry">ال</sys:String>
     <sys:String x:Key="LOCItadStores">المتاجر</sys:String>
 
     <sys:String x:Key="LOCItadEnableNotificationGiveaways">تفعيل اإشعارات الهدايا</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">تفعيل اإشعارات</sys:String>
     <sys:String x:Key="LOCItadLimitNotification">Price cut</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPrice">السعر أق</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPrice">السعر أ</sys:String>
 
     <sys:String x:Key="LOCItadSettingPrice">حدود شريط تمرير السعر</sys:String>
     <sys:String x:Key="LOCItadMinimum">الحد الا</sys:String>
