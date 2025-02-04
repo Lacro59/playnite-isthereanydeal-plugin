@@ -18,7 +18,7 @@
     <sys:String x:Key="LOCItadEnableXbox">Włącz listę życzeń Xbox</sys:String>
     <sys:String x:Key="LOCItadXboxWishlistLink">Link do listy życzeń</sys:String>
     <sys:String x:Key="LOCItadEnableUbisoft">Włącz listę życzeń Ubisoft</sys:String>
-    <sys:String x:Key="LOCItadUbisoftWishlistLink">Link do listy życzeń</sys:String>
+    <sys:String x:Key="LOCItadUbisoftWishlistLink">Link do listy życze</sys:String>
     <sys:String x:Key="LOCItadEnableOrigin">Włącz listę życzeń EA app</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
@@ -76,7 +76,7 @@
     <sys:String x:Key="LOCItadImportSteamWishlist">Importuj listę życzeń Steam</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">Link do listy życzeń Steam</sys:String>
     <sys:String x:Key="LOCItadImportSuccessful">Import zakończony powodzeniem</sys:String>
-    <sys:String x:Key="LOCItadImportError">Nie można zaimportować pliku listy życzeń</sys:String>
+    <sys:String x:Key="LOCItadImportError">Nie można zaimportować pliku listy życze</sys:String>
 
     <!-- IsThereAnyDeal -->
 
