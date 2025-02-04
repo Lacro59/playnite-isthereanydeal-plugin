@@ -12,20 +12,7 @@ namespace IsThereAnyDeal.Services
 {
     public class GogWishlist : GenericWishlist
     {
-        protected static GogApi _GogApi;
-        internal static GogApi GogApi
-        {
-            get
-            {
-                if (_GogApi == null)
-                {
-                    _GogApi = new GogApi("IsThereAnyDeal");
-                }
-                return _GogApi;
-            }
-
-            set => _GogApi = value;
-        }
+        private static GogApi GogApi => IsThereAnyDeal.GogApi;
 
 
         public GogWishlist(IsThereAnyDeal plugin) : base(plugin, "GOG")

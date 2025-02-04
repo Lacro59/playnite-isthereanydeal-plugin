@@ -13,20 +13,7 @@ namespace IsThereAnyDeal.Services
 {
     public class EpicWishlist : GenericWishlist
     {
-        protected static EpicApi _EpicApi;
-        internal static EpicApi EpicApi
-        {
-            get
-            {
-                if (_EpicApi == null)
-                {
-                    _EpicApi = new EpicApi("IsThereAnyDeals");
-                }
-                return _EpicApi;
-            }
-
-            set => _EpicApi = value;
-        }
+        private static EpicApi EpicApi => IsThereAnyDeal.EpicApi;
 
 
         public EpicWishlist(IsThereAnyDeal plugin) : base(plugin, "Epic")

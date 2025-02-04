@@ -28,7 +28,7 @@ namespace IsThereAnyDeal.Services
             {
                 if (SidebarItemControl == null)
                 {
-                    SidebarItemControl = new SidebarItemControl(API.Instance);
+                    SidebarItemControl = new SidebarItemControl();
                     SidebarItemControl.SetTitle(ResourceProvider.GetString("LOCItad"));
                     SidebarItemControl.AddContent(new IsThereAnyDealView(plugin, plugin.PluginSettings.Settings));
                 }

@@ -8,13 +8,14 @@ using IsThereAnyDeal.Services;
 using IsThereAnyDeal.Models.Api;
 using CommonPluginsShared.Extensions;
 using IsThereAnyDeal.Models.ApiWebsite;
+using CommonPluginsShared.Plugins;
+using CommonPluginsStores;
 
 namespace IsThereAnyDeal
 {
-    public class IsThereAnyDealSettings : ObservableObject
+    public class IsThereAnyDealSettings : PluginSettings
     {
         #region Settings variables
-        public bool MenuInExtensions { get; set; } = true;
         public bool EnableIntegrationButtonHeader { get; set; } = false;
         public bool EnableIntegrationButtonSide { get; set; } = true;
 
@@ -49,6 +50,13 @@ namespace IsThereAnyDeal
         public string UbisoftLink { get; set; } = string.Empty;
 
         public List<ItadNotificationCriteria> NotificationCriterias { get; set; } = new List<ItadNotificationCriteria>();
+
+        [DontSerialize]
+        public StoreSettings SteamStoreSettings { get; set; } = new StoreSettings { UseAuth = true, ForceAuth = true };
+        [DontSerialize]
+        public StoreSettings EpicStoreSettings { get; set; } = new StoreSettings { UseAuth = true, ForceAuth = true };
+        [DontSerialize]
+        public StoreSettings GogStoreSettings { get; set; } = new StoreSettings { UseAuth = true, ForceAuth = true };
         #endregion
 
         // Playnite serializes settings object to a JSON object and saves it as text file.
@@ -64,8 +72,8 @@ namespace IsThereAnyDeal
         private readonly IsThereAnyDeal Plugin;
         private IsThereAnyDealSettings EditingClone { get; set; }
 
-        private IsThereAnyDealSettings _Settings;
-        public IsThereAnyDealSettings Settings { get => _Settings; set => SetValue(ref _Settings, value); }
+        private IsThereAnyDealSettings _settings;
+        public IsThereAnyDealSettings Settings { get => _settings; set => SetValue(ref _settings, value); }
 
 
         public IsThereAnyDealSettingsViewModel(IsThereAnyDeal plugin)
@@ -371,6 +379,32 @@ namespace IsThereAnyDeal
         // This method should save settings made to Option1 and Option2.
         public void EndEdit()
         {
+            // StoreAPI intialization
+            IsThereAnyDeal.SteamApi.StoreSettings = Settings.SteamStoreSettings;
+            if (Settings.EnableSteam)
+            {
+                IsThereAnyDeal.SteamApi.SaveCurrentUser();
+                IsThereAnyDeal.SteamApi.CurrentAccountInfos = null;
+                _ = IsThereAnyDeal.SteamApi.CurrentAccountInfos;
+            }
+
+            IsThereAnyDeal.EpicApi.StoreSettings = Settings.EpicStoreSettings;
+            if (Settings.EnableEpic)
+            {
+                IsThereAnyDeal.EpicApi.SaveCurrentUser();
+                IsThereAnyDeal.EpicApi.CurrentAccountInfos = null;
+                _ = IsThereAnyDeal.EpicApi.CurrentAccountInfos;
+            }
+
+            IsThereAnyDeal.GogApi.StoreSettings = Settings.GogStoreSettings;
+            if (Settings.EnableGog)
+            {
+                IsThereAnyDeal.GogApi.SaveCurrentUser();
+                IsThereAnyDeal.GogApi.CurrentAccountInfos = null;
+                _ = IsThereAnyDeal.GogApi.CurrentAccountInfos;
+            }
+
+
             Plugin.SavePluginSettings(Settings);
 
             if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)

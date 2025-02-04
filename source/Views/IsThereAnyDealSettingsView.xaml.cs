@@ -19,14 +19,13 @@ namespace IsThereAnyDeal.Views
 {
     public partial class IsThereAnyDealSettingsView : UserControl
     {
-        private static readonly ILogger logger = LogManager.GetLogger();
-        private static readonly IResourceProvider resources = new ResourceProvider();
+        private static ILogger Logger => LogManager.GetLogger();
 
-        private IsThereAnyDealSettings Settings;
-        private IsThereAnyDeal Plugin;
+        private IsThereAnyDealSettings Settings { get; set; }
+        private IsThereAnyDeal Plugin { get; set; }
 
-        private List<ItadShops> StoresItems = new List<ItadShops>();
-        private readonly IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+        private List<ItadShops> StoresItems { get; set; } = new List<ItadShops>();
+        private IsThereAnyDealApi IsThereAnyDealApi { get; set; } = new IsThereAnyDealApi();
 
 
         public IsThereAnyDealSettingsView(IsThereAnyDealSettings settings, IsThereAnyDeal plugin)
@@ -36,7 +35,9 @@ namespace IsThereAnyDeal.Views
 
             InitializeComponent();
 
-            SteamPanel.SteamApi = IsThereAnyDeal.SteamApi;
+            SteamPanel.StoreApi = IsThereAnyDeal.SteamApi;
+            EpicPanel.StoreApi = IsThereAnyDeal.EpicApi;
+            GogPanel.StoreApi = IsThereAnyDeal.GogApi;
 
             Settings.wishlistIgnores = Settings.wishlistIgnores.OrderBy(x => x.StoreName).ThenBy(x => x.Name).ToList();
             lvIgnoreList.ItemsSource = Settings.wishlistIgnores;
@@ -60,7 +61,7 @@ namespace IsThereAnyDeal.Views
 
             _ = Task.Run(() =>
             {
-                StoresItems = isThereAnyDealApi.GetShops(Settings.CountrySelected.Alpha2).GetAwaiter().GetResult();
+                StoresItems = IsThereAnyDealApi.GetShops(Settings.CountrySelected.Alpha2).GetAwaiter().GetResult();
                 StoresItems.ForEach(x => 
                 {
                     ItadShops finded = Settings.Stores.Where(y => y.Id == x.Id)?.FirstOrDefault();
@@ -168,7 +169,7 @@ namespace IsThereAnyDeal.Views
             if (!targetPath.IsNullOrEmpty())
             {
                 GlobalProgressOptions globalProgressOptions = new GlobalProgressOptions(
-                    $"IsThereAnyDeal - " + resources.GetString("LOCImportLabel"),
+                    $"IsThereAnyDeal - " + ResourceProvider.GetString("LOCImportLabel"),
                     true
                 );
                 globalProgressOptions.IsIndeterminate = true;
@@ -194,7 +195,7 @@ namespace IsThereAnyDeal.Views
                                     return;
                                 }
 
-                                _ = API.Instance.Dialogs.ShowMessage(resources.GetString("LOCItadImportSuccessful"), "IsThereAnyDeal");
+                                _ = API.Instance.Dialogs.ShowMessage(ResourceProvider.GetString("LOCItadImportSuccessful"), "IsThereAnyDeal");
                             }
                             else
                             {
@@ -202,7 +203,7 @@ namespace IsThereAnyDeal.Views
                                 {
                                     return;
                                 }
-                                _ = API.Instance.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
+                                _ = API.Instance.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOCItadImportError"), "IsThereAnyDeal");
                             }
                         }
                         else
@@ -211,12 +212,12 @@ namespace IsThereAnyDeal.Views
                             {
                                 return;
                             }
-                            _ = API.Instance.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
+                            _ = API.Instance.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOCItadImportError"), "IsThereAnyDeal");
                         }
 
                         stopWatch.Stop();
                         TimeSpan ts = stopWatch.Elapsed;
-                        logger.Info($"Task GetImportSteam() - {string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
+                        Logger.Info($"Task GetImportSteam() - {string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
                     }
                     catch (Exception ex)
                     {
@@ -226,7 +227,7 @@ namespace IsThereAnyDeal.Views
                         {
                             return;
                         }
-                        _ = API.Instance.Dialogs.ShowErrorMessage(resources.GetString("LOCItadImportError"), "IsThereAnyDeal");
+                        _ = API.Instance.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOCItadImportError"), "IsThereAnyDeal");
                     }
                 }, globalProgressOptions);
             }
@@ -239,7 +240,7 @@ namespace IsThereAnyDeal.Views
 
             _ = Task.Run(() =>
             {
-                List<Country> Countries = isThereAnyDealApi.GetCountries().GetAwaiter().GetResult();
+                List<Country> Countries = IsThereAnyDealApi.GetCountries().GetAwaiter().GetResult();
                 if (Countries?.Count > 0)
                 {
                     Settings.Countries = Countries;
@@ -258,9 +259,9 @@ namespace IsThereAnyDeal.Views
 
         private void PART_Steam_Checked(object sender, RoutedEventArgs e)
         {
-            IsThereAnyDeal.SteamApi = new SteamApi("IsThereAnyDeal");
+            IsThereAnyDeal.SteamApi = new SteamApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal);
             IsThereAnyDeal.SteamApi.SetLanguage(API.Instance.ApplicationSettings.Language);
-            _ = IsThereAnyDeal.SteamApi.CurrentUser;
+            _ = IsThereAnyDeal.SteamApi.CurrentAccountInfos;
         }
     }
 }

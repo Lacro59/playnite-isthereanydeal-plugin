@@ -9,16 +9,16 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
-using CommonPlayniteShared.PluginLibrary.SteamLibrary.SteamShared;
 using IsThereAnyDeal.Models.Api;
 using System.Collections.ObjectModel;
 using CommonPluginsStores.Models;
+using CommonPluginsStores.Steam;
 
 namespace IsThereAnyDeal.Services
 {
     public class SteamWishlist : GenericWishlist
     {
-        private string UrlAppData => @"https://store.steampowered.com/api/appdetails?appids={0}";
+        private static SteamApi SteamApi => IsThereAnyDeal.SteamApi;
 
 
         public SteamWishlist(IsThereAnyDeal plugin) : base(plugin, "Steam")
@@ -30,7 +30,7 @@ namespace IsThereAnyDeal.Services
         {
             Logger.Info($"Load data from web for {ClientName}");
 
-            if (!IsThereAnyDeal.SteamApi?.IsUserLoggedIn ?? true)
+            if (!SteamApi.IsUserLoggedIn)
             {
                 Logger.Warn($"{ClientName}: Not authenticated");
                 API.Instance.Notifications.Add(new NotificationMessage(
@@ -46,7 +46,7 @@ namespace IsThereAnyDeal.Services
 
             List<Wishlist> Result = new List<Wishlist>();
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-            ObservableCollection<AccountWishlist> accountWishlist = IsThereAnyDeal.SteamApi.GetWishlist(IsThereAnyDeal.SteamApi.CurrentAccountInfos);
+            ObservableCollection<AccountWishlist> accountWishlist = SteamApi.GetWishlist(SteamApi.CurrentAccountInfos);
 
             accountWishlist.ForEach(x =>
             {
@@ -74,7 +74,7 @@ namespace IsThereAnyDeal.Services
 
         public override bool RemoveWishlist(string StoreId)
         {
-            return IsThereAnyDeal.SteamApi?.RemoveWishlist(StoreId) ?? false;
+            return SteamApi.RemoveWishlist(StoreId);
         }
 
 
@@ -91,59 +91,23 @@ namespace IsThereAnyDeal.Services
 
                     foreach(dynamic el in rgWishlist)
                     {
-                        // Respect API limitation
-                        Thread.Sleep(500);
-
-                        string response = string.Empty;
-                        try
+                        GameInfos gameInfos = SteamApi.GetGameInfos((string)el, null);
+                        if (gameInfos != null)
                         {
-                            response = Web.DownloadStringData(string.Format(UrlAppData, (string)el)).GetAwaiter().GetResult();
-                        }
-                        catch (Exception ex)
-                        {
-                            Common.LogError(ex, false, $"Error download Steam app data - {el.ToString()}", true, "IsThereAnyDeal");
-                            return false;
-                        }
-
-                        if (!response.IsNullOrEmpty())
-                        {
-                            string StoreId = string.Empty;
-                            try
+                            GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse((string)el)).GetAwaiter().GetResult();
+                            Result.Add(new Wishlist
                             {
-                                StoreId = (string)el;
-
-                                Dictionary<string, StoreAppDetailsResult> parsedData = Serialization.FromJson<Dictionary<string, StoreAppDetailsResult>>(response);
-                                dynamic AppDetails = parsedData[el.ToString()].data;
-
-                                if (AppDetails == null)
-                                {
-                                    continue;
-                                }
-
-                                string Name = WebUtility.HtmlDecode(AppDetails.name);
-                                string Capsule = AppDetails.header_image;
-                                DateTime.TryParse(AppDetails?.release_date?.date, out DateTime ReleaseDate);
-
-                                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(StoreId)).GetAwaiter().GetResult();
-
-                                Result.Add(new Wishlist
-                                {
-                                    StoreId = StoreId,
-                                    StoreName = "Steam",
-                                    ShopColor = GetShopColor(),
-                                    StoreUrl = "https://store.steampowered.com/app/" + (string)el,
-                                    Name = Name,
-                                    SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
-                                    ReleaseDate = ReleaseDate.ToUniversalTime(),
-                                    Capsule = Capsule,
-                                    Game = gamesLookup.Found ? gamesLookup.Game : null,
-                                    IsActive = true
-                                });
-                            }
-                            catch(Exception ex)
-                            {
-                                Common.LogError(ex, false, $"Error for import Steam game {StoreId}", true, "IsThereAnyDeal");
-                            }
+                                StoreId = (string)el,
+                                StoreName = "Steam",
+                                ShopColor = GetShopColor(),
+                                StoreUrl = "https://store.steampowered.com/app/" + (string)el,
+                                Name = gameInfos.Name,
+                                SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
+                                ReleaseDate = gameInfos.Released?.ToUniversalTime(),
+                                Capsule = gameInfos.Image,
+                                Game = gamesLookup.Found ? gamesLookup.Game : null,
+                                IsActive = true
+                            });
                         }
                     }
 

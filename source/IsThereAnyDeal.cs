@@ -15,6 +15,8 @@ using System.Reflection;
 using CommonPlayniteShared;
 using CommonPlayniteShared.Common;
 using CommonPluginsStores.Steam;
+using CommonPluginsStores.Epic;
+using CommonPluginsStores.Gog;
 
 namespace IsThereAnyDeal
 {
@@ -22,10 +24,12 @@ namespace IsThereAnyDeal
     {
         public override Guid Id { get; } = Guid.Parse("7d5cbee9-3c86-4389-ac7b-9abe3da4c9cd");
 
+        public static SteamApi SteamApi { get; set; }
+        public static EpicApi EpicApi { get; set; }
+        public static GogApi GogApi { get; set; }
+
         internal TopPanelItem TopPanelItem { get; set; }
         internal ItadViewSidebar ItadViewSidebar { get; set; }
-
-        public static SteamApi SteamApi { get; set; }
 
 
         public IsThereAnyDeal(IPlayniteAPI api) : base(api)
@@ -58,9 +62,9 @@ namespace IsThereAnyDeal
                     {
                         Text = "\uea63",
                         FontSize = 22,
-                        FontFamily = resources.GetResource("CommonFont") as FontFamily
+                        FontFamily = ResourceProvider.GetResource("CommonFont") as FontFamily
                     },
-                    Title = resources.GetString("LOCItad"),
+                    Title = ResourceProvider.GetString("LOCItad"),
                     Activated = () =>
                     {
                         WindowOptions windowOptions = new WindowOptions
@@ -73,8 +77,8 @@ namespace IsThereAnyDeal
                             Height = 720
                         };
 
-                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, PluginSettings.Settings);
-                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
+                        IsThereAnyDealView viewExtension = new IsThereAnyDealView(this, PluginSettings.Settings);
+                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
                         _ = windowExtension.ShowDialog();
                     },
                     Visible = PluginSettings.Settings.EnableIntegrationButtonHeader
@@ -117,7 +121,7 @@ namespace IsThereAnyDeal
 #if DEBUG
             gameMenuItems.Add(new GameMenuItem
             {
-                MenuSection = resources.GetString("LOCItad"),
+                MenuSection = ResourceProvider.GetString("LOCItad"),
                 Description = "Test",
                 Action = (mainMenuItem) => { }
             });
@@ -139,8 +143,8 @@ namespace IsThereAnyDeal
             {
                 new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
-                    Description = resources.GetString("LOCItadPluginView"),
+                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCItad"),
+                    Description = ResourceProvider.GetString("LOCItadPluginView"),
                     Action = (mainMenuItem) =>
                     {
                         WindowOptions windowOptions = new WindowOptions
@@ -152,16 +156,16 @@ namespace IsThereAnyDeal
                             Width = 1180,
                             Height = 720
                         };
-                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, PluginSettings.Settings);
-                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
+                        IsThereAnyDealView viewExtension = new IsThereAnyDealView(this, PluginSettings.Settings);
+                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
                         windowExtension.ShowDialog();
                     }
                 },
 
                 new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
-                    Description = resources.GetString("LOCItadCheckNotifications"),
+                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCItad"),
+                    Description = ResourceProvider.GetString("LOCItadCheckNotifications"),
                     Action = (mainMenuItem) =>
                     {
                         _ = IsThereAnyDealApi.CheckNotifications(PluginSettings.Settings, this);
@@ -170,8 +174,8 @@ namespace IsThereAnyDeal
 
                 new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
-                    Description = resources.GetString("LOCItadUpdateDatas"),
+                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCItad"),
+                    Description = ResourceProvider.GetString("LOCItadUpdateDatas"),
                     Action = (mainMenuItem) =>
                     {
                         ItadViewSidebar.ResetView();
@@ -183,7 +187,7 @@ namespace IsThereAnyDeal
 #if DEBUG
             mainMenuItems.Add(new MainMenuItem
             {
-                MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
+                MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCItad"),
                 Description = "Test",
                 Action = (mainMenuItem) => { }
             });
@@ -238,11 +242,29 @@ namespace IsThereAnyDeal
         {
             _ = IsThereAnyDealApi.CheckNotifications(PluginSettings.Settings, this);
 
-            SteamApi = new SteamApi("IsThereAnyDeal");
+            // StoreAPI intialization
+            SteamApi = new SteamApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal);
             SteamApi.SetLanguage(API.Instance.ApplicationSettings.Language);
+            SteamApi.StoreSettings = PluginSettings.Settings.SteamStoreSettings;
             if (PluginSettings.Settings.EnableSteam)
             {
-                _ = SteamApi.CurrentUser;
+                _ = SteamApi.CurrentAccountInfos;
+            }
+
+            EpicApi = new EpicApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal);
+            EpicApi.SetLanguage(API.Instance.ApplicationSettings.Language);
+            EpicApi.StoreSettings = PluginSettings.Settings.EpicStoreSettings;
+            if (PluginSettings.Settings.EnableEpic)
+            {
+                _ = EpicApi.CurrentAccountInfos;
+            }
+
+            GogApi = new GogApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal);
+            GogApi.SetLanguage(API.Instance.ApplicationSettings.Language);
+            GogApi.StoreSettings = PluginSettings.Settings.GogStoreSettings;
+            if (PluginSettings.Settings.EnableGog)
+            {
+                _ = GogApi.CurrentAccountInfos;
             }
         }
 

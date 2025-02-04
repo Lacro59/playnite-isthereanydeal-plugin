@@ -7,14 +7,16 @@
              xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls"
              xmlns:converters="clr-namespace:CommonPluginsShared.Converters" 
              xmlns:isthereanydeal="clr-namespace:IsThereAnyDeal" 
-             xmlns:Steam="clr-namespace:CommonPluginsControls.Stores.Steam" xmlns:controls="clr-namespace:CommonPluginsControls.Controls"
+             xmlns:Steam="clr-namespace:CommonPluginsControls.Stores.Steam"
+             xmlns:Epic="clr-namespace:CommonPluginsControls.Stores.Epic"
+             xmlns:Gog="clr-namespace:CommonPluginsControls.Stores.Gog"
+             xmlns:controls="clr-namespace:CommonPluginsControls.Controls"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=isthereanydeal:IsThereAnyDealSettingsViewModel}">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:StringToBooleanConverter x:Key="StringToBooleanConverter" />
-            <converters:InvertedBoolenConverter x:Key="InvertedBoolenConverter" />
             <converters:IndexConverter x:Key="IndexConverter"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
@@ -278,11 +280,11 @@
                         <Label Content="{DynamicResource LOCItadEnableSteam}" />
                     </CheckBox>
 
-                    <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding Settings.EnableGog}" VerticalAlignment="Center">
+                    <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding Settings.EnableGog}" Name="PART_Gog" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableGog}" />
                     </CheckBox>
 
-                    <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding Settings.EnableEpic}" VerticalAlignment="Center">
+                    <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding Settings.EnableEpic}" Name="PART_Epic" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableEpic}" />
                     </CheckBox>
 
@@ -441,8 +443,19 @@
             </TabItem>
 
             <TabItem Header="{DynamicResource LOCLibraries}">
-                <Steam:PanelView x:Name="SteamPanel" UseApi="False"
-                                 Visibility="{Binding ElementName=PART_Steam, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <StackPanel Margin="10">
+                    <Steam:PanelView x:Name="SteamPanel" Margin="0,0,0,10"
+                                     Visibility="{Binding ElementName=PART_Steam, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                     UseApi="False" ForceAuth="True" UseAuth="True" />
+
+                    <Epic:PanelView x:Name="EpicPanel" Margin="0,0,0,10"
+                                    Visibility="{Binding ElementName=PART_Epic, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    ForceAuth="True" UseAuth="True" />
+
+                    <Gog:PanelView x:Name="GogPanel" 
+                                   Visibility="{Binding ElementName=PART_Gog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   ForceAuth="True" UseAuth="True" />
+                </StackPanel>
             </TabItem>
         </TabControl>
     </Grid>
