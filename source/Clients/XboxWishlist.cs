@@ -79,12 +79,12 @@ namespace IsThereAnyDeal.Clients
                 });
             });
 
-            wishlists = SetCurrentPrice(wishlists);
+            wishlists = SetCurrentPrice(wishlists, false);
             SaveWishlist(wishlists);
             return wishlists;
         }
 
-        public override bool RemoveWishlist(string StoreId)
+        public override bool RemoveWishlist(string storeId)
         {
             return false;
         }

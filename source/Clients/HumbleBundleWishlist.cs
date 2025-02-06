@@ -36,65 +36,65 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> wishlists = new List<Wishlist>();
-            string ResultWeb = string.Empty;
+            string resultWeb = string.Empty;
             string url = string.Format(@"https://www.humblebundle.com/store/wishlist/{0}", Settings.HumbleKey);
 
-            ResultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
-            if (!ResultWeb.IsNullOrEmpty())
+            resultWeb = Web.DownloadStringData(url).GetAwaiter().GetResult();
+            if (!resultWeb.IsNullOrEmpty())
             {
-                int startSub = ResultWeb.IndexOf("<script id=\"storefront-webpack-json-data\" type=\"application/json\">");
+                int startSub = resultWeb.IndexOf("<script id=\"storefront-webpack-json-data\" type=\"application/json\">");
                 if (startSub == -1)
                 {
                     Logger.Warn($"No Humble wishlist?");
                     return wishlists;
                 }
-                ResultWeb = ResultWeb.Substring(startSub, ResultWeb.Length - startSub);
+                resultWeb = resultWeb.Substring(startSub, resultWeb.Length - startSub);
 
-                int endSub = ResultWeb.IndexOf("</script>");
-                ResultWeb = ResultWeb.Substring(0, endSub);
+                int endSub = resultWeb.IndexOf("</script>");
+                resultWeb = resultWeb.Substring(0, endSub);
 
-                ResultWeb = ResultWeb.Replace("<script id=\"storefront-webpack-json-data\" type=\"application/json\">", string.Empty);
+                resultWeb = resultWeb.Replace("<script id=\"storefront-webpack-json-data\" type=\"application/json\">", string.Empty);
 
-                dynamic dataObj = Serialization.FromJson<dynamic>(ResultWeb);
+                dynamic dataObj = Serialization.FromJson<dynamic>(resultWeb);
 
                 IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                 foreach (dynamic gameWish in dataObj["products_json"])
                 {
-                    string StoreId = string.Empty;
-                    string StoreUrl = string.Empty;
-                    string Name = string.Empty;
-                    DateTime ReleaseDate = default;
-                    string Capsule = string.Empty;
+                    string storeId = string.Empty;
+                    string storeUrl = string.Empty;
+                    string name = string.Empty;
+                    DateTime releaseDate = default;
+                    string capsule = string.Empty;
 
-                    StoreId = (string)gameWish["machine_name"];
-                    StoreUrl = "https://www.humblebundle.com/store/" + gameWish["human_url"];
-                    Name = WebUtility.HtmlDecode((string)gameWish["human_name"]);
-                    Capsule = (string)gameWish["standard_carousel_image"];
+                    storeId = (string)gameWish["machine_name"];
+                    storeUrl = "https://www.humblebundle.com/store/" + gameWish["human_url"];
+                    name = WebUtility.HtmlDecode((string)gameWish["human_name"]);
+                    capsule = (string)gameWish["standard_carousel_image"];
 
-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
+                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(name).GetAwaiter().GetResult();
 
                     wishlists.Add(new Wishlist
                     {
-                        StoreId = StoreId,
+                        StoreId = storeId,
                         StoreName = "Humble",
                         ShopColor = GetShopColor(),
-                        StoreUrl = StoreUrl,
-                        Name = Name,
+                        StoreUrl = storeUrl,
+                        Name = name,
                         SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
-                        ReleaseDate = ReleaseDate.ToUniversalTime(),
-                        Capsule = Capsule,
+                        ReleaseDate = releaseDate.ToUniversalTime(),
+                        Capsule = capsule,
                         Game = gamesLookup.Found ? gamesLookup.Game : null,
                         IsActive = true
                     });
                 }
             }
 
-            wishlists = SetCurrentPrice(wishlists);
+            wishlists = SetCurrentPrice(wishlists, false);
             SaveWishlist(wishlists);
             return wishlists;
         }
 
-        public override bool RemoveWishlist(string StoreId)
+        public override bool RemoveWishlist(string storeId)
         {
             IWebView view = API.Instance.WebViews.CreateOffscreenView();
             HumbleAccountClientExtand humbleAccountClient = new HumbleAccountClientExtand(view);

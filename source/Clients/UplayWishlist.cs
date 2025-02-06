@@ -13,9 +13,9 @@ using System.Text;
 
 namespace IsThereAnyDeal.Clients
 {
-    public class UbisoftWishlist : GenericWishlist
+    public class UplayWishlist : GenericWishlist
     {
-        public UbisoftWishlist(IsThereAnyDeal plugin) : base(plugin, "Ubisoft")
+        public UplayWishlist(IsThereAnyDeal plugin) : base(plugin, "Ubisoft")
         {
             ExternalPlugin = PlayniteTools.ExternalPlugin.UplayLibrary;
         }
@@ -38,7 +38,7 @@ namespace IsThereAnyDeal.Clients
                 return cachedData;
             }
 
-            List<Wishlist> Result = new List<Wishlist>();
+            List<Wishlist> wishlists = new List<Wishlist>();
 
             // Get wishlist
             string response = Web.DownloadStringData(Settings.UbisoftLink).GetAwaiter().GetResult();
@@ -62,7 +62,7 @@ namespace IsThereAnyDeal.Clients
 
                     GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
 
-                    Result.Add(new Wishlist
+                    wishlists.Add(new Wishlist
                     {
                         StoreId = StoreId.Trim(),
                         StoreName = "Ubisoft Connect",
@@ -82,12 +82,12 @@ namespace IsThereAnyDeal.Clients
                 return cachedData;
             }
 
-            Result = SetCurrentPrice(Result);
-            SaveWishlist(Result);
-            return Result;
+            wishlists = SetCurrentPrice(wishlists, false);
+            SaveWishlist(wishlists);
+            return wishlists;
         }
 
-        public override bool RemoveWishlist(string StoreId)
+        public override bool RemoveWishlist(string storeId)
         {
             return false;
         }

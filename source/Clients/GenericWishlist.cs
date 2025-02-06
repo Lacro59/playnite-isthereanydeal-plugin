@@ -12,22 +12,6 @@ namespace IsThereAnyDeal.Services
     public abstract class GenericWishlist
     {
         internal static ILogger Logger => LogManager.GetLogger();
-        internal static IResourceProvider ResourceProvider => new ResourceProvider();
-
-        protected static IWebView _WebViewOffscreen;
-        internal static IWebView WebViewOffscreen
-        {
-            get
-            {
-                if (_WebViewOffscreen == null)
-                {
-                    _WebViewOffscreen = API.Instance.WebViews.CreateOffscreenView();
-                }
-                return _WebViewOffscreen;
-            }
-
-            set => _WebViewOffscreen = value;
-        }
 
         internal IsThereAnyDeal Plugin { get; set; }
         internal IsThereAnyDealSettings Settings { get; set; }
@@ -70,7 +54,7 @@ namespace IsThereAnyDeal.Services
                 {
                     if (forcePrice)
                     {
-                        wishlists = SetCurrentPrice(wishlists);
+                        wishlists = SetCurrentPrice(wishlists, forcePrice);
                         SaveWishlist(wishlists);
                     }
                     return wishlists;
@@ -130,10 +114,10 @@ namespace IsThereAnyDeal.Services
 
         public abstract bool RemoveWishlist(string storeId);
 
-        public List<Wishlist> SetCurrentPrice(List<Wishlist> wishlists)
+        public List<Wishlist> SetCurrentPrice(List<Wishlist> wishlists, bool force)
         {
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-            return isThereAnyDealApi.GetCurrentPrice(wishlists, Settings).GetAwaiter().GetResult();
+            return isThereAnyDealApi.GetCurrentPrice(wishlists, Settings, force).GetAwaiter().GetResult();
         }
 
         internal string GetShopColor()

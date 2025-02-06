@@ -91,7 +91,7 @@
     <Compile Include="Clients\EpicWishlist.cs" />
     <Compile Include="Clients\GenericWishlist.cs" />
     <Compile Include="Clients\OriginWishlist.cs" />
-    <Compile Include="Clients\UbisoftWishlist.cs" />
+    <Compile Include="Clients\UplayWishlist.cs" />
     <Compile Include="Clients\XboxWishlist.cs" />
     <Compile Include="Clients\GogWishlist.cs" />
     <Compile Include="Clients\HumbleBundleWishlist.cs" />
@@ -148,6 +148,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\countries.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="extension.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

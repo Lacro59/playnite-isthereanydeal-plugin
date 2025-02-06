@@ -77,7 +77,7 @@ namespace IsThereAnyDeal.Clients
                 });
             });
 
-            wishlists = SetCurrentPrice(wishlists);
+            wishlists = SetCurrentPrice(wishlists, false);
             SaveWishlist(wishlists);
             return wishlists;
         }

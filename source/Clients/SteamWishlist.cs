@@ -44,14 +44,14 @@ namespace IsThereAnyDeal.Services
                 return cachedData;
             }
 
-            List<Wishlist> Result = new List<Wishlist>();
+            List<Wishlist> wishlists = new List<Wishlist>();
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             ObservableCollection<AccountWishlist> accountWishlist = SteamApi.GetWishlist(SteamApi.CurrentAccountInfos);
 
             accountWishlist.ForEach(x =>
             {
                 GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
-                Result.Add(new Wishlist
+                wishlists.Add(new Wishlist
                 {
                     StoreId = x.Id,
                     StoreName = "Steam",
@@ -67,22 +67,22 @@ namespace IsThereAnyDeal.Services
                 });
             });
 
-            Result = SetCurrentPrice(Result);
-            SaveWishlist(Result);
-            return Result;
+            wishlists = SetCurrentPrice(wishlists, false);
+            SaveWishlist(wishlists);
+            return wishlists;
         }
 
-        public override bool RemoveWishlist(string StoreId)
+        public override bool RemoveWishlist(string storeId)
         {
-            return SteamApi.RemoveWishlist(StoreId);
+            return SteamApi.RemoveWishlist(storeId);
         }
 
 
-        public bool ImportWishlist(string FilePath)
+        public bool ImportWishlist(string filePath)
         {
-            List<Wishlist> Result = new List<Wishlist>();
+            List<Wishlist> wishlists = new List<Wishlist>();
 
-            if (File.Exists(FilePath) && Serialization.TryFromJsonFile(FilePath, out dynamic jObject))
+            if (File.Exists(filePath) && Serialization.TryFromJsonFile(filePath, out dynamic jObject))
             {
                 try
                 {
@@ -95,7 +95,7 @@ namespace IsThereAnyDeal.Services
                         if (gameInfos != null)
                         {
                             GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse((string)el)).GetAwaiter().GetResult();
-                            Result.Add(new Wishlist
+                            wishlists.Add(new Wishlist
                             {
                                 StoreId = (string)el,
                                 StoreName = "Steam",
@@ -111,8 +111,8 @@ namespace IsThereAnyDeal.Services
                         }
                     }
 
-                    Result = SetCurrentPrice(Result);
-                    SaveWishlist(Result);
+                    wishlists = SetCurrentPrice(wishlists, false);
+                    SaveWishlist(wishlists);
 
                     return true;
                 }

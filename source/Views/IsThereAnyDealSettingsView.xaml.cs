@@ -62,7 +62,7 @@ namespace IsThereAnyDeal.Views
             _ = Task.Run(() =>
             {
                 StoresItems = IsThereAnyDealApi.GetShops(Settings.CountrySelected.Alpha2).GetAwaiter().GetResult();
-                StoresItems.ForEach(x => 
+                StoresItems.ForEach(x =>
                 {
                     ItadShops finded = Settings.Stores.Where(y => y.Id == x.Id)?.FirstOrDefault();
                     if (finded != null)
@@ -231,30 +231,6 @@ namespace IsThereAnyDeal.Views
                     }
                 }, globalProgressOptions);
             }
-        }
-
-        private void PART_BtCountriesRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            PART_DataLoad.Visibility = Visibility.Visible;
-            PART_Data.Visibility = Visibility.Hidden;
-
-            _ = Task.Run(() =>
-            {
-                List<Country> Countries = IsThereAnyDealApi.GetCountries().GetAwaiter().GetResult();
-                if (Countries?.Count > 0)
-                {
-                    Settings.Countries = Countries;
-                }
-
-                _ = (Dispatcher?.BeginInvoke((Action)delegate
-                {
-                    PART_SelectCountry.ItemsSource = null;
-                    PART_SelectCountry.ItemsSource = Settings.Countries;
-
-                    PART_DataLoad.Visibility = Visibility.Hidden;
-                    PART_Data.Visibility = Visibility.Visible;
-                }));
-            });
         }
 
         private void PART_Steam_Checked(object sender, RoutedEventArgs e)

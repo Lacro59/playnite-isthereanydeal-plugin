@@ -19,13 +19,14 @@ using System.Net.Http;
 using IsThereAnyDeal.Models.Api;
 using IsThereAnyDeal.Models.ApiWebsite;
 using static CommonPluginsShared.PlayniteTools;
+using System.IO;
+using System.Reflection;
 
 namespace IsThereAnyDeal.Services
 {
     public class IsThereAnyDealApi
     {
         private static ILogger Logger => LogManager.GetLogger();
-        private static IResourceProvider ResourceProvider => new ResourceProvider();
 
         private string BaseUrl => "https://isthereanydeal.com";
         private string ApiUrl => "https://api.isthereanydeal.com";
@@ -47,8 +48,8 @@ namespace IsThereAnyDeal.Services
                 string url = ApiUrl + $"/service/shops/v1?country={country}";
                 string data = await Web.DownloadStringData(url).ConfigureAwait(false);
 
-                _ = Serialization.TryFromJson(data, out List<ServiceShop> serviceShops);
-                return serviceShops;
+                _ = Serialization.TryFromJson(data, out List<ServiceShop> serviceShops, out Exception ex);
+                return ex != null ? throw ex : serviceShops;
             }
             catch (Exception ex)
             {
@@ -124,12 +125,12 @@ namespace IsThereAnyDeal.Services
             try
             {
                 string shops = string.Join(",", shopsId);
-                string url = ApiUrl + $"/games/prices/v2?key={Key}&nondeals=true&vouchers=true&capacity=0&country={country}&shops={shops}";
+                string url = ApiUrl + $"/games/prices/v3?key={Key}&vouchers=true&capacity=0&country={country}&shops={shops}";
                 string payload = Serialization.ToJson(gamesId);
                 string data = await Web.PostStringDataPayload(url, payload);
 
-                _ = Serialization.TryFromJson(data, out List<GamePrices> gamesPrices);
-                return gamesPrices;
+                _ = Serialization.TryFromJson(data, out List<GamePrices> gamesPrices, out Exception ex);
+                return ex != null ? throw ex : gamesPrices;
             }
             catch (Exception ex)
             {
@@ -140,16 +141,13 @@ namespace IsThereAnyDeal.Services
         }
         #endregion
 
-        #region Api from website
-        public async Task<List<Country>> GetCountries()
+        public static List<Country> GetCountries()
         {
             try
             {
-                string url = BaseUrl + $"/api/country/";
-                string data = await Web.DownloadStringData(url);
-
-                _ = Serialization.TryFromJson(data, out List<Country> countries);
-                return countries;
+                string pluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                _ = Serialization.TryFromJsonFile(Path.Combine(pluginPath, "Data", "countries.json"), out List<Country> countries, out Exception ex);
+                return ex != null ? throw ex : countries;
             }
             catch (Exception ex)
             {
@@ -158,7 +156,6 @@ namespace IsThereAnyDeal.Services
 
             return null;
         }
-        #endregion
 
         #region Plugin
         public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false, bool ForcePrice = false)
@@ -350,7 +347,7 @@ namespace IsThereAnyDeal.Services
                 {
                     if (PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(ExternalPlugin.UplayLibrary)))
                     {
-                        UbisoftWishlist ubisoftWishlist = new UbisoftWishlist(plugin);
+                        UplayWishlist ubisoftWishlist = new UplayWishlist(plugin);
                         ListWishlistUbisoft = ubisoftWishlist.GetWishlist(CacheOnly, ForcePrice);
                         if (ListWishlistUbisoft == null)
                         {
@@ -482,75 +479,79 @@ namespace IsThereAnyDeal.Services
             return itadShops;
         }
 
-        public async Task<List<Wishlist>> GetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings)
+        public async Task<List<Wishlist>> GetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings, bool force)
         {
             try
             {
+                List<Wishlist> wishlistsData = force
+                    ? wishlists
+                        .Where(x => !x.Game?.Id?.IsNullOrEmpty() ?? false)
+                        .ToList()
+                    : wishlists
+                        .Where(x => (!x.ItadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true) && (!x.Game?.Id?.IsNullOrEmpty() ?? false))
+                        .ToList();
+
                 // Games list
-                List<string> gamesId = wishlists
-                    .Where(x => (!x.ItadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true) && (!x.Game?.Id?.IsNullOrEmpty() ?? false))
-                    .Select(x => x.Game.Id)
-                    .ToList();
+                List<string> gamesId = wishlistsData.Select(x => x.Game.Id).ToList();
 
                 // Stores list
                 List<int> shopsId = settings.Stores.Select(x => int.Parse(x.Id)).ToList();
 
-                if (gamesId.Count != 0)
+                if (gamesId?.Count() != 0)
                 {
                     // Check if in library (exclude game emulated)
                     List<Guid> ListEmulators = API.Instance.Database.Emulators.Select(x => x.Id).ToList();
 
                     List<GamePrices> gamesPrices = await GetGamesPrices(settings.CountrySelected.Alpha2, shopsId, gamesId);
 
-                    wishlists.Where(x => (!x.ItadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true) && (!x.Game?.Id?.IsNullOrEmpty() ?? false))
-                        .ForEach(y =>
+                    foreach (Wishlist wishlist in wishlistsData)
+                    {
+                        ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
+                        List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
+
+                        try
                         {
-                            ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
-                            List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
-
-                            try
+                            GamePrices gamePrices = gamesPrices.Where(x => x.Id.IsEqual(wishlist.Game.Id))?.FirstOrDefault();
+                            if (gamePrices?.Deals?.Count > 0)
                             {
-                                GamePrices gamePrices = gamesPrices.Where(x => x.Id.IsEqual(y.Game.Id))?.FirstOrDefault();
-                                if (gamePrices?.Deals?.Count > 0)
+                                foreach (Deal deal in gamePrices.Deals)
                                 {
-                                    foreach (Deal deal in gamePrices.Deals)
+                                    try
                                     {
-                                        try
+                                        dataCurrentPrice.Add(new ItadGameInfo
                                         {
-                                            dataCurrentPrice.Add(new ItadGameInfo
-                                            {
-                                                Name = y.Name,
-                                                StoreId = y.StoreId,
-                                                SourceId = y.SourceId,
-                                                Id = y.Game.Id,
-                                                Slug = y.Game.Slug,
-                                                PriceNew = Math.Round(deal.Price.Amount, 2),
-                                                PriceOld = Math.Round(deal.Regular.Amount, 2),
-                                                PriceCut = deal.Cut,
-                                                CurrencySign = GetCurrencySymbol(deal.Price.Currency),
-                                                ShopName = deal.Shop.Name,
-                                                UrlBuy = deal.Url
-                                            });
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Common.LogError(ex, false, true, "IsThereAnyDeal");
-                                        }
+                                            Name = wishlist.Name,
+                                            StoreId = wishlist.StoreId,
+                                            SourceId = wishlist.SourceId,
+                                            Id = wishlist.Game.Id,
+                                            Slug = wishlist.Game.Slug,
+                                            PriceNew = Math.Round(deal.Price.Amount, 2),
+                                            PriceOld = Math.Round(deal.Regular.Amount, 2),
+                                            PriceCut = deal.Cut,
+                                            CurrencySign = GetCurrencySymbol(deal.Price.Currency),
+                                            ShopName = deal.Shop.Name,
+                                            UrlBuy = deal.Url
+                                        });
                                     }
+                                    catch (Exception ex)
+                                    {
+                                        Common.LogError(ex, false, true, "IsThereAnyDeal");
+                                    }
+                                }
 
-                                    _ = itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
-                                    y.ItadGameInfos = itadGameInfos;
-                                }
-                                else
-                                {
-                                    Common.LogDebug(true, $"No data for {y.Name}");
-                                }
+                                _ = itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
+                                wishlist.ItadGameInfos = itadGameInfos;
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                Common.LogError(ex, true);
+                                Common.LogDebug(true, $"No data for {wishlist.Name}");
                             }
-                        });
+                        }
+                        catch (Exception ex)
+                        {
+                            Common.LogError(ex, true);
+                        }
+                    };
                 }
             }
             catch (Exception ex)
