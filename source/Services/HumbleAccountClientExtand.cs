@@ -10,10 +10,10 @@ namespace IsThereAnyDeal.Services
         {
         }
 
-        public bool RemoveWishList(string StoreId)
+        public bool RemoveWishList(string storeId)
         {
-            Common.LogDebug(true, $"Humble.RemoveWishList({StoreId}) - {webView.GetPageSource()}");
-            string url = string.Format(@"https://www.humblebundle.com/wishlist/remove/{0}", StoreId);
+            Common.LogDebug(true, $"Humble.RemoveWishList({storeId}) - {webView.GetPageSource()}");
+            string url = string.Format(@"https://www.humblebundle.com/wishlist/remove/{0}", storeId);
             webView.NavigateAndWait(url);
             return true;
         }

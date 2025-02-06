@@ -15,19 +15,19 @@ namespace IsThereAnyDeal.Clients
 {
     public class OriginWishlist : GenericWishlist
     {
-        protected static OriginApi _OriginApi;
+        protected static OriginApi _originApi;
         internal static OriginApi OriginApi
         {
             get
             {
-                if (_OriginApi == null)
+                if (_originApi == null)
                 {
-                    _OriginApi = new OriginApi("IsTeherAnyDeals");
+                    _originApi = new OriginApi("IsTeherAnyDeals");
                 }
-                return _OriginApi;
+                return _originApi;
             }
 
-            set => _OriginApi = value;
+            set => _originApi = value;
         }
 
 
@@ -82,9 +82,9 @@ namespace IsThereAnyDeal.Clients
             return wishlists;
         }
 
-        public override bool RemoveWishlist(string StoreId)
+        public override bool RemoveWishlist(string storeId)
         {
-            return OriginApi.RemoveWishlist(StoreId);
+            return OriginApi.RemoveWishlist(storeId);
         }
     }
 }

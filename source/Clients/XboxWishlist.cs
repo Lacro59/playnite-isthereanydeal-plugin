@@ -15,19 +15,19 @@ namespace IsThereAnyDeal.Clients
 {
     public class XboxWishlist : GenericWishlist
     {
-        protected static XboxApi _XboxApi;
+        protected static XboxApi _xboxApi;
         internal static XboxApi XboxApi
         {
             get
             {
-                if (_XboxApi == null)
+                if (_xboxApi == null)
                 {
-                    _XboxApi = new XboxApi("IsThereAnyDeals");
+                    _xboxApi = new XboxApi("IsThereAnyDeals");
                 }
-                return _XboxApi;
+                return _xboxApi;
             }
 
-            set => _XboxApi = value;
+            set => _xboxApi = value;
         }
 
 
