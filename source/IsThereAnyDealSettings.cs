@@ -100,7 +100,7 @@ namespace IsThereAnyDeal
                         Id = x.Id.ToString(),
                         Title = x.Title,
                         IsCheck = Settings.Stores.Where(y => y.Title.IsEqual(x.Title))?.FirstOrDefault()?.IsCheck ?? false,
-                        Color = Settings.Stores.Where(y => y.Title.IsEqual(x.Title))?.FirstOrDefault()?.Color ?? string.Empty,
+                        Color = Settings.Stores.Where(y => y.Title.IsEqual(x.Title))?.FirstOrDefault()?.Color ?? ResourceProvider.GetResource("TextBrush").ToString(),
                     }).ToList();
                     Settings.Stores = itadShops;
                 }

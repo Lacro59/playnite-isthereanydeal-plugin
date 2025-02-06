@@ -78,6 +78,9 @@
     <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
     <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
 
+    <sys:String x:Key="LOCItadInWaitlist">In watilist</sys:String>
+    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal data</sys:String>

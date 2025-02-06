@@ -58,9 +58,9 @@
                                         <Label Content="{DynamicResource LOCCommonMenuInExtensions}" />
                                     </CheckBox>
 
-                                    <!--CheckBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" IsChecked="{Binding Settings.EnableNotificationGiveaways}" VerticalAlignment="Center">
+                                    <CheckBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="6" IsChecked="{Binding Settings.EnableNotificationGiveaways}" VerticalAlignment="Center">
                                         <Label Content="{DynamicResource LOCItadEnableNotificationGiveaways}" />
-                                    </CheckBox-->
+                                    </CheckBox>
 
                                     <CheckBox Name="chk_Notification" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" IsChecked="{Binding Settings.EnableNotification}" VerticalAlignment="Center">
                                         <Label Content="{DynamicResource LOCItadEnableNotification}" />

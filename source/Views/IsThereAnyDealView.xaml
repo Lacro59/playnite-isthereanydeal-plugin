@@ -665,18 +665,18 @@
                 </Grid>
             </TabItem>
 
-            <!--TabItem Header="Giveaways">
+            <TabItem Header="Giveaways">
                 <Grid Name="gGiveaways" Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="540" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="540" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                 </Grid>
-            </TabItem-->
+            </TabItem>
         </TabControl>
 
         <Grid Name="PART_Order" Height="{Binding ElementName=PART_Tb, Path=ActualHeight}" VerticalAlignment="Top">
