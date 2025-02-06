@@ -4,9 +4,9 @@ using Playnite.SDK;
 
 namespace IsThereAnyDeal.Services
 {
-    public class HumbleAccountClientExtand : HumbleAccountClient
+    public class HumbleAccountClientExtend : HumbleAccountClient
     {
-        public HumbleAccountClientExtand(IWebView webView) : base(webView)
+        public HumbleAccountClientExtend(IWebView webView) : base(webView)
         {
         }
 

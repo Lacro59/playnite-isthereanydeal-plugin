@@ -97,7 +97,7 @@ namespace IsThereAnyDeal.Services
         public override bool RemoveWishlist(string storeId)
         {
             IWebView view = API.Instance.WebViews.CreateOffscreenView();
-            HumbleAccountClientExtand humbleAccountClient = new HumbleAccountClientExtand(view);
+            HumbleAccountClientExtend humbleAccountClient = new HumbleAccountClientExtend(view);
             //if (humbleAccountClient.GetIsUserLoggedIn())
             //{
             //    return humbleAccountClient.RemoveWishList(StoreId);

@@ -140,7 +140,7 @@
     <Compile Include="playnite-plugincommon\CommonPluginsControls\Views\OptionsDownloadData.xaml.cs">
       <DependentUpon>OptionsDownloadData.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\HumbleAccountClientExtand.cs" />
+    <Compile Include="Services\HumbleAccountClientExtend.cs" />
     <Compile Include="Services\IsThereAnyDealApi.cs" />
     <Compile Include="Clients\SteamWishlist.cs" />
     <Compile Include="IsThereAnyDeal.cs" />
