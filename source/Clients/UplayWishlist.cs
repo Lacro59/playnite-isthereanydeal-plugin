@@ -49,29 +49,29 @@ namespace IsThereAnyDeal.Clients
                 IHtmlDocument HtmlRequirement = parser.Parse(response);
 
                 IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                foreach (IElement SearchElement in HtmlRequirement.QuerySelectorAll(".wishlist-items-list li"))
+                foreach (IElement searchElement in HtmlRequirement.QuerySelectorAll(".wishlist-items-list li"))
                 {
-                    string StoreId = string.Empty;
-                    string Name = string.Empty;
-                    DateTime ReleaseDate = default;
-                    string Capsule = string.Empty;
+                    string storeId = string.Empty;
+                    string name = string.Empty;
+                    DateTime releaseDate = default;
+                    string capsule = string.Empty;
 
-                    StoreId = SearchElement.QuerySelector("div.wishlist-product-tile.product-tile").GetAttribute("data-itemid");
-                    Capsule = SearchElement.QuerySelector("img").GetAttribute("data-src");
-                    Name = SearchElement.QuerySelector("div.wishlist-product-tile.product-tile .prod-title").InnerHtml.Trim();
+                    storeId = searchElement.QuerySelector("div.product-tile").GetAttribute("data-itemid");
+                    capsule = searchElement.QuerySelector("img").GetAttribute("data-src");
+                    name = searchElement.QuerySelector("div.card-title div.prod-title").InnerHtml.Trim();
 
-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(Name).GetAwaiter().GetResult();
+                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(name).GetAwaiter().GetResult();
 
                     wishlists.Add(new Wishlist
                     {
-                        StoreId = StoreId.Trim(),
+                        StoreId = storeId.Trim(),
                         StoreName = "Ubisoft Connect",
                         ShopColor = GetShopColor(),
-                        StoreUrl = @"https://store.ubi.com/fr/game?pid=" + StoreId.Trim(),
-                        Name = Name.Trim(),
+                        StoreUrl = @"https://store.ubi.com/fr/game?pid=" + storeId.Trim(),
+                        Name = name.Trim(),
                         SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
-                        ReleaseDate = ReleaseDate.ToUniversalTime(),
-                        Capsule = Capsule.Trim(),
+                        ReleaseDate = releaseDate.ToUniversalTime(),
+                        Capsule = capsule.Trim(),
                         Game = gamesLookup.Found ? gamesLookup.Game : null,
                         IsActive = true
                     });
