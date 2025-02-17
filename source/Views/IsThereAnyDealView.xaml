@@ -261,7 +261,7 @@
 
                                             <!-- Image -->
                                             <StackPanel Grid.Column="0" Height="100" Width="200">
-                                                <Image x:Name="HltbImage" Source="{Binding CapsuleImage, IsAsync=True}" Stretch="UniformToFill" Height="100" Width="200"
+                                                <Image x:Name="HltbImage" Source="{Binding CapsuleImagePath, IsAsync=True}" Stretch="UniformToFill" Height="100" Width="200"
                                                        RenderOptions.BitmapScalingMode="Linear" />
                                                 <TextBlock Text="{Binding StoreNameIcon}" Foreground="White" HorizontalAlignment="Right" 
                                                            VerticalAlignment="Bottom" FontSize="24" FontFamily="{DynamicResource CommonFont}" 

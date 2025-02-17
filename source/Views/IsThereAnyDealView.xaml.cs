@@ -29,8 +29,8 @@ namespace IsThereAnyDeal.Views
     {
         private static ILogger Logger => LogManager.GetLogger();
 
-        private readonly IsThereAnyDealSettings Settings;
-        private readonly IsThereAnyDeal Plugin;
+        private IsThereAnyDealSettings Settings { get; }
+        private IsThereAnyDeal Plugin { get; }
 
         private List<string> SearchStores { get; set; } = new List<string>();
 
@@ -59,12 +59,12 @@ namespace IsThereAnyDeal.Views
             lbWishlist.ItemsSource = new ObservableCollection<Wishlist>();
         }
 
-        private void RefreshData(string id, bool CachOnly = true, bool ForcePrice = false)
+        private void RefreshData(string id, bool cachOnly = true, bool forcePrice = false)
         {
             DataLoadWishlist.Visibility = Visibility.Visible;
             dpData.IsEnabled = false;
 
-            Task task = Task.Run(() => LoadData(Plugin.GetPluginUserDataPath(), Settings, CachOnly, ForcePrice))
+            Task task = Task.Run(() => LoadData(Plugin.GetPluginUserDataPath(), Settings, cachOnly, forcePrice))
                 .ContinueWith(antecedent =>
                 {
                     Application.Current.Dispatcher?.Invoke(new Action(() =>
@@ -150,9 +150,9 @@ namespace IsThereAnyDeal.Views
         }
 
 
-        private ObservableCollection<Wishlist> LoadData(string pluginUserDataPath, IsThereAnyDealSettings settings, bool CachOnly = true, bool ForcePrice = false)
+        private ObservableCollection<Wishlist> LoadData(string pluginUserDataPath, IsThereAnyDealSettings settings, bool cachOnly = true, bool forcePrice = false)
         {
-            ObservableCollection<Wishlist> ListWishlist = IsThereAnyDealApi.LoadWishlist(Plugin, settings, CachOnly, ForcePrice).ToObservable();
+            ObservableCollection<Wishlist> ListWishlist = IsThereAnyDealApi.LoadWishlist(Plugin, settings, cachOnly, forcePrice).ToObservable();
             return ListWishlist;
         }
 
@@ -644,25 +644,25 @@ namespace IsThereAnyDeal.Views
 
     public class ItadDataContext : ObservableObject
     {
-        private string _CurrencySign = "$";
-        public string CurrencySign { get => _CurrencySign; set => SetValue(ref _CurrencySign, value); }
+        private string _currencySign = "$";
+        public string CurrencySign { get => _currencySign; set => SetValue(ref _currencySign, value); }
 
-        private double _MinPrice = 0;
-        public double MinPrice { get => _MinPrice; set => SetValue(ref _MinPrice, value); }
+        private double _minPrice = 0;
+        public double MinPrice { get => _minPrice; set => SetValue(ref _minPrice, value); }
 
-        private double _MaxPrice = 250;
-        public double MaxPrice { get => _MaxPrice; set => SetValue(ref _MaxPrice, value); }
+        private double _maxPrice = 250;
+        public double MaxPrice { get => _maxPrice; set => SetValue(ref _maxPrice, value); }
 
 
 
-        private double _DiscountPercent = 0;
-        public double DiscountPercent { get => _DiscountPercent; set => SetValue(ref _DiscountPercent, value); }
+        private double _discountPercent = 0;
+        public double DiscountPercent { get => _discountPercent; set => SetValue(ref _discountPercent, value); }
 
-        private double _PriceLimit = 100;
-        public double PriceLimit { get => _PriceLimit; set => SetValue(ref _PriceLimit, value); }
+        private double _priceLimit = 100;
+        public double PriceLimit { get => _priceLimit; set => SetValue(ref _priceLimit, value); }
 
-        private List<ListStore> _FilterStoreItems = new List<ListStore>();
-        public List<ListStore> FilterStoreItems { get => _FilterStoreItems; set => SetValue(ref _FilterStoreItems, value); }
+        private List<ListStore> _filterStoreItems = new List<ListStore>();
+        public List<ListStore> FilterStoreItems { get => _filterStoreItems; set => SetValue(ref _filterStoreItems, value); }
     }
 
 

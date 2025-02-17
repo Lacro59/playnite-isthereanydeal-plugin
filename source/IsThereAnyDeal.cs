@@ -29,20 +29,20 @@ namespace IsThereAnyDeal
         public static GogApi GogApi { get; set; }
 
         internal TopPanelItem TopPanelItem { get; set; }
-        internal ItadViewSidebar ItadViewSidebar { get; set; }
+        internal ItadViewSidebar SidebarItem { get; set; }
 
 
         public IsThereAnyDeal(IPlayniteAPI api) : base(api)
         {
-            string PluginCachePath = Path.Combine(PlaynitePaths.DataCachePath, "IsThereAnyDeal");
-            HttpFileCachePlugin.CacheDirectory = PluginCachePath;
-            FileSystem.CreateDirectory(PluginCachePath);
+            string pluginCachePath = Path.Combine(PlaynitePaths.DataCachePath, "IsThereAnyDeal");
+            HttpFileCachePlugin.CacheDirectory = pluginCachePath;
+            FileSystem.CreateDirectory(pluginCachePath);
 
             // Manual dll load
             try
             {
-                string PluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string PathDLL = Path.Combine(PluginPath, "VirtualizingWrapPanel.dll");
+                string pluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string PathDLL = Path.Combine(pluginPath, "VirtualizingWrapPanel.dll");
                 if (File.Exists(PathDLL))
                 {
                     Assembly DLL = Assembly.LoadFile(PathDLL);
@@ -56,35 +56,8 @@ namespace IsThereAnyDeal
             // Initialize top & side bar
             if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
             {
-                TopPanelItem = new TopPanelItem()
-                {
-                    Icon = new TextBlock
-                    {
-                        Text = "\uea63",
-                        FontSize = 22,
-                        FontFamily = ResourceProvider.GetResource("CommonFont") as FontFamily
-                    },
-                    Title = ResourceProvider.GetString("LOCItad"),
-                    Activated = () =>
-                    {
-                        WindowOptions windowOptions = new WindowOptions
-                        {
-                            ShowMinimizeButton = false,
-                            ShowMaximizeButton = false,
-                            ShowCloseButton = true,
-                            CanBeResizable = false,
-                            Width = 1180,
-                            Height = 720
-                        };
-
-                        IsThereAnyDealView viewExtension = new IsThereAnyDealView(this, PluginSettings.Settings);
-                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
-                        _ = windowExtension.ShowDialog();
-                    },
-                    Visible = PluginSettings.Settings.EnableIntegrationButtonHeader
-                };
-
-                ItadViewSidebar = new ItadViewSidebar(this);
+                TopPanelItem = new ItadTopPanelItem(this);
+                SidebarItem = new ItadViewSidebar(this);
             }
         }
 
@@ -105,7 +78,7 @@ namespace IsThereAnyDeal
         // Sidebar
         public override IEnumerable<SidebarItem> GetSidebarItems()
         {
-            yield return ItadViewSidebar;
+            yield return SidebarItem;
         }
         #endregion
 
@@ -178,7 +151,7 @@ namespace IsThereAnyDeal
                     Description = ResourceProvider.GetString("LOCItadUpdateDatas"),
                     Action = (mainMenuItem) =>
                     {
-                        ItadViewSidebar.ResetView();
+                        SidebarItem.ResetView();
                         IsThereAnyDealApi.UpdateDatas(PluginSettings.Settings, this);
                     }
                 }

@@ -154,7 +154,7 @@ namespace IsThereAnyDeal
             if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
             {
                 Plugin.TopPanelItem.Visible = Settings.EnableIntegrationButtonHeader;
-                Plugin.ItadViewSidebar.Visible = Settings.EnableIntegrationButtonSide;
+                Plugin.SidebarItem.Visible = Settings.EnableIntegrationButtonSide;
             }
         }
 

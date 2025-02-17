@@ -148,6 +148,7 @@
     <Compile Include="Models\ItadGameInfo.cs" />
     <Compile Include="Models\ItadGiveaway.cs" />
     <Compile Include="Models\ItadShops.cs" />
+    <Compile Include="Services\ItadTopPanelItem.cs" />
     <Compile Include="Services\ItadViewSidebarcs.cs" />
     <Compile Include="Views\IsThereAnyDealSettingsView.xaml.cs">
       <DependentUpon>IsThereAnyDealSettingsView.xaml</DependentUpon>

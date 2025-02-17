@@ -26,6 +26,9 @@ namespace IsThereAnyDeal.Models
         public string Capsule { get; set; }
         [DontSerialize]
         public BitmapImage CapsuleImage => ImageSourceManagerPlugin.GetImage(Capsule, false, new BitmapLoadProperties(200, 200));
+        [DontSerialize]
+        public string CapsuleImagePath => ImageSourceManagerPlugin.GetImagePath(Capsule);
+
         public Game Game { get; set; }
 
         [DontSerialize]
@@ -84,39 +87,9 @@ namespace IsThereAnyDeal.Models
             }
         }
         [DontSerialize]
-        public ItadGameInfo ItadBestPrice
-        {
-            get
-            {
-                ItadGameInfo Result = new ItadGameInfo();
-                double last = 5000;
-                foreach (ItadGameInfo item in ItadLastPrice)
-                {
-                    if (item.PriceNew < last)
-                    {
-                        last = item.PriceNew;
-                        Result = item;
-                    }
-                }
-                return Result;
-            }
-        }
+        public ItadGameInfo ItadBestPrice=> ItadLastPrice?.OrderBy(item => item.PriceNew).FirstOrDefault() ?? new ItadGameInfo();
         [DontSerialize]
-        public ItadGameInfo ItadPriceForWishlistStore
-        {
-            get
-            {
-                ItadGameInfo Result = new ItadGameInfo();
-                foreach (ItadGameInfo item in ItadLastPrice)
-                {
-                    if (item.ShopName.ToLower().IndexOf(StoreName.ToLower()) > -1)
-                    {
-                        Result = item;
-                    }
-                }
-                return Result;
-            }
-        }
+        public ItadGameInfo ItadPriceForWishlistStore => ItadLastPrice?.FirstOrDefault(item => item.ShopName?.ToLower().Contains(StoreName.ToLower()) == true) ?? new ItadGameInfo();
 
         [DontSerialize]
         public bool HasItadData => ItadBestPrice.CurrencySign != null && !ItadBestPrice.CurrencySign.IsNullOrEmpty();
@@ -133,8 +106,7 @@ namespace IsThereAnyDeal.Models
         {
             get
             {
-                List<ItadGameInfo> list = new List<ItadGameInfo>();
-                list.Add(ItadPriceForWishlistStore);
+                List<ItadGameInfo> list = new List<ItadGameInfo> { ItadPriceForWishlistStore };
                 if (hasDuplicates)
                 {
                     foreach(Wishlist duplicate in Duplicates)
