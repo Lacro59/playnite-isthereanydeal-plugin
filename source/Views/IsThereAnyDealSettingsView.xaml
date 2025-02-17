@@ -89,7 +89,7 @@
                                         <ComboBox Name="PART_SelectCountry"
                                                   IsReadOnly="True" 
                                                   ItemsSource="{Binding Settings.Countries}"
-                                                  SelectedItem="{Binding Settings.CountrySelected, Mode=TwoWay}"
+                                                  SelectedItem="{Binding Settings.CountrySelected}"
                                                   SelectionChanged="PART_SelectCountry_SelectionChanged">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>

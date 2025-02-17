@@ -9,9 +9,6 @@ namespace IsThereAnyDeal.Models
 {
     public class ItadNotificationCriteria
     {
-        private static readonly IResourceProvider resourceProvider = new ResourceProvider();
-
-
         public int PriceCut { get; set; } = -1;
         public int PriceInferior { get; set; } = -1;
 
@@ -24,18 +21,18 @@ namespace IsThereAnyDeal.Models
 
                 if (PriceCut > -1)
                 {
-                    CriteriaString = resourceProvider.GetString("LOCItadLimitNotificationAt") + " " + PriceCut + " %";
+                    CriteriaString = ResourceProvider.GetString("LOCItadLimitNotificationAt") + " " + PriceCut + " %";
                 }
 
                 if (PriceInferior > -1)
                 {
                     if (CriteriaString.IsNullOrEmpty())
                     {
-                        CriteriaString = resourceProvider.GetString("LOCItadLimitNotificationPriceAt") + " " + PriceInferior;
+                        CriteriaString = ResourceProvider.GetString("LOCItadLimitNotificationPriceAt") + " " + PriceInferior;
                     }
                     else
                     {
-                        CriteriaString += " & " + resourceProvider.GetString("LOCItadLimitNotificationPriceAt") + " " + PriceInferior;
+                        CriteriaString += " & " + ResourceProvider.GetString("LOCItadLimitNotificationPriceAt") + " " + PriceInferior;
                     }
                 }
 

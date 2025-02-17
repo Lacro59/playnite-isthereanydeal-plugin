@@ -506,7 +506,23 @@ namespace IsThereAnyDeal.Services
                     // Check if in library (exclude game emulated)
                     List<Guid> ListEmulators = API.Instance.Database.Emulators.Select(x => x.Id).ToList();
 
-                    List<GamePrices> gamesPrices = await GetGamesPrices(settings.CountrySelected.Alpha2, shopsId, gamesId);
+
+                    // Max 200
+                    List<List<string>> chunks = gamesId
+                        .Select((item, index) => new { item, index })
+                        .GroupBy(x => x.index / 200)
+                        .Select(g => g.Select(x => x.item).ToList())
+                        .ToList();
+
+                    List<GamePrices> gamesPrices = new List<GamePrices>();
+                    for (int i = 0; i < chunks.Count; i++)
+                    {
+                        List<GamePrices> prices = await GetGamesPrices(settings.CountrySelected.Alpha2, shopsId, chunks[i]);
+                        if (prices?.Count() > 0)
+                        {
+                            gamesPrices.AddRange(prices);
+                        }
+                    }
 
                     foreach (Wishlist wishlist in wishlistsData)
                     {

@@ -24,7 +24,7 @@ namespace IsThereAnyDeal
         public List<WishlistIgnore> wishlistIgnores { get; set; } = new List<WishlistIgnore>();
 
         [DontSerialize]
-        public List<Country> Countries { get; set; } = IsThereAnyDealApi.GetCountries();
+        public List<Country> Countries => IsThereAnyDealApi.GetCountries();
         public Country CountrySelected { get; set; } = new Country { Alpha2 = "US", Alpha3 = "USA", M49 = "003", Name = "United States of America", Currency = "USD", RCurrency = "USD" };
         public List<ItadShops> Stores { get; set; } = new List<ItadShops>();
 

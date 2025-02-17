@@ -53,6 +53,11 @@ namespace IsThereAnyDeal.Views
             StoresItems = Settings.Stores;
             ListStores.ItemsSource = StoresItems;
             ChkStore_Checked(null, null);
+
+
+            PART_SelectCountry.ItemsSource = settings.Countries;
+            int idx = ((List<Country>)PART_SelectCountry.ItemsSource).FindIndex(x => x.Alpha3 == settings.CountrySelected.Alpha3);
+            PART_SelectCountry.SelectedIndex = idx;
         }
 
         private void PART_SelectCountry_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -87,7 +87,7 @@ namespace IsThereAnyDeal.Models
             }
         }
         [DontSerialize]
-        public ItadGameInfo ItadBestPrice=> ItadLastPrice?.OrderBy(item => item.PriceNew).FirstOrDefault() ?? new ItadGameInfo();
+        public ItadGameInfo ItadBestPrice => ItadLastPrice?.OrderBy(item => item.PriceNew).FirstOrDefault() ?? new ItadGameInfo();
         [DontSerialize]
         public ItadGameInfo ItadPriceForWishlistStore => ItadLastPrice?.FirstOrDefault(item => item.ShopName?.ToLower().Contains(StoreName.ToLower()) == true) ?? new ItadGameInfo();
 
@@ -155,7 +155,7 @@ namespace IsThereAnyDeal.Models
         {
             foreach (ItadGameInfo item in ItadLastPrice)
             {
-                foreach(ItadNotificationCriteria Criteria in Criterias)
+                foreach (ItadNotificationCriteria Criteria in Criterias)
                 {
                     if (Criteria.PriceCut > -1 && Criteria.PriceInferior > -1)
                     {
