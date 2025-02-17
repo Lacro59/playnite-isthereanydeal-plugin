@@ -122,7 +122,13 @@ namespace IsThereAnyDeal.Services
 
         internal string GetShopColor()
         {
-            return Settings.Stores?.Find(x => x.Title.ToLower().IndexOf(ClientName) > -1)?.Color ?? ResourceProvider.GetResource("TextBrush").ToString();
+            string shopColor = string.Empty;
+            API.Instance.MainView.UIDispatcher?.Invoke(new Action(() =>
+            {
+                string color = Settings.Stores?.Find(x => x.Title?.ToLower().Contains(ClientName.ToLower()) == true)?.Color;
+                shopColor = color.IsNullOrEmpty() ? ResourceProvider.GetResource("TextBrush").ToString() : color;
+            }));
+            return shopColor;
         }
     }
 }

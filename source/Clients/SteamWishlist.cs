@@ -13,6 +13,8 @@ using IsThereAnyDeal.Models.Api;
 using System.Collections.ObjectModel;
 using CommonPluginsStores.Models;
 using CommonPluginsStores.Steam;
+using CommonPluginsShared.Extensions;
+using CommonPluginsStores.Steam.Models.SteamKit;
 
 namespace IsThereAnyDeal.Services
 {
@@ -50,21 +52,28 @@ namespace IsThereAnyDeal.Services
 
             accountWishlist.ForEach(x =>
             {
-                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
-                wishlists.Add(new Wishlist
+                try
                 {
-                    StoreId = x.Id,
-                    StoreName = "Steam",
-                    ShopColor = GetShopColor(),
-                    StoreUrl = x.Link,
-                    Name = x.Name,
-                    SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
-                    ReleaseDate = x.Released,
-                    Added = x.Added,
-                    Capsule = x.Image,
-                    Game = gamesLookup.Found ? gamesLookup.Game : null,
-                    IsActive = true
-                });
+                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
+                    wishlists.Add(new Wishlist
+                    {
+                        StoreId = x.Id,
+                        StoreName = "Steam",
+                        ShopColor = GetShopColor(),
+                        StoreUrl = x.Link,
+                        Name = x.Name.IsEqual($"SteamApp? - {x.Id}") && gamesLookup.Found ? gamesLookup.Game.Title : x.Name,
+                        SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
+                        ReleaseDate = x.Released,
+                        Added = x.Added,
+                        Capsule = x.Image,
+                        Game = (gamesLookup?.Found ?? false) ? gamesLookup.Game : null,
+                        IsActive = true
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, false, true, "IsThereAnyDeal");
+                }
             });
 
             wishlists = SetCurrentPrice(wishlists, false);
@@ -91,24 +100,23 @@ namespace IsThereAnyDeal.Services
 
                     foreach(dynamic el in rgWishlist)
                     {
-                        GameInfos gameInfos = SteamApi.GetGameInfos((string)el, null);
-                        if (gameInfos != null)
+                        SteamApp steamApp = SteamApi.SteamApps.FirstOrDefault(y => y.AppId.ToString().IsEqual((string)el));
+                        //GameInfos gameInfos = SteamApi.GetGameInfos((string)el, null);
+
+                        GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse((string)el)).GetAwaiter().GetResult();
+                        wishlists.Add(new Wishlist
                         {
-                            GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse((string)el)).GetAwaiter().GetResult();
-                            wishlists.Add(new Wishlist
-                            {
-                                StoreId = (string)el,
-                                StoreName = "Steam",
-                                ShopColor = GetShopColor(),
-                                StoreUrl = "https://store.steampowered.com/app/" + (string)el,
-                                Name = gameInfos.Name,
-                                SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
-                                ReleaseDate = gameInfos.Released?.ToUniversalTime(),
-                                Capsule = gameInfos.Image,
-                                Game = gamesLookup.Found ? gamesLookup.Game : null,
-                                IsActive = true
-                            });
-                        }
+                            StoreId = (string)el,
+                            StoreName = "Steam",
+                            ShopColor = GetShopColor(),
+                            StoreUrl = "https://store.steampowered.com/app/" + (string)el,
+                            Name = (steamApp?.Name.IsNullOrEmpty() ?? true) && gamesLookup.Found ? gamesLookup.Game.Title : steamApp?.Name,
+                            SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
+                            ReleaseDate = null,
+                            Capsule = string.Format("https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/{0}/header_292x136.jpg", (string)el),
+                            Game = gamesLookup.Found ? gamesLookup.Game : null,
+                            IsActive = true
+                        });
                     }
 
                     wishlists = SetCurrentPrice(wishlists, false);

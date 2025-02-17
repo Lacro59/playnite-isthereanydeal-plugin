@@ -83,7 +83,7 @@ namespace IsThereAnyDeal.Services
                         SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
                         ReleaseDate = releaseDate.ToUniversalTime(),
                         Capsule = capsule,
-                        Game = gamesLookup.Found ? gamesLookup.Game : null,
+                        Game = (gamesLookup?.Found ?? false) ? gamesLookup.Game : null,
                         IsActive = true
                     });
                 }

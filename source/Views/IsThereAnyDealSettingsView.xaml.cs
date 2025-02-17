@@ -35,6 +35,9 @@ namespace IsThereAnyDeal.Views
 
             InitializeComponent();
 
+            PART_DataLoad.Visibility = Visibility.Hidden;
+            PART_Data.Visibility = Visibility.Visible;
+
             SteamPanel.StoreApi = IsThereAnyDeal.SteamApi;
             EpicPanel.StoreApi = IsThereAnyDeal.EpicApi;
             GogPanel.StoreApi = IsThereAnyDeal.GogApi;
@@ -174,7 +177,7 @@ namespace IsThereAnyDeal.Views
                 );
                 globalProgressOptions.IsIndeterminate = true;
 
-                API.Instance.Dialogs.ActivateGlobalProgress((activateGlobalProgress) =>
+                _ = API.Instance.Dialogs.ActivateGlobalProgress((a) =>
                 {
                     try
                     {
@@ -190,7 +193,7 @@ namespace IsThereAnyDeal.Views
 
                             if (steamWishlist.ImportWishlist(targetPath))
                             {
-                                if (activateGlobalProgress.CancelToken.IsCancellationRequested)
+                                if (a.CancelToken.IsCancellationRequested)
                                 {
                                     return;
                                 }
@@ -199,7 +202,7 @@ namespace IsThereAnyDeal.Views
                             }
                             else
                             {
-                                if (activateGlobalProgress.CancelToken.IsCancellationRequested)
+                                if (a.CancelToken.IsCancellationRequested)
                                 {
                                     return;
                                 }
@@ -208,7 +211,7 @@ namespace IsThereAnyDeal.Views
                         }
                         else
                         {
-                            if (activateGlobalProgress.CancelToken.IsCancellationRequested)
+                            if (a.CancelToken.IsCancellationRequested)
                             {
                                 return;
                             }
@@ -223,7 +226,7 @@ namespace IsThereAnyDeal.Views
                     {
                         Common.LogError(ex, false, true, "IsThereAnyDeal");
 
-                        if (activateGlobalProgress.CancelToken.IsCancellationRequested)
+                        if (a.CancelToken.IsCancellationRequested)
                         {
                             return;
                         }
@@ -231,13 +234,6 @@ namespace IsThereAnyDeal.Views
                     }
                 }, globalProgressOptions);
             }
-        }
-
-        private void PART_Steam_Checked(object sender, RoutedEventArgs e)
-        {
-            IsThereAnyDeal.SteamApi = new SteamApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal);
-            IsThereAnyDeal.SteamApi.SetLanguage(API.Instance.ApplicationSettings.Language);
-            _ = IsThereAnyDeal.SteamApi.CurrentAccountInfos;
         }
     }
 }

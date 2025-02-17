@@ -273,7 +273,7 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
 
-                    <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding Settings.EnableSteam}" Name="PART_Steam" VerticalAlignment="Center" Checked="PART_Steam_Checked">
+                    <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding Settings.EnableSteam}" Name="PART_Steam" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableSteam}" />
                     </CheckBox>
 
@@ -443,7 +443,9 @@
                 <StackPanel Margin="10">
                     <Steam:PanelView x:Name="SteamPanel" Margin="0,0,0,10"
                                      Visibility="{Binding ElementName=PART_Steam, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                     UseApi="False" ForceAuth="True" UseAuth="True" />
+                                     ForceAuth="False" 
+                                     UseApi="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Settings.SteamStoreSettings.UseApi, Mode=TwoWay}" 
+                                     UseAuth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Settings.SteamStoreSettings.UseAuth, Mode=TwoWay}" />
 
                     <Epic:PanelView x:Name="EpicPanel" Margin="0,0,0,10"
                                     Visibility="{Binding ElementName=PART_Epic, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"

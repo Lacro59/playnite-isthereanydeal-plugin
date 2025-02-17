@@ -52,8 +52,7 @@ namespace IsThereAnyDeal
 
         public List<ItadNotificationCriteria> NotificationCriterias { get; set; } = new List<ItadNotificationCriteria>();
 
-        [DontSerialize]
-        public StoreSettings SteamStoreSettings { get; set; } = new StoreSettings { UseAuth = true, ForceAuth = true };
+        public StoreSettings SteamStoreSettings { get; set; } = new StoreSettings { UseAuth = true, ForceAuth = false };
         [DontSerialize]
         public StoreSettings EpicStoreSettings { get; set; } = new StoreSettings { UseAuth = true, ForceAuth = true };
         [DontSerialize]
