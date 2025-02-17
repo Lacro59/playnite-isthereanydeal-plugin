@@ -43,7 +43,7 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">Обновить цены</sys:String>
 
-    <sys:String x:Key="LOCITADBestPrice">Best price</sys:String>
+    <sys:String x:Key="LOCITADBestPrice">Лучшая цена</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Store price</sys:String>
     
     <sys:String x:Key="LOCITADOrderBestPriceCut">Best - Price cut</sys:String>

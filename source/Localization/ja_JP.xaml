@@ -7,28 +7,28 @@
 
     <!-- IsThereAnyDealSettingsView -->
 
-    <sys:String x:Key="LOCItadExclusionList">除外リス</sys:String>
+    <sys:String x:Key="LOCItadExclusionList">除外リスト</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist"></sys:String>
+    <sys:String x:Key="LOCItadSettingWishlist">ウィッシュリスト</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Steam ウィッシュリストを有効にする</sys:String>
     <sys:String x:Key="LOCItadEnableGog">GOG ウィッシュリストを有効にする</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Epic Games Store ウィッシュリストを有効にする</sys:String>
     <sys:String x:Key="LOCItadEnableHumble">Humble ウィッシュリストを有効にする</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Humble ID</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Xbox ウィッシュリストを有効にする</sys:String>
-    <sys:String x:Key="LOCItadXboxWishlistLink"></sys:String>
+    <sys:String x:Key="LOCItadXboxWishlistLink">ウィッシュリストリンク</sys:String>
     <sys:String x:Key="LOCItadEnableUbisoft">Ubisoft ウィッシュリストを有効にする</sys:String>
-    <sys:String x:Key="LOCItadUbisoftWishlistLink"></sys:String>
+    <sys:String x:Key="LOCItadUbisoftWishlistLink">ウィッシュリストリンク</sys:String>
     <sys:String x:Key="LOCItadEnableOrigin">EA App ウィッシュリストを有効にする</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
-    <sys:String x:Key="LOCItadRegion">地</sys:String>
+    <sys:String x:Key="LOCItadRegion">地域</sys:String>
     <sys:String x:Key="LOCItadCountry">国</sys:String>
-    <sys:String x:Key="LOCItadStores"></sys:String>
+    <sys:String x:Key="LOCItadStores">ストア</sys:String>
 
-    <sys:String x:Key="LOCItadEnableNotificationGiveaways"></sys:String>
+    <sys:String x:Key="LOCItadEnableNotificationGiveaways">ギフトの通知を有効にする</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">通知を有効にする</sys:String>
-    <sys:String x:Key="LOCItadLimitNotification">値下げ</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">値下げ率</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">値下げ価格</sys:String>
 
     <sys:String x:Key="LOCItadSettingPrice">価格スライダーの制限を定義する</sys:String>
@@ -36,7 +36,7 @@
     <sys:String x:Key="LOCItadMaximum">最大</sys:String>
 
     <sys:String x:Key="LOCItadSettingsNotifications">通知</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationAt">値下げ率が次の値以</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationAt">値下げ率が次の値以上</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPriceAt">値下げ価格が次の値以下</sys:String>
 
     <!-- IsThereAnyDealView -->
@@ -52,31 +52,31 @@
     <sys:String x:Key="LOCITADOrderStorePriceCut">Store - Price cut</sys:String>
     <sys:String x:Key="LOCITADOrderStorePrice">Store - Price</sys:String>
     
-    <sys:String x:Key="LOCITADFilterSource"></sys:String>
-    <sys:String x:Key="LOCITADPercentage">最小割引</sys:String>
+    <sys:String x:Key="LOCITADFilterSource">ストアでフィルター</sys:String>
+    <sys:String x:Key="LOCITADPercentage">最小割引率</sys:String>
     <sys:String x:Key="LOCITADPrice">値下げ価格</sys:String>
 
     <sys:String x:Key="LOCItadCurrentBest">現在の最安値</sys:String>
-    <sys:String x:Key="LOCItadCurrentStore">現在のストアのウィッシュリス</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">現在のストアのウィッシュリスト</sys:String>
     <sys:String x:Key="LOCItadBuy">最安値で購入</sys:String>
-    <sys:String x:Key="LOCItadStore"></sys:String>
+    <sys:String x:Key="LOCItadStore">ストア</sys:String>
     <sys:String x:Key="LOCItadNoData">設定内で選択したストアにデータがありません</sys:String>
-    <sys:String x:Key="LOCItadInLibrary"></sys:String>
+    <sys:String x:Key="LOCItadInLibrary">ライブラリ内</sys:String>
     <sys:String x:Key="LOCItadNotActive">IsThereAnyDeal ではアクティブではありません</sys:String>
     <sys:String x:Key="LOCItadNotFind">IsThereAnyDeal では見つかりません</sys:String>
 
-    <sys:String x:Key="LOCItadDeleteOnStoreWishList">{0} の {1} を削除しますか</sys:String>
-    <sys:String x:Key="LOCItadHideOnStoreWishList">{0} の {1} を除外しますか</sys:String>
+    <sys:String x:Key="LOCItadDeleteOnStoreWishList">{0} の {1} を削除しますか？</sys:String>
+    <sys:String x:Key="LOCItadHideOnStoreWishList">{0} の {1} を除外しますか？</sys:String>
 
-    <sys:String x:Key="LOCItadWhishListOptions"></sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary"></sys:String>
+    <sys:String x:Key="LOCItadWhishListOptions">ウィッシュリストのオプション</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">ライブラリ内のゲームを含める</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">IsThereAnyDeal データのないゲームを含める</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary"></sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">ライブラリ内のゲームのみ</sys:String>
 
-    <sys:String x:Key="LOCItadImportSteamWishlist">Steam ウィッシュリストをインポー</sys:String>
-    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam ウィッシュリストリン</sys:String>
-    <sys:String x:Key="LOCItadImportSuccessful">正常にインポートされまし</sys:String>
-    <sys:String x:Key="LOCItadImportError"></sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlist">Steam ウィッシュリストをインポート</sys:String>
+    <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam ウィッシュリストリンク</sys:String>
+    <sys:String x:Key="LOCItadImportSuccessful">正常にインポートされました</sys:String>
+    <sys:String x:Key="LOCItadImportError">ウィッシュリストファイルをインポートできません</sys:String>
 
     <!-- IsThereAnyDeal -->
 
@@ -89,17 +89,17 @@
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">{0}  - {1}{2} ({3}%) の価格通知</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">{0} からウィッシュリストを取得中にエラーが発生しました。
-アカウントでログインしてみてくださ</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Humble Bundle は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリの拡張機能が無効になっています</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています</sys:String>
+アカウントでログインしてみてください。</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorHumble" xml:space="preserve">Humble Bundle は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリの拡張機能が無効になっています。</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEpic" xml:space="preserve">Epic は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています。</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorGog" xml:space="preserve">GOG は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteam" xml:space="preserve">Steam は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています。</sys:String>
     <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam の設定が正しく設定されていません</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam ウィッシュリストがプライベートに設定されています。Steam ライブラリプラグインでユーザーを認証してくださ</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam ウィッシュリストがプライベートに設定されています。Steam ライブラリプラグインでユーザーを認証してください。</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Xbox ウィッシュリストのリンクがありません</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Xbox ウィッシュリストのリンクがありません。</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisoft は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています</sys:String>    
-    <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Ubisoft ウィッシュリストのリンクがありません</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Ubisoft ウィッシュリストのリンクがありません。</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA App は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています</sys:String>
 
 </ResourceDictionary>

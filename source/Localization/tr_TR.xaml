@@ -58,7 +58,7 @@
 
     <sys:String x:Key="LOCItadCurrentBest">Şu anki en iyi</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Şu anki mağaza istek listesi</sys:String>
-    <sys:String x:Key="LOCItadBuy">En iyi satın alım</sys:String>
+    <sys:String x:Key="LOCItadBuy">En iyisini al</sys:String>
     <sys:String x:Key="LOCItadStore">Mağaza</sys:String>
     <sys:String x:Key="LOCItadNoData">Ayarlardaki seçilen mağazaya ait veri yok</sys:String>
     <sys:String x:Key="LOCItadInLibrary">Kütüphanede</sys:String>
