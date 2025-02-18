@@ -32,9 +32,12 @@ namespace IsThereAnyDeal.Services
     {
         private static ILogger Logger => LogManager.GetLogger();
 
-        private string BaseUrl => "https://isthereanydeal.com";
-        private string ApiUrl => "https://api.isthereanydeal.com";
-        private string Key => "fa49308286edcaf76fea58926fd2ea2d216a17ff";
+        private static string BaseUrl => @"https://isthereanydeal.com";
+        private static string GiveawaysUrl => BaseUrl + @"/giveaways/api/list/";
+        private static string ApiUrl => @"https://api.isthereanydeal.com";
+        private static string ApiLookupTitles => ApiUrl + @"/lookup/id/title/v1";
+        private static string ApiLookupAppIds => ApiUrl + @"/lookup/id/shop/{0}/v1";
+        private static string Key => "fa49308286edcaf76fea58926fd2ea2d216a17ff";
 
         public List<CountData> CountDatas { get; set; } = new List<CountData>();
 
@@ -115,6 +118,43 @@ namespace IsThereAnyDeal.Services
         }
 
 
+
+        public async Task<Dictionary<string, string>> GetGamesId(List<string> titles, List<string> appIds)
+        {
+            Thread.Sleep(500);
+            string url = string.Empty;
+            string payload = string.Empty;
+
+            try
+            {
+                if (titles?.Count() > 0)
+                {
+                    url = ApiLookupTitles;
+                    payload = Serialization.ToJson(titles.Select(x => PlayniteTools.RemoveGameEdition(x)));
+                }
+
+                if (appIds?.Count() > 0)
+                {
+                    url = string.Format(ApiLookupAppIds, 61);
+                    payload = Serialization.ToJson(appIds.Select(x => x.Contains("app/") ? x : "app/" + x));
+                }
+
+                string data = await Web.PostStringDataPayload(url, payload);
+                _ = Serialization.TryFromJson(data, out Dictionary<string, string> gamesId, out Exception ex);
+                return ex != null ? throw ex : gamesId;
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, false, $"Error in GetGamesId({payload})", true, "IsThereAnyDeal");
+            }
+
+            return null;
+        }
+
+
+
+
+
         /// <summary>
         /// Get games' prices
         /// </summary>
@@ -124,7 +164,6 @@ namespace IsThereAnyDeal.Services
         /// <returns></returns>
         public async Task<List<GamePrices>> GetGamesPrices(string country, List<int> shopsId, List<string> gamesId)
         {
-
             Thread.Sleep(500);
             try
             {
@@ -729,16 +768,15 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    string url = @"https://isthereanydeal.com/giveaways/api/list/";
                     string data = string.Empty;
                     try
                     {
                         string payload = "{\"_id\":1,\"offset\":0,\"sort\":null,\"filter\":null,\"options\":[]}";
-                        data = Web.PostStringDataPayload(url, payload).GetAwaiter().GetResult();
+                        data = Web.PostStringDataPayload(GiveawaysUrl, payload).GetAwaiter().GetResult();
                     }
                     catch (Exception ex2)
                     {
-                        Common.LogError(ex2, false, $"Failed to download {url}", true, "IsThereAnyDeal");
+                        Common.LogError(ex2, false, $"Failed to download {GiveawaysUrl}", true, "IsThereAnyDeal");
                     }
 
                     _ = Serialization.TryFromJson(data, out Giveaways giveaways, out Exception ex);
@@ -767,7 +805,7 @@ namespace IsThereAnyDeal.Services
                         }
                         catch (Exception ex2)
                         {
-                            Common.LogError(ex2, false, $"Failed to download {url}", true, "IsThereAnyDeal");
+                            Common.LogError(ex2, false, $"Failed to download {GiveawaysUrl}", true, "IsThereAnyDeal");
                         }
 
                         itadGiveaways.Add(new ItadGiveaway

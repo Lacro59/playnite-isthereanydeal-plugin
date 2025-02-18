@@ -17,6 +17,7 @@ using CommonPlayniteShared.Common;
 using CommonPluginsStores.Steam;
 using CommonPluginsStores.Epic;
 using CommonPluginsStores.Gog;
+using System.Windows.Automation;
 
 namespace IsThereAnyDeal
 {
@@ -30,7 +31,6 @@ namespace IsThereAnyDeal
 
         internal TopPanelItem TopPanelItem { get; set; }
         internal ItadViewSidebar SidebarItem { get; set; }
-
 
         public IsThereAnyDeal(IPlayniteAPI api) : base(api)
         {
@@ -53,6 +53,9 @@ namespace IsThereAnyDeal
                 Common.LogError(ex, false, true, "IsThereAnyDeal");
             }
 
+            // Add Event for WindowBase for get the "WindowSettings".
+            EventManager.RegisterClassHandler(typeof(Window), Window.LoadedEvent, new RoutedEventHandler(WindowBase_LoadedEvent));
+
             // Initialize top & side bar
             if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
             {
@@ -60,6 +63,29 @@ namespace IsThereAnyDeal
                 SidebarItem = new ItadViewSidebar(this);
             }
         }
+
+
+        #region Custom event
+        private void WindowBase_LoadedEvent(object sender, System.EventArgs e)
+        {
+            string winIdProperty = string.Empty;
+            try
+            {
+                winIdProperty = ((Window)sender).GetValue(AutomationProperties.AutomationIdProperty).ToString();
+
+                if (winIdProperty == "WindowSettings" || winIdProperty == "WindowExtensions" || winIdProperty == "WindowLibraryIntegrations")
+                {
+                    SteamApi.ResetIsUserLoggedIn();
+                    EpicApi.ResetIsUserLoggedIn();
+                    GogApi.ResetIsUserLoggedIn();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, false, $"Error on WindowBase_LoadedEvent for {winIdProperty}", true, "IsThereAnyDeal");
+            }
+        }
+        #endregion
 
 
         #region Theme integration

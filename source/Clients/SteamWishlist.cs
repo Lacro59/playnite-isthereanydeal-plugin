@@ -54,14 +54,14 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
+                    GameLookup gamesLookup = gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
                     wishlists.Add(new Wishlist
                     {
                         StoreId = x.Id,
                         StoreName = "Steam",
                         ShopColor = GetShopColor(),
                         StoreUrl = x.Link,
-                        Name = x.Name.IsEqual($"SteamApp? - {x.Id}") && gamesLookup.Found ? gamesLookup.Game.Title : x.Name,
+                        Name = x.Name.IsEqual($"SteamApp? - {x.Id}") && (gamesLookup?.Found ?? false) ? gamesLookup.Game.Title : x.Name,
                         SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
                         ReleaseDate = x.Released,
                         Added = x.Added,
