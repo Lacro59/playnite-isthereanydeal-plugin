@@ -9,7 +9,7 @@
 
     <sys:String x:Key="LOCItadExclusionList">Eksklusjonsliste</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist">Ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadWishlist">Ønskeliste</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Aktiver Steam-ønskeliste</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Aktiver GOG-ønskeliste</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Aktiver Epic Games Store-ønskeliste</sys:String>

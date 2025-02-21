@@ -18,6 +18,8 @@ using CommonPluginsStores.Steam;
 using CommonPluginsStores.Epic;
 using CommonPluginsStores.Gog;
 using System.Windows.Automation;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace IsThereAnyDeal
 {
@@ -62,6 +64,48 @@ namespace IsThereAnyDeal
                 TopPanelItem = new ItadTopPanelItem(this);
                 SidebarItem = new ItadViewSidebar(this);
             }
+
+            // Timer
+            if (PluginSettings.Settings.UpdateWishlist.EveryHours)
+            {
+                //Timer timerUpdateWishlist = new Timer(PluginSettings.Settings.UpdateWishlist.Hours * 3600000)
+                Timer timerUpdateWishlist = new Timer(PluginSettings.Settings.UpdateWishlist.Hours * 60000)
+                {
+                    AutoReset = true
+                };
+                timerUpdateWishlist.Elapsed += (sender, e) => OnTimedUpdateWishlistEvent(sender, e);
+                timerUpdateWishlist.Start();
+            }
+            if (PluginSettings.Settings.UpdatePrice.EveryHours)
+            {
+                //Timer timerUpdatePrice = new Timer(PluginSettings.Settings.UpdatePrice.Hours * 3600000)
+                Timer timerUpdatePrice = new Timer(PluginSettings.Settings.UpdatePrice.Hours * 60000)
+                {
+                    AutoReset = true
+                };
+                timerUpdatePrice.Elapsed += (sender, e) => OnTimedUpdatePriceEvent(sender, e);
+                timerUpdatePrice.Start();
+            }
+        }
+
+        private void OnTimedUpdatePriceEvent(object sender, ElapsedEventArgs e)
+        {
+            _ = Task.Run(() =>
+            {
+                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                _ = isThereAnyDealApi.LoadWishlist(this, false, true);
+                _ = IsThereAnyDealApi.CheckNotifications(this);
+            });
+        }
+
+        private void OnTimedUpdateWishlistEvent(object sender, ElapsedEventArgs e)
+        {
+            _ = Task.Run(() =>
+            {
+                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                _ = isThereAnyDealApi.LoadWishlist(this, true, false);
+                _ = IsThereAnyDealApi.CheckNotifications(this);
+            });
         }
 
 
@@ -155,7 +199,7 @@ namespace IsThereAnyDeal
                             Width = 1180,
                             Height = 720
                         };
-                        IsThereAnyDealView viewExtension = new IsThereAnyDealView(this, PluginSettings.Settings);
+                        IsThereAnyDealView viewExtension = new IsThereAnyDealView(this);
                         Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
                         windowExtension.ShowDialog();
                     }
@@ -167,7 +211,7 @@ namespace IsThereAnyDeal
                     Description = ResourceProvider.GetString("LOCItadCheckNotifications"),
                     Action = (mainMenuItem) =>
                     {
-                        _ = IsThereAnyDealApi.CheckNotifications(PluginSettings.Settings, this);
+                        _ = IsThereAnyDealApi.CheckNotifications(this);
                     }
                 },
 
@@ -178,7 +222,7 @@ namespace IsThereAnyDeal
                     Action = (mainMenuItem) =>
                     {
                         SidebarItem.ResetView();
-                        IsThereAnyDealApi.UpdateDatas(PluginSettings.Settings, this);
+                        IsThereAnyDealApi.UpdateDatas(this);
                     }
                 }
             };
@@ -239,7 +283,14 @@ namespace IsThereAnyDeal
         // Add code to be executed when Playnite is initialized.
         public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
         {
-            _ = IsThereAnyDealApi.CheckNotifications(PluginSettings.Settings, this);
+            _ = PluginSettings.Settings.UpdateWishlist.OnStart || PluginSettings.Settings.UpdateWishlist.OnStart
+                ? Task.Run(() =>
+                {
+                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                    _ = isThereAnyDealApi.LoadWishlist(this, PluginSettings.Settings.UpdateWishlist.OnStart, PluginSettings.Settings.UpdateWishlist.OnStart);
+                    _ = IsThereAnyDealApi.CheckNotifications(this);
+                })
+                : IsThereAnyDealApi.CheckNotifications(this);
 
             // StoreAPI intialization
             SteamApi = new SteamApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal);

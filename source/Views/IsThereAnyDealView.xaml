@@ -21,7 +21,7 @@
 
     <Grid Margin="10" >
         <TabControl SelectionChanged="TabControl_SelectionChanged">
-            <TabItem Header="{DynamicResource LOCItadSettingWishlist}" Name="PART_Tb">
+            <TabItem Header="{DynamicResource LOCItadWishlist}" Name="PART_Tb">
                 <Grid Margin="10">
                     <DockPanel Name="dpData" LastChildFill="True">
                         <Border DockPanel.Dock="Top" BorderThickness="{DynamicResource PopupBorderThickness}" BorderBrush="{DynamicResource NormalBorderBrush}" Margin="0,0,0,10">

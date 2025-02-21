@@ -9,7 +9,7 @@
 
     <sys:String x:Key="LOCItadExclusionList">Kizárási lista</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist">Kívánságlista</sys:String>
+    <sys:String x:Key="LOCItadWishlist">Kívánságlista</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Steam kívánságlista engedélyezése</sys:String>
     <sys:String x:Key="LOCItadEnableGog">GOG kívánságlista engedélyezése</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Epic Games Store kívánságlista engedélyezése</sys:String>

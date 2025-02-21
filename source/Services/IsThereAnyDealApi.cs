@@ -201,10 +201,10 @@ namespace IsThereAnyDeal.Services
         }
 
         #region Plugin
-        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, IsThereAnyDealSettings settings, bool cacheOnly = false, bool forcePrice = false)
+        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, bool cacheOnly = false, bool forcePrice = false)
         {
             List<Wishlist> ListWishlistSteam = new List<Wishlist>();
-            if (settings.EnableSteam)
+            if (plugin.PluginSettings.Settings.EnableSteam)
             {
                 try
                 {
@@ -240,7 +240,7 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> ListWishlistGog = new List<Wishlist>();
-            if (settings.EnableGog)
+            if (plugin.PluginSettings.Settings.EnableGog)
             {
                 try
                 {
@@ -276,7 +276,7 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> ListWishlistEpic = new List<Wishlist>();
-            if (settings.EnableEpic)
+            if (plugin.PluginSettings.Settings.EnableEpic)
             {
                 try
                 {
@@ -312,7 +312,7 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> ListWishlistHumble = new List<Wishlist>();
-            if (settings.EnableHumble)
+            if (plugin.PluginSettings.Settings.EnableHumble)
             {
                 try
                 {
@@ -348,7 +348,7 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> ListWishlistXbox = new List<Wishlist>();
-            if (settings.EnableXbox)
+            if (plugin.PluginSettings.Settings.EnableXbox)
             {
                 try
                 {
@@ -384,7 +384,7 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> ListWishlistUbisoft = new List<Wishlist>();
-            if (settings.EnableUbisoft)
+            if (plugin.PluginSettings.Settings.EnableUbisoft)
             {
                 try
                 {
@@ -420,7 +420,7 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> ListWishlisOrigin = new List<Wishlist>();
-            if (settings.EnableOrigin)
+            if (plugin.PluginSettings.Settings.EnableOrigin)
             {
                 try
                 {
@@ -499,8 +499,8 @@ namespace IsThereAnyDeal.Services
 
             if (!cacheOnly || forcePrice)
             {
-                settings.LastRefresh = DateTime.Now.ToUniversalTime();
-                plugin.SavePluginSettings(settings);
+                plugin.PluginSettings.Settings.LastRefresh = DateTime.Now.ToUniversalTime();
+                plugin.SavePluginSettings(plugin.PluginSettings.Settings);
             }
 
 
@@ -859,16 +859,16 @@ namespace IsThereAnyDeal.Services
             return itadGiveaways;
         }
 
-        public static async Task CheckNotifications(IsThereAnyDealSettings settings, IsThereAnyDeal plugin)
+        public static async Task CheckNotifications(IsThereAnyDeal plugin)
         {
             await Task.Run(() =>
             {
                 IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
 
-                if (settings.EnableNotification)
+                if (plugin.PluginSettings.Settings.EnableNotification)
                 {
-                    List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, settings, true, true);
-                    ListWishlist.Where(x => x.Game != null && x.GetNotification(settings.NotificationCriterias))
+                    List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, true);
+                    ListWishlist.Where(x => x.Game != null && x.GetNotification(plugin.PluginSettings.Settings.NotificationCriterias))
                       .ForEach(x =>
                       {
                           API.Instance.Notifications.Add(new NotificationMessage(
@@ -890,7 +890,7 @@ namespace IsThereAnyDeal.Services
                                               Height = 720
                                           };
 
-                                          IsThereAnyDealView viewExtension = new IsThereAnyDealView(plugin, settings, x.Game.Id);
+                                          IsThereAnyDealView viewExtension = new IsThereAnyDealView(plugin, x.Game.Id);
                                           Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
                                           _ = windowExtension.ShowDialog();
                                       }
@@ -903,7 +903,7 @@ namespace IsThereAnyDeal.Services
                       });
                 }
 
-                if (settings.EnableNotificationGiveaways)
+                if (plugin.PluginSettings.Settings.EnableNotificationGiveaways)
                 {
                     List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(plugin.GetPluginUserDataPath());
                     itadGiveaways.Where(x => !x.HasSeen).ForEach(x =>
@@ -919,7 +919,7 @@ namespace IsThereAnyDeal.Services
             });
         }
 
-        public static void UpdateDatas(IsThereAnyDealSettings settings, IsThereAnyDeal plugin)
+        public static void UpdateDatas(IsThereAnyDeal plugin)
         {
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
 
@@ -931,7 +931,7 @@ namespace IsThereAnyDeal.Services
                 IsIndeterminate = true
             };
 
-            _ = API.Instance.Dialogs.ActivateGlobalProgress((activateGlobalProgress) =>
+            _ = API.Instance.Dialogs.ActivateGlobalProgress((a) =>
             {
                 Logger.Info($"Task UpdateDatas()");
                 Stopwatch stopWatch = new Stopwatch();
@@ -939,7 +939,7 @@ namespace IsThereAnyDeal.Services
 
                 try
                 {
-                    _ = isThereAnyDealApi.LoadWishlist(plugin, settings);
+                    _ = isThereAnyDealApi.LoadWishlist(plugin);
                 }
                 catch (Exception ex)
                 {

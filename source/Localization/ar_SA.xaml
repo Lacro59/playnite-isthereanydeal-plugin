@@ -9,7 +9,7 @@
 
     <sys:String x:Key="LOCItadExclusionList">قائمة الاستبعا</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist">قائمة الرغبات</sys:String>
+    <sys:String x:Key="LOCItadWishlist">قائمة الرغبات</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">تمكين قائمة رغبات Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">تمكين قائمة رغبات GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">تمكين قائمة رغبات Epic Games</sys:String>

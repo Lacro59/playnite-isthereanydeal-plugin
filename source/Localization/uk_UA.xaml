@@ -9,7 +9,7 @@
 
     <sys:String x:Key="LOCItadExclusionList">Список винятків</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist">Список бажаного</sys:String>
+    <sys:String x:Key="LOCItadWishlist">Список бажаного</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Увімкнути список бажаного Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Увімкнути список бажаного GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Увімкнути список бажаного Epic Games Store</sys:String>

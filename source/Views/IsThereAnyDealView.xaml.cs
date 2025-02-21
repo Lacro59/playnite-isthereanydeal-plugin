@@ -41,11 +41,11 @@ namespace IsThereAnyDeal.Views
         private ItadDataContext ItadDataContext { get; set; } = new ItadDataContext();
 
 
-        public IsThereAnyDealView(IsThereAnyDeal plugin, IsThereAnyDealSettings settings, string id = "")
+        public IsThereAnyDealView(IsThereAnyDeal plugin, string id = "")
         {
             InitializeComponent();
 
-            Settings = settings;
+            Settings = plugin.PluginSettings.Settings;
             Plugin = plugin;
 
             // Load data
@@ -64,7 +64,7 @@ namespace IsThereAnyDeal.Views
             DataLoadWishlist.Visibility = Visibility.Visible;
             dpData.IsEnabled = false;
 
-            Task task = Task.Run(() => LoadData(Plugin.GetPluginUserDataPath(), Settings, cachOnly, forcePrice))
+            Task task = Task.Run(() => LoadData(cachOnly, forcePrice))
                 .ContinueWith(antecedent =>
                 {
                     Application.Current.Dispatcher?.Invoke(new Action(() =>
@@ -150,9 +150,9 @@ namespace IsThereAnyDeal.Views
         }
 
 
-        private ObservableCollection<Wishlist> LoadData(string pluginUserDataPath, IsThereAnyDealSettings settings, bool cachOnly = true, bool forcePrice = false)
+        private ObservableCollection<Wishlist> LoadData(bool cachOnly = true, bool forcePrice = false)
         {
-            ObservableCollection<Wishlist> ListWishlist = IsThereAnyDealApi.LoadWishlist(Plugin, settings, cachOnly, forcePrice).ToObservable();
+            ObservableCollection<Wishlist> ListWishlist = IsThereAnyDealApi.LoadWishlist(Plugin, cachOnly, forcePrice).ToObservable();
             return ListWishlist;
         }
 

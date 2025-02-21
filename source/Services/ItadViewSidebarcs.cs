@@ -30,7 +30,7 @@ namespace IsThereAnyDeal.Services
                 {
                     SidebarItemControl = new SidebarItemControl();
                     SidebarItemControl.SetTitle(ResourceProvider.GetString("LOCItad"));
-                    SidebarItemControl.AddContent(new IsThereAnyDealView(plugin, plugin.PluginSettings.Settings));
+                    SidebarItemControl.AddContent(new IsThereAnyDealView(plugin));
                 }
                 return SidebarItemControl;
             };

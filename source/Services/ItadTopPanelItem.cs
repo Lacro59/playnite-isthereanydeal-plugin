@@ -36,7 +36,7 @@ namespace IsThereAnyDeal.Services
                     Height = 720
                 };
 
-                IsThereAnyDealView viewExtension = new IsThereAnyDealView(plugin, plugin.PluginSettings.Settings);
+                IsThereAnyDealView viewExtension = new IsThereAnyDealView(plugin);
                 Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
                 _ = windowExtension.ShowDialog();
             };
