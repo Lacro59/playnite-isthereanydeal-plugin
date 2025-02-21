@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows;
 using CommonPluginsShared.PlayniteExtended;
 using Playnite.SDK.Events;
-using System.Windows.Media;
 using System.IO;
 using System.Reflection;
 using CommonPlayniteShared;
@@ -68,8 +67,7 @@ namespace IsThereAnyDeal
             // Timer
             if (PluginSettings.Settings.UpdateWishlist.EveryHours)
             {
-                //Timer timerUpdateWishlist = new Timer(PluginSettings.Settings.UpdateWishlist.Hours * 3600000)
-                Timer timerUpdateWishlist = new Timer(PluginSettings.Settings.UpdateWishlist.Hours * 60000)
+                Timer timerUpdateWishlist = new Timer(PluginSettings.Settings.UpdateWishlist.Hours * 3600000)
                 {
                     AutoReset = true
                 };
@@ -78,8 +76,7 @@ namespace IsThereAnyDeal
             }
             if (PluginSettings.Settings.UpdatePrice.EveryHours)
             {
-                //Timer timerUpdatePrice = new Timer(PluginSettings.Settings.UpdatePrice.Hours * 3600000)
-                Timer timerUpdatePrice = new Timer(PluginSettings.Settings.UpdatePrice.Hours * 60000)
+                Timer timerUpdatePrice = new Timer(PluginSettings.Settings.UpdatePrice.Hours * 3600000)
                 {
                     AutoReset = true
                 };

@@ -117,8 +117,6 @@ namespace IsThereAnyDeal.Services
             return null;
         }
 
-
-
         public async Task<Dictionary<string, string>> GetGamesId(List<string> titles, List<string> appIds)
         {
             Thread.Sleep(500);
@@ -150,10 +148,6 @@ namespace IsThereAnyDeal.Services
 
             return null;
         }
-
-
-
-
 
         /// <summary>
         /// Get games' prices
