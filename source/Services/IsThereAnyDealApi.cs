@@ -18,17 +18,26 @@ using System.Text;
 using System.Net.Http;
 using IsThereAnyDeal.Models.Api;
 using IsThereAnyDeal.Models.ApiWebsite;
+using static CommonPluginsShared.PlayniteTools;
+using System.IO;
+using System.Reflection;
+using AngleSharp.Parser.Html;
+using AngleSharp.Dom.Html;
+using AngleSharp.Dom;
+using CommonPlayniteShared.Common;
 
 namespace IsThereAnyDeal.Services
 {
     public class IsThereAnyDealApi
     {
         private static ILogger Logger => LogManager.GetLogger();
-        private static IResourceProvider ResourceProvider => new ResourceProvider();
 
-        private string BaseUrl => "https://isthereanydeal.com";
-        private string ApiUrl => "https://api.isthereanydeal.com";
-        private string Key => "fa49308286edcaf76fea58926fd2ea2d216a17ff";
+        private static string BaseUrl => @"https://isthereanydeal.com";
+        private static string GiveawaysUrl => BaseUrl + @"/giveaways/api/list/";
+        private static string ApiUrl => @"https://api.isthereanydeal.com";
+        private static string ApiLookupTitles => ApiUrl + @"/lookup/id/title/v1";
+        private static string ApiLookupAppIds => ApiUrl + @"/lookup/id/shop/{0}/v1";
+        private static string Key => "fa49308286edcaf76fea58926fd2ea2d216a17ff";
 
         public List<CountData> CountDatas { get; set; } = new List<CountData>();
 
@@ -46,8 +55,8 @@ namespace IsThereAnyDeal.Services
                 string url = ApiUrl + $"/service/shops/v1?country={country}";
                 string data = await Web.DownloadStringData(url).ConfigureAwait(false);
 
-                _ = Serialization.TryFromJson(data, out List<ServiceShop> serviceShops);
-                return serviceShops;
+                _ = Serialization.TryFromJson(data, out List<ServiceShop> serviceShops, out Exception ex);
+                return ex != null ? throw ex : serviceShops;
             }
             catch (Exception ex)
             {
@@ -108,6 +117,37 @@ namespace IsThereAnyDeal.Services
             return null;
         }
 
+        public async Task<Dictionary<string, string>> GetGamesId(List<string> titles, List<string> appIds)
+        {
+            Thread.Sleep(500);
+            string url = string.Empty;
+            string payload = string.Empty;
+
+            try
+            {
+                if (titles?.Count() > 0)
+                {
+                    url = ApiLookupTitles;
+                    payload = Serialization.ToJson(titles.Select(x => PlayniteTools.RemoveGameEdition(x)));
+                }
+
+                if (appIds?.Count() > 0)
+                {
+                    url = string.Format(ApiLookupAppIds, 61);
+                    payload = Serialization.ToJson(appIds.Select(x => x.Contains("app/") ? x : "app/" + x));
+                }
+
+                string data = await Web.PostStringDataPayload(url, payload);
+                _ = Serialization.TryFromJson(data, out Dictionary<string, string> gamesId, out Exception ex);
+                return ex != null ? throw ex : gamesId;
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, false, $"Error in GetGamesId({payload})", true, "IsThereAnyDeal");
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Get games' prices
@@ -118,17 +158,16 @@ namespace IsThereAnyDeal.Services
         /// <returns></returns>
         public async Task<List<GamePrices>> GetGamesPrices(string country, List<int> shopsId, List<string> gamesId)
         {
-
             Thread.Sleep(500);
             try
             {
                 string shops = string.Join(",", shopsId);
-                string url = ApiUrl + $"/games/prices/v2?key={Key}&nondeals=true&vouchers=true&capacity=0&country={country}&shops={shops}";
+                string url = ApiUrl + $"/games/prices/v3?key={Key}&vouchers=true&capacity=0&country={country}&shops={shops}";
                 string payload = Serialization.ToJson(gamesId);
                 string data = await Web.PostStringDataPayload(url, payload);
 
-                _ = Serialization.TryFromJson(data, out List<GamePrices> gamesPrices);
-                return gamesPrices;
+                _ = Serialization.TryFromJson(data, out List<GamePrices> gamesPrices, out Exception ex);
+                return ex != null ? throw ex : gamesPrices;
             }
             catch (Exception ex)
             {
@@ -139,16 +178,13 @@ namespace IsThereAnyDeal.Services
         }
         #endregion
 
-        #region Api from website
-        public async Task<List<Country>> GetCountries()
+        public static List<Country> GetCountries()
         {
             try
             {
-                string url = BaseUrl + $"/api/country/";
-                string data = await Web.DownloadStringData(url);
-
-                _ = Serialization.TryFromJson(data, out List<Country> countries);
-                return countries;
+                string pluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                _ = Serialization.TryFromJsonFile(Path.Combine(pluginPath, "Data", "countries.json"), out List<Country> countries, out Exception ex);
+                return ex != null ? throw ex : countries;
             }
             catch (Exception ex)
             {
@@ -157,20 +193,19 @@ namespace IsThereAnyDeal.Services
 
             return null;
         }
-        #endregion
 
         #region Plugin
-        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, IsThereAnyDealSettings settings, string PluginUserDataPath, bool CacheOnly = false, bool ForcePrice = false)
+        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, bool cacheOnly = false, bool forcePrice = false)
         {
             List<Wishlist> ListWishlistSteam = new List<Wishlist>();
-            if (settings.EnableSteam)
+            if (plugin.PluginSettings.Settings.EnableSteam)
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("SteamLibrary"))
+                    if (PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(ExternalPlugin.SteamLibrary)))
                     {
                         SteamWishlist steamWishlist = new SteamWishlist(plugin);
-                        ListWishlistSteam = steamWishlist.GetWishlist(CacheOnly, ForcePrice);
+                        ListWishlistSteam = steamWishlist.GetWishlist(cacheOnly, forcePrice);
                         if (ListWishlistSteam == null)
                         {
                             ListWishlistSteam = new List<Wishlist>();
@@ -199,14 +234,14 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> ListWishlistGog = new List<Wishlist>();
-            if (settings.EnableGog)
+            if (plugin.PluginSettings.Settings.EnableGog)
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("GogLibrary"))
+                    if (PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(ExternalPlugin.GogLibrary)) || PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(ExternalPlugin.GogOssLibrary)))
                     {
                         GogWishlist gogWishlist = new GogWishlist(plugin);
-                        ListWishlistGog = gogWishlist.GetWishlist(CacheOnly, ForcePrice);
+                        ListWishlistGog = gogWishlist.GetWishlist(cacheOnly, forcePrice);
                         if (ListWishlistGog == null)
                         {
                             ListWishlistGog = new List<Wishlist>();
@@ -235,14 +270,14 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> ListWishlistEpic = new List<Wishlist>();
-            if (settings.EnableEpic)
+            if (plugin.PluginSettings.Settings.EnableEpic)
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("EpicLibrary"))
+                    if (PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(ExternalPlugin.EpicLibrary)) || PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(ExternalPlugin.LegendaryLibrary)))
                     {
                         EpicWishlist epicWishlist = new EpicWishlist(plugin);
-                        ListWishlistEpic = epicWishlist.GetWishlist(CacheOnly, ForcePrice);
+                        ListWishlistEpic = epicWishlist.GetWishlist(cacheOnly, forcePrice);
                         if (ListWishlistEpic == null)
                         {
                             ListWishlistEpic = new List<Wishlist>();
@@ -271,14 +306,14 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> ListWishlistHumble = new List<Wishlist>();
-            if (settings.EnableHumble)
+            if (plugin.PluginSettings.Settings.EnableHumble)
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("HumbleLibrary"))
+                    if (PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(ExternalPlugin.HumbleLibrary)))
                     {
                         HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist(plugin);
-                        ListWishlistHumble = humbleBundleWishlist.GetWishlist(CacheOnly, ForcePrice);
+                        ListWishlistHumble = humbleBundleWishlist.GetWishlist(cacheOnly, forcePrice);
                         if (ListWishlistHumble == null)
                         {
                             ListWishlistHumble = new List<Wishlist>();
@@ -307,14 +342,14 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> ListWishlistXbox = new List<Wishlist>();
-            if (settings.EnableXbox)
+            if (plugin.PluginSettings.Settings.EnableXbox)
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("XboxLibrary"))
+                    if (PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(ExternalPlugin.XboxLibrary)))
                     {
                         XboxWishlist xboxWishlist = new XboxWishlist(plugin);
-                        ListWishlistXbox = xboxWishlist.GetWishlist(CacheOnly, ForcePrice);
+                        ListWishlistXbox = xboxWishlist.GetWishlist(cacheOnly, forcePrice);
                         if (ListWishlistXbox == null)
                         {
                             ListWishlistXbox = new List<Wishlist>();
@@ -343,14 +378,14 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> ListWishlistUbisoft = new List<Wishlist>();
-            if (settings.EnableUbisoft)
+            if (plugin.PluginSettings.Settings.EnableUbisoft)
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("UbisoftLibrary"))
+                    if (PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(ExternalPlugin.UplayLibrary)))
                     {
-                        UbisoftWishlist ubisoftWishlist = new UbisoftWishlist(plugin);
-                        ListWishlistUbisoft = ubisoftWishlist.GetWishlist(CacheOnly, ForcePrice);
+                        UplayWishlist ubisoftWishlist = new UplayWishlist(plugin);
+                        ListWishlistUbisoft = ubisoftWishlist.GetWishlist(cacheOnly, forcePrice);
                         if (ListWishlistUbisoft == null)
                         {
                             ListWishlistUbisoft = new List<Wishlist>();
@@ -379,14 +414,14 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Wishlist> ListWishlisOrigin = new List<Wishlist>();
-            if (settings.EnableOrigin)
+            if (plugin.PluginSettings.Settings.EnableOrigin)
             {
                 try
                 {
-                    if (!PlayniteTools.IsDisabledPlaynitePlugins("OriginLibrary"))
+                    if (PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(ExternalPlugin.OriginLibrary)))
                     {
                         OriginWishlist originWishlist = new OriginWishlist(plugin);
-                        ListWishlisOrigin = originWishlist.GetWishlist(CacheOnly, ForcePrice);
+                        ListWishlisOrigin = originWishlist.GetWishlist(cacheOnly, forcePrice);
                         if (ListWishlisOrigin == null)
                         {
                             ListWishlisOrigin = new List<Wishlist>();
@@ -456,10 +491,10 @@ namespace IsThereAnyDeal.Services
             }
 
 
-            if (!CacheOnly || ForcePrice)
+            if (!cacheOnly || forcePrice)
             {
-                settings.LastRefresh = DateTime.Now.ToUniversalTime();
-                plugin.SavePluginSettings(settings);
+                plugin.PluginSettings.Settings.LastRefresh = DateTime.Now.ToUniversalTime();
+                plugin.SavePluginSettings(plugin.PluginSettings.Settings);
             }
 
 
@@ -481,75 +516,95 @@ namespace IsThereAnyDeal.Services
             return itadShops;
         }
 
-        public async Task<List<Wishlist>> GetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings)
+        public async Task<List<Wishlist>> GetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings, bool force)
         {
             try
             {
+                List<Wishlist> wishlistsData = force
+                    ? wishlists
+                        .Where(x => !x.Game?.Id?.IsNullOrEmpty() ?? false)
+                        .ToList()
+                    : wishlists
+                        .Where(x => (!x.ItadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true) && (!x.Game?.Id?.IsNullOrEmpty() ?? false))
+                        .ToList();
+
                 // Games list
-                List<string> gamesId = wishlists
-                    .Where(x => (!x.ItadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true) && (!x.Game?.Id?.IsNullOrEmpty() ?? false))
-                    .Select(x => x.Game.Id)
-                    .ToList();
+                List<string> gamesId = wishlistsData.Select(x => x.Game.Id).ToList();
 
                 // Stores list
                 List<int> shopsId = settings.Stores.Select(x => int.Parse(x.Id)).ToList();
 
-                if (gamesId.Count != 0)
+                if (gamesId?.Count() != 0)
                 {
                     // Check if in library (exclude game emulated)
                     List<Guid> ListEmulators = API.Instance.Database.Emulators.Select(x => x.Id).ToList();
 
-                    List<GamePrices> gamesPrices = await GetGamesPrices(settings.CountrySelected.Alpha2, shopsId, gamesId);
 
-                    wishlists.Where(x => (!x.ItadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true) && (!x.Game?.Id?.IsNullOrEmpty() ?? false))
-                        .ForEach(y =>
+                    // Max 200
+                    List<List<string>> chunks = gamesId
+                        .Select((item, index) => new { item, index })
+                        .GroupBy(x => x.index / 200)
+                        .Select(g => g.Select(x => x.item).ToList())
+                        .ToList();
+
+                    List<GamePrices> gamesPrices = new List<GamePrices>();
+                    for (int i = 0; i < chunks.Count; i++)
+                    {
+                        List<GamePrices> prices = await GetGamesPrices(settings.CountrySelected.Alpha2, shopsId, chunks[i]);
+                        if (prices?.Count() > 0)
                         {
-                            ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
-                            List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
+                            gamesPrices.AddRange(prices);
+                        }
+                    }
 
-                            try
+                    foreach (Wishlist wishlist in wishlistsData)
+                    {
+                        ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
+                        List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
+
+                        try
+                        {
+                            GamePrices gamePrices = gamesPrices.Where(x => x.Id.IsEqual(wishlist.Game.Id))?.FirstOrDefault();
+                            if (gamePrices?.Deals?.Count > 0)
                             {
-                                GamePrices gamePrices = gamesPrices.Where(x => x.Id.IsEqual(y.Game.Id))?.FirstOrDefault();
-                                if (gamePrices?.Deals?.Count > 0)
+                                foreach (Deal deal in gamePrices.Deals)
                                 {
-                                    foreach (Deal deal in gamePrices.Deals)
+                                    try
                                     {
-                                        try
+                                        dataCurrentPrice.Add(new ItadGameInfo
                                         {
-                                            dataCurrentPrice.Add(new ItadGameInfo
-                                            {
-                                                Name = y.Name,
-                                                StoreId = y.StoreId,
-                                                SourceId = y.SourceId,
-                                                Id = y.Game.Id,
-                                                Slug = y.Game.Slug,
-                                                PriceNew = Math.Round(deal.Price.Amount, 2),
-                                                PriceOld = Math.Round(deal.Regular.Amount, 2),
-                                                PriceCut = deal.Cut,
-                                                CurrencySign = GetCurrencySymbol(deal.Price.Currency),
-                                                ShopName = deal.Shop.Name,
-                                                UrlBuy = deal.Url
-                                            });
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Common.LogError(ex, false, true, "IsThereAnyDeal");
-                                        }
+                                            Name = wishlist.Name,
+                                            StoreId = wishlist.StoreId,
+                                            SourceId = wishlist.SourceId,
+                                            Id = wishlist.Game.Id,
+                                            Slug = wishlist.Game.Slug,
+                                            PriceNew = Math.Round(deal.Price.Amount, 2),
+                                            PriceOld = Math.Round(deal.Regular.Amount, 2),
+                                            PriceCut = deal.Cut,
+                                            CurrencySign = GetCurrencySymbol(deal.Price.Currency),
+                                            ShopName = deal.Shop.Name,
+                                            UrlBuy = deal.Url
+                                        });
                                     }
+                                    catch (Exception ex)
+                                    {
+                                        Common.LogError(ex, false, true, "IsThereAnyDeal");
+                                    }
+                                }
 
-                                    _ = itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
-                                    y.ItadGameInfos = itadGameInfos;
-                                }
-                                else
-                                {
-                                    Common.LogDebug(true, $"No data for {y.Name}");
-                                }
+                                _ = itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
+                                wishlist.ItadGameInfos = itadGameInfos;
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                Common.LogError(ex, true);
+                                Common.LogDebug(true, $"No data for {wishlist.Name}");
                             }
-                        });
+                        }
+                        catch (Exception ex)
+                        {
+                            Common.LogError(ex, true);
+                        }
+                    };
                 }
             }
             catch (Exception ex)
@@ -583,7 +638,7 @@ namespace IsThereAnyDeal.Services
             }
         }
 
-        public static string GetShopColor(string ShopName)
+        public static string GetShopColor(string shopName)
         {
             Dictionary<string, string> shopColor = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
@@ -608,6 +663,7 @@ namespace IsThereAnyDeal.Services
                 { "DotEmu", "#f6931c" },
                 { "Nuuvem", "#b5e0f4" },
                 { "IndieGala Store", "#ffb4e0" },
+                { "IndieGala", "#ffb4e0" },
                 { "DLGamer", "#f5fe94" },
                 { "GameFly", "#f0a690" },
                 { "Direct2Drive", "#1df884" },
@@ -649,10 +705,14 @@ namespace IsThereAnyDeal.Services
                 { "LBOstore", "#005268" },
                 { "Razer", "#00ff00" },
                 { "Microsoft Store", "#ffd800" },
+                { "Microsoft", "#ffd800" },
                 { "Oculus", "#5161a6" },
                 { "Discord", "#6f85d4" },
                 { "Epic", "#0078f2" },
                 { "Epic Game Store", "#0078f2" },
+                { "Epic Games Store", "#0078f2" },
+                { "Epic Game", "#0078f2" },
+                { "Epic Games", "#0078f2" },
                 { "Playism", "#b8934f" },
                 { "GamesLoad", "#b76cc7" },
                 { "JoyBuggy", "#43c68d" },
@@ -661,23 +721,29 @@ namespace IsThereAnyDeal.Services
                 { "ETail.Market", "#358192" }
             };
 
-            return ShopName.IsNullOrEmpty() || !shopColor.TryGetValue(ShopName, out string value) ? "#000000" : value;
+            if (shopName.IsNullOrEmpty())
+            {
+                return ResourceProvider.GetResource("TextBrush").ToString();
+            }
+            _ = !shopColor.TryGetValue(shopName, out string value);
+            return value.IsNullOrEmpty() ? ResourceProvider.GetResource("TextBrush").ToString() : value;
         }
 
-        /*
-        public List<ItadGiveaway> GetGiveaways(string PluginUserDataPath, bool CacheOnly = false)
+
+
+        public List<ItadGiveaway> GetGiveaways(string pluginUserDataPath, bool cacheOnly = false)
         {
             // Load previous
-            string PluginDirectoryCache = PluginUserDataPath + "\\cache";
-            string PluginFileCache = PluginDirectoryCache + "\\giveways.json";
+            string pluginDirectoryCache = pluginUserDataPath + "\\cache";
+            string pluginFileCache = pluginDirectoryCache + "\\giveways.json";
             List<ItadGiveaway> itadGiveawaysCache = new List<ItadGiveaway>();
 
             try
             {
-                FileSystem.CreateDirectory(PluginDirectoryCache, false);
-                if (File.Exists(PluginFileCache))
+                FileSystem.CreateDirectory(pluginDirectoryCache, false);
+                if (File.Exists(pluginFileCache))
                 {
-                    _ = Serialization.TryFromJsonFile(PluginFileCache, out itadGiveawaysCache);
+                    _ = Serialization.TryFromJsonFile(pluginFileCache, out itadGiveawaysCache);
                     if (itadGiveawaysCache == null)
                     {
                         itadGiveawaysCache = new List<ItadGiveaway>();
@@ -692,67 +758,62 @@ namespace IsThereAnyDeal.Services
 
             // Load on web
             List<ItadGiveaway> itadGiveaways = new List<ItadGiveaway>();
-            if (!CacheOnly && itadGiveawaysCache != new List<ItadGiveaway>())
+            if (!cacheOnly && itadGiveawaysCache != new List<ItadGiveaway>())
             {
                 try
                 {
-                    string url = @"https://isthereanydeal.com/giveaways/";
-                    string responseData = string.Empty;
+                    string data = string.Empty;
                     try
                     {
-                        responseData = Web.DownloadStringData(url).GetAwaiter().GetResult();
+                        string payload = "{\"_id\":1,\"offset\":0,\"sort\":null,\"filter\":null,\"options\":[]}";
+                        data = Web.PostStringDataPayload(GiveawaysUrl, payload).GetAwaiter().GetResult();
                     }
-                    catch (Exception ex)
+                    catch (Exception ex2)
                     {
-                        Common.LogError(ex, false, $"Failed to download {url}", true, "IsThereAnyDeal");
+                        Common.LogError(ex2, false, $"Failed to download {GiveawaysUrl}", true, "IsThereAnyDeal");
                     }
 
-                    if (!responseData.IsNullOrEmpty())
+                    _ = Serialization.TryFromJson(data, out Giveaways giveaways, out Exception ex);
+                    if (ex != null)
                     {
-                        HtmlParser parser = new HtmlParser();
-                        IHtmlDocument htmlDocument = parser.Parse(responseData);
-                        foreach (IElement SearchElement in htmlDocument.QuerySelectorAll("div.giveaway"))
+                        Common.LogError(ex, false, true, "IsThereAnyDeals");
+                    }
+
+                    giveaways?.Data?.ForEach(x =>
+                    {
+                        DateTime? time = null;
+                        if (x.Expiry != null)
                         {
-                            bool HasSeen = (SearchElement.ClassName.IndexOf("Seen") > -1);
-
-                            var row1 = SearchElement.QuerySelector("div.bundle-row1");
-
-                            DateTime? bundleTime = null;
-                            if (!row1.QuerySelector("div.bundle-time").GetAttribute("title").IsNullOrEmpty())
-                            {
-                                bundleTime = Convert.ToDateTime(row1.QuerySelector("div.bundle-time").GetAttribute("title"));
-                            }
-
-                            string TitleAll = row1.QuerySelector("div.bundle-title a").InnerHtml.Trim();
-
-                            List<string> arrBundleTitle = TitleAll.Split('-').ToList();
-
-                            string bundleShop = arrBundleTitle[arrBundleTitle.Count - 1].Trim();
-                            bundleShop = bundleShop.Replace("FREE Games on", string.Empty).Replace("Always FREE For", string.Empty)
-                                .Replace("FREE For", string.Empty).Replace("FREE on", string.Empty);
-
-                            string bundleTitle = string.Empty;
-                            arrBundleTitle.RemoveAt(arrBundleTitle.Count - 1);
-                            bundleTitle = String.Join("-", arrBundleTitle.ToArray()).Trim();
-
-                            string bundleLink = row1.QuerySelector("div.bundle-title a").GetAttribute("href");
-
-                            var row2 = SearchElement.QuerySelector("div.bundle-row2");
-
-                            string bundleDescCount = row2.QuerySelector("div.bundle-desc span.lg").InnerHtml;
-
-                            itadGiveaways.Add(new ItadGiveaway
-                            {
-                                TitleAll = TitleAll,
-                                Title = bundleTitle,
-                                Time = bundleTime,
-                                Link = bundleLink,
-                                ShopName = bundleShop,
-                                Count = bundleDescCount,
-                                HasSeen = HasSeen
-                            });
+                            time = DateTimeOffset.FromUnixTimeSeconds(x.Expiry ?? 0).DateTime;
                         }
-                    }
+
+                        string shop = string.Empty;
+                        try
+                        {
+                            shop = x.Title.Split('-').Last()
+                                .Replace("FREE Games on", string.Empty)
+                                .Replace("Always FREE For", string.Empty)
+                                .Replace("FREE For", string.Empty)
+                                .Replace("FREE on", string.Empty)
+                                .Trim();
+                        }
+                        catch (Exception ex2)
+                        {
+                            Common.LogError(ex2, false, $"Failed to download {GiveawaysUrl}", true, "IsThereAnyDeal");
+                        }
+
+                        itadGiveaways.Add(new ItadGiveaway
+                        {
+                            TitleAll = x.Title,
+                            Title = x.Games?.FirstOrDefault()?.Title,
+                            Time = time,
+                            Link = x.Url,
+                            ShopName = shop,
+                            Count = x.Games?.Count() ?? 0,
+                            InWaitlist = x.Counts.Waitlist != 0,
+                            InCollection = x.Counts.Collection != 0,
+                        });
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -782,7 +843,7 @@ namespace IsThereAnyDeal.Services
             // Save new
             try
             {
-                File.WriteAllText(PluginFileCache, Serialization.ToJson(itadGiveaways));
+                File.WriteAllText(pluginFileCache, Serialization.ToJson(itadGiveaways));
             }
             catch (Exception ex)
             {
@@ -791,18 +852,17 @@ namespace IsThereAnyDeal.Services
 
             return itadGiveaways;
         }
-        */
 
-        public static async Task CheckNotifications(IsThereAnyDealSettings settings, IsThereAnyDeal plugin)
+        public static async Task CheckNotifications(IsThereAnyDeal plugin)
         {
             await Task.Run(() =>
             {
                 IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
 
-                if (settings.EnableNotification)
+                if (plugin.PluginSettings.Settings.EnableNotification)
                 {
-                    List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, settings, plugin.GetPluginUserDataPath(), true, true);
-                    ListWishlist.Where(x => x.Game != null && x.GetNotification(settings.NotificationCriterias))
+                    List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, true);
+                    ListWishlist.Where(x => x.Game != null && x.GetNotification(plugin.PluginSettings.Settings.NotificationCriterias))
                       .ForEach(x =>
                       {
                           API.Instance.Notifications.Add(new NotificationMessage(
@@ -824,8 +884,8 @@ namespace IsThereAnyDeal.Services
                                               Height = 720
                                           };
 
-                                          IsThereAnyDealView ViewExtension = new IsThereAnyDealView(plugin, settings, x.Game.Id);
-                                          Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(API.Instance, ResourceProvider.GetString("LOCItad"), ViewExtension, windowOptions);
+                                          IsThereAnyDealView viewExtension = new IsThereAnyDealView(plugin, x.Game.Id);
+                                          Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
                                           _ = windowExtension.ShowDialog();
                                       }
                                       else
@@ -837,23 +897,23 @@ namespace IsThereAnyDeal.Services
                       });
                 }
 
-                //if (settings.EnableNotificationGiveaways)
-                //{
-                //    List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(plugin.GetPluginUserDataPath());
-                //    itadGiveaways.Where(x => !x.HasSeen).ForEach(x =>
-                //    {
-                //        API.Instance.Notifications.Add(new NotificationMessage(
-                //              $"IsThereAnyDeal-{x.Title}",
-                //              "IsThereAnyDeal\r\n" + string.Format(ResourceProvider.GetString("LOCItadNotificationGiveaway"), x.TitleAll, x.Count),
-                //              NotificationType.Info,
-                //              () => Process.Start(x.Link)
-                //          ));
-                //    });
-                //}
+                if (plugin.PluginSettings.Settings.EnableNotificationGiveaways)
+                {
+                    List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(plugin.GetPluginUserDataPath());
+                    itadGiveaways.Where(x => !x.HasSeen).ForEach(x =>
+                    {
+                        API.Instance.Notifications.Add(new NotificationMessage(
+                              $"IsThereAnyDeal-{x.Title}",
+                              "IsThereAnyDeal\r\n" + string.Format(ResourceProvider.GetString("LOCItadNotificationGiveaway"), x.TitleAll, x.Count),
+                              NotificationType.Info,
+                              () => Process.Start(x.Link)
+                          ));
+                    });
+                }
             });
         }
 
-        public static void UpdateDatas(IsThereAnyDealSettings settings, IsThereAnyDeal plugin)
+        public static void UpdateDatas(IsThereAnyDeal plugin)
         {
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
 
@@ -865,7 +925,7 @@ namespace IsThereAnyDeal.Services
                 IsIndeterminate = true
             };
 
-            _ = API.Instance.Dialogs.ActivateGlobalProgress((activateGlobalProgress) =>
+            _ = API.Instance.Dialogs.ActivateGlobalProgress((a) =>
             {
                 Logger.Info($"Task UpdateDatas()");
                 Stopwatch stopWatch = new Stopwatch();
@@ -873,7 +933,7 @@ namespace IsThereAnyDeal.Services
 
                 try
                 {
-                    _ = isThereAnyDealApi.LoadWishlist(plugin, settings, plugin.GetPluginUserDataPath());
+                    _ = isThereAnyDealApi.LoadWishlist(plugin);
                 }
                 catch (Exception ex)
                 {

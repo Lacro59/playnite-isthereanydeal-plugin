@@ -9,12 +9,16 @@ using System.Windows.Controls;
 using System.Windows;
 using CommonPluginsShared.PlayniteExtended;
 using Playnite.SDK.Events;
-using System.Windows.Media;
 using System.IO;
 using System.Reflection;
 using CommonPlayniteShared;
 using CommonPlayniteShared.Common;
 using CommonPluginsStores.Steam;
+using CommonPluginsStores.Epic;
+using CommonPluginsStores.Gog;
+using System.Windows.Automation;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace IsThereAnyDeal
 {
@@ -22,23 +26,24 @@ namespace IsThereAnyDeal
     {
         public override Guid Id { get; } = Guid.Parse("7d5cbee9-3c86-4389-ac7b-9abe3da4c9cd");
 
-        internal TopPanelItem TopPanelItem { get; set; }
-        internal ItadViewSidebar ItadViewSidebar { get; set; }
-
         public static SteamApi SteamApi { get; set; }
+        public static EpicApi EpicApi { get; set; }
+        public static GogApi GogApi { get; set; }
 
+        internal TopPanelItem TopPanelItem { get; set; }
+        internal ItadViewSidebar SidebarItem { get; set; }
 
         public IsThereAnyDeal(IPlayniteAPI api) : base(api)
         {
-            string PluginCachePath = Path.Combine(PlaynitePaths.DataCachePath, "IsThereAnyDeal");
-            HttpFileCachePlugin.CacheDirectory = PluginCachePath;
-            FileSystem.CreateDirectory(PluginCachePath);
+            string pluginCachePath = Path.Combine(PlaynitePaths.DataCachePath, "IsThereAnyDeal");
+            HttpFileCachePlugin.CacheDirectory = pluginCachePath;
+            FileSystem.CreateDirectory(pluginCachePath);
 
             // Manual dll load
             try
             {
-                string PluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string PathDLL = Path.Combine(PluginPath, "VirtualizingWrapPanel.dll");
+                string pluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string PathDLL = Path.Combine(pluginPath, "VirtualizingWrapPanel.dll");
                 if (File.Exists(PathDLL))
                 {
                     Assembly DLL = Assembly.LoadFile(PathDLL);
@@ -49,40 +54,79 @@ namespace IsThereAnyDeal
                 Common.LogError(ex, false, true, "IsThereAnyDeal");
             }
 
+            // Add Event for WindowBase for get the "WindowSettings".
+            EventManager.RegisterClassHandler(typeof(Window), Window.LoadedEvent, new RoutedEventHandler(WindowBase_LoadedEvent));
+
             // Initialize top & side bar
             if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
             {
-                TopPanelItem = new TopPanelItem()
+                TopPanelItem = new ItadTopPanelItem(this);
+                SidebarItem = new ItadViewSidebar(this);
+            }
+
+            // Timer
+            if (PluginSettings.Settings.UpdateWishlist.EveryHours)
+            {
+                Timer timerUpdateWishlist = new Timer(PluginSettings.Settings.UpdateWishlist.Hours * 3600000)
                 {
-                    Icon = new TextBlock
-                    {
-                        Text = "\uea63",
-                        FontSize = 22,
-                        FontFamily = resources.GetResource("CommonFont") as FontFamily
-                    },
-                    Title = resources.GetString("LOCItad"),
-                    Activated = () =>
-                    {
-                        WindowOptions windowOptions = new WindowOptions
-                        {
-                            ShowMinimizeButton = false,
-                            ShowMaximizeButton = false,
-                            ShowCloseButton = true,
-                            CanBeResizable = false,
-                            Width = 1180,
-                            Height = 720
-                        };
-
-                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, PluginSettings.Settings);
-                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
-                        _ = windowExtension.ShowDialog();
-                    },
-                    Visible = PluginSettings.Settings.EnableIntegrationButtonHeader
+                    AutoReset = true
                 };
-
-                ItadViewSidebar = new ItadViewSidebar(this);
+                timerUpdateWishlist.Elapsed += (sender, e) => OnTimedUpdateWishlistEvent(sender, e);
+                timerUpdateWishlist.Start();
+            }
+            if (PluginSettings.Settings.UpdatePrice.EveryHours)
+            {
+                Timer timerUpdatePrice = new Timer(PluginSettings.Settings.UpdatePrice.Hours * 3600000)
+                {
+                    AutoReset = true
+                };
+                timerUpdatePrice.Elapsed += (sender, e) => OnTimedUpdatePriceEvent(sender, e);
+                timerUpdatePrice.Start();
             }
         }
+
+        private void OnTimedUpdatePriceEvent(object sender, ElapsedEventArgs e)
+        {
+            _ = Task.Run(() =>
+            {
+                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                _ = isThereAnyDealApi.LoadWishlist(this, false, true);
+                _ = IsThereAnyDealApi.CheckNotifications(this);
+            });
+        }
+
+        private void OnTimedUpdateWishlistEvent(object sender, ElapsedEventArgs e)
+        {
+            _ = Task.Run(() =>
+            {
+                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                _ = isThereAnyDealApi.LoadWishlist(this, true, false);
+                _ = IsThereAnyDealApi.CheckNotifications(this);
+            });
+        }
+
+
+        #region Custom event
+        private void WindowBase_LoadedEvent(object sender, System.EventArgs e)
+        {
+            string winIdProperty = string.Empty;
+            try
+            {
+                winIdProperty = ((Window)sender).GetValue(AutomationProperties.AutomationIdProperty).ToString();
+
+                if (winIdProperty == "WindowSettings" || winIdProperty == "WindowExtensions" || winIdProperty == "WindowLibraryIntegrations")
+                {
+                    SteamApi.ResetIsUserLoggedIn();
+                    EpicApi.ResetIsUserLoggedIn();
+                    GogApi.ResetIsUserLoggedIn();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, false, $"Error on WindowBase_LoadedEvent for {winIdProperty}", true, "IsThereAnyDeal");
+            }
+        }
+        #endregion
 
 
         #region Theme integration
@@ -101,7 +145,7 @@ namespace IsThereAnyDeal
         // Sidebar
         public override IEnumerable<SidebarItem> GetSidebarItems()
         {
-            yield return ItadViewSidebar;
+            yield return SidebarItem;
         }
         #endregion
 
@@ -117,7 +161,7 @@ namespace IsThereAnyDeal
 #if DEBUG
             gameMenuItems.Add(new GameMenuItem
             {
-                MenuSection = resources.GetString("LOCItad"),
+                MenuSection = ResourceProvider.GetString("LOCItad"),
                 Description = "Test",
                 Action = (mainMenuItem) => { }
             });
@@ -139,8 +183,8 @@ namespace IsThereAnyDeal
             {
                 new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
-                    Description = resources.GetString("LOCItadPluginView"),
+                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCItad"),
+                    Description = ResourceProvider.GetString("LOCItadPluginView"),
                     Action = (mainMenuItem) =>
                     {
                         WindowOptions windowOptions = new WindowOptions
@@ -152,30 +196,30 @@ namespace IsThereAnyDeal
                             Width = 1180,
                             Height = 720
                         };
-                        IsThereAnyDealView ViewExtension = new IsThereAnyDealView(this, PluginSettings.Settings);
-                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(PlayniteApi, resources.GetString("LOCItad"), ViewExtension, windowOptions);
+                        IsThereAnyDealView viewExtension = new IsThereAnyDealView(this);
+                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
                         windowExtension.ShowDialog();
                     }
                 },
 
                 new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
-                    Description = resources.GetString("LOCItadCheckNotifications"),
+                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCItad"),
+                    Description = ResourceProvider.GetString("LOCItadCheckNotifications"),
                     Action = (mainMenuItem) =>
                     {
-                        _ = IsThereAnyDealApi.CheckNotifications(PluginSettings.Settings, this);
+                        _ = IsThereAnyDealApi.CheckNotifications(this);
                     }
                 },
 
                 new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
-                    Description = resources.GetString("LOCItadUpdateDatas"),
+                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCItad"),
+                    Description = ResourceProvider.GetString("LOCItadUpdateDatas"),
                     Action = (mainMenuItem) =>
                     {
-                        ItadViewSidebar.ResetView();
-                        IsThereAnyDealApi.UpdateDatas(PluginSettings.Settings, this);
+                        SidebarItem.ResetView();
+                        IsThereAnyDealApi.UpdateDatas(this);
                     }
                 }
             };
@@ -183,7 +227,7 @@ namespace IsThereAnyDeal
 #if DEBUG
             mainMenuItems.Add(new MainMenuItem
             {
-                MenuSection = MenuInExtensions + resources.GetString("LOCItad"),
+                MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCItad"),
                 Description = "Test",
                 Action = (mainMenuItem) => { }
             });
@@ -236,13 +280,38 @@ namespace IsThereAnyDeal
         // Add code to be executed when Playnite is initialized.
         public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
         {
-            _ = IsThereAnyDealApi.CheckNotifications(PluginSettings.Settings, this);
+            _ = PluginSettings.Settings.UpdateWishlist.OnStart || PluginSettings.Settings.UpdateWishlist.OnStart
+                ? Task.Run(() =>
+                {
+                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                    _ = isThereAnyDealApi.LoadWishlist(this, PluginSettings.Settings.UpdateWishlist.OnStart, PluginSettings.Settings.UpdateWishlist.OnStart);
+                    _ = IsThereAnyDealApi.CheckNotifications(this);
+                })
+                : IsThereAnyDealApi.CheckNotifications(this);
 
-            SteamApi = new SteamApi("IsThereAnyDeal");
+            // StoreAPI intialization
+            SteamApi = new SteamApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal);
             SteamApi.SetLanguage(API.Instance.ApplicationSettings.Language);
+            SteamApi.StoreSettings = PluginSettings.Settings.SteamStoreSettings;
             if (PluginSettings.Settings.EnableSteam)
             {
-                _ = SteamApi.CurrentUser;
+                _ = SteamApi.CurrentAccountInfos;
+            }
+
+            EpicApi = new EpicApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal);
+            EpicApi.SetLanguage(API.Instance.ApplicationSettings.Language);
+            EpicApi.StoreSettings = PluginSettings.Settings.EpicStoreSettings;
+            if (PluginSettings.Settings.EnableEpic)
+            {
+                _ = EpicApi.CurrentAccountInfos;
+            }
+
+            GogApi = new GogApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal);
+            GogApi.SetLanguage(API.Instance.ApplicationSettings.Language);
+            GogApi.StoreSettings = PluginSettings.Settings.GogStoreSettings;
+            if (PluginSettings.Settings.EnableGog)
+            {
+                _ = GogApi.CurrentAccountInfos;
             }
         }
 

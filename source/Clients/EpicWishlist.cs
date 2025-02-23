@@ -13,20 +13,7 @@ namespace IsThereAnyDeal.Services
 {
     public class EpicWishlist : GenericWishlist
     {
-        protected static EpicApi _EpicApi;
-        internal static EpicApi EpicApi
-        {
-            get
-            {
-                if (_EpicApi == null)
-                {
-                    _EpicApi = new EpicApi("IsThereAnyDeals");
-                }
-                return _EpicApi;
-            }
-
-            set => _EpicApi = value;
-        }
+        private static EpicApi EpicApi => IsThereAnyDeal.EpicApi;
 
 
         public EpicWishlist(IsThereAnyDeal plugin) : base(plugin, "Epic")
@@ -58,31 +45,38 @@ namespace IsThereAnyDeal.Services
 
             accountWishlist.ForEach(x =>
             {
-                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
-                wishlists.Add(new Wishlist
+                try
                 {
-                    StoreId = x.Id,
-                    StoreName = "Epic",
-                    ShopColor = GetShopColor(),
-                    StoreUrl = x.Link,
-                    Name = x.Name,
-                    SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
-                    ReleaseDate = x.Released,
-                    Added = x.Added,
-                    Capsule = x.Image,
-                    Game = gamesLookup.Found ? gamesLookup.Game : null,
-                    IsActive = true
-                });
+                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                    wishlists.Add(new Wishlist
+                    {
+                        StoreId = x.Id,
+                        StoreName = "Epic",
+                        ShopColor = GetShopColor(),
+                        StoreUrl = x.Link,
+                        Name = x.Name,
+                        SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
+                        ReleaseDate = x.Released,
+                        Added = x.Added,
+                        Capsule = x.Image,
+                        Game = (gamesLookup?.Found ?? false) ? gamesLookup.Game : null,
+                        IsActive = true
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, false, true, "IsThereAnyDeal");
+                }
             });
 
-            wishlists = SetCurrentPrice(wishlists);
+            wishlists = SetCurrentPrice(wishlists, false);
             SaveWishlist(wishlists);
             return wishlists;
         }
 
-        public override bool RemoveWishlist(string StoreId)
+        public override bool RemoveWishlist(string storeId)
         {
-            return EpicApi.RemoveWishlist(StoreId);
+            return EpicApi.RemoveWishlist(storeId);
         }
     }
 }

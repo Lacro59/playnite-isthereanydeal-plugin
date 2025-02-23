@@ -17,6 +17,8 @@ using CommonPluginsShared.Converters;
 using System.Globalization;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
+using System.Windows.Media;
+using CommonPluginsControls.Controls;
 
 namespace IsThereAnyDeal.Views
 {
@@ -26,10 +28,9 @@ namespace IsThereAnyDeal.Views
     public partial class IsThereAnyDealView : UserControl
     {
         private static ILogger Logger => LogManager.GetLogger();
-        private static IResourceProvider ResourceProvider => new ResourceProvider();
 
-        private readonly IsThereAnyDealSettings Settings;
-        private readonly IsThereAnyDeal Plugin;
+        private IsThereAnyDealSettings Settings { get; }
+        private IsThereAnyDeal Plugin { get; }
 
         private List<string> SearchStores { get; set; } = new List<string>();
 
@@ -37,33 +38,33 @@ namespace IsThereAnyDeal.Views
         private ItadGameInfo StorePriceSelected { get; set; }
 
 
-        private readonly ItadDataContext itadDataContext = new ItadDataContext();
+        private ItadDataContext ItadDataContext { get; set; } = new ItadDataContext();
 
 
-        public IsThereAnyDealView(IsThereAnyDeal plugin, IsThereAnyDealSettings settings, string id = "")
+        public IsThereAnyDealView(IsThereAnyDeal plugin, string id = "")
         {
             InitializeComponent();
 
-            Settings = settings;
+            Settings = plugin.PluginSettings.Settings;
             Plugin = plugin;
 
             // Load data
             RefreshData(id);
-            //GetListGiveaways(PluginUserDataPath);            
+            GetListGiveaways(plugin.GetPluginUserDataPath());
 
-            DataContext = itadDataContext;
-            itadDataContext.MinPrice = Settings.MinPrice;
-            itadDataContext.MaxPrice = Settings.MaxPrice;
+            DataContext = ItadDataContext;
+            ItadDataContext.MinPrice = Settings.MinPrice;
+            ItadDataContext.MaxPrice = Settings.MaxPrice;
 
             lbWishlist.ItemsSource = new ObservableCollection<Wishlist>();
         }
 
-        private void RefreshData(string id, bool CachOnly = true, bool ForcePrice = false)
+        private void RefreshData(string id, bool cachOnly = true, bool forcePrice = false)
         {
             DataLoadWishlist.Visibility = Visibility.Visible;
             dpData.IsEnabled = false;
 
-            Task task = Task.Run(() => LoadData(Plugin.GetPluginUserDataPath(), Settings, CachOnly, ForcePrice))
+            Task task = Task.Run(() => LoadData(cachOnly, forcePrice))
                 .ContinueWith(antecedent =>
                 {
                     Application.Current.Dispatcher?.Invoke(new Action(() =>
@@ -74,7 +75,7 @@ namespace IsThereAnyDeal.Views
 
                             SetInfos();
 
-                            itadDataContext.CurrencySign = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource)?.Where(x => x.ItadLastPrice != null && x.ItadLastPrice.Where(y => !y.CurrencySign.IsNullOrEmpty()).Count() > 0)?.FirstOrDefault()?.ItadBestPrice.CurrencySign;
+                            ItadDataContext.CurrencySign = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource)?.Where(x => x.ItadLastPrice != null && x.ItadLastPrice.Where(y => !y.CurrencySign.IsNullOrEmpty()).Count() > 0)?.FirstOrDefault()?.ItadBestPrice.CurrencySign;
 
                             if (!id.IsNullOrEmpty())
                             {
@@ -139,7 +140,7 @@ namespace IsThereAnyDeal.Views
                 FilterStoreItems.Add(new ListStore { StoreName = "EA app", StoreNameDisplay = (TransformIcon.Get("EA app") + " EA app").Trim(), IsCheck = false });
             }
             FilterStoreItems.Sort((x, y) => string.Compare(x.StoreName, y.StoreName));
-            itadDataContext.FilterStoreItems = FilterStoreItems;
+            ItadDataContext.FilterStoreItems = FilterStoreItems;
         }
 
         private void SetInfos()
@@ -149,22 +150,21 @@ namespace IsThereAnyDeal.Views
         }
 
 
-        private ObservableCollection<Wishlist> LoadData(string PluginUserDataPath, IsThereAnyDealSettings settings, bool CachOnly = true, bool ForcePrice = false)
+        private ObservableCollection<Wishlist> LoadData(bool cachOnly = true, bool forcePrice = false)
         {
-            ObservableCollection<Wishlist> ListWishlist = IsThereAnyDealApi.LoadWishlist(Plugin, settings, PluginUserDataPath, CachOnly, ForcePrice).ToObservable();
+            ObservableCollection<Wishlist> ListWishlist = IsThereAnyDealApi.LoadWishlist(Plugin, cachOnly, forcePrice).ToObservable();
             return ListWishlist;
         }
 
-        //private List<ItadGiveaway> LoadDatatGiveaways(string PluginUserDataPath)
-        //{
-        //    List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(PluginUserDataPath);
-        //    return itadGiveaways;
-        //}
-
-        /*
-        private void GetListGiveaways(string PluginUserDataPath)
+        private List<ItadGiveaway> LoadDatatGiveaways(string pluginUserDataPath)
         {
-            _ = Task.Run(() => LoadDatatGiveaways(PluginUserDataPath))
+            List<ItadGiveaway> itadGiveaways = IsThereAnyDealApi.GetGiveaways(pluginUserDataPath);
+            return itadGiveaways;
+        }
+
+        private void GetListGiveaways(string pluginUserDataPath)
+        {
+            _ = Task.Run(() => LoadDatatGiveaways(pluginUserDataPath))
                 .ContinueWith(antecedent =>
                 {
                     if (antecedent?.Result == null)
@@ -183,43 +183,114 @@ namespace IsThereAnyDeal.Views
                             {
                                 col = 0;
                                 row += 1;
-                                RowDefinition rowAuto = new RowDefinition();
-                                rowAuto.Height = new GridLength(40);
+                                RowDefinition rowAuto = new RowDefinition
+                                {
+                                    Height = new GridLength(40)
+                                };
                                 gGiveaways.RowDefinitions.Add(rowAuto);
                             }
 
-                            DockPanel dp = new DockPanel();
-                            dp.Width = 540;
+                            DockPanel dp = new DockPanel
+                            {
+                                Width = 540
+                            };
 
-                            TextBlock tb = new TextBlock();
-                            tb.Text = itadGiveaway.TitleAll;
-                            tb.VerticalAlignment = VerticalAlignment.Center;
-                            tb.Width = 440;
-                            tb.VerticalAlignment = VerticalAlignment.Center;
+                            TextBlockTrimmed tb = new TextBlockTrimmed
+                            {
+                                Text = itadGiveaway.Title,
+                                VerticalAlignment = VerticalAlignment.Center,
+                                MaxWidth = 350
+                            };
 
-                            Button bt = new Button();
-                            bt.Content = resources.GetString("LOCWebsiteLabel");
-                            bt.Tag = itadGiveaway.Link;
-                            bt.Click += new RoutedEventHandler(webGiveaway);
-                            bt.Height = 30;
-                            bt.Width = 100;
-                            bt.VerticalAlignment = VerticalAlignment.Center;
+                            TextBlockTrimmed tbShop = new TextBlockTrimmed
+                            {
+                                Text = itadGiveaway.ShopName,
+                                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(itadGiveaway.ShopColor)),
+                                Margin = new Thickness(10, 0, 0, 0),
+                                VerticalAlignment = VerticalAlignment.Center
+                            };
+
+                            TextBlock tbWaitlist = new TextBlock
+                            {
+                                Text = "\uec3f",
+                                FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily,
+                                ToolTip = ResourceProvider.GetString("LOCItadInWaitlist"),
+                                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#02b65a")),
+                                Margin = new Thickness(10, 0, 0, 0),
+                                VerticalAlignment = VerticalAlignment.Center
+                            };
+
+                            TextBlock tbCollection = new TextBlock
+                            {
+                                Text = "\uec5c",
+                                FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily,
+                                ToolTip = ResourceProvider.GetString("LOCItadInCollection"),
+                                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1494e4")),
+                                Margin = new Thickness(10, 0, 0, 0),
+                                VerticalAlignment = VerticalAlignment.Center
+                            };
+
+                            LocalDateConverter localDateConverter = new LocalDateConverter();
+                            TextBlock tbDate = new TextBlock
+                            {
+                                Text = "\uf006",
+                                FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily,
+                                Margin = new Thickness(10, 0, 0, 0),
+                                VerticalAlignment = VerticalAlignment.Center,
+                                Visibility = itadGiveaway.Time == null ? Visibility.Hidden : Visibility.Visible
+                            };
+                            TextBlock tbDate2 = new TextBlock
+                            {
+                                Text = $"{localDateConverter.Convert(itadGiveaway.Time, null, null, CultureInfo.CurrentCulture)}",
+                                Margin = new Thickness(10, 0, 0, 0),
+                                VerticalAlignment = VerticalAlignment.Center,
+                                Visibility = itadGiveaway.Time == null ? Visibility.Hidden : Visibility.Visible
+                            };
+                            if (itadGiveaway.Time < DateTime.Now)
+                            {
+                                tbDate.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
+                                tbDate2.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
+                            }
+                            DockPanel.SetDock(tbDate, Dock.Right);
+                            DockPanel.SetDock(tbDate2, Dock.Right);
+
+                            Button bt = new Button
+                            {
+                                ToolTip = ResourceProvider.GetString("LOCWebsiteLabel"),
+                                Content = "\uf028",
+                                FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily,
+                                Tag = itadGiveaway.Link,
+                                VerticalAlignment = VerticalAlignment.Center,
+                                Margin = new Thickness(10, 0, 0, 0),
+                            };
+                            bt.Click += new RoutedEventHandler(WebGiveaway);
                             DockPanel.SetDock(bt, Dock.Right);
 
-                            dp.Children.Add(tb);
-                            dp.Children.Add(bt);
+                            _ = dp.Children.Add(bt);
+                            _ = dp.Children.Add(tbDate2);
+                            _ = dp.Children.Add(tbDate);
+                            _ = dp.Children.Add(tb);
+                            _ = dp.Children.Add(tbShop);
+
+                            if (itadGiveaway.InWaitlist)
+                            {
+                                _ = dp.Children.Add(tbWaitlist);
+                            }
+                            if (itadGiveaway.InCollection)
+                            {
+                                _ = dp.Children.Add(tbCollection);
+                            }
 
                             Grid.SetRow(dp, row);
                             Grid.SetColumn(dp, col);
 
                             col += 2;
 
-                            gGiveaways.Children.Add(dp);
+                            _ = gGiveaways.Children.Add(dp);
                         }
                     }));
                 });
         }
-        */
 
         private void WebGiveaway(object sender, RoutedEventArgs e)
         {
@@ -387,8 +458,8 @@ namespace IsThereAnyDeal.Views
         private bool UserFilter(object item)
         {
             Wishlist wishlist = item as Wishlist;
-            return ((bool)PART_RbBest.IsChecked ? wishlist.ItadBestPrice.PriceCut >= itadDataContext.DiscountPercent : wishlist.ItadPriceForWishlistStore.PriceCut >= itadDataContext.DiscountPercent)
-                && ((bool)PART_RbBest.IsChecked ? wishlist.ItadBestPrice.PriceNew <= itadDataContext.PriceLimit : wishlist.ItadPriceForWishlistStore.PriceNew <= itadDataContext.PriceLimit)
+            return ((bool)PART_RbBest.IsChecked ? wishlist.ItadBestPrice.PriceCut >= ItadDataContext.DiscountPercent : wishlist.ItadPriceForWishlistStore.PriceCut >= ItadDataContext.DiscountPercent)
+                && ((bool)PART_RbBest.IsChecked ? wishlist.ItadBestPrice.PriceNew <= ItadDataContext.PriceLimit : wishlist.ItadPriceForWishlistStore.PriceNew <= ItadDataContext.PriceLimit)
                 && (TextboxSearch.Text.IsNullOrEmpty() || wishlist.Name.Contains(TextboxSearch.Text, StringComparison.InvariantCultureIgnoreCase))
                 && (SearchStores.Count == 0 || SearchStores.Contains(wishlist.StoreName) || wishlist.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
                 && Settings.wishlistIgnores.All(y => y.StoreId != wishlist.StoreId && !y.Name.IsEqual(wishlist.Name))
@@ -573,25 +644,25 @@ namespace IsThereAnyDeal.Views
 
     public class ItadDataContext : ObservableObject
     {
-        private string _CurrencySign = "$";
-        public string CurrencySign { get => _CurrencySign; set => SetValue(ref _CurrencySign, value); }
+        private string _currencySign = "$";
+        public string CurrencySign { get => _currencySign; set => SetValue(ref _currencySign, value); }
 
-        private double _MinPrice = 0;
-        public double MinPrice { get => _MinPrice; set => SetValue(ref _MinPrice, value); }
+        private double _minPrice = 0;
+        public double MinPrice { get => _minPrice; set => SetValue(ref _minPrice, value); }
 
-        private double _MaxPrice = 250;
-        public double MaxPrice { get => _MaxPrice; set => SetValue(ref _MaxPrice, value); }
+        private double _maxPrice = 250;
+        public double MaxPrice { get => _maxPrice; set => SetValue(ref _maxPrice, value); }
 
 
 
-        private double _DiscountPercent = 0;
-        public double DiscountPercent { get => _DiscountPercent; set => SetValue(ref _DiscountPercent, value); }
+        private double _discountPercent = 0;
+        public double DiscountPercent { get => _discountPercent; set => SetValue(ref _discountPercent, value); }
 
-        private double _PriceLimit = 100;
-        public double PriceLimit { get => _PriceLimit; set => SetValue(ref _PriceLimit, value); }
+        private double _priceLimit = 100;
+        public double PriceLimit { get => _priceLimit; set => SetValue(ref _priceLimit, value); }
 
-        private List<ListStore> _FilterStoreItems = new List<ListStore>();
-        public List<ListStore> FilterStoreItems { get => _FilterStoreItems; set => SetValue(ref _FilterStoreItems, value); }
+        private List<ListStore> _filterStoreItems = new List<ListStore>();
+        public List<ListStore> FilterStoreItems { get => _filterStoreItems; set => SetValue(ref _filterStoreItems, value); }
     }
 
 

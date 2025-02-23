@@ -1,0 +1,1994 @@
+﻿[
+  {
+    "alpha2": "AF",
+    "alpha3": "AFG",
+    "m49": "142",
+    "name": "Afghanistan",
+    "currency": "AFN",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "AX",
+    "alpha3": "ALA",
+    "m49": "150",
+    "name": "Åland Islands",
+    "currency": "EUR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "AL",
+    "alpha3": "ALB",
+    "m49": "150",
+    "name": "Albania",
+    "currency": "ALL",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "DZ",
+    "alpha3": "DZA",
+    "m49": "002",
+    "name": "Algeria",
+    "currency": "DZD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "AS",
+    "alpha3": "ASM",
+    "m49": "009",
+    "name": "American Samoa",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "AD",
+    "alpha3": "AND",
+    "m49": "150",
+    "name": "Andorra",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "AO",
+    "alpha3": "AGO",
+    "m49": "002",
+    "name": "Angola",
+    "currency": "AOA",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "AI",
+    "alpha3": "AIA",
+    "m49": "003",
+    "name": "Anguilla",
+    "currency": "XCD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "AQ",
+    "alpha3": "ATA",
+    "m49": "010",
+    "name": "Antarctica",
+    "currency": "ARS",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "AG",
+    "alpha3": "ATG",
+    "m49": "003",
+    "name": "Antigua and Barbuda",
+    "currency": "XCD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "AR",
+    "alpha3": "ARG",
+    "m49": "419",
+    "name": "Argentina",
+    "currency": "ARS",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "AM",
+    "alpha3": "ARM",
+    "m49": "142",
+    "name": "Armenia",
+    "currency": "AMD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "AW",
+    "alpha3": "ABW",
+    "m49": "419",
+    "name": "Aruba",
+    "currency": "AWG",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "AU",
+    "alpha3": "AUS",
+    "m49": "009",
+    "name": "Australia",
+    "currency": "AUD",
+    "rCurrency": "AUD"
+  },
+  {
+    "alpha2": "AT",
+    "alpha3": "AUT",
+    "m49": "150",
+    "name": "Austria",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "AZ",
+    "alpha3": "AZE",
+    "m49": "142",
+    "name": "Azerbaijan",
+    "currency": "AZN",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BS",
+    "alpha3": "BHS",
+    "m49": "419",
+    "name": "Bahamas",
+    "currency": "BSD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BH",
+    "alpha3": "BHR",
+    "m49": "142",
+    "name": "Bahrain",
+    "currency": "BHD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BD",
+    "alpha3": "BGD",
+    "m49": "142",
+    "name": "Bangladesh",
+    "currency": "BDT",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BB",
+    "alpha3": "BRB",
+    "m49": "419",
+    "name": "Barbados",
+    "currency": "BBD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BY",
+    "alpha3": "BLR",
+    "m49": "150",
+    "name": "Belarus",
+    "currency": "BYN",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BE",
+    "alpha3": "BEL",
+    "m49": "150",
+    "name": "Belgium",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "BZ",
+    "alpha3": "BLZ",
+    "m49": "419",
+    "name": "Belize",
+    "currency": "BZD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BJ",
+    "alpha3": "BEN",
+    "m49": "002",
+    "name": "Benin",
+    "currency": "XOF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BM",
+    "alpha3": "BMU",
+    "m49": "003",
+    "name": "Bermuda",
+    "currency": "BMD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BT",
+    "alpha3": "BTN",
+    "m49": "142",
+    "name": "Bhutan",
+    "currency": "BTN",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BO",
+    "alpha3": "BOL",
+    "m49": "419",
+    "name": "Bolivia (Plurinational State of)",
+    "currency": "BOB",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BQ",
+    "alpha3": "BES",
+    "m49": "419",
+    "name": "Bonaire, Sint Eustatius and Saba",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BA",
+    "alpha3": "BIH",
+    "m49": "150",
+    "name": "Bosnia and Herzegovina",
+    "currency": "BAM",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "BW",
+    "alpha3": "BWA",
+    "m49": "002",
+    "name": "Botswana",
+    "currency": "BWP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BV",
+    "alpha3": "BVT",
+    "m49": "419",
+    "name": "Bouvet Island",
+    "currency": "NOK",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BR",
+    "alpha3": "BRA",
+    "m49": "419",
+    "name": "Brazil",
+    "currency": "BRL",
+    "rCurrency": "BRL"
+  },
+  {
+    "alpha2": "IO",
+    "alpha3": "IOT",
+    "m49": "002",
+    "name": "British Indian Ocean Territory",
+    "currency": "GBP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BN",
+    "alpha3": "BRN",
+    "m49": "142",
+    "name": "Brunei Darussalam",
+    "currency": "BND",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BG",
+    "alpha3": "BGR",
+    "m49": "150",
+    "name": "Bulgaria",
+    "currency": "BGN",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "BF",
+    "alpha3": "BFA",
+    "m49": "002",
+    "name": "Burkina Faso",
+    "currency": "XOF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BI",
+    "alpha3": "BDI",
+    "m49": "002",
+    "name": "Burundi",
+    "currency": "BIF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CV",
+    "alpha3": "CPV",
+    "m49": "002",
+    "name": "Cabo Verde",
+    "currency": "CVE",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "KH",
+    "alpha3": "KHM",
+    "m49": "142",
+    "name": "Cambodia",
+    "currency": "KHR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CM",
+    "alpha3": "CMR",
+    "m49": "002",
+    "name": "Cameroon",
+    "currency": "XAF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CA",
+    "alpha3": "CAN",
+    "m49": "003",
+    "name": "Canada",
+    "currency": "CAD",
+    "rCurrency": "CAD"
+  },
+  {
+    "alpha2": "KY",
+    "alpha3": "CYM",
+    "m49": "419",
+    "name": "Cayman Islands",
+    "currency": "KYD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CF",
+    "alpha3": "CAF",
+    "m49": "002",
+    "name": "Central African Republic",
+    "currency": "XAF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TD",
+    "alpha3": "TCD",
+    "m49": "002",
+    "name": "Chad",
+    "currency": "XAF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CL",
+    "alpha3": "CHL",
+    "m49": "419",
+    "name": "Chile",
+    "currency": "CLP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CN",
+    "alpha3": "CHN",
+    "m49": "142",
+    "name": "China",
+    "currency": "CNY",
+    "rCurrency": "CNY"
+  },
+  {
+    "alpha2": "CX",
+    "alpha3": "CXR",
+    "m49": "009",
+    "name": "Christmas Island",
+    "currency": "AUD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CC",
+    "alpha3": "CCK",
+    "m49": "009",
+    "name": "Cocos (Keeling) Islands",
+    "currency": "AUD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CO",
+    "alpha3": "COL",
+    "m49": "419",
+    "name": "Colombia",
+    "currency": "COP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "KM",
+    "alpha3": "COM",
+    "m49": "002",
+    "name": "Comoros",
+    "currency": "KMF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CG",
+    "alpha3": "COG",
+    "m49": "002",
+    "name": "Congo",
+    "currency": "XAF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CD",
+    "alpha3": "COD",
+    "m49": "002",
+    "name": "Congo (Democratic Republic of the)",
+    "currency": "CDF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CK",
+    "alpha3": "COK",
+    "m49": "009",
+    "name": "Cook Islands",
+    "currency": "NZD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CR",
+    "alpha3": "CRI",
+    "m49": "419",
+    "name": "Costa Rica",
+    "currency": "CRC",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CI",
+    "alpha3": "CIV",
+    "m49": "002",
+    "name": "Côte d'Ivoire",
+    "currency": "XOF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "HR",
+    "alpha3": "HRV",
+    "m49": "150",
+    "name": "Croatia",
+    "currency": "HRK",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "CU",
+    "alpha3": "CUB",
+    "m49": "419",
+    "name": "Cuba",
+    "currency": "CUC",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CW",
+    "alpha3": "CUW",
+    "m49": "419",
+    "name": "Curaçao",
+    "currency": "ANG",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "CY",
+    "alpha3": "CYP",
+    "m49": "142",
+    "name": "Cyprus",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "CZ",
+    "alpha3": "CZE",
+    "m49": "150",
+    "name": "Czechia",
+    "currency": "CZK",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "DK",
+    "alpha3": "DNK",
+    "m49": "150",
+    "name": "Denmark",
+    "currency": "DKK",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "DJ",
+    "alpha3": "DJI",
+    "m49": "002",
+    "name": "Djibouti",
+    "currency": "DJF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "DM",
+    "alpha3": "DMA",
+    "m49": "419",
+    "name": "Dominica",
+    "currency": "XCD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "DO",
+    "alpha3": "DOM",
+    "m49": "419",
+    "name": "Dominican Republic",
+    "currency": "DOP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "EC",
+    "alpha3": "ECU",
+    "m49": "419",
+    "name": "Ecuador",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "EG",
+    "alpha3": "EGY",
+    "m49": "002",
+    "name": "Egypt",
+    "currency": "EGP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SV",
+    "alpha3": "SLV",
+    "m49": "419",
+    "name": "El Salvador",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GQ",
+    "alpha3": "GNQ",
+    "m49": "002",
+    "name": "Equatorial Guinea",
+    "currency": "XAF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "ER",
+    "alpha3": "ERI",
+    "m49": "002",
+    "name": "Eritrea",
+    "currency": "ERN",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "EE",
+    "alpha3": "EST",
+    "m49": "150",
+    "name": "Estonia",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "ET",
+    "alpha3": "ETH",
+    "m49": "002",
+    "name": "Ethiopia",
+    "currency": "ETB",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SZ",
+    "alpha3": "SWZ",
+    "m49": "002",
+    "name": "Eswatini",
+    "currency": "SZL",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "FK",
+    "alpha3": "FLK",
+    "m49": "419",
+    "name": "Falkland Islands (Malvinas)",
+    "currency": "FKP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "FO",
+    "alpha3": "FRO",
+    "m49": "150",
+    "name": "Faroe Islands",
+    "currency": "DKK",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "FJ",
+    "alpha3": "FJI",
+    "m49": "009",
+    "name": "Fiji",
+    "currency": "FJD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "FI",
+    "alpha3": "FIN",
+    "m49": "150",
+    "name": "Finland",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "FR",
+    "alpha3": "FRA",
+    "m49": "150",
+    "name": "France",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "GF",
+    "alpha3": "GUF",
+    "m49": "419",
+    "name": "French Guiana",
+    "currency": "EUR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "PF",
+    "alpha3": "PYF",
+    "m49": "009",
+    "name": "French Polynesia",
+    "currency": "XPF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TF",
+    "alpha3": "ATF",
+    "m49": "002",
+    "name": "French Southern Territories",
+    "currency": "EUR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GA",
+    "alpha3": "GAB",
+    "m49": "002",
+    "name": "Gabon",
+    "currency": "XAF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GM",
+    "alpha3": "GMB",
+    "m49": "002",
+    "name": "Gambia",
+    "currency": "GMD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GE",
+    "alpha3": "GEO",
+    "m49": "142",
+    "name": "Georgia",
+    "currency": "GEL",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "DE",
+    "alpha3": "DEU",
+    "m49": "150",
+    "name": "Germany",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "GH",
+    "alpha3": "GHA",
+    "m49": "002",
+    "name": "Ghana",
+    "currency": "GHS",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GI",
+    "alpha3": "GIB",
+    "m49": "150",
+    "name": "Gibraltar",
+    "currency": "GIP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GR",
+    "alpha3": "GRC",
+    "m49": "150",
+    "name": "Greece",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "GL",
+    "alpha3": "GRL",
+    "m49": "003",
+    "name": "Greenland",
+    "currency": "DKK",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GD",
+    "alpha3": "GRD",
+    "m49": "419",
+    "name": "Grenada",
+    "currency": "XCD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GP",
+    "alpha3": "GLP",
+    "m49": "419",
+    "name": "Guadeloupe",
+    "currency": "EUR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GU",
+    "alpha3": "GUM",
+    "m49": "009",
+    "name": "Guam",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GT",
+    "alpha3": "GTM",
+    "m49": "419",
+    "name": "Guatemala",
+    "currency": "GTQ",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GG",
+    "alpha3": "GGY",
+    "m49": "150",
+    "name": "Guernsey",
+    "currency": "GBP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GN",
+    "alpha3": "GIN",
+    "m49": "002",
+    "name": "Guinea",
+    "currency": "GNF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GW",
+    "alpha3": "GNB",
+    "m49": "002",
+    "name": "Guinea-Bissau",
+    "currency": "XOF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GY",
+    "alpha3": "GUY",
+    "m49": "419",
+    "name": "Guyana",
+    "currency": "GYD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "HT",
+    "alpha3": "HTI",
+    "m49": "419",
+    "name": "Haiti",
+    "currency": "HTG",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "HM",
+    "alpha3": "HMD",
+    "m49": "009",
+    "name": "Heard Island and McDonald Islands",
+    "currency": "AUD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "VA",
+    "alpha3": "VAT",
+    "m49": "150",
+    "name": "Holy See",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "HN",
+    "alpha3": "HND",
+    "m49": "419",
+    "name": "Honduras",
+    "currency": "HNL",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "HK",
+    "alpha3": "HKG",
+    "m49": "142",
+    "name": "Hong Kong",
+    "currency": "HKD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "HU",
+    "alpha3": "HUN",
+    "m49": "150",
+    "name": "Hungary",
+    "currency": "HUF",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "IS",
+    "alpha3": "ISL",
+    "m49": "150",
+    "name": "Iceland",
+    "currency": "ISK",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "IN",
+    "alpha3": "IND",
+    "m49": "142",
+    "name": "India",
+    "currency": "INR",
+    "rCurrency": "INR"
+  },
+  {
+    "alpha2": "ID",
+    "alpha3": "IDN",
+    "m49": "142",
+    "name": "Indonesia",
+    "currency": "IDR",
+    "rCurrency": "IDR"
+  },
+  {
+    "alpha2": "IR",
+    "alpha3": "IRN",
+    "m49": "142",
+    "name": "Iran (Islamic Republic of)",
+    "currency": "IRR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "IQ",
+    "alpha3": "IRQ",
+    "m49": "142",
+    "name": "Iraq",
+    "currency": "IQD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "IE",
+    "alpha3": "IRL",
+    "m49": "150",
+    "name": "Ireland",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "IM",
+    "alpha3": "IMN",
+    "m49": "150",
+    "name": "Isle of Man",
+    "currency": "GBP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "IL",
+    "alpha3": "ISR",
+    "m49": "142",
+    "name": "Israel",
+    "currency": "ILS",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "IT",
+    "alpha3": "ITA",
+    "m49": "150",
+    "name": "Italy",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "JM",
+    "alpha3": "JAM",
+    "m49": "419",
+    "name": "Jamaica",
+    "currency": "JMD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "JP",
+    "alpha3": "JPN",
+    "m49": "142",
+    "name": "Japan",
+    "currency": "JPY",
+    "rCurrency": "JPY"
+  },
+  {
+    "alpha2": "JE",
+    "alpha3": "JEY",
+    "m49": "150",
+    "name": "Jersey",
+    "currency": "GBP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "JO",
+    "alpha3": "JOR",
+    "m49": "142",
+    "name": "Jordan",
+    "currency": "JOD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "KZ",
+    "alpha3": "KAZ",
+    "m49": "142",
+    "name": "Kazakhstan",
+    "currency": "KZT",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "KE",
+    "alpha3": "KEN",
+    "m49": "002",
+    "name": "Kenya",
+    "currency": "KES",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "KI",
+    "alpha3": "KIR",
+    "m49": "009",
+    "name": "Kiribati",
+    "currency": "AUD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "KP",
+    "alpha3": "PRK",
+    "m49": "142",
+    "name": "Korea (Democratic People's Republic of)",
+    "currency": "KPW",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "KR",
+    "alpha3": "KOR",
+    "m49": "142",
+    "name": "Korea (Republic of)",
+    "currency": "KRW",
+    "rCurrency": "KRW"
+  },
+  {
+    "alpha2": "KW",
+    "alpha3": "KWT",
+    "m49": "142",
+    "name": "Kuwait",
+    "currency": "KWD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "KG",
+    "alpha3": "KGZ",
+    "m49": "142",
+    "name": "Kyrgyzstan",
+    "currency": "KGS",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "LA",
+    "alpha3": "LAO",
+    "m49": "142",
+    "name": "Lao People's Democratic Republic",
+    "currency": "LAK",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "LV",
+    "alpha3": "LVA",
+    "m49": "150",
+    "name": "Latvia",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "LB",
+    "alpha3": "LBN",
+    "m49": "142",
+    "name": "Lebanon",
+    "currency": "LBP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "LS",
+    "alpha3": "LSO",
+    "m49": "002",
+    "name": "Lesotho",
+    "currency": "LSL",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "LR",
+    "alpha3": "LBR",
+    "m49": "002",
+    "name": "Liberia",
+    "currency": "LRD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "LY",
+    "alpha3": "LBY",
+    "m49": "002",
+    "name": "Libya",
+    "currency": "LYD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "LI",
+    "alpha3": "LIE",
+    "m49": "150",
+    "name": "Liechtenstein",
+    "currency": "CHF",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "LT",
+    "alpha3": "LTU",
+    "m49": "150",
+    "name": "Lithuania",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "LU",
+    "alpha3": "LUX",
+    "m49": "150",
+    "name": "Luxembourg",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "MO",
+    "alpha3": "MAC",
+    "m49": "142",
+    "name": "Macao",
+    "currency": "MOP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MK",
+    "alpha3": "MKD",
+    "m49": "150",
+    "name": "North Macedonia",
+    "currency": "MKD",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "MG",
+    "alpha3": "MDG",
+    "m49": "002",
+    "name": "Madagascar",
+    "currency": "MGA",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MW",
+    "alpha3": "MWI",
+    "m49": "002",
+    "name": "Malawi",
+    "currency": "MWK",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MY",
+    "alpha3": "MYS",
+    "m49": "142",
+    "name": "Malaysia",
+    "currency": "MYR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MV",
+    "alpha3": "MDV",
+    "m49": "142",
+    "name": "Maldives",
+    "currency": "MVR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "ML",
+    "alpha3": "MLI",
+    "m49": "002",
+    "name": "Mali",
+    "currency": "XOF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MT",
+    "alpha3": "MLT",
+    "m49": "150",
+    "name": "Malta",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "MH",
+    "alpha3": "MHL",
+    "m49": "009",
+    "name": "Marshall Islands",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MQ",
+    "alpha3": "MTQ",
+    "m49": "419",
+    "name": "Martinique",
+    "currency": "EUR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MR",
+    "alpha3": "MRT",
+    "m49": "002",
+    "name": "Mauritania",
+    "currency": "MRO",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MU",
+    "alpha3": "MUS",
+    "m49": "002",
+    "name": "Mauritius",
+    "currency": "MUR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "YT",
+    "alpha3": "MYT",
+    "m49": "002",
+    "name": "Mayotte",
+    "currency": "EUR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MX",
+    "alpha3": "MEX",
+    "m49": "419",
+    "name": "Mexico",
+    "currency": "MXN",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "FM",
+    "alpha3": "FSM",
+    "m49": "009",
+    "name": "Micronesia (Federated States of)",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MD",
+    "alpha3": "MDA",
+    "m49": "150",
+    "name": "Moldova (Republic of)",
+    "currency": "MDL",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MC",
+    "alpha3": "MCO",
+    "m49": "150",
+    "name": "Monaco",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "MN",
+    "alpha3": "MNG",
+    "m49": "142",
+    "name": "Mongolia",
+    "currency": "MNT",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "ME",
+    "alpha3": "MNE",
+    "m49": "150",
+    "name": "Montenegro",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "MS",
+    "alpha3": "MSR",
+    "m49": "419",
+    "name": "Montserrat",
+    "currency": "XCD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MA",
+    "alpha3": "MAR",
+    "m49": "002",
+    "name": "Morocco",
+    "currency": "MAD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MZ",
+    "alpha3": "MOZ",
+    "m49": "002",
+    "name": "Mozambique",
+    "currency": "MZN",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MM",
+    "alpha3": "MMR",
+    "m49": "142",
+    "name": "Myanmar",
+    "currency": "MMK",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "NA",
+    "alpha3": "NAM",
+    "m49": "002",
+    "name": "Namibia",
+    "currency": "NAD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "NR",
+    "alpha3": "NRU",
+    "m49": "009",
+    "name": "Nauru",
+    "currency": "AUD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "NP",
+    "alpha3": "NPL",
+    "m49": "142",
+    "name": "Nepal",
+    "currency": "NPR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "NL",
+    "alpha3": "NLD",
+    "m49": "150",
+    "name": "Netherlands",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "NC",
+    "alpha3": "NCL",
+    "m49": "009",
+    "name": "New Caledonia",
+    "currency": "XPF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "NZ",
+    "alpha3": "NZL",
+    "m49": "009",
+    "name": "New Zealand",
+    "currency": "NZD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "NI",
+    "alpha3": "NIC",
+    "m49": "419",
+    "name": "Nicaragua",
+    "currency": "NIO",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "NE",
+    "alpha3": "NER",
+    "m49": "002",
+    "name": "Niger",
+    "currency": "XOF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "NG",
+    "alpha3": "NGA",
+    "m49": "002",
+    "name": "Nigeria",
+    "currency": "NGN",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "NU",
+    "alpha3": "NIU",
+    "m49": "009",
+    "name": "Niue",
+    "currency": "NZD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "NF",
+    "alpha3": "NFK",
+    "m49": "009",
+    "name": "Norfolk Island",
+    "currency": "AUD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MP",
+    "alpha3": "MNP",
+    "m49": "009",
+    "name": "Northern Mariana Islands",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "NO",
+    "alpha3": "NOR",
+    "m49": "150",
+    "name": "Norway",
+    "currency": "NOK",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "OM",
+    "alpha3": "OMN",
+    "m49": "142",
+    "name": "Oman",
+    "currency": "OMR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "PK",
+    "alpha3": "PAK",
+    "m49": "142",
+    "name": "Pakistan",
+    "currency": "PKR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "PW",
+    "alpha3": "PLW",
+    "m49": "009",
+    "name": "Palau",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "PS",
+    "alpha3": "PSE",
+    "m49": "142",
+    "name": "Palestine, State of",
+    "currency": "ILS",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "PA",
+    "alpha3": "PAN",
+    "m49": "419",
+    "name": "Panama",
+    "currency": "PAB",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "PG",
+    "alpha3": "PNG",
+    "m49": "009",
+    "name": "Papua New Guinea",
+    "currency": "PGK",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "PY",
+    "alpha3": "PRY",
+    "m49": "419",
+    "name": "Paraguay",
+    "currency": "PYG",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "PE",
+    "alpha3": "PER",
+    "m49": "419",
+    "name": "Peru",
+    "currency": "PEN",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "PH",
+    "alpha3": "PHL",
+    "m49": "142",
+    "name": "Philippines",
+    "currency": "PHP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "PN",
+    "alpha3": "PCN",
+    "m49": "009",
+    "name": "Pitcairn",
+    "currency": "NZD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "PL",
+    "alpha3": "POL",
+    "m49": "150",
+    "name": "Poland",
+    "currency": "PLN",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "PT",
+    "alpha3": "PRT",
+    "m49": "150",
+    "name": "Portugal",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "PR",
+    "alpha3": "PRI",
+    "m49": "419",
+    "name": "Puerto Rico",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "QA",
+    "alpha3": "QAT",
+    "m49": "142",
+    "name": "Qatar",
+    "currency": "QAR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "RE",
+    "alpha3": "REU",
+    "m49": "002",
+    "name": "Réunion",
+    "currency": "EUR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "RO",
+    "alpha3": "ROU",
+    "m49": "150",
+    "name": "Romania",
+    "currency": "RON",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "RU",
+    "alpha3": "RUS",
+    "m49": "150",
+    "name": "Russian Federation",
+    "currency": "RUB",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "RW",
+    "alpha3": "RWA",
+    "m49": "002",
+    "name": "Rwanda",
+    "currency": "RWF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "BL",
+    "alpha3": "BLM",
+    "m49": "419",
+    "name": "Saint Barthélemy",
+    "currency": "EUR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SH",
+    "alpha3": "SHN",
+    "m49": "002",
+    "name": "Saint Helena, Ascension and Tristan da Cunha",
+    "currency": "SHP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "KN",
+    "alpha3": "KNA",
+    "m49": "419",
+    "name": "Saint Kitts and Nevis",
+    "currency": "XCD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "LC",
+    "alpha3": "LCA",
+    "m49": "419",
+    "name": "Saint Lucia",
+    "currency": "XCD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "MF",
+    "alpha3": "MAF",
+    "m49": "419",
+    "name": "Saint Martin (French part)",
+    "currency": "EUR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "PM",
+    "alpha3": "SPM",
+    "m49": "003",
+    "name": "Saint Pierre and Miquelon",
+    "currency": "EUR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "VC",
+    "alpha3": "VCT",
+    "m49": "419",
+    "name": "Saint Vincent and the Grenadines",
+    "currency": "XCD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "WS",
+    "alpha3": "WSM",
+    "m49": "009",
+    "name": "Samoa",
+    "currency": "WST",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SM",
+    "alpha3": "SMR",
+    "m49": "150",
+    "name": "San Marino",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "ST",
+    "alpha3": "STP",
+    "m49": "002",
+    "name": "Sao Tome and Principe",
+    "currency": "STD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SA",
+    "alpha3": "SAU",
+    "m49": "142",
+    "name": "Saudi Arabia",
+    "currency": "SAR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SN",
+    "alpha3": "SEN",
+    "m49": "002",
+    "name": "Senegal",
+    "currency": "XOF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "RS",
+    "alpha3": "SRB",
+    "m49": "150",
+    "name": "Serbia",
+    "currency": "RSD",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "SC",
+    "alpha3": "SYC",
+    "m49": "002",
+    "name": "Seychelles",
+    "currency": "SCR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SL",
+    "alpha3": "SLE",
+    "m49": "002",
+    "name": "Sierra Leone",
+    "currency": "SLL",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SG",
+    "alpha3": "SGP",
+    "m49": "142",
+    "name": "Singapore",
+    "currency": "SGD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SX",
+    "alpha3": "SXM",
+    "m49": "419",
+    "name": "Sint Maarten (Dutch part)",
+    "currency": "ANG",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SK",
+    "alpha3": "SVK",
+    "m49": "150",
+    "name": "Slovakia",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "SI",
+    "alpha3": "SVN",
+    "m49": "150",
+    "name": "Slovenia",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "SB",
+    "alpha3": "SLB",
+    "m49": "009",
+    "name": "Solomon Islands",
+    "currency": "SBD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SO",
+    "alpha3": "SOM",
+    "m49": "002",
+    "name": "Somalia",
+    "currency": "SOS",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "ZA",
+    "alpha3": "ZAF",
+    "m49": "002",
+    "name": "South Africa",
+    "currency": "ZAR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GS",
+    "alpha3": "SGS",
+    "m49": "419",
+    "name": "South Georgia and the South Sandwich Islands",
+    "currency": "GBP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SS",
+    "alpha3": "SSD",
+    "m49": "002",
+    "name": "South Sudan",
+    "currency": "SSP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "ES",
+    "alpha3": "ESP",
+    "m49": "150",
+    "name": "Spain",
+    "currency": "EUR",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "LK",
+    "alpha3": "LKA",
+    "m49": "142",
+    "name": "Sri Lanka",
+    "currency": "LKR",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SD",
+    "alpha3": "SDN",
+    "m49": "002",
+    "name": "Sudan",
+    "currency": "SDG",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SR",
+    "alpha3": "SUR",
+    "m49": "419",
+    "name": "Suriname",
+    "currency": "SRD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SJ",
+    "alpha3": "SJM",
+    "m49": "150",
+    "name": "Svalbard and Jan Mayen",
+    "currency": "NOK",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "SE",
+    "alpha3": "SWE",
+    "m49": "150",
+    "name": "Sweden",
+    "currency": "SEK",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "CH",
+    "alpha3": "CHE",
+    "m49": "150",
+    "name": "Switzerland",
+    "currency": "CHF",
+    "rCurrency": "EUR"
+  },
+  {
+    "alpha2": "SY",
+    "alpha3": "SYR",
+    "m49": "142",
+    "name": "Syrian Arab Republic",
+    "currency": "SYP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TW",
+    "alpha3": "TWN",
+    "m49": "142",
+    "name": "Taiwan",
+    "currency": "TWD",
+    "rCurrency": "TWD"
+  },
+  {
+    "alpha2": "TJ",
+    "alpha3": "TJK",
+    "m49": "142",
+    "name": "Tajikistan",
+    "currency": "TJS",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TZ",
+    "alpha3": "TZA",
+    "m49": "002",
+    "name": "Tanzania, United Republic of",
+    "currency": "TZS",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TH",
+    "alpha3": "THA",
+    "m49": "142",
+    "name": "Thailand",
+    "currency": "THB",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TL",
+    "alpha3": "TLS",
+    "m49": "142",
+    "name": "Timor-Leste",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TG",
+    "alpha3": "TGO",
+    "m49": "002",
+    "name": "Togo",
+    "currency": "XOF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TK",
+    "alpha3": "TKL",
+    "m49": "009",
+    "name": "Tokelau",
+    "currency": "NZD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TO",
+    "alpha3": "TON",
+    "m49": "009",
+    "name": "Tonga",
+    "currency": "TOP",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TT",
+    "alpha3": "TTO",
+    "m49": "419",
+    "name": "Trinidad and Tobago",
+    "currency": "TTD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TN",
+    "alpha3": "TUN",
+    "m49": "002",
+    "name": "Tunisia",
+    "currency": "TND",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TR",
+    "alpha3": "TUR",
+    "m49": "142",
+    "name": "Turkey",
+    "currency": "TRY",
+    "rCurrency": "TRY"
+  },
+  {
+    "alpha2": "TM",
+    "alpha3": "TKM",
+    "m49": "142",
+    "name": "Turkmenistan",
+    "currency": "TMT",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TC",
+    "alpha3": "TCA",
+    "m49": "419",
+    "name": "Turks and Caicos Islands",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "TV",
+    "alpha3": "TUV",
+    "m49": "009",
+    "name": "Tuvalu",
+    "currency": "AUD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "UG",
+    "alpha3": "UGA",
+    "m49": "002",
+    "name": "Uganda",
+    "currency": "UGX",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "UA",
+    "alpha3": "UKR",
+    "m49": "150",
+    "name": "Ukraine",
+    "currency": "UAH",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "AE",
+    "alpha3": "ARE",
+    "m49": "142",
+    "name": "United Arab Emirates",
+    "currency": "AED",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "GB",
+    "alpha3": "GBR",
+    "m49": "150",
+    "name": "United Kingdom of Great Britain and Northern Ireland",
+    "currency": "GBP",
+    "rCurrency": "GBP"
+  },
+  {
+    "alpha2": "US",
+    "alpha3": "USA",
+    "m49": "003",
+    "name": "United States of America",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "UM",
+    "alpha3": "UMI",
+    "m49": "009",
+    "name": "United States Minor Outlying Islands",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "UY",
+    "alpha3": "URY",
+    "m49": "419",
+    "name": "Uruguay",
+    "currency": "UYU",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "UZ",
+    "alpha3": "UZB",
+    "m49": "142",
+    "name": "Uzbekistan",
+    "currency": "UZS",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "VU",
+    "alpha3": "VUT",
+    "m49": "009",
+    "name": "Vanuatu",
+    "currency": "VUV",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "VE",
+    "alpha3": "VEN",
+    "m49": "419",
+    "name": "Venezuela (Bolivarian Republic of)",
+    "currency": "VEF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "VN",
+    "alpha3": "VNM",
+    "m49": "142",
+    "name": "Viet Nam",
+    "currency": "VND",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "VG",
+    "alpha3": "VGB",
+    "m49": "419",
+    "name": "Virgin Islands (British)",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "VI",
+    "alpha3": "VIR",
+    "m49": "419",
+    "name": "Virgin Islands (U.S.)",
+    "currency": "USD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "WF",
+    "alpha3": "WLF",
+    "m49": "009",
+    "name": "Wallis and Futuna",
+    "currency": "XPF",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "EH",
+    "alpha3": "ESH",
+    "m49": "002",
+    "name": "Western Sahara",
+    "currency": "MAD",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "YE",
+    "alpha3": "YEM",
+    "m49": "142",
+    "name": "Yemen",
+    "currency": "YER",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "ZM",
+    "alpha3": "ZMB",
+    "m49": "002",
+    "name": "Zambia",
+    "currency": "ZMW",
+    "rCurrency": "USD"
+  },
+  {
+    "alpha2": "ZW",
+    "alpha3": "ZWE",
+    "m49": "002",
+    "name": "Zimbabwe",
+    "currency": "BWP",
+    "rCurrency": "USD"
+  }
+]

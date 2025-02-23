@@ -21,7 +21,7 @@
 
     <Grid Margin="10" >
         <TabControl SelectionChanged="TabControl_SelectionChanged">
-            <TabItem Header="{DynamicResource LOCItadSettingWishlist}" Name="PART_Tb">
+            <TabItem Header="{DynamicResource LOCItadWishlist}" Name="PART_Tb">
                 <Grid Margin="10">
                     <DockPanel Name="dpData" LastChildFill="True">
                         <Border DockPanel.Dock="Top" BorderThickness="{DynamicResource PopupBorderThickness}" BorderBrush="{DynamicResource NormalBorderBrush}" Margin="0,0,0,10">
@@ -261,7 +261,7 @@
 
                                             <!-- Image -->
                                             <StackPanel Grid.Column="0" Height="100" Width="200">
-                                                <Image x:Name="HltbImage" Source="{Binding CapsuleImage, IsAsync=True}" Stretch="UniformToFill" Height="100" Width="200"
+                                                <Image x:Name="HltbImage" Source="{Binding CapsuleImagePath, IsAsync=True}" Stretch="UniformToFill" Height="100" Width="200"
                                                        RenderOptions.BitmapScalingMode="Linear" />
                                                 <TextBlock Text="{Binding StoreNameIcon}" Foreground="White" HorizontalAlignment="Right" 
                                                            VerticalAlignment="Bottom" FontSize="24" FontFamily="{DynamicResource CommonFont}" 
@@ -665,18 +665,18 @@
                 </Grid>
             </TabItem>
 
-            <!--TabItem Header="Giveaways">
+            <TabItem Header="Giveaways">
                 <Grid Name="gGiveaways" Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="540" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="540" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                 </Grid>
-            </TabItem-->
+            </TabItem>
         </TabControl>
 
         <Grid Name="PART_Order" Height="{Binding ElementName=PART_Tb, Path=ActualHeight}" VerticalAlignment="Top">

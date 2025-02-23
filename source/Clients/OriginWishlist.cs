@@ -15,19 +15,19 @@ namespace IsThereAnyDeal.Clients
 {
     public class OriginWishlist : GenericWishlist
     {
-        protected static OriginApi _OriginApi;
+        protected static OriginApi _originApi;
         internal static OriginApi OriginApi
         {
             get
             {
-                if (_OriginApi == null)
+                if (_originApi == null)
                 {
-                    _OriginApi = new OriginApi("IsTeherAnyDeals");
+                    _originApi = new OriginApi("IsTeherAnyDeals");
                 }
-                return _OriginApi;
+                return _originApi;
             }
 
-            set => _OriginApi = value;
+            set => _originApi = value;
         }
 
 
@@ -60,31 +60,38 @@ namespace IsThereAnyDeal.Clients
 
             accountWishlist.ForEach(x =>
             {
-                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
-                wishlists.Add(new Wishlist
+                try
                 {
-                    StoreId = x.Id,
-                    StoreName = "EA app",
-                    ShopColor = GetShopColor(),
-                    StoreUrl = x.Link,
-                    Name = x.Name,
-                    SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
-                    ReleaseDate = x.Released,
-                    Added = x.Added,
-                    Capsule = x.Image,
-                    Game = gamesLookup.Found ? gamesLookup.Game : null,
-                    IsActive = true
-                });
-            });
+                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                    wishlists.Add(new Wishlist
+                    {
+                        StoreId = x.Id,
+                        StoreName = "EA app",
+                        ShopColor = GetShopColor(),
+                        StoreUrl = x.Link,
+                        Name = x.Name,
+                        SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
+                        ReleaseDate = x.Released,
+                        Added = x.Added,
+                        Capsule = x.Image,
+                        Game = (gamesLookup?.Found ?? false) ? gamesLookup.Game : null,
+                        IsActive = true
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, false, true, "IsThereAnyDeal");
+                }
+        });
 
-            wishlists = SetCurrentPrice(wishlists);
+            wishlists = SetCurrentPrice(wishlists, false);
             SaveWishlist(wishlists);
             return wishlists;
         }
 
-        public override bool RemoveWishlist(string StoreId)
+        public override bool RemoveWishlist(string storeId)
         {
-            return OriginApi.RemoveWishlist(StoreId);
+            return OriginApi.RemoveWishlist(storeId);
         }
     }
 }

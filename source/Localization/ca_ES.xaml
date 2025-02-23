@@ -7,9 +7,9 @@
 
     <!-- IsThereAnyDealSettingsView -->
 
-    <sys:String x:Key="LOCItadExclusionList">Llista d'exclusió</sys:String>
+    <sys:String x:Key="LOCItadExclusionList">Exclusion list</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist">Llista de desitjos</sys:String>
+    <sys:String x:Key="LOCItadWishlist">Wishlist</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Habilitar llista de desitjos de Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Habilitar llista de desitjos de GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Habilitar llista de desitjos de Epic Games</sys:String>

@@ -32,5 +32,8 @@ namespace IsThereAnyDeal.Models.Api
 
         [SerializationPropertyName("mature")]
         public bool Mature { get; set; }
+
+        [SerializationPropertyName("assets")]
+        public object Assets { get; set; }
     }
 }

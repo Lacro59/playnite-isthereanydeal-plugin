@@ -9,7 +9,7 @@
 
     <sys:String x:Key="LOCItadExclusionList">除外リスト</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist">ウィッシュリスト</sys:String>
+    <sys:String x:Key="LOCItadWishlist">ウィッシュリスト</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">Steam ウィッシュリストを有効にする</sys:String>
     <sys:String x:Key="LOCItadEnableGog">GOG ウィッシュリストを有効にする</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Epic Games Store ウィッシュリストを有効にする</sys:String>

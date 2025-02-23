@@ -12,20 +12,7 @@ namespace IsThereAnyDeal.Services
 {
     public class GogWishlist : GenericWishlist
     {
-        protected static GogApi _GogApi;
-        internal static GogApi GogApi
-        {
-            get
-            {
-                if (_GogApi == null)
-                {
-                    _GogApi = new GogApi("IsThereAnyDeal");
-                }
-                return _GogApi;
-            }
-
-            set => _GogApi = value;
-        }
+        private static GogApi GogApi => IsThereAnyDeal.GogApi;
 
 
         public GogWishlist(IsThereAnyDeal plugin) : base(plugin, "GOG")
@@ -57,31 +44,38 @@ namespace IsThereAnyDeal.Services
 
             accountWishlist.ForEach(x =>
             {
-                GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
-                wishlists.Add(new Wishlist
+                try
                 {
-                    StoreId = x.Id,
-                    StoreName = "GOG",
-                    ShopColor = GetShopColor(),
-                    StoreUrl = x.Link,
-                    Name = x.Name,
-                    SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
-                    ReleaseDate = x.Released,
-                    Added = x.Added,
-                    Capsule = x.Image,
-                    Game = gamesLookup.Found ? gamesLookup.Game : null,
-                    IsActive = true
-                });
+                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                    wishlists.Add(new Wishlist
+                    {
+                        StoreId = x.Id,
+                        StoreName = "GOG",
+                        ShopColor = GetShopColor(),
+                        StoreUrl = x.Link,
+                        Name = x.Name,
+                        SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
+                        ReleaseDate = x.Released,
+                        Added = x.Added,
+                        Capsule = x.Image,
+                        Game = (gamesLookup?.Found ?? false) ? gamesLookup.Game : null,
+                        IsActive = true
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, false, true, "IsThereAnyDeal");
+                }
             });
 
-            wishlists = SetCurrentPrice(wishlists);
+            wishlists = SetCurrentPrice(wishlists, false);
             SaveWishlist(wishlists);
             return wishlists;
         }
 
-        public override bool RemoveWishlist(string StoreId)
+        public override bool RemoveWishlist(string storeId)
         {
-            return GogApi.RemoveWishlist(StoreId);
+            return GogApi.RemoveWishlist(storeId);
         }
     }
 }
