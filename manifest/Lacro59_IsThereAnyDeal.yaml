@@ -71,3 +71,14 @@ Packages:
     Changelog:
       - Updated localizations
       - Fixed issues to authenticate with Steam
+  - Version: 3.3
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2025-02-24
+    PackageUrl: https://github.com/Lacro59/playnite-isthereanydeal-plugin/releases/download/v3.3/playnite-isthereanydeal-plugin_3_3.pext
+    Changelog:
+      - 'Updated: Localizations'
+      - 'Fixed: Missing give away tab'
+      - 'Fixed: Issue with Uplay wishlist'
+      - 'Fixed: Issue with Steam wishlist'
+      - 'Updated: ITAD api'
+      - 'Added: Options for background updates'
