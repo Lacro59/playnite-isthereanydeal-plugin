@@ -9,7 +9,7 @@
 
     <sys:String x:Key="LOCItadExclusionList">排除列</sys:String>
 
-    <sys:String x:Key="LOCItadWishlist">愿望单</sys:String>
+    <sys:String x:Key="LOCItadSettingWishlist">愿望单</sys:String>
     <sys:String x:Key="LOCItadEnableSteam">启用 Steam 愿望单</sys:String>
     <sys:String x:Key="LOCItadEnableGog">启用 GOG 愿望单</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">启用 Epic 游戏商店愿望单</sys:String>
