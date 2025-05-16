@@ -10,6 +10,8 @@
     <sys:String x:Key="LOCItadExclusionList">Exclusion list</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">Wishlist</sys:String>
+    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    
     <sys:String x:Key="LOCItadEnableSteam">Enable Steam wishlist</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Enable GOG wishlist</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Enable Epic Games Store wishlist</sys:String>
@@ -26,38 +28,38 @@
     <sys:String x:Key="LOCItadCountry">Country</sys:String>
     <sys:String x:Key="LOCItadStores">Store(s)</sys:String>
 
-    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Enable notifications of giveaways</sys:String>
+    <sys:String x:Key="LOCItadEnableNotificationGiveaways">Enable giveaway notifications</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">Enable notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotification">Price cut</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCItadLimitNotification">Discount</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPrice">Inferior price</sys:String>
 
     <sys:String x:Key="LOCItadSettingPrice">Define limit to price slider</sys:String>
     <sys:String x:Key="LOCItadMinimum">Minimum</sys:String>
     <sys:String x:Key="LOCItadMaximum">Maximum</sys:String>
 
     <sys:String x:Key="LOCItadSettingsNotifications">Notifications</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationAt">Price cut at</sys:String>
-    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Price inferior at</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationAt">Discount at</sys:String>
+    <sys:String x:Key="LOCItadLimitNotificationPriceAt">Price inferior to</sys:String>
 
     <!-- IsThereAnyDealView -->
 
-    <sys:String x:Key="LOCITADRefreshPrice">Refresh price</sys:String>
+    <sys:String x:Key="LOCITADRefreshPrice">Refresh prices</sys:String>
 
     <sys:String x:Key="LOCITADBestPrice">Best price</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Store price</sys:String>
     
-    <sys:String x:Key="LOCITADOrderBestPriceCut">Best - Price cut</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPriceCut">Best - Discount</sys:String>
     <sys:String x:Key="LOCITADOrderBestPrice">Best - Price</sys:String>
 
-    <sys:String x:Key="LOCITADOrderStorePriceCut">Store - Price cut</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePriceCut">Store - Discount</sys:String>
     <sys:String x:Key="LOCITADOrderStorePrice">Store - Price</sys:String>
     
     <sys:String x:Key="LOCITADFilterSource">Filter by store(s)</sys:String>
     <sys:String x:Key="LOCITADPercentage">Minimum discount percentage</sys:String>
-    <sys:String x:Key="LOCITADPrice">Price inferior</sys:String>
+    <sys:String x:Key="LOCITADPrice">Inferior price</sys:String>
 
     <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
-    <sys:String x:Key="LOCItadCurrentStore">Current store wishlist</sys:String>
+    <sys:String x:Key="LOCItadCurrentStore">Current store wishlit</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy best</sys:String>
     <sys:String x:Key="LOCItadStore">Store</sys:String>
     <sys:String x:Key="LOCItadNoData">No data for selected store in settings</sys:String>
@@ -77,6 +79,9 @@
     <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>
     <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
     <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
+
+    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
+    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
 
     <!-- IsThereAnyDeal -->
 
@@ -98,7 +103,7 @@ Try login in with your account.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam wishlist is private. You must use authenticate buton in Steam Library plugin</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">There is no Xbox wishlist link.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">There is no Ubisoft wishlist link.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
 

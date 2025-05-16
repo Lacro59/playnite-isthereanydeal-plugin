@@ -10,20 +10,22 @@
     <sys:String x:Key="LOCItadExclusionList">Exclusion list</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">Wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableSteam">Enable Steam wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableGog">Enable GOG wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableEpic">Enable Epic Games Store wishlist</sys:String>
-    <sys:String x:Key="LOCItadEnableHumble">Enable Humble wishlist</sys:String>
+    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    
+    <sys:String x:Key="LOCItadEnableSteam">啓用 Steam 願望單</sys:String>
+    <sys:String x:Key="LOCItadEnableGog">啓用 GOG 願望單</sys:String>
+    <sys:String x:Key="LOCItadEnableEpic">啓用 Epic 願望單</sys:String>
+    <sys:String x:Key="LOCItadEnableHumble">啓用 Humble 願望單</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
-    <sys:String x:Key="LOCItadEnableXbox">Enable Xbox wishlist</sys:String>
+    <sys:String x:Key="LOCItadEnableXbox">啓用 Xbox 願望單</sys:String>
     <sys:String x:Key="LOCItadXboxWishlistLink">Wishlist link</sys:String>
-    <sys:String x:Key="LOCItadEnableUbisoft">Enable Ubisoft wishlist</sys:String>
+    <sys:String x:Key="LOCItadEnableUbisoft">啓用 Ubisoft 願望單</sys:String>
     <sys:String x:Key="LOCItadUbisoftWishlistLink">Wishlist link</sys:String>
-    <sys:String x:Key="LOCItadEnableOrigin">Enable EA app wishlist</sys:String>
+    <sys:String x:Key="LOCItadEnableOrigin">啓用 EA 願望單</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
-    <sys:String x:Key="LOCItadRegion">Region</sys:String>
-    <sys:String x:Key="LOCItadCountry">Country</sys:String>
+    <sys:String x:Key="LOCItadRegion">地區</sys:String>
+    <sys:String x:Key="LOCItadCountry">國家</sys:String>
     <sys:String x:Key="LOCItadStores">Store(s)</sys:String>
 
     <sys:String x:Key="LOCItadEnableNotificationGiveaways">Enable notifications of giveaways</sys:String>
@@ -78,6 +80,9 @@
     <sys:String x:Key="LOCItadImportSuccessful">Import successful</sys:String>
     <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
 
+    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
+    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal data</sys:String>
@@ -98,7 +103,7 @@ Try login in with your account.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam wishlist is private. You must use authenticate buton in Steam Library plugin</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">There is no Xbox wishlist link.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">There is no Ubisoft wishlist link.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
 
