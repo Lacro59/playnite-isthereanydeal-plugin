@@ -9,7 +9,9 @@
 
     <sys:String x:Key="LOCItadExclusionList">Список винятків</sys:String>
 
-    <sys:String x:Key="LOCItadSettingWishlist">Список бажаного</sys:String>
+    <sys:String x:Key="LOCItadWishlist">Wishlist</sys:String>
+    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    
     <sys:String x:Key="LOCItadEnableSteam">Увімкнути список бажаного Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Увімкнути список бажаного GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Увімкнути список бажаного Epic Games Store</sys:String>
@@ -78,6 +80,9 @@
     <sys:String x:Key="LOCItadImportSuccessful">Успішно імпортовано</sys:String>
     <sys:String x:Key="LOCItadImportError">Неможливо імпортувати файл зі списком бажаного</sys:String>
 
+    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
+    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">Переглянути дані IsThereAnyDeal</sys:String>
@@ -98,7 +103,7 @@
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Список бажань Steam приватний. Скористайтеся кнопкою &quot;Автентифікація&quot; у плагіні бібліотеки Steam</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox увімкнено у плагіні IsThereAnyDeal, але розширення бібліотеки було вимкнено в Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Немає посилання на список бажаного Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisoft увімкнено у плагіні IsThereAnyDeal, але розширення бібліотеки було вимкнено в Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Немає посилання на список бажаного Ubisoft.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA app увімкнено у плагіні IsThereAnyDeal, але розширення бібліотеки було вимкнено в Playnite.</sys:String>
 
