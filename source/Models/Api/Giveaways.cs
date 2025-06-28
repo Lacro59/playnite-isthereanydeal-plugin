@@ -43,7 +43,7 @@ namespace IsThereAnyDeal.Models.Api
         public bool IsMature { get; set; }
 
         [SerializationPropertyName("shop")]
-        public int Shop { get; set; }
+        public int? Shop { get; set; }
 
         [SerializationPropertyName("counts")]
         public Counts Counts { get; set; }
