@@ -9,7 +9,7 @@
 
     <sys:String x:Key="LOCItadExclusionList">Lista wykluczeń</sys:String>
 
-    <sys:String x:Key="LOCItadWishlist">Wishlist</sys:String>
+    <sys:String x:Key="LOCItadWishlist">Lista życze</sys:String>
     <sys:String x:Key="LOCItadPrice">Price</sys:String>
     
     <sys:String x:Key="LOCItadEnableSteam">Włącz listę życzeń Steam</sys:String>
