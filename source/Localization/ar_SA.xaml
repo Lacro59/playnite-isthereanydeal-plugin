@@ -9,7 +9,7 @@
 
     <sys:String x:Key="LOCItadExclusionList">قائمة الاستبعا</sys:String>
 
-    <sys:String x:Key="LOCItadWishlist">Wishlist</sys:String>
+    <sys:String x:Key="LOCItadWishlist">قائمة الرغبات</sys:String>
     <sys:String x:Key="LOCItadPrice">Price</sys:String>
     
     <sys:String x:Key="LOCItadEnableSteam">تمكين قائمة رغبات Steam</sys:String>
@@ -25,7 +25,7 @@
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">المنط</sys:String>
-    <sys:String x:Key="LOCItadCountry">ال</sys:String>
+    <sys:String x:Key="LOCItadCountry">ا</sys:String>
     <sys:String x:Key="LOCItadStores">المتاجر</sys:String>
 
     <sys:String x:Key="LOCItadEnableNotificationGiveaways">تفعيل اإشعارات الهدايا</sys:String>
