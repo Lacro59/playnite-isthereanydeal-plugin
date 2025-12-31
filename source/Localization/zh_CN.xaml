@@ -9,8 +9,8 @@
 
     <sys:String x:Key="LOCItadExclusionList">排除列</sys:String>
 
-    <sys:String x:Key="LOCItadWishlist">Wishlist</sys:String>
-    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    <sys:String x:Key="LOCItadWishlist">愿望单</sys:String>
+    <sys:String x:Key="LOCItadPrice">价格</sys:String>
     
     <sys:String x:Key="LOCItadEnableSteam">启用 Steam 愿望单</sys:String>
     <sys:String x:Key="LOCItadEnableGog">启用 GOG 愿望单</sys:String>
@@ -46,13 +46,13 @@
     <sys:String x:Key="LOCITADRefreshPrice">刷新价格</sys:String>
 
     <sys:String x:Key="LOCITADBestPrice">最好的价格</sys:String>
-    <sys:String x:Key="LOCITADStorePrice">商店售价：？</sys:String>
+    <sys:String x:Key="LOCITADStorePrice">商店售价：</sys:String>
     
     <sys:String x:Key="LOCITADOrderBestPriceCut">最佳-降价</sys:String>
     <sys:String x:Key="LOCITADOrderBestPrice">最佳价格</sys:String>
 
     <sys:String x:Key="LOCITADOrderStorePriceCut">最佳-降价</sys:String>
-    <sys:String x:Key="LOCITADOrderStorePrice">商店售价：？</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePrice">商店售价：</sys:String>
     
     <sys:String x:Key="LOCITADFilterSource">按商店筛选</sys:String>
     <sys:String x:Key="LOCITADPercentage">最低折扣百分比</sys:String>
@@ -80,8 +80,8 @@
     <sys:String x:Key="LOCItadImportSuccessful">导入成</sys:String>
     <sys:String x:Key="LOCItadImportError">无法导入愿望单文件</sys:String>
 
-    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
-    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+    <sys:String x:Key="LOCItadInWaitlist">在等待列表</sys:String>
+    <sys:String x:Key="LOCItadInCollection">收藏中</sys:String>
 
     <!-- IsThereAnyDeal -->
 
@@ -103,7 +103,7 @@
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam 愿望单是私有的。您必须在 Steam 库插件中使用身份验证按钮</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">没有 Xbox 愿望单链接</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">没有 Xbox 愿望单链接</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Epic 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中</sys:String>
 
