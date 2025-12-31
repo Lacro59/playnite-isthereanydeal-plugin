@@ -9,8 +9,8 @@
 
     <sys:String x:Key="LOCItadExclusionList">Elenco di esclusione</sys:String>
 
-    <sys:String x:Key="LOCItadWishlist">Wishlist</sys:String>
-    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    <sys:String x:Key="LOCItadWishlist">Lista dei desideri</sys:String>
+    <sys:String x:Key="LOCItadPrice">Prezzo</sys:String>
     
     <sys:String x:Key="LOCItadEnableSteam">Abilita lista dei desideri di Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Abilita la lista dei desideri di GOG</sys:String>
@@ -80,8 +80,8 @@
     <sys:String x:Key="LOCItadImportSuccessful">Importazione completata</sys:String>
     <sys:String x:Key="LOCItadImportError">Impossibile importare il file della lista desideri</sys:String>
 
-    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
-    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+    <sys:String x:Key="LOCItadInWaitlist">Nella lista d'attesa</sys:String>
+    <sys:String x:Key="LOCItadInCollection">Nella raccolta</sys:String>
 
     <!-- IsThereAnyDeal -->
 
@@ -103,7 +103,7 @@ Prova ad accedere con il tuo account.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">La lista dei desideri di Steam è privata. È necessario utilizzare il pulsante di autenticazione nel plugin Libreria di Steam</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox è attivato nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disattivata in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Non c'è nessun link alla lista dei desideri Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisoft è abilitato nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disabilitata in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Non c'è alcun link alla lista dei desideri Ubisoft.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">L'app EA è abilitata nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disabilitata in Playnite.</sys:String>
 
