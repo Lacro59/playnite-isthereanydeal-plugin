@@ -9,7 +9,7 @@
 
     <sys:String x:Key="LOCItadExclusionList">除外リスト</sys:String>
 
-    <sys:String x:Key="LOCItadWishlist">Wishlist</sys:String>
+    <sys:String x:Key="LOCItadWishlist">ィッシュリス</sys:String>
     <sys:String x:Key="LOCItadPrice">Price</sys:String>
     
     <sys:String x:Key="LOCItadEnableSteam">Steam ウィッシュリストを有効にする</sys:String>
@@ -18,17 +18,17 @@
     <sys:String x:Key="LOCItadEnableHumble">Humble ウィッシュリストを有効にする</sys:String>
     <sys:String x:Key="LOCItadHumbleKey">Humble ID</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Xbox ウィッシュリストを有効にする</sys:String>
-    <sys:String x:Key="LOCItadXboxWishlistLink">ウィッシュリストリンク</sys:String>
+    <sys:String x:Key="LOCItadXboxWishlistLink">ィッシュリストリン</sys:String>
     <sys:String x:Key="LOCItadEnableUbisoft">Ubisoft ウィッシュリストを有効にする</sys:String>
-    <sys:String x:Key="LOCItadUbisoftWishlistLink">ウィッシュリストリンク</sys:String>
+    <sys:String x:Key="LOCItadUbisoftWishlistLink">ィッシュリストリン</sys:String>
     <sys:String x:Key="LOCItadEnableOrigin">EA App ウィッシュリストを有効にする</sys:String>
 
     <sys:String x:Key="LOCItadSettingItad">IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadRegion">地域</sys:String>
     <sys:String x:Key="LOCItadCountry">国</sys:String>
-    <sys:String x:Key="LOCItadStores">ストア</sys:String>
+    <sys:String x:Key="LOCItadStores">トア</sys:String>
 
-    <sys:String x:Key="LOCItadEnableNotificationGiveaways">ギフトの通知を有効にする</sys:String>
+    <sys:String x:Key="LOCItadEnableNotificationGiveaways">フトの通知を有効にする</sys:String>
     <sys:String x:Key="LOCItadEnableNotification">通知を有効にする</sys:String>
     <sys:String x:Key="LOCItadLimitNotification">値下げ率</sys:String>
     <sys:String x:Key="LOCItadLimitNotificationPrice">値下げ価格</sys:String>
@@ -54,31 +54,31 @@
     <sys:String x:Key="LOCITADOrderStorePriceCut">Store - Price cut</sys:String>
     <sys:String x:Key="LOCITADOrderStorePrice">Store - Price</sys:String>
     
-    <sys:String x:Key="LOCITADFilterSource">ストアでフィルター</sys:String>
+    <sys:String x:Key="LOCITADFilterSource">トアでフィルター</sys:String>
     <sys:String x:Key="LOCITADPercentage">最小割引率</sys:String>
     <sys:String x:Key="LOCITADPrice">値下げ価格</sys:String>
 
     <sys:String x:Key="LOCItadCurrentBest">現在の最安値</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">現在のストアのウィッシュリスト</sys:String>
     <sys:String x:Key="LOCItadBuy">最安値で購入</sys:String>
-    <sys:String x:Key="LOCItadStore">ストア</sys:String>
+    <sys:String x:Key="LOCItadStore">トア</sys:String>
     <sys:String x:Key="LOCItadNoData">設定内で選択したストアにデータがありません</sys:String>
-    <sys:String x:Key="LOCItadInLibrary">ライブラリ内</sys:String>
+    <sys:String x:Key="LOCItadInLibrary">ブラリ</sys:String>
     <sys:String x:Key="LOCItadNotActive">IsThereAnyDeal ではアクティブではありません</sys:String>
     <sys:String x:Key="LOCItadNotFind">IsThereAnyDeal では見つかりません</sys:String>
 
     <sys:String x:Key="LOCItadDeleteOnStoreWishList">{0} の {1} を削除しますか？</sys:String>
     <sys:String x:Key="LOCItadHideOnStoreWishList">{0} の {1} を除外しますか？</sys:String>
 
-    <sys:String x:Key="LOCItadWhishListOptions">ウィッシュリストのオプション</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">ライブラリ内のゲームを含める</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptions">ィッシュリストのオプション</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">ブラリ内のゲームを含める</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">IsThereAnyDeal データのないゲームを含める</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">ライブラリ内のゲームのみ</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">ブラリ内のゲームのみ</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">Steam ウィッシュリストをインポート</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam ウィッシュリストリンク</sys:String>
     <sys:String x:Key="LOCItadImportSuccessful">正常にインポートされました</sys:String>
-    <sys:String x:Key="LOCItadImportError">ウィッシュリストファイルをインポートできません</sys:String>
+    <sys:String x:Key="LOCItadImportError">ィッシュリストファイルをインポートできません</sys:String>
 
     <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
     <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
