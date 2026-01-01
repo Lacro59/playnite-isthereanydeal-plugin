@@ -10,6 +10,8 @@
     <sys:String x:Key="LOCItadExclusionList">Список исключений</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">Список желаемого</sys:String>
+    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    
     <sys:String x:Key="LOCItadEnableSteam">Включить список желаемого в Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Включить список желаемого в GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Включить список желаемого в Epic Game Store</sys:String>
@@ -78,6 +80,9 @@
     <sys:String x:Key="LOCItadImportSuccessful">Импорт завершён</sys:String>
     <sys:String x:Key="LOCItadImportError">Невозможно импортировать файл списка желаемого</sys:String>
 
+    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
+    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">Просмотр данных IsThereAnyDeal</sys:String>
@@ -98,7 +103,7 @@
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Список желаний Steam является закрытым. Вы должны использовать кнопку аутентификации в плагине библиотеки Steam.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox включен в плагине IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Отстутствует ссылка на список желемого Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Xbox включен в плагине IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Нет ссылки на список желаний Ubisoft.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA включен в плагине IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
 

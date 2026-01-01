@@ -10,6 +10,8 @@
     <sys:String x:Key="LOCItadExclusionList">Kizárási lista</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">Kívánságlista</sys:String>
+    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    
     <sys:String x:Key="LOCItadEnableSteam">Steam kívánságlista engedélyezése</sys:String>
     <sys:String x:Key="LOCItadEnableGog">GOG kívánságlista engedélyezése</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Epic Games Store kívánságlista engedélyezése</sys:String>
@@ -78,6 +80,9 @@
     <sys:String x:Key="LOCItadImportSuccessful">Importálás sikeres</sys:String>
     <sys:String x:Key="LOCItadImportError">Impossible to import wishlist file</sys:String>
 
+    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
+    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">View IsThereAnyDeal data</sys:String>
@@ -98,7 +103,7 @@ Try login in with your account.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam wishlist is private. You must use authenticate buton in Steam Library plugin</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">There is no Xbox wishlist link.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">There is no Ubisoft wishlist link.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
 
