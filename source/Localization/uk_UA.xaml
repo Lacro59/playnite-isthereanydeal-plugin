@@ -10,7 +10,7 @@
     <sys:String x:Key="LOCItadExclusionList">Список винятків</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">Список бажаного</sys:String>
-    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    <sys:String x:Key="LOCItadPrice">Ціна</sys:String>
     
     <sys:String x:Key="LOCItadEnableSteam">Увімкнути список бажаного Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Увімкнути список бажаного GOG</sys:String>
