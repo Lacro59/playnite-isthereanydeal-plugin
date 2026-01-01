@@ -10,13 +10,13 @@
     <sys:String x:Key="LOCItadExclusionList">Lista de exclusão</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">Lista de desejos</sys:String>
-    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    <sys:String x:Key="LOCItadPrice">Preço</sys:String>
     
     <sys:String x:Key="LOCItadEnableSteam">Habilitar a lista de desejos da Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Habilitar a lista de desejos da GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Habilitar a lista de desejos da Epic Games Store</sys:String>
     <sys:String x:Key="LOCItadEnableHumble">Habilitar a lista de desejos da Humble</sys:String>
-    <sys:String x:Key="LOCItadHumbleKey">Humble id</sys:String>
+    <sys:String x:Key="LOCItadHumbleKey">Id Humble</sys:String>
     <sys:String x:Key="LOCItadEnableXbox">Ativar lista de desejos do Xbox</sys:String>
     <sys:String x:Key="LOCItadXboxWishlistLink">Link da lista de desejos</sys:String>
     <sys:String x:Key="LOCItadEnableUbisoft">Ativar lista de desejos da Ubisoft</sys:String>
@@ -80,8 +80,8 @@
     <sys:String x:Key="LOCItadImportSuccessful">Importação bem sucedida</sys:String>
     <sys:String x:Key="LOCItadImportError">Impossível importar arquivo de lista de desejos</sys:String>
 
-    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
-    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+    <sys:String x:Key="LOCItadInWaitlist">Na lista de espera</sys:String>
+    <sys:String x:Key="LOCItadInCollection">Na coleção</sys:String>
 
     <!-- IsThereAnyDeal -->
 
@@ -103,7 +103,7 @@ Tente entrar com sua conta.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Lista de desejos Steam é privada. Você deve usar o botão de autenticar no plugin da Biblioteca Steam</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">O Xbox está habilitado no plugin IsThereAnyDeal, mas a extensão da biblioteca foi desativada no Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Não há nenhum link para a lista de desejos do Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisoft está habilitado no plugin IsThereAnyDeal, mas a extensão de biblioteca foi desativada no Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Não há nenhum link para a lista de desejos da Ubisoft.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA app está habilitado no plugin IsThereAnyDeal, mas a extensão de biblioteca foi desativada no Playnite.</sys:String>
 
