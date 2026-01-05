@@ -114,6 +114,7 @@
     <Compile Include="Models\Api\ServiceShop.cs" />
     <Compile Include="Models\CountData.cs" />
     <Compile Include="Models\ItadNotificationCriteria.cs" />
+    <Compile Include="Models\Shop.cs" />
     <Compile Include="Models\Wishlist.cs" />
     <Compile Include="Models\WishlistIgnore.cs" />
     <Compile Include="playnite-plugincommon\CommonPluginsControls\Controls\TextBlockTrimmed.xaml.cs">
@@ -166,6 +167,7 @@
     <None Include="Data\countries.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Data\shops.json" />
     <None Include="extension.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

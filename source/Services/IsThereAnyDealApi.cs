@@ -1,25 +1,25 @@
-﻿using IsThereAnyDeal.Clients;
+﻿using CommonPlayniteShared.Common;
+using CommonPluginsShared;
+using CommonPluginsShared.Extensions;
+using IsThereAnyDeal.Clients;
 using IsThereAnyDeal.Models;
+using IsThereAnyDeal.Models.Api;
+using IsThereAnyDeal.Models.ApiWebsite;
 using IsThereAnyDeal.Views;
 using Playnite.SDK;
 using Playnite.SDK.Data;
-using CommonPluginsShared;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Threading;
-using CommonPluginsShared.Extensions;
-using IsThereAnyDeal.Models.Api;
-using IsThereAnyDeal.Models.ApiWebsite;
 using static CommonPluginsShared.PlayniteTools;
-using System.IO;
-using System.Reflection;
-using CommonPlayniteShared.Common;
 
 namespace IsThereAnyDeal.Services
 {
@@ -207,19 +207,10 @@ namespace IsThereAnyDeal.Services
 		/// Loads the list of supported countries from the local JSON data file.
 		/// </summary>
 		public static List<Country> GetCountries()
-        {
-            try
-            {
-                string pluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                _ = Serialization.TryFromJsonFile(Path.Combine(pluginPath, "Data", "countries.json"), out List<Country> countries, out Exception ex);
-                return ex != null ? throw ex : countries;
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, false, $"Error in GetCountries()", true, "IsThereAnyDeal");
-            }
-
-            return null;
+		{
+			string pluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			var fileDataTools = new FileDataTools("IsThereAnyDeal", "");
+            return fileDataTools.LoadData<List<Country>>(Path.Combine(pluginPath, "Data", "countries.json"), -1);
         }
 
 		#region Plugin
@@ -538,94 +529,10 @@ namespace IsThereAnyDeal.Services
 		/// </summary>
 		public static string GetShopColor(string shopName)
         {
-			// REMARK: Large dictionary for shop coloring. This could be moved to a configuration file or static field for performance.
-			Dictionary<string, string> shopColor = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "Adventure Shop", "#3e6517" },
-                { "AllYouPlay", "#e9267b" },
-                { "Amazon", "#fcc588" },
-                { "Blizzard", "#00cbe6" },
-                { "Bohemia Interactive Store", "#f74040" },
-                { "Steam", "#9ffc3a" },
-                { "GamersGate", "#fc5d5d" },
-                { "Fanatical", "#ff9800" },
-                { "Impulse", "#c63f62" },
-                { "GamesPlanet UK", "#f6a740" },
-                { "GamesPlanet DE", "#f6a740" },
-                { "GamesPlanet FR", "#f6a740" },
-                { "GamesPlanet US", "#f6a740" },
-                { "GameTap", "#f6a740" },
-                { "GreenManGaming", "#21a930" },
-                { "GetGames", "#fa1f1f" },
-                { "Desura", "#03bee0" },
-                { "GOG", "#f16421" },
-                { "DotEmu", "#f6931c" },
-                { "Nuuvem", "#b5e0f4" },
-                { "IndieGala Store", "#ffb4e0" },
-                { "IndieGala", "#ffb4e0" },
-                { "DLGamer", "#f5fe94" },
-                { "GameFly", "#f0a690" },
-                { "Direct2Drive", "#1df884" },
-                { "EA Store", "#ddff1c" },
-                { "Ubisoft Store", "#01657a" },
-                { "Uplay", "#01657a" },
-                { "ShinyLoot", "#bfa236" },
-                { "Humble Store", "#ff3e1b" },
-                { "Humble Widgets", "#f8300c" },
-                { "IndieGameStand", "#73c175" },
-                { "GamesRocket", "#e1bc4e" },
-                { "Squenix", "#b41919" },
-                { "Gameolith", "#80e5ff" },
-                { "Fireflower", "#29698c" },
-                { "Newegg", "#f79328" },
-                { "Games Republic", "#ef0e38" },
-                { "Coinplay", "#1b4284" },
-                { "Funstock", "#7f3f98" },
-                { "WinGameStore", "#2790da" },
-                { "MacGameStore", "#2790da" },
-                { "GameBillet", "#f22f15" },
-                { "Sila Games", "#f9cf6b" },
-                { "Playfield", "#e84c31" },
-                { "Imperial Games", "#16a085" },
-                { "Itch.io", "#fa5c5c" },
-                { "Itchio", "#fa5c5c" },
-                { "Game Jolt", "#2f7f6f" },
-                { "Digital Download", "#0166ff" },
-                { "DreamGame", "#497791" },
-                { "Paradox", "#bc2a31" },
-                { "Chrono", "#59c4c5" },
-                { "TwoGame", "#523f95" },
-                { "2Game", "#523f95" },
-                { "Less4Games", "#ff9900" },
-                { "Savemi", "#01add3" },
-                { "Gemly", "#ce2745" },
-                { "Voidu", "#f47820" },
-                { "Cybermanta", "#00b2ee" },
-                { "LBOstore", "#005268" },
-                { "Razer", "#00ff00" },
-                { "Microsoft Store", "#ffd800" },
-                { "Microsoft", "#ffd800" },
-                { "Oculus", "#5161a6" },
-                { "Discord", "#6f85d4" },
-                { "Epic", "#0078f2" },
-                { "Epic Game Store", "#0078f2" },
-                { "Epic Games Store", "#0078f2" },
-                { "Epic Game", "#0078f2" },
-                { "Epic Games", "#0078f2" },
-                { "Playism", "#b8934f" },
-                { "GamesLoad", "#b76cc7" },
-                { "JoyBuggy", "#43c68d" },
-                { "Noctre", "#1a83ff" },
-                { "ETailMarket", "#358192" },
-                { "ETail.Market", "#358192" }
-            };
-
-            if (shopName.IsNullOrEmpty())
-            {
-                return ResourceProvider.GetResource("TextBrush").ToString();
-            }
-            _ = !shopColor.TryGetValue(shopName, out string value);
-            return value.IsNullOrEmpty() ? ResourceProvider.GetResource("TextBrush").ToString() : value;
+			string pluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			var fileDataTools = new FileDataTools("IsThereAnyDeal", "");
+			var data = fileDataTools.LoadData<List<Shop>>(Path.Combine(pluginPath, "Data", "shops.json"), -1);
+            return data?.FirstOrDefault(x => x.Name.IsEqual(shopName))?.Color ?? ResourceProvider.GetResource("TextBrush").ToString();
         }
 
 		/// <summary>
@@ -634,27 +541,11 @@ namespace IsThereAnyDeal.Services
 		public List<ItadGiveaway> GetGiveaways(string pluginUserDataPath, bool cacheOnly = false)
         {
             // Load previous
-            string pluginDirectoryCache = pluginUserDataPath + "\\cache";
+			string pluginDirectoryCache = pluginUserDataPath + "\\cache";
             string pluginFileCache = pluginDirectoryCache + "\\giveways.json";
-            List<ItadGiveaway> itadGiveawaysCache = new List<ItadGiveaway>();
 
-            try
-            {
-                FileSystem.CreateDirectory(pluginDirectoryCache, false);
-                if (File.Exists(pluginFileCache))
-                {
-                    _ = Serialization.TryFromJsonFile(pluginFileCache, out itadGiveawaysCache);
-                    if (itadGiveawaysCache == null)
-                    {
-                        itadGiveawaysCache = new List<ItadGiveaway>();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, false, "Error in GetGiveAway() with cache data", true, "IsThereAnyDeal");
-            }
-
+			var fileDataTools = new FileDataTools("IsThereAnyDeal", "");
+			var itadGiveawaysCache = fileDataTools.LoadData<List<ItadGiveaway>>(pluginFileCache, -1)?? new List<ItadGiveaway>();
 
             // Load on web
             List<ItadGiveaway> itadGiveaways = new List<ItadGiveaway>();
@@ -741,14 +632,7 @@ namespace IsThereAnyDeal.Services
             }
 
             // Save new
-            try
-            {
-                File.WriteAllText(pluginFileCache, Serialization.ToJson(itadGiveaways));
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, false, "Error in GetGiveAway() with save data", true, "IsThereAnyDeal");
-            }
+            fileDataTools.SaveData(pluginFileCache, itadGiveaways);
 
             return itadGiveaways;
         }
