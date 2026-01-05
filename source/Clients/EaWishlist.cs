@@ -15,23 +15,11 @@ namespace IsThereAnyDeal.Clients
 {
     public class EaWishlist : GenericWishlist
     {
-        protected static EaApi eaApi;
-        internal static EaApi EaApi
-        {
-            get
-            {
-                if (eaApi == null)
-                {
-                    eaApi = new EaApi("IsTeherAnyDeals");
-                }
-                return eaApi;
-            }
-
-            set => eaApi = value;
-        }
+		private readonly Lazy<EaApi> _lazyApi = new Lazy<EaApi>(() => new EaApi("IsThereAnyDeal"));
+		internal EaApi EaApi => _lazyApi.Value;
 
 
-        public EaWishlist(IsThereAnyDeal plugin) : base(plugin, "EA")
+		public EaWishlist(IsThereAnyDeal plugin) : base(plugin, "EA")
         {
             ExternalPlugin = PlayniteTools.ExternalPlugin.OriginLibrary;
         }
@@ -54,7 +42,6 @@ namespace IsThereAnyDeal.Clients
                 return cachedData;
             }
 
-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             List<Wishlist> wishlists = new List<Wishlist>();
             ObservableCollection<AccountWishlist> accountWishlist = EaApi.GetWishlist(EaApi.CurrentAccountInfos);
 
@@ -62,7 +49,7 @@ namespace IsThereAnyDeal.Clients
             {
                 try
                 {
-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
                     wishlists.Add(new Wishlist
                     {
                         StoreId = x.Id,

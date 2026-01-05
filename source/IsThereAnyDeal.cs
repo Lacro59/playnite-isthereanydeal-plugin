@@ -36,9 +36,9 @@ namespace IsThereAnyDeal
         internal ItadViewSidebar SidebarItem { get; set; }
 
 
-        public IsThereAnyDeal(IPlayniteAPI api) : base(api)
+        public IsThereAnyDeal(IPlayniteAPI api) : base(api, "IsThereAnyDeal")
         {
-            string pluginCachePath = Path.Combine(PlaynitePaths.DataCachePath, "IsThereAnyDeal");
+            string pluginCachePath = Path.Combine(PlaynitePaths.DataCachePath, PluginName);
             HttpFileCachePlugin.CacheDirectory = pluginCachePath;
             FileSystem.CreateDirectory(pluginCachePath);
 
@@ -54,7 +54,7 @@ namespace IsThereAnyDeal
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false, true, "IsThereAnyDeal");
+                Common.LogError(ex, false, true, PluginName);
             }
 
             // Add Event for WindowBase for get the "WindowSettings".
@@ -126,7 +126,7 @@ namespace IsThereAnyDeal
             }
             catch (Exception ex)
             {
-                Common.LogError(ex, false, $"Error on WindowBase_LoadedEvent for {winIdProperty}", true, "IsThereAnyDeal");
+                Common.LogError(ex, false, $"Error on WindowBase_LoadedEvent for {winIdProperty}", true, PluginName);
             }
         }
         
@@ -307,7 +307,7 @@ namespace IsThereAnyDeal
 						try
 						{
 							Logger.Info("SteamApi Initialization");
-							SteamApi = new SteamApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.SuccessStory);
+							SteamApi = new SteamApi(PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
 							SteamApi.Initialization(
 								PluginSettings.Settings.SteamStoreSettings,
 								PluginSettings.Settings.PluginState.SteamIsEnabled && PluginSettings.Settings.EnableSteam
@@ -323,7 +323,7 @@ namespace IsThereAnyDeal
 						try
 						{
 							Logger.Info("EpicApi Initialization");
-							EpicApi = new EpicApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.SuccessStory);
+							EpicApi = new EpicApi(PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
 							EpicApi.Initialization(
 								PluginSettings.Settings.EpicStoreSettings,
 								PluginSettings.Settings.PluginState.EpicIsEnabled && PluginSettings.Settings.EnableEpic
@@ -339,7 +339,7 @@ namespace IsThereAnyDeal
 						try
 						{
 							Logger.Info("GogApi Initialization");
-							GogApi = new GogApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.SuccessStory);
+							GogApi = new GogApi(PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
 							GogApi.Initialization(
 								PluginSettings.Settings.GogStoreSettings,
 								PluginSettings.Settings.PluginState.GogIsEnabled && PluginSettings.Settings.EnableGog

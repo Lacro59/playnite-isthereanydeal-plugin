@@ -1,22 +1,14 @@
-﻿using IsThereAnyDeal.Models;
-using Playnite.SDK;
+﻿using Playnite.SDK;
 using Playnite.SDK.Data;
 using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
 using IsThereAnyDeal.Models.Api;
 using System.Collections.ObjectModel;
 using CommonPluginsStores.Models;
 using CommonPluginsStores.Steam;
 using CommonPluginsShared.Extensions;
-using CommonPluginsStores.Steam.Models.SteamKit;
-using CommonPluginsStores.Steam.Models;
-using System.Web.UI.WebControls;
 
 namespace IsThereAnyDeal.Services
 {
@@ -49,14 +41,13 @@ namespace IsThereAnyDeal.Services
             }
 
             List<Models.Wishlist> wishlists = new List<Models.Wishlist>();
-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             ObservableCollection<AccountWishlist> accountWishlist = SteamApi.GetWishlist(SteamApi.CurrentAccountInfos);
 
             accountWishlist.ForEach(x =>
             {
                 try
                 {
-                    GameLookup gamesLookup = gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
+                    GameLookup gamesLookup = gamesLookup = IsThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
                     wishlists.Add(new Models.Wishlist
                     {
                         StoreId = x.Id,
@@ -97,14 +88,13 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                     dynamic rgWishlist = jObject["rgWishlist"];
 
                     foreach(dynamic el in rgWishlist)
                     {
                         string name = SteamApi.GetGameName(uint.Parse((string)el));
 
-                        GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse((string)el)).GetAwaiter().GetResult();
+                        GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(int.Parse((string)el)).GetAwaiter().GetResult();
                         wishlists.Add(new Models.Wishlist
                         {
                             StoreId = (string)el,

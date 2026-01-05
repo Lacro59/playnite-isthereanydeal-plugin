@@ -1,0 +1,834 @@
+diff --git a/source/Clients/EaWishlist.cs b/source/Clients/EaWishlist.cs
+index 5c49895..d6b4286 100644
+--- a/source/Clients/EaWishlist.cs
++++ b/source/Clients/EaWishlist.cs
+@@ -15,23 +15,11 @@ namespace IsThereAnyDeal.Clients
+ {
+     public class EaWishlist : GenericWishlist
+     {
+-        protected static EaApi eaApi;
+-        internal static EaApi EaApi
+-        {
+-            get
+-            {
+-                if (eaApi == null)
+-                {
+-                    eaApi = new EaApi("IsTeherAnyDeals");
+-                }
+-                return eaApi;
+-            }
+-
+-            set => eaApi = value;
+-        }
++		private readonly Lazy<EaApi> _lazyApi = new Lazy<EaApi>(() => new EaApi("IsThereAnyDeal"));
++		internal EaApi EaApi => _lazyApi.Value;
+ 
+ 
+-        public EaWishlist(IsThereAnyDeal plugin) : base(plugin, "EA")
++		public EaWishlist(IsThereAnyDeal plugin) : base(plugin, "EA")
+         {
+             ExternalPlugin = PlayniteTools.ExternalPlugin.OriginLibrary;
+         }
+@@ -54,7 +42,6 @@ namespace IsThereAnyDeal.Clients
+                 return cachedData;
+             }
+ 
+-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+             List<Wishlist> wishlists = new List<Wishlist>();
+             ObservableCollection<AccountWishlist> accountWishlist = EaApi.GetWishlist(EaApi.CurrentAccountInfos);
+ 
+@@ -62,7 +49,7 @@ namespace IsThereAnyDeal.Clients
+             {
+                 try
+                 {
+-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
++                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                     wishlists.Add(new Wishlist
+                     {
+                         StoreId = x.Id,
+@@ -94,4 +81,4 @@ namespace IsThereAnyDeal.Clients
+             return EaApi.RemoveWishlist(storeId);
+         }
+     }
+-}
++}
+\ No newline at end of file
+diff --git a/source/Clients/EpicWishlist.cs b/source/Clients/EpicWishlist.cs
+index 7854339..ff74c57 100644
+--- a/source/Clients/EpicWishlist.cs
++++ b/source/Clients/EpicWishlist.cs
+@@ -39,7 +39,6 @@ namespace IsThereAnyDeal.Services
+                 return cachedData;
+             }
+ 
+-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+             List<Wishlist> wishlists = new List<Wishlist>();
+             ObservableCollection<AccountWishlist> accountWishlist = EpicApi.GetWishlist(EpicApi.CurrentAccountInfos);
+ 
+@@ -47,7 +46,7 @@ namespace IsThereAnyDeal.Services
+             {
+                 try
+                 {
+-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
++                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                     wishlists.Add(new Wishlist
+                     {
+                         StoreId = x.Id,
+@@ -79,4 +78,4 @@ namespace IsThereAnyDeal.Services
+             return EpicApi.RemoveWishlist(storeId);
+         }
+     }
+-}
++}
+\ No newline at end of file
+diff --git a/source/Clients/GenericWishlist.cs b/source/Clients/GenericWishlist.cs
+index faa0c7b..661c2c6 100644
+--- a/source/Clients/GenericWishlist.cs
++++ b/source/Clients/GenericWishlist.cs
+@@ -4,157 +4,296 @@ using CommonPluginsShared;
+ using System;
+ using System.Collections.Generic;
+ using System.IO;
+-using CommonPlayniteShared.Common;
+-using Playnite.SDK.Data;
+ using System.Linq;
++using System.Threading.Tasks;
+ 
+ namespace IsThereAnyDeal.Services
+ {
+-    public abstract class GenericWishlist
+-    {
+-        internal static ILogger Logger => LogManager.GetLogger();
+-
+-        internal IsThereAnyDeal Plugin { get; set; }
+-        internal IsThereAnyDealSettings Settings { get; set; }
+-        internal static string PluginUserDataPath { get; set; }
+-
+-        internal static string ClientName { get; set; }
+-        internal static PlayniteTools.ExternalPlugin ExternalPlugin { get; set; }
+-
+-
+-        public GenericWishlist(IsThereAnyDeal plugin, string clientName)
+-        {
+-            Plugin = plugin;
+-            Settings = plugin.PluginSettings.Settings;
+-            PluginUserDataPath = plugin.GetPluginUserDataPath();
+-            ClientName = clientName;
+-        }
+-
+-        /// <summary>
+-        /// Load local data with max 1 day
+-        /// </summary>
+-        /// <param name="cacheOnly">Force load for expired data</param>
+-        /// <param name="forcePrice">Force load price data data</param>
+-        /// <returns></returns>
+-        internal List<Wishlist> LoadWishlists(bool cacheOnly = false, bool forcePrice = false)
+-        {
+-            try
+-            {
+-                string DirPath = Path.Combine(PluginUserDataPath, "IsThereAnyDeal");
+-                string FilePath = Path.Combine(DirPath, $"{ClientName}.json");
+-
+-                FileSystem.CreateDirectory(DirPath, false);
+-
+-                if (!File.Exists(FilePath) || (File.GetLastWriteTime(FilePath).AddDays(1) < DateTime.Now && !cacheOnly))
+-                {
+-                    return null;
+-                }
+-
+-                Logger.Info($"Load wishlists from local for {ClientName}");
+-                if (Serialization.TryFromJsonFile(FilePath, out List<Wishlist> wishlists))
+-                {
+-                    if (forcePrice)
+-                    {
+-                        wishlists = SetCurrentPrice(wishlists, forcePrice);
+-                        SaveWishlist(wishlists);
+-                    }
+-                    return wishlists;
+-                }
+-                else
+-                {
+-                    Logger.Error($"Failed to load wishlists from local for {ClientName}");
+-                }
+-            }
+-            catch (Exception ex)
+-            {
+-                Common.LogError(ex, false, $"Error for load {ClientName} wishlists", true, "IsThereAnyDeal");
+-            }
+-
+-            return null;
+-        }
+-
+-        /// <summary>
+-        /// Saved data
+-        /// </summary>
+-        /// <param name="wishlists"></param>
+-        public void SaveWishlist(List<Wishlist> wishlists)
+-        {
+-            try
+-            {
+-                string DirPath = Path.Combine(PluginUserDataPath, "IsThereAnyDeal");
+-                string FilePath = Path.Combine(DirPath, $"{ClientName}.json");
+-
+-                FileSystem.WriteStringToFile(FilePath, Serialization.ToJson(wishlists));
+-            }
+-            catch (Exception ex)
+-            {
+-                Common.LogError(ex, false, $"Error for save {ClientName} wishlists", true, "IsThereAnyDeal");
+-            }
+-        }
+-
+-        /// <summary>
+-        /// Download data from store
+-        /// </summary>
+-        /// <param name="CacheOnly"></param>
+-        /// <param name="ForcePrice"></param>
+-        /// <returns></returns>
+-        public List<Wishlist> GetWishlist(bool cacheOnly = false, bool forcePrice = false)
+-        {
+-            List<Wishlist> cachedData = LoadWishlists(cacheOnly, forcePrice);
+-            try
+-            {
+-                return cacheOnly ? cachedData : GetStoreWishlist(cachedData);
+-            }
+-            catch (Exception ex)
+-            {
+-                Common.LogError(ex, false, true, $"Error on GetStoreWishlist({ClientName})");
+-                return cachedData;
+-            }
+-        }
+-        internal abstract List<Wishlist> GetStoreWishlist(List<Wishlist> cachedData);
+-
+-        public abstract bool RemoveWishlist(string storeId);
+-
+-        public List<Wishlist> SetCurrentPrice(List<Wishlist> wishlists, bool force)
+-        {
+-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+-            return isThereAnyDealApi.GetCurrentPrice(wishlists, Settings, force).GetAwaiter().GetResult();
+-        }
+-
+-        public Dictionary<string, string> GetGamesId(List<string> titles, bool isTitle)
+-        {
+-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+-
+-            // Max 200
+-            List<List<string>> chunks = titles
+-                .Select((item, index) => new { item, index })
+-                .GroupBy(x => x.index / 200)
+-                .Select(g => g.Select(x => x.item).ToList())
+-                .ToList();
+-
+-            Dictionary<string, string> gamesId = new Dictionary<string, string>();
+-            for (int i = 0; i < chunks.Count; i++)
+-            {
+-                Dictionary<string, string> ids = isThereAnyDealApi.GetGamesId(isTitle ? chunks[i] : null, !isTitle ? chunks[i] : null).GetAwaiter().GetResult();
+-                if (ids?.Count() > 0)
+-                {
+-                    gamesId = gamesId.Concat(ids).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+-                }
+-            }
+-
+-            return gamesId;
+-        }
+-
+-
+-        internal string GetShopColor()
+-        {
+-            string shopColor = string.Empty;
+-            API.Instance.MainView.UIDispatcher?.Invoke(new Action(() =>
+-            {
+-                string color = Settings.Stores?.Find(x => x.Title?.ToLower().Contains(ClientName.ToLower()) == true)?.Color;
+-                shopColor = color.IsNullOrEmpty() ? ResourceProvider.GetResource("TextBrush").ToString() : color;
+-            }));
+-            return shopColor;
+-        }
+-    }
++	/// <summary>
++	/// Abstract base class for managing wishlists from various game store clients.
++	/// Provides common functionality for loading, saving, and retrieving wishlist data,
++	/// as well as integration with the IsThereAnyDeal API for price tracking.
++	/// </summary>
++	public abstract class GenericWishlist
++	{
++		#region Properties
++
++		/// <summary>
++		/// Gets the logger instance for this class.
++		/// </summary>
++		private static readonly Lazy<ILogger> LazyLogger = new Lazy<ILogger>(() => LogManager.GetLogger());
++		internal static ILogger Logger => LazyLogger.Value;
++
++		/// <summary>
++		/// Gets the IsThereAnyDeal plugin instance.
++		/// </summary>
++		internal IsThereAnyDeal Plugin { get; }
++
++		/// <summary>
++		/// Gets the plugin settings.
++		/// </summary>
++		internal IsThereAnyDealSettings Settings { get; }
++
++		/// <summary>
++		/// Gets the path to the plugin's user data directory.
++		/// </summary>
++		internal static string PluginUserDataPath { get; private set; }
++
++		/// <summary>
++		/// Gets the name of the store client (e.g., "Steam", "Epic", "GOG").
++		/// </summary>
++		internal string ClientName { get; }
++
++		/// <summary>
++		/// Gets or sets the external plugin reference.
++		/// </summary>
++		internal static PlayniteTools.ExternalPlugin ExternalPlugin { get; set; }
++
++		/// <summary>
++		/// Gets the file data tools instance for managing cached data.
++		/// </summary>
++		internal FileDataTools FileDataTools { get; }
++
++		/// <summary>
++		/// Gets the full file path where wishlist data is stored for this client.
++		/// </summary>
++		internal string FilePath { get; }
++
++		/// <summary>
++		/// Gets the IsThereAnyDeal API client instance (cached).
++		/// </summary>
++		private readonly Lazy<IsThereAnyDealApi> _lazyApi = new Lazy<IsThereAnyDealApi>(() => new IsThereAnyDealApi());
++		internal IsThereAnyDealApi IsThereAnyDealApi => _lazyApi.Value;
++
++		/// <summary>
++		/// Cache timeout in minutes (24 hours).
++		/// </summary>
++		private const int CacheTimeoutMinutes = 1440;
++
++		/// <summary>
++		/// Maximum number of items per API request.
++		/// </summary>
++		private const int MaxApiRequestSize = 200;
++
++		#endregion
++
++		#region Constructor
++
++		/// <summary>
++		/// Initializes a new instance of the GenericWishlist class.
++		/// </summary>
++		/// <param name="plugin">The IsThereAnyDeal plugin instance.</param>
++		/// <param name="clientName">The name of the store client (e.g., "Steam", "Epic").</param>
++		/// <exception cref="ArgumentNullException">Thrown when plugin or clientName is null.</exception>
++		public GenericWishlist(IsThereAnyDeal plugin, string clientName)
++		{
++			Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
++			ClientName = clientName ?? throw new ArgumentNullException(nameof(clientName));
++
++			Settings = plugin.PluginSettings.Settings;
++			PluginUserDataPath = plugin.GetPluginUserDataPath();
++
++			string dirPath = Path.Combine(PluginUserDataPath, Plugin.PluginName);
++			FilePath = Path.Combine(dirPath, $"{ClientName}.json");
++
++			FileDataTools = new FileDataTools(plugin.PluginName, clientName);
++		}
++
++		#endregion
++
++		#region Data Loading and Saving
++
++		/// <summary>
++		/// Loads wishlist data from local cache with a maximum age of 1 day.
++		/// </summary>
++		/// <param name="cacheOnly">If true, forces loading of expired cached data without refreshing.</param>
++		/// <param name="forcePrice">If true, forces a refresh of price data for all wishlist items.</param>
++		/// <returns>A list of wishlist items, or an empty list if data is unavailable or an error occurs.</returns>
++		/// <remarks>
++		/// When cacheOnly is false, data older than 1440 minutes (24 hours) will be considered stale.
++		/// If forcePrice is true, the method will fetch current prices and save the updated data.
++		/// </remarks>
++		internal List<Wishlist> LoadWishlists(bool cacheOnly = false, bool forcePrice = false)
++		{
++			try
++			{
++				int cacheTimeout = cacheOnly ? -1 : CacheTimeoutMinutes;
++				var data = FileDataTools.LoadData<List<Wishlist>>(FilePath, cacheTimeout);
++
++				if (data == null)
++				{
++					return new List<Wishlist>();
++				}
++
++				if (forcePrice)
++				{
++					data = SetCurrentPrice(data, forcePrice);
++					SaveWishlist(data);
++				}
++
++				return data;
++			}
++			catch (Exception ex)
++			{
++				Common.LogError(ex, false, $"Error loading {ClientName} wishlists", true, Plugin.PluginName);
++				return new List<Wishlist>();
++			}
++		}
++
++		/// <summary>
++		/// Saves wishlist data to the local cache file.
++		/// </summary>
++		/// <param name="wishlists">The list of wishlist items to save.</param>
++		public void SaveWishlist(List<Wishlist> wishlists) => FileDataTools.SaveData(FilePath, wishlists);
++
++		#endregion
++
++		#region Wishlist Retrieval
++
++		/// <summary>
++		/// Retrieves the wishlist, either from cache or by downloading fresh data from the store.
++		/// </summary>
++		/// <param name="cacheOnly">If true, only returns cached data without contacting the store.</param>
++		/// <param name="forcePrice">If true, forces a refresh of price data for all wishlist items.</param>
++		/// <returns>A list of wishlist items from either cache or the store, or cached data if an error occurs.</returns>
++		/// <remarks>
++		/// If cacheOnly is false, this method will attempt to download fresh data from the store.
++		/// If the download fails, it falls back to returning the cached data.
++		/// </remarks>
++		public List<Wishlist> GetWishlist(bool cacheOnly = false, bool forcePrice = false)
++		{
++			List<Wishlist> cachedData = LoadWishlists(cacheOnly, forcePrice);
++
++			if (cacheOnly)
++			{
++				return cachedData;
++			}
++
++			try
++			{
++				return GetStoreWishlist(cachedData);
++			}
++			catch (Exception ex)
++			{
++				Common.LogError(ex, false, true, $"Error on GetStoreWishlist({ClientName})");
++				return cachedData;
++			}
++		}
++
++		/// <summary>
++		/// Abstract method that must be implemented by derived classes to download wishlist data from the specific store.
++		/// </summary>
++		/// <param name="cachedData">The currently cached wishlist data, which may be used for comparison or fallback.</param>
++		/// <returns>A list of wishlist items retrieved from the store.</returns>
++		internal abstract List<Wishlist> GetStoreWishlist(List<Wishlist> cachedData);
++
++		/// <summary>
++		/// Abstract method that must be implemented by derived classes to remove a game from the wishlist.
++		/// </summary>
++		/// <param name="storeId">The store-specific identifier of the game to remove.</param>
++		/// <returns>True if the removal was successful, false otherwise.</returns>
++		public abstract bool RemoveWishlist(string storeId);
++
++		#endregion
++
++		#region Price Management
++
++		/// <summary>
++		/// Updates the current price information for all items in the wishlist using the IsThereAnyDeal API.
++		/// </summary>
++		/// <param name="wishlists">The list of wishlist items to update with current prices.</param>
++		/// <param name="force">If true, forces a refresh even if recent price data exists.</param>
++		/// <returns>The wishlist with updated price information.</returns>
++		public List<Wishlist> SetCurrentPrice(List<Wishlist> wishlists, bool force)
++		{
++			if (wishlists == null || wishlists.Count == 0)
++			{
++				return wishlists ?? new List<Wishlist>();
++			}
++
++			return IsThereAnyDealApi.GetCurrentPrice(wishlists, Settings, force).GetAwaiter().GetResult();
++		}
++
++		#endregion
++
++		#region Game ID Resolution
++
++		/// <summary>
++		/// Retrieves game IDs from the IsThereAnyDeal API based on game titles or existing IDs.
++		/// Processes requests in chunks of 200 items to comply with API limitations.
++		/// </summary>
++		/// <param name="titles">A list of game titles or IDs to look up.</param>
++		/// <param name="isTitle">If true, treats the input as game titles; if false, treats them as IDs.</param>
++		/// <returns>A dictionary mapping the input values to their corresponding game IDs.</returns>
++		/// <remarks>
++		/// The IsThereAnyDeal API has a maximum limit of 200 items per request.
++		/// This method automatically splits larger requests into multiple API calls.
++		/// </remarks>
++		public Dictionary<string, string> GetGamesId(List<string> titles, bool isTitle)
++		{
++			if (titles == null || titles.Count == 0)
++			{
++				return new Dictionary<string, string>();
++			}
++
++			// Split into chunks of maximum 200 items per API request
++			var chunks = titles
++				.Select((item, index) => new { item, index })
++				.GroupBy(x => x.index / MaxApiRequestSize)
++				.Select(g => g.Select(x => x.item).ToList())
++				.ToList();
++
++			var gamesId = new Dictionary<string, string>();
++
++			foreach (var chunk in chunks)
++			{
++				var ids = IsThereAnyDealApi.GetGamesId(
++					isTitle ? chunk : null,
++					!isTitle ? chunk : null
++				).GetAwaiter().GetResult();
++
++				if (ids != null && ids.Count > 0)
++				{
++					foreach (var kvp in ids)
++					{
++						gamesId[kvp.Key] = kvp.Value;
++					}
++				}
++			}
++
++			return gamesId;
++		}
++
++		#endregion
++
++		#region UI Helpers
++
++		/// <summary>
++		/// Retrieves the display color associated with this store client from the plugin settings.
++		/// </summary>
++		/// <returns>
++		/// The color string configured for this store, or the default text brush color if none is configured.
++		/// </returns>
++		/// <remarks>
++		/// This method must be invoked on the UI dispatcher thread to safely access UI resources.
++		/// </remarks>
++		internal string GetShopColor()
++		{
++			string shopColor = string.Empty;
++
++			API.Instance.MainView.UIDispatcher?.Invoke(new Action(() =>
++			{
++				var store = Settings.Stores?.FirstOrDefault(x =>
++					x.Title?.IndexOf(ClientName, StringComparison.OrdinalIgnoreCase) >= 0);
++
++				shopColor = string.IsNullOrEmpty(store?.Color)
++					? ResourceProvider.GetResource("TextBrush")?.ToString() ?? string.Empty
++					: store.Color;
++			}));
++
++			return shopColor;
++		}
++
++		#endregion
++	}
+ }
+\ No newline at end of file
+diff --git a/source/Clients/GogWishlist.cs b/source/Clients/GogWishlist.cs
+index 7e37c8a..788672b 100644
+--- a/source/Clients/GogWishlist.cs
++++ b/source/Clients/GogWishlist.cs
+@@ -38,7 +38,6 @@ namespace IsThereAnyDeal.Services
+                 return cachedData;
+             }
+ 
+-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+             List<Wishlist> wishlists = new List<Wishlist>();
+             ObservableCollection<AccountWishlist> accountWishlist = GogApi.GetWishlist(GogApi.CurrentAccountInfos);
+ 
+@@ -46,7 +45,7 @@ namespace IsThereAnyDeal.Services
+             {
+                 try
+                 {
+-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
++                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                     wishlists.Add(new Wishlist
+                     {
+                         StoreId = x.Id,
+@@ -78,4 +77,4 @@ namespace IsThereAnyDeal.Services
+             return GogApi.RemoveWishlist(storeId);
+         }
+     }
+-}
++}
+\ No newline at end of file
+diff --git a/source/Clients/HumbleBundleWishlist.cs b/source/Clients/HumbleBundleWishlist.cs
+index dcc79a5..292e42b 100644
+--- a/source/Clients/HumbleBundleWishlist.cs
++++ b/source/Clients/HumbleBundleWishlist.cs
+@@ -57,7 +57,6 @@ namespace IsThereAnyDeal.Services
+ 
+                 dynamic dataObj = Serialization.FromJson<dynamic>(resultWeb);
+ 
+-                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                 foreach (dynamic gameWish in dataObj["products_json"])
+                 {
+                     string storeId = string.Empty;
+@@ -71,7 +70,7 @@ namespace IsThereAnyDeal.Services
+                     name = WebUtility.HtmlDecode((string)gameWish["human_name"]);
+                     capsule = (string)gameWish["standard_carousel_image"];
+ 
+-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(name).GetAwaiter().GetResult();
++                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(name).GetAwaiter().GetResult();
+ 
+                     wishlists.Add(new Wishlist
+                     {
+@@ -109,4 +108,4 @@ namespace IsThereAnyDeal.Services
+             return false;
+         }
+     }
+-}
++}
+\ No newline at end of file
+diff --git a/source/Clients/SteamWishlist.cs b/source/Clients/SteamWishlist.cs
+index cd2089e..fe2cc5c 100644
+--- a/source/Clients/SteamWishlist.cs
++++ b/source/Clients/SteamWishlist.cs
+@@ -1,22 +1,14 @@
+-﻿using IsThereAnyDeal.Models;
+-using Playnite.SDK;
++﻿using Playnite.SDK;
+ using Playnite.SDK.Data;
+ using CommonPluginsShared;
+ using System;
+ using System.Collections.Generic;
+ using System.IO;
+-using System.Linq;
+-using System.Net;
+-using System.Text;
+-using System.Threading;
+ using IsThereAnyDeal.Models.Api;
+ using System.Collections.ObjectModel;
+ using CommonPluginsStores.Models;
+ using CommonPluginsStores.Steam;
+ using CommonPluginsShared.Extensions;
+-using CommonPluginsStores.Steam.Models.SteamKit;
+-using CommonPluginsStores.Steam.Models;
+-using System.Web.UI.WebControls;
+ 
+ namespace IsThereAnyDeal.Services
+ {
+@@ -49,14 +41,13 @@ namespace IsThereAnyDeal.Services
+             }
+ 
+             List<Models.Wishlist> wishlists = new List<Models.Wishlist>();
+-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+             ObservableCollection<AccountWishlist> accountWishlist = SteamApi.GetWishlist(SteamApi.CurrentAccountInfos);
+ 
+             accountWishlist.ForEach(x =>
+             {
+                 try
+                 {
+-                    GameLookup gamesLookup = gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
++                    GameLookup gamesLookup = gamesLookup = IsThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
+                     wishlists.Add(new Models.Wishlist
+                     {
+                         StoreId = x.Id,
+@@ -97,14 +88,13 @@ namespace IsThereAnyDeal.Services
+             {
+                 try
+                 {
+-                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                     dynamic rgWishlist = jObject["rgWishlist"];
+ 
+                     foreach(dynamic el in rgWishlist)
+                     {
+                         string name = SteamApi.GetGameName(uint.Parse((string)el));
+ 
+-                        GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse((string)el)).GetAwaiter().GetResult();
++                        GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(int.Parse((string)el)).GetAwaiter().GetResult();
+                         wishlists.Add(new Models.Wishlist
+                         {
+                             StoreId = (string)el,
+@@ -134,4 +124,4 @@ namespace IsThereAnyDeal.Services
+             return false;
+         }
+     }
+-}
++}
+\ No newline at end of file
+diff --git a/source/Clients/UplayWishlist.cs b/source/Clients/UplayWishlist.cs
+index e5e675a..e8296a6 100644
+--- a/source/Clients/UplayWishlist.cs
++++ b/source/Clients/UplayWishlist.cs
+@@ -15,7 +15,7 @@ namespace IsThereAnyDeal.Clients
+ {
+     public class UplayWishlist : GenericWishlist
+     {
+-        public UplayWishlist(IsThereAnyDeal plugin) : base(plugin, "Ubisoft")
++        public UplayWishlist(IsThereAnyDeal plugin) : base(plugin, "UPlay")
+         {
+             ExternalPlugin = PlayniteTools.ExternalPlugin.UplayLibrary;
+         }
+@@ -48,7 +48,6 @@ namespace IsThereAnyDeal.Clients
+                 HtmlParser parser = new HtmlParser();
+                 IHtmlDocument HtmlRequirement = parser.Parse(response);
+ 
+-                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                 foreach (IElement searchElement in HtmlRequirement.QuerySelectorAll(".wishlist-items-list li"))
+                 {
+                     string storeId = string.Empty;
+@@ -60,7 +59,7 @@ namespace IsThereAnyDeal.Clients
+                     capsule = searchElement.QuerySelector("img").GetAttribute("data-src");
+                     name = searchElement.QuerySelector("div.card-title div.prod-title").InnerHtml.Trim();
+ 
+-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(name).GetAwaiter().GetResult();
++                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(name).GetAwaiter().GetResult();
+ 
+                     wishlists.Add(new Wishlist
+                     {
+@@ -92,4 +91,4 @@ namespace IsThereAnyDeal.Clients
+             return false;
+         }
+     }
+-}
++}
+\ No newline at end of file
+diff --git a/source/Clients/XboxWishlist.cs b/source/Clients/XboxWishlist.cs
+index f13c2f9..ac51c64 100644
+--- a/source/Clients/XboxWishlist.cs
++++ b/source/Clients/XboxWishlist.cs
+@@ -1,34 +1,23 @@
+-﻿using IsThereAnyDeal.Models;
++﻿using CommonPluginsShared;
++using CommonPluginsStores.Ea;
++using CommonPluginsStores.Models;
++using CommonPluginsStores.Xbox;
++using IsThereAnyDeal.Models;
++using IsThereAnyDeal.Models.Api;
+ using IsThereAnyDeal.Services;
+ using Playnite.SDK;
+-using CommonPluginsShared;
+ using System;
+ using System.Collections.Generic;
++using System.Collections.ObjectModel;
+ using System.Linq;
+ using System.Text;
+-using IsThereAnyDeal.Models.Api;
+-using System.Collections.ObjectModel;
+-using CommonPluginsStores.Models;
+-using CommonPluginsStores.Xbox;
+ 
+ namespace IsThereAnyDeal.Clients
+ {
+     public class XboxWishlist : GenericWishlist
+-    {
+-        protected static XboxApi _xboxApi;
+-        internal static XboxApi XboxApi
+-        {
+-            get
+-            {
+-                if (_xboxApi == null)
+-                {
+-                    _xboxApi = new XboxApi("IsThereAnyDeals");
+-                }
+-                return _xboxApi;
+-            }
+-
+-            set => _xboxApi = value;
+-        }
++	{
++		private readonly Lazy<XboxApi> _lazyApi = new Lazy<XboxApi>(() => new XboxApi("IsThereAnyDeal"));
++		internal XboxApi XboxApi => _lazyApi.Value;
+ 
+ 
+         public XboxWishlist(IsThereAnyDeal plugin) : base(plugin, "Xbox")
+@@ -56,7 +45,6 @@ namespace IsThereAnyDeal.Clients
+                 return cachedData;
+             }
+ 
+-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+             List<Wishlist> wishlists = new List<Wishlist>();
+             ObservableCollection<AccountWishlist> accountWishlist = XboxApi.GetWishlist(new AccountInfos { Link = Settings.XboxLink });
+ 
+@@ -64,7 +52,7 @@ namespace IsThereAnyDeal.Clients
+             {
+                 try
+                 {
+-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
++                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                     wishlists.Add(new Wishlist
+                     {
+                         StoreId = x.Id,
+@@ -96,4 +84,4 @@ namespace IsThereAnyDeal.Clients
+             return false;
+         }
+     }
+-}
++}
+\ No newline at end of file
+diff --git a/source/IsThereAnyDeal.cs b/source/IsThereAnyDeal.cs
+index c206753..709391e 100644
+--- a/source/IsThereAnyDeal.cs
++++ b/source/IsThereAnyDeal.cs
+@@ -36,9 +36,9 @@ namespace IsThereAnyDeal
+         internal ItadViewSidebar SidebarItem { get; set; }
+ 
+ 
+-        public IsThereAnyDeal(IPlayniteAPI api) : base(api)
++        public IsThereAnyDeal(IPlayniteAPI api) : base(api, "IsThereAnyDeal")
+         {
+-            string pluginCachePath = Path.Combine(PlaynitePaths.DataCachePath, "IsThereAnyDeal");
++            string pluginCachePath = Path.Combine(PlaynitePaths.DataCachePath, PluginName);
+             HttpFileCachePlugin.CacheDirectory = pluginCachePath;
+             FileSystem.CreateDirectory(pluginCachePath);
+ 
+@@ -54,7 +54,7 @@ namespace IsThereAnyDeal
+             }
+             catch (Exception ex)
+             {
+-                Common.LogError(ex, false, true, "IsThereAnyDeal");
++                Common.LogError(ex, false, true, PluginName);
+             }
+ 
+             // Add Event for WindowBase for get the "WindowSettings".
+@@ -126,7 +126,7 @@ namespace IsThereAnyDeal
+             }
+             catch (Exception ex)
+             {
+-                Common.LogError(ex, false, $"Error on WindowBase_LoadedEvent for {winIdProperty}", true, "IsThereAnyDeal");
++                Common.LogError(ex, false, $"Error on WindowBase_LoadedEvent for {winIdProperty}", true, PluginName);
+             }
+         }
+         
+@@ -307,7 +307,7 @@ namespace IsThereAnyDeal
+ 						try
+ 						{
+ 							Logger.Info("SteamApi Initialization");
+-							SteamApi = new SteamApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.SuccessStory);
++							SteamApi = new SteamApi(PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
+ 							SteamApi.Initialization(
+ 								PluginSettings.Settings.SteamStoreSettings,
+ 								PluginSettings.Settings.PluginState.SteamIsEnabled && PluginSettings.Settings.EnableSteam
+@@ -323,7 +323,7 @@ namespace IsThereAnyDeal
+ 						try
+ 						{
+ 							Logger.Info("EpicApi Initialization");
+-							EpicApi = new EpicApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.SuccessStory);
++							EpicApi = new EpicApi(PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
+ 							EpicApi.Initialization(
+ 								PluginSettings.Settings.EpicStoreSettings,
+ 								PluginSettings.Settings.PluginState.EpicIsEnabled && PluginSettings.Settings.EnableEpic
+@@ -339,7 +339,7 @@ namespace IsThereAnyDeal
+ 						try
+ 						{
+ 							Logger.Info("GogApi Initialization");
+-							GogApi = new GogApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.SuccessStory);
++							GogApi = new GogApi(PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
+ 							GogApi.Initialization(
+ 								PluginSettings.Settings.GogStoreSettings,
+ 								PluginSettings.Settings.PluginState.GogIsEnabled && PluginSettings.Settings.EnableGog
+diff --git a/source/playnite-plugincommon b/source/playnite-plugincommon
+--- a/source/playnite-plugincommon
++++ b/source/playnite-plugincommon
+@@ -1 +1 @@
+-Subproject commit 68eb7f9ca2eb82d938e359086642eb58c15a1b8e
++Subproject commit 68eb7f9ca2eb82d938e359086642eb58c15a1b8e-dirty

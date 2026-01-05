@@ -1,34 +1,23 @@
-﻿using IsThereAnyDeal.Models;
-using IsThereAnyDeal.Services;
-using Playnite.SDK;
-using CommonPluginsShared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using IsThereAnyDeal.Models.Api;
-using System.Collections.ObjectModel;
+﻿using CommonPluginsShared;
+using CommonPluginsStores.Ea;
 using CommonPluginsStores.Models;
 using CommonPluginsStores.Xbox;
+using IsThereAnyDeal.Models;
+using IsThereAnyDeal.Models.Api;
+using IsThereAnyDeal.Services;
+using Playnite.SDK;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
 
 namespace IsThereAnyDeal.Clients
 {
     public class XboxWishlist : GenericWishlist
-    {
-        protected static XboxApi _xboxApi;
-        internal static XboxApi XboxApi
-        {
-            get
-            {
-                if (_xboxApi == null)
-                {
-                    _xboxApi = new XboxApi("IsThereAnyDeals");
-                }
-                return _xboxApi;
-            }
-
-            set => _xboxApi = value;
-        }
+	{
+		private readonly Lazy<XboxApi> _lazyApi = new Lazy<XboxApi>(() => new XboxApi("IsThereAnyDeal"));
+		internal XboxApi XboxApi => _lazyApi.Value;
 
 
         public XboxWishlist(IsThereAnyDeal plugin) : base(plugin, "Xbox")
@@ -56,7 +45,6 @@ namespace IsThereAnyDeal.Clients
                 return cachedData;
             }
 
-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             List<Wishlist> wishlists = new List<Wishlist>();
             ObservableCollection<AccountWishlist> accountWishlist = XboxApi.GetWishlist(new AccountInfos { Link = Settings.XboxLink });
 
@@ -64,7 +52,7 @@ namespace IsThereAnyDeal.Clients
             {
                 try
                 {
-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
                     wishlists.Add(new Wishlist
                     {
                         StoreId = x.Id,

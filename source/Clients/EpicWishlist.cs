@@ -39,7 +39,6 @@ namespace IsThereAnyDeal.Services
                 return cachedData;
             }
 
-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             List<Wishlist> wishlists = new List<Wishlist>();
             ObservableCollection<AccountWishlist> accountWishlist = EpicApi.GetWishlist(EpicApi.CurrentAccountInfos);
 
@@ -47,7 +46,7 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
                     wishlists.Add(new Wishlist
                     {
                         StoreId = x.Id,
