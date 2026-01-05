@@ -17,13 +17,232 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
         <converters1:ValueOperationConverter x:Key="ValueOperationConverter"/>
+
+        <!-- Color resources for dark cards and buttons (theme-overridable via DynamicResource keys) -->
+        <SolidColorBrush x:Key="CardBackgroundBrush"
+                                 Color="#2E2F33"/>
+        <SolidColorBrush x:Key="CardForegroundBrush"
+                                 Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="CardBorderBrush"
+                                 Color="#444"/>
+
+        <SolidColorBrush x:Key="PrimaryButtonBackgroundBrush"
+                                 Color="#5A9BD5"/>
+        <SolidColorBrush x:Key="PrimaryButtonHoverBrush"
+                                 Color="#4B89C6"/>
+        <SolidColorBrush x:Key="PrimaryButtonForegroundBrush"
+                                 Color="#FFFFFF"/>
+
+        <!-- Card-like item appearance -->
+        <Style x:Key="ItemBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="8,6,12,10"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+
+            <Setter Property="CacheMode">
+                <Setter.Value>
+                    <BitmapCache RenderAtScale="1" EnableClearType="True" />
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TranslateTransform Y="0"/>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryButtonBackgroundBrush}"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="#22000000" BlurRadius="8" ShadowDepth="2" Opacity="0.45"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <TranslateTransform Y="-2"/>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryButtonBackgroundBrush}"/>
+                    <Setter Property="Background" Value="#33363A"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="#33000000" BlurRadius="8" ShadowDepth="2" Opacity="0.6"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <TranslateTransform Y="-2"/>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Button look -->
+        <Style x:Key="PrimaryButtonStyle"
+                       TargetType="Button">
+            <Setter Property="Background"
+                                Value="{DynamicResource PrimaryButtonBackgroundBrush}"/>
+            <Setter Property="Foreground"
+                                Value="{DynamicResource PrimaryButtonForegroundBrush}"/>
+            <Setter Property="Padding"
+                                Value="8,6"/>
+            <Setter Property="Margin"
+                                Value="0"/>
+            <Setter Property="MinWidth"
+                                Value="80"/>
+            <Setter Property="FontWeight"
+                                Value="SemiBold"/>
+            <Setter Property="BorderBrush"
+                                Value="#2E6A9C"/>
+            <Setter Property="BorderThickness"
+                                Value="1"/>
+            <Setter Property="RenderTransformOrigin"
+                                Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="1"
+                                                                ScaleY="1"/>
+                        <TranslateTransform X="0"
+                                                                    Y="0"/>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="4"
+                                                        Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                                                          VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"
+                                                                 Value="True">
+                                <Setter Property="Background"
+                                                                        Value="{DynamicResource PrimaryButtonHoverBrush}"/>
+                                <Setter Property="BorderBrush"
+                                                                        Value="#1F6EA0"/>
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#22000000"
+                                                                                                  BlurRadius="10"
+                                                                                                  ShadowDepth="2"
+                                                                                                  Opacity="0.6"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleX="1.02"
+                                                                                                        ScaleY="1.02"/>
+                                            <TranslateTransform X="0"
+                                                                                                            Y="-1"/>
+                                        </TransformGroup>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+
+                            <Trigger Property="IsPressed"
+                                                                 Value="True">
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleX="0.99"
+                                                                                                        ScaleY="0.99"/>
+                                            <TranslateTransform X="0"
+                                                                                                            Y="0"/>
+                                        </TransformGroup>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#18000000"
+                                                                                                  BlurRadius="6"
+                                                                                                  ShadowDepth="1"
+                                                                                                  Opacity="0.5"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled"
+                                                                 Value="False">
+                                <Setter Property="Opacity"
+                                                                        Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Make listbox items stretch to full width and remove default highlighting -->
+        <Style x:Key="ListBoxItemContainerStyle" TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="IsTabStop" Value="True"/>
+
+            <Setter Property="Width">
+                <Setter.Value>
+                    <MultiBinding Converter="{StaticResource ValueOperationConverter}" ConverterParameter="-">
+                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource AncestorType=ContentPresenter}" />
+                        <Binding Source="5" />
+                    </MultiBinding>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="UseLayoutRounding" Value="True"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border Background="Transparent">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Panel.ZIndex" Value="99"/>
+                </Trigger>
+
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Panel.ZIndex" Value="100"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <Grid Margin="10" >
         <TabControl SelectionChanged="TabControl_SelectionChanged">
             <TabItem Header="{DynamicResource LOCItadWishlist}" Name="PART_Tb">
                 <Grid Margin="10">
-                    <DockPanel Name="dpData" LastChildFill="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="113*"/>
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Name="dpData" LastChildFill="True" Grid.ColumnSpan="3">
                         <Border DockPanel.Dock="Top" BorderThickness="{DynamicResource PopupBorderThickness}" BorderBrush="{DynamicResource NormalBorderBrush}" Margin="0,0,0,10">
                             <Grid Margin="10">
                                 <Grid.RowDefinitions>
@@ -192,245 +411,103 @@
 
                         <Grid Name="DataLoaded">
                             <ListBox Name="lbWishlist" Height="{Binding ElementName=DataLoaded, Path=ActualHeight}"
-                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                <!-- Force the style because HorizontalContentAlignment not work. -->
-                                <ListBox.ItemContainerStyle>
-                                    <Style TargetType="ListBoxItem">
-                                        <Setter Property="SnapsToDevicePixels" Value="True" />
-                                        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-                                        <Setter Property="OverridesDefaultStyle" Value="True" />
-                                        <Setter Property="Padding" Value="3" />
-                                        <Setter Property="Margin" Value="0" />
-                                        <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                        <Setter Property="VerticalAlignment" Value="Stretch" />
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                                    <Grid>
-                                                        <Border x:Name="HoverRectangle" IsHitTestVisible="False" Visibility="Collapsed"
-                                                                Background="{DynamicResource HoverBrush}" CornerRadius="{DynamicResource ControlCornerRadius}" />
-                                                        <Border x:Name="SelectedRectangle" IsHitTestVisible="False" Visibility="Collapsed"
-                                                                Background="{DynamicResource GlyphBrush}" CornerRadius="{DynamicResource ControlCornerRadius}"/>
-                                                        <Border Padding="{TemplateBinding Padding}" Background="Transparent">
-                                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                                              Margin="3,0,0,0" />
-                                                        </Border>
-                                                    </Grid>
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsFocused" Value="True">
-                                                            <Setter Property="Visibility" Value="Visible" TargetName="HoverRectangle" />
-                                                        </Trigger>
-                                                        <Trigger Property="IsSelected" Value="true">
-                                                            <Setter Property="Visibility" Value="Visible" TargetName="HoverRectangle" />
-                                                        </Trigger>
-                                                        <MultiTrigger>
-                                                            <MultiTrigger.Conditions>
-                                                                <Condition Property="IsMouseOver" Value="True" />
-                                                                <Condition Property="Selector.IsSelected" Value="False" />
-                                                            </MultiTrigger.Conditions>
-                                                            <Setter Property="Visibility" Value="Visible" TargetName="HoverRectangle" />
-                                                        </MultiTrigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Style.Triggers>
-                                            <Trigger Property="Selector.IsSelected" Value="True">
-                                                <!--Setter Property="Foreground" Value="{DynamicResource TextBrushDark}" /-->
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ListBox.ItemContainerStyle>
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                     ItemContainerStyle="{StaticResource ListBoxItemContainerStyle}">
 
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <wpftk:VirtualizingWrapPanel Orientation="Vertical" VirtualizingPanel.CacheLengthUnit="Item" />
+                                        <wpftk:VirtualizingWrapPanel Orientation="Vertical" 
+                                                         VirtualizingPanel.CacheLengthUnit="Item" 
+                                                         VirtualizingPanel.CacheLength="10,10" 
+                                                         VirtualizingPanel.VirtualizationMode="Recycling" />
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
 
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid Margin="0,5">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="auto" />
-                                                <ColumnDefinition Width="6" />
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
+                                        <DataTemplate.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground"
+                                                                Value="{DynamicResource CardForegroundBrush}"/>
+                                            </Style>
+                                        </DataTemplate.Resources>
 
-                                            <!-- Image -->
-                                            <StackPanel Grid.Column="0" Height="100" Width="200">
-                                                <Image x:Name="HltbImage" Source="{Binding CapsuleImagePath, IsAsync=True}" Stretch="UniformToFill" Height="100" Width="200"
-                                                       RenderOptions.BitmapScalingMode="Linear" />
-                                                <TextBlock Text="{Binding StoreNameIcon}" Foreground="White" HorizontalAlignment="Right" 
-                                                           VerticalAlignment="Bottom" FontSize="24" FontFamily="{DynamicResource CommonFont}" 
-                                                           Margin="0,-40,5,5">
-                                                    <TextBlock.Effect>
-                                                        <DropShadowEffect Color="Black" Opacity="1" BlurRadius="5" ShadowDepth="0" />
-                                                    </TextBlock.Effect>
-                                                </TextBlock>
-                                            </StackPanel>
-
-                                            <!-- Infos & actions -->
-                                            <Grid Grid.Column="2" Name="PART_Infos" Tag="250">
-                                                <Grid.MinWidth>
-                                                    <MultiBinding Converter="{StaticResource ValueOperationConverter}" ConverterParameter="-">
-                                                        <Binding ElementName="DataLoaded" Path="ActualWidth" />
-                                                        <Binding ElementName="PART_Infos" Path="Tag" />
-                                                    </MultiBinding>
-                                                </Grid.MinWidth>
-
+                                        <Border Style="{StaticResource ItemBorderStyle}">
+                                            <Grid Margin="0,5">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="auto" />
                                                     <ColumnDefinition Width="6" />
-                                                    <ColumnDefinition Width="100" />
+                                                    <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*" />
-                                                    <RowDefinition Height="6" />
-                                                    <RowDefinition Height="*" />
-                                                    <RowDefinition Height="6" />
-                                                    <RowDefinition Height="*" />
-                                                </Grid.RowDefinitions>
+                                                <!-- Image -->
+                                                <StackPanel Grid.Column="0" Height="100" Width="200">
+                                                    <Image x:Name="HltbImage" Source="{Binding CapsuleImagePath, IsAsync=True}" Stretch="UniformToFill" Height="100" Width="200"
+                                                       RenderOptions.BitmapScalingMode="Linear" />
+                                                    <TextBlock Text="{Binding StoreNameIcon}" Foreground="White" HorizontalAlignment="Right" 
+                                                           VerticalAlignment="Bottom" FontSize="24" FontFamily="{DynamicResource CommonFont}" 
+                                                           Margin="0,-40,5,5">
+                                                        <TextBlock.Effect>
+                                                            <DropShadowEffect Color="Black" Opacity="1" BlurRadius="5" ShadowDepth="0" />
+                                                        </TextBlock.Effect>
+                                                    </TextBlock>
+                                                </StackPanel>
 
-                                                <Label Grid.Column="0" Grid.Row="0" Content="{Binding Name}" FontWeight="Bold" FontSize="20" />
+                                                <!-- Infos & actions -->
+                                                <Grid Grid.Column="2" Name="PART_Infos" Tag="270">
+                                                    <Grid.MinWidth>
+                                                        <MultiBinding Converter="{StaticResource ValueOperationConverter}" ConverterParameter="-">
+                                                            <Binding ElementName="DataLoaded" Path="ActualWidth" />
+                                                            <Binding ElementName="PART_Infos" Path="Tag" />
+                                                        </MultiBinding>
+                                                    </Grid.MinWidth>
 
-                                                <Grid Grid.Column="0" Grid.Row="2" Grid.RowSpan="3">
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="30" />
-                                                        <ColumnDefinition Width="1.5*" />
+                                                        <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="6" />
-                                                        <ColumnDefinition Width="2*" />
+                                                        <ColumnDefinition Width="100" />
                                                     </Grid.ColumnDefinitions>
 
-                                                    <!-- Best price -->
-                                                    <Grid Grid.Column="1">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="6" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="6" />
+                                                        <RowDefinition Height="*" />
+                                                    </Grid.RowDefinitions>
+
+                                                    <Label Grid.Column="0" Grid.Row="0" Content="{Binding Name}" FontWeight="Bold" FontSize="20" />
+
+                                                    <Grid Grid.Column="0" Grid.Row="2" Grid.RowSpan="3">
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="auto"/>
-                                                            <ColumnDefinition Width="10"/>
-                                                            <ColumnDefinition Width="auto"/>
-                                                            <ColumnDefinition Width="10"/>
-                                                            <ColumnDefinition Width="auto"/>
-                                                            <ColumnDefinition Width="10"/>
-                                                            <ColumnDefinition Width="auto"/>
+                                                            <ColumnDefinition Width="30" />
+                                                            <ColumnDefinition Width="1.5*" />
+                                                            <ColumnDefinition Width="6" />
+                                                            <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
 
-                                                        <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentBest}">
-                                                            <TextBlock.Style>
-                                                                <Style TargetType="TextBlock">
-                                                                    <Setter Property="Visibility" Value="Visible"/>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>
-                                                        </TextBlock>
-                                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                                            <StackPanel.Style>
-                                                                <Style TargetType="StackPanel">
-                                                                    <Setter Property="Visibility" Value="Visible"/>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </StackPanel.Style>
+                                                        <!-- Best price -->
+                                                        <Grid Grid.Column="1">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="auto"/>
+                                                                <ColumnDefinition Width="10"/>
+                                                                <ColumnDefinition Width="auto"/>
+                                                                <ColumnDefinition Width="10"/>
+                                                                <ColumnDefinition Width="auto"/>
+                                                                <ColumnDefinition Width="10"/>
+                                                                <ColumnDefinition Width="auto"/>
+                                                            </Grid.ColumnDefinitions>
 
-                                                            <TextBlock Text="{Binding ItadBestPrice.PriceNew}" Margin="0,0,5,0" />
-                                                            <TextBlock Text="{Binding ItadBestPrice.CurrencySign}" />
-                                                        </StackPanel>
-                                                        <StackPanel Grid.Column="4" Orientation="Horizontal">
-                                                            <StackPanel.Style>
-                                                                <Style TargetType="StackPanel">
-                                                                    <Setter Property="Visibility" Value="Visible"/>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </StackPanel.Style>
-
-                                                            <TextBlock Text="{Binding ItadBestPrice.PriceCut}" />
-                                                            <TextBlock Text="%" />
-                                                        </StackPanel>
-                                                        <TextBlock Grid.Column="6" Text="{Binding ItadBestPrice.ShopName}" Foreground="{Binding ItadBestPrice.ShopColor}">
-                                                            <TextBlock.Style>
-                                                                <Style TargetType="TextBlock">
-                                                                    <Setter Property="Visibility" Value="Visible"/>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>
-                                                        </TextBlock>
-
-                                                        <StackPanel Grid.Column="0">
-                                                            <TextBlock Text="{DynamicResource LOCItadNotActive}" 
-                                                                       Visibility="{Binding IsActive, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
-
-                                                            <TextBlock Text="{DynamicResource LOCItadNotFind}" 
-                                                                       Visibility="{Binding IsFind, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
-                                                            
-                                                            <TextBlock Visibility="{Binding InLibrary, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                                <Hyperlink Command="{Binding GoToGame}" CommandParameter="{Binding GameId}">
-                                                                    <TextBlock Text="{DynamicResource LOCItadInLibrary}" Style="{DynamicResource ListExtendStyleTextBlock}" />
-                                                                </Hyperlink>
-                                                            </TextBlock>
-
-                                                            <TextBlock Text="{DynamicResource LOCItadNoData}">
+                                                            <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentBest}">
                                                                 <TextBlock.Style>
-                                                                    <Style TargetType="TextBlock">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
                                                                         <Style.Triggers>
                                                                             <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
-                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
                                                                             </DataTrigger>
                                                                             <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
-                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
                                                                             </DataTrigger>
                                                                             <DataTrigger Binding="{Binding InLibrary}" Value="True">
                                                                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -442,39 +519,130 @@
                                                                     </Style>
                                                                 </TextBlock.Style>
                                                             </TextBlock>
-                                                        </StackPanel>
-                                                    </Grid>
+                                                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                                <StackPanel.Style>
+                                                                    <Style TargetType="StackPanel">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </StackPanel.Style>
 
-                                                    <!-- Store price -->
-                                                    <ListBox Grid.Column="3" ItemsSource="{Binding ListItadPriceForWishlistStore}" 
+                                                                <TextBlock Text="{Binding ItadBestPrice.PriceNew}" Margin="0,0,5,0" />
+                                                                <TextBlock Text="{Binding ItadBestPrice.CurrencySign}" />
+                                                            </StackPanel>
+                                                            <StackPanel Grid.Column="4" Orientation="Horizontal">
+                                                                <StackPanel.Style>
+                                                                    <Style TargetType="StackPanel">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </StackPanel.Style>
+
+                                                                <TextBlock Text="{Binding ItadBestPrice.PriceCut}" />
+                                                                <TextBlock Text="%" />
+                                                            </StackPanel>
+                                                            <TextBlock Grid.Column="6" Text="{Binding ItadBestPrice.ShopName}" Foreground="{Binding ItadBestPrice.ShopColor}">
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
+
+                                                            <StackPanel Grid.Column="0">
+                                                                <TextBlock Text="{DynamicResource LOCItadNotActive}" Style="{StaticResource BaseTextBlockStyle}"
+                                                                       Visibility="{Binding IsActive, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+
+                                                                <TextBlock Text="{DynamicResource LOCItadNotFind}" Style="{StaticResource BaseTextBlockStyle}"
+                                                                       Visibility="{Binding IsFind, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+
+                                                                <TextBlock Visibility="{Binding InLibrary, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                                            Style="{StaticResource BaseTextBlockStyle}">
+                                                                <Hyperlink Command="{Binding GoToGame}" CommandParameter="{Binding GameId}">
+                                                                    <TextBlock Text="{DynamicResource LOCItadInLibrary}" Style="{DynamicResource ListExtendStyleTextBlock}" />
+                                                                </Hyperlink>
+                                                            </TextBlock>
+
+                                                                <TextBlock Text="{DynamicResource LOCItadNoData}">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
+                                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
+                                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                            </StackPanel>
+                                                        </Grid>
+
+                                                        <!-- Store price -->
+                                                        <ListBox Grid.Column="3" ItemsSource="{Binding ListItadPriceForWishlistStore}" 
                                                              Name="lbStorePrice" SelectionChanged="LbStorePrice_SelectionChanged"
                                                              BorderThickness="0" Padding="0" Margin="0"
                                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                        <ListBox.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <Grid>
-                                                                    <Grid.ColumnDefinitions>
-                                                                        <ColumnDefinition Width="auto"/>
-                                                                        <ColumnDefinition Width="10"/>
-                                                                        <ColumnDefinition Width="auto"/>
-                                                                        <ColumnDefinition Width="0"/>
-                                                                        <ColumnDefinition Width="auto"/>
-                                                                        <ColumnDefinition Width="0"/>
-                                                                        <ColumnDefinition Width="auto"/>
-                                                                        <ColumnDefinition Width="10"/>
-                                                                        <ColumnDefinition Width="*"/>
-                                                                    </Grid.ColumnDefinitions>
-
-                                                                    <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentStore}" VerticalAlignment="Center" />
-                                                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
-                                                                        <StackPanel.Style>
-                                                                            <Style TargetType="StackPanel">
+                                                            <ListBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <DockPanel Margin="0,2" LastChildFill="True">
+                                                                        <DockPanel.Resources>
+                                                                            <Style x:Key="PriceVisibilityStyle" TargetType="FrameworkElement">
                                                                                 <Setter Property="Visibility" Value="Visible"/>
                                                                                 <Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding CurrencySign}" Value="">
+                                                                                    <DataTrigger Binding="{Binding CurrencySign}" Value="{x:Null}">
                                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                                     </DataTrigger>
-                                                                                    <DataTrigger Binding="{Binding CurrencySign}" Value="{x:Null}">
+                                                                                    <DataTrigger Binding="{Binding CurrencySign}" Value="">
                                                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                                                     </DataTrigger>
                                                                                     <DataTrigger Binding="{Binding InLibrary}" Value="True">
@@ -485,152 +653,146 @@
                                                                                     </DataTrigger>
                                                                                 </Style.Triggers>
                                                                             </Style>
-                                                                        </StackPanel.Style>
+                                                                        </DockPanel.Resources>
 
-                                                                        <TextBlock Text="{Binding PriceNew}" Margin="0,0,5,0" />
-                                                                        <TextBlock Text="{Binding CurrencySign}" />
-                                                                    </StackPanel>
-                                                                    <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
-                                                                        <StackPanel.Style>
-                                                                            <Style TargetType="StackPanel">
-                                                                                <Setter Property="Visibility" Value="Visible"/>
-                                                                                <Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding CurrencySign}" Value="">
-                                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                    </DataTrigger>
-                                                                                    <DataTrigger Binding="{Binding CurrencySign}" Value="{x:Null}">
-                                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                    </DataTrigger>
-                                                                                    <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                    </DataTrigger>
-                                                                                    <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                    </DataTrigger>
-                                                                                </Style.Triggers>
-                                                                            </Style>
-                                                                        </StackPanel.Style>
+                                                                        <TextBlock DockPanel.Dock="Left" 
+                   Text="{DynamicResource LOCItadCurrentStore}" 
+                   VerticalAlignment="Center" 
+                   Margin="0,0,10,0"/>
 
-                                                                        <TextBlock Text="{Binding PriceCut}" />
-                                                                        <TextBlock Text="%" />
-                                                                    </StackPanel>
-                                                                    <TextBlock Grid.Column="6" Text="{Binding ShopName}"
-                                                                               Foreground="{Binding ShopColor}" VerticalAlignment="Center" />
-                                                                    <StackPanel Grid.Column="8" Orientation="Horizontal" HorizontalAlignment="Right">
-                                                                        <Button Click="BtHideWishList_Click" 
-                                                                                ToolTip="{DynamicResource LOCHideGame}"
-                                                                                Content="" FontFamily="{DynamicResource CommonFont}"
-                                                                                Tag="{Binding}"
-                                                                                Name="BtHideWishList" VerticalAlignment="Center" />
-                                                                        <Button Click="BtRemoveWishList_Click"
-                                                                                ToolTip="{DynamicResource LOCRemoveTitle}"
-                                                                                Content="" FontFamily="{DynamicResource CommonFont}" Margin="6,0,0,0"  
-                                                                                Tag="{Binding}"
-                                                                                Name="BtRemoveWishList" VerticalAlignment="Center">
-                                                                            <Button.Style>
-                                                                                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                                                                    <Setter Property="IsEnabled" Value="True" />
-                                                                                    <Style.Triggers>
-                                                                                        <DataTrigger Binding="{Binding ShopName}" Value="Xbox">
-                                                                                            <Setter Property="IsEnabled" Value="False" />
-                                                                                        </DataTrigger>
-                                                                                        <DataTrigger Binding="{Binding ShopName}" Value="Microsoft Store">
-                                                                                            <Setter Property="IsEnabled" Value="False" />
-                                                                                        </DataTrigger>
-                                                                                    </Style.Triggers>
-                                                                                </Style>
-                                                                            </Button.Style>
-                                                                        </Button>
-                                                                    </StackPanel>
-                                                                </Grid>
-                                                            </DataTemplate>
-                                                        </ListBox.ItemTemplate>
-                                                    </ListBox>
-                                                </Grid>
+                                                                        <StackPanel DockPanel.Dock="Right" 
+                    Orientation="Horizontal" 
+                    VerticalAlignment="Center">
+                                                                            <Button Name="BtHideWishList" Click="BtHideWishList_Click" 
+                    Content="" FontFamily="{DynamicResource CommonFont}"
+                    ToolTip="{DynamicResource LOCHideGame}" Tag="{Binding}" Margin="5,0,0,0"/>
 
-                                                <!-- actions buttons -->
-                                                <Button Height="30" Grid.Column="2" Grid.Row="0" Tag="{Binding UrlGame}" Content="{DynamicResource LOCWebsiteLabel}" 
+                                                                            <Button Name="BtRemoveWishList" Click="BtRemoveWishList_Click"
+                    Content="" FontFamily="{DynamicResource CommonFont}"
+                    ToolTip="{DynamicResource LOCRemoveTitle}" Tag="{Binding}" Margin="6,0,0,0">
+                                                                                <Button.Style>
+                                                                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                                                                        <Setter Property="IsEnabled" Value="True" />
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding ShopName}" Value="Xbox">
+                                                                                                <Setter Property="IsEnabled" Value="False" />
+                                                                                            </DataTrigger>
+                                                                                            <DataTrigger Binding="{Binding ShopName}" Value="Microsoft Store">
+                                                                                                <Setter Property="IsEnabled" Value="False" />
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </Button.Style>
+                                                                            </Button>
+                                                                        </StackPanel>
+
+                                                                        <TextBlock DockPanel.Dock="Left" 
+                   Style="{StaticResource PriceVisibilityStyle}"
+                   VerticalAlignment="Center" 
+                   Margin="0,0,10,0">
+            <Run Text="{Binding PriceNew, Mode=OneWay}" /><Run Text="{Binding CurrencySign, Mode=OneWay}" />
+                                                                        </TextBlock>
+
+                                                                        <TextBlock DockPanel.Dock="Left" 
+                   Style="{StaticResource PriceVisibilityStyle}"
+                   VerticalAlignment="Center" 
+                   Margin="0,0,10,0">
+            <Run Text="{Binding PriceCut, Mode=OneWay}" /><Run Text="%" />
+                                                                        </TextBlock>
+
+                                                                        <TextBlock Text="{Binding ShopName}"
+                   Foreground="{Binding ShopColor}" 
+                   VerticalAlignment="Center" 
+                   TextTrimming="CharacterEllipsis"/>
+                                                                    </DockPanel>
+                                                                </DataTemplate>
+                                                            </ListBox.ItemTemplate>
+                                                        </ListBox>
+                                                    </Grid>
+
+                                                    <!-- actions buttons -->
+                                                    <Button Height="30" Grid.Column="2" Grid.Row="0" Tag="{Binding UrlGame}" Content="{DynamicResource LOCWebsiteLabel}" 
                                                         Click="ButtonWeb_Click" />
-                                                <Button Height="30"  Grid.Column="2" Grid.Row="2" Tag="{Binding ItadBestPrice.UrlBuy}" Content="{DynamicResource LOCItadBuy}" 
+                                                    <Button Height="30"  Grid.Column="2" Grid.Row="2" Tag="{Binding ItadBestPrice.UrlBuy}" Content="{DynamicResource LOCItadBuy}" 
                                                         Click="ButtonWeb_Click">
-                                                    <Button.Style>
-                                                        <Style TargetType="Button">
-                                                            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
-                                                            <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}" />
-                                                            <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
-                                                            <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
-                                                            <Setter Property="SnapsToDevicePixels" Value="True" />
-                                                            <Setter Property="Padding" Value="10,5,10,5" />
-                                                            <Setter Property="Template">
-                                                                <Setter.Value>
-                                                                    <ControlTemplate TargetType="{x:Type Button}">
-                                                                        <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"
+                                                        <Button.Style>
+                                                            <Style TargetType="Button">
+                                                                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+                                                                <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}" />
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
+                                                                <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
+                                                                <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                                <Setter Property="Padding" Value="10,5,10,5" />
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="{x:Type Button}">
+                                                                            <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"
                                                                                 CornerRadius="{DynamicResource ControlCornerRadius}" Style="{DynamicResource HighlightBorder}">
-                                                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                                                               Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" />
-                                                                        </Border>
-                                                                        <ControlTemplate.Triggers>
-                                                                            <Trigger Property="IsFocused" Value="True">
-                                                                                <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" TargetName="Border" />
-                                                                            </Trigger>
-                                                                        </ControlTemplate.Triggers>
-                                                                    </ControlTemplate>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                            <Style.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-                                                                </Trigger>
-                                                                <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="{x:Null}">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Button.Style>
-                                                </Button>
-                                                <Button Height="30"  Grid.Column="2" Grid.Row="4" Tag="{Binding StoreUrl}" Content="{DynamicResource LOCItadStore}" 
+                                                                            </Border>
+                                                                            <ControlTemplate.Triggers>
+                                                                                <Trigger Property="IsFocused" Value="True">
+                                                                                    <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" TargetName="Border" />
+                                                                                </Trigger>
+                                                                            </ControlTemplate.Triggers>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                                                                    </Trigger>
+                                                                    <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="{x:Null}">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Button.Style>
+                                                    </Button>
+                                                    <Button Height="30"  Grid.Column="2" Grid.Row="4" Tag="{Binding StoreUrl}" Content="{DynamicResource LOCItadStore}" 
                                                         Click="ButtonWeb_Click" IsEnabled="False" Name="btStore">
-                                                    <Button.Style>
-                                                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                                            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
-                                                            <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}" />
-                                                            <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
-                                                            <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
-                                                            <Setter Property="SnapsToDevicePixels" Value="True" />
-                                                            <Setter Property="Padding" Value="10,5,10,5" />
-                                                            <Setter Property="Template">
-                                                                <Setter.Value>
-                                                                    <ControlTemplate TargetType="{x:Type Button}">
-                                                                        <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"
+                                                        <Button.Style>
+                                                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                                                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+                                                                <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}" />
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
+                                                                <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}" />
+                                                                <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                                <Setter Property="Padding" Value="10,5,10,5" />
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="{x:Type Button}">
+                                                                            <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"
                                                                                 CornerRadius="{DynamicResource ControlCornerRadius}" Style="{DynamicResource HighlightBorder}">
-                                                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                                                               Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" />
-                                                                        </Border>
-                                                                        <ControlTemplate.Triggers>
-                                                                            <Trigger Property="IsFocused" Value="True">
-                                                                                <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" TargetName="Border" />
-                                                                            </Trigger>
-                                                                        </ControlTemplate.Triggers>
-                                                                    </ControlTemplate>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                            <Style.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-                                                                </Trigger>
-                                                                <!--DataTrigger Binding="{Binding StoreUrl}" Value="">
+                                                                            </Border>
+                                                                            <ControlTemplate.Triggers>
+                                                                                <Trigger Property="IsFocused" Value="True">
+                                                                                    <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" TargetName="Border" />
+                                                                                </Trigger>
+                                                                            </ControlTemplate.Triggers>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                                                                    </Trigger>
+                                                                    <!--DataTrigger Binding="{Binding StoreUrl}" Value="">
                                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                                             </>
                                                             <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
@@ -645,19 +807,20 @@
                                                             <DataTrigger Binding="{Binding IsActive}" Value="False">
                                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                                             </DataTrigger-->
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Button.Style>
-                                                </Button>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Button.Style>
+                                                    </Button>
+                                                </Grid>
                                             </Grid>
-                                        </Grid>
+                                        </Border>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </Grid>
                     </DockPanel>
-                    
-                    <Grid Name="DataLoadWishlist">
+
+                    <Grid Name="DataLoadWishlist" Grid.ColumnSpan="3">
                         <ProgressBar IsIndeterminate="True" Width="350" Height="40" />
                         <TextBlock Text="{DynamicResource LOCDownloadingLabel}" Style="{DynamicResource BaseTextBlockStyle}"
                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
