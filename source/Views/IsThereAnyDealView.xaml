@@ -478,118 +478,15 @@
 
                                                     <Label Grid.Column="0" Grid.Row="0" Content="{Binding Name}" FontWeight="Bold" FontSize="20" />
 
-                                                    <Grid Grid.Column="0" Grid.Row="2" Grid.RowSpan="3">
-                                                        <Grid.ColumnDefinitions>
+                                                    <Grid Grid.Column="0" Grid.Row="2" Grid.RowSpan="3">                                                        <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="30" />
                                                             <ColumnDefinition Width="1.5*" />
                                                             <ColumnDefinition Width="6" />
                                                             <ColumnDefinition Width="2*" />
                                                         </Grid.ColumnDefinitions>
 
-                                                        <!-- Best price -->
-                                                        <Grid Grid.Column="1">
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="auto"/>
-                                                                <ColumnDefinition Width="10"/>
-                                                                <ColumnDefinition Width="auto"/>
-                                                                <ColumnDefinition Width="10"/>
-                                                                <ColumnDefinition Width="auto"/>
-                                                                <ColumnDefinition Width="10"/>
-                                                                <ColumnDefinition Width="auto"/>
-                                                            </Grid.ColumnDefinitions>
-
-                                                            <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentBest}">
-                                                                <TextBlock.Style>
-                                                                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </TextBlock.Style>
-                                                            </TextBlock>
-                                                            <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                                                <StackPanel.Style>
-                                                                    <Style TargetType="StackPanel">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </StackPanel.Style>
-
-                                                                <TextBlock Text="{Binding ItadBestPrice.PriceNew}" Margin="0,0,5,0" />
-                                                                <TextBlock Text="{Binding ItadBestPrice.CurrencySign}" />
-                                                            </StackPanel>
-                                                            <StackPanel Grid.Column="4" Orientation="Horizontal">
-                                                                <StackPanel.Style>
-                                                                    <Style TargetType="StackPanel">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </StackPanel.Style>
-
-                                                                <TextBlock Text="{Binding ItadBestPrice.PriceCut}" />
-                                                                <TextBlock Text="%" />
-                                                            </StackPanel>
-                                                            <TextBlock Grid.Column="6" Text="{Binding ItadBestPrice.ShopName}" Foreground="{Binding ItadBestPrice.ShopColor}">
-                                                                <TextBlock.Style>
-                                                                    <Style TargetType="TextBlock">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </TextBlock.Style>
-                                                            </TextBlock>
-
-                                                            <StackPanel Grid.Column="0">
+                                                        <StackPanel Grid.Column="1" Grid.IsSharedSizeScope="True">
+                                                            <StackPanel>
                                                                 <TextBlock Text="{DynamicResource LOCItadNotActive}" Style="{StaticResource BaseTextBlockStyle}"
                                                                        Visibility="{Binding IsActive, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
 
@@ -598,10 +495,10 @@
 
                                                                 <TextBlock Visibility="{Binding InLibrary, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                                             Style="{StaticResource BaseTextBlockStyle}">
-                                                                <Hyperlink Command="{Binding GoToGame}" CommandParameter="{Binding GameId}">
-                                                                    <TextBlock Text="{DynamicResource LOCItadInLibrary}" Style="{DynamicResource ListExtendStyleTextBlock}" />
-                                                                </Hyperlink>
-                                                            </TextBlock>
+                                                                        <Hyperlink Command="{Binding GoToGame}" CommandParameter="{Binding GameId}">
+                                                                            <TextBlock Text="{DynamicResource LOCItadInLibrary}" Style="{DynamicResource ListExtendStyleTextBlock}" />
+                                                                        </Hyperlink>
+                                                                    </TextBlock>
 
                                                                 <TextBlock Text="{DynamicResource LOCItadNoData}">
                                                                     <TextBlock.Style>
@@ -625,7 +522,183 @@
                                                                     </TextBlock.Style>
                                                                 </TextBlock>
                                                             </StackPanel>
-                                                        </Grid>
+                                                            
+                                                            <!-- Best price -->
+                                                            <Grid>
+                                                                <Grid.Style>
+                                                                    <Style TargetType="Grid">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding ItadBestPrice.CurrencySign}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Grid.Style>
+
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="B"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="C"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentBest}" />
+                                                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                                    <TextBlock Text="{Binding ItadBestPrice.PriceNew}" Margin="0,0,5,0" />
+                                                                    <TextBlock Text="{Binding ItadBestPrice.CurrencySign}" />
+                                                                </StackPanel>
+                                                                <StackPanel Grid.Column="4" Orientation="Horizontal">
+                                                                    <TextBlock Text="{Binding ItadBestPrice.PriceCut}" />
+                                                                    <TextBlock Text="%" />
+                                                                </StackPanel>
+                                                                <TextBlock Grid.Column="6" Text="{Binding ItadBestPrice.ShopName}" Foreground="{Binding ItadBestPrice.ShopColor}" />
+                                                            </Grid>
+
+                                                            <!-- Best all time low -->
+                                                            <Grid>
+                                                                <Grid.Style>
+                                                                    <Style TargetType="Grid">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding ItadAllTimeLow.CurrencySign}" Value="">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding ItadAllTimeLow.CurrencySign}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Grid.Style>
+
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="B"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="C"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadAllTimeLow}" />
+                                                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                                    <TextBlock Text="{Binding ItadAllTimeLow.PriceNew}" Margin="0,0,5,0" />
+                                                                    <TextBlock Text="{Binding ItadAllTimeLow.CurrencySign}" />
+                                                                </StackPanel>
+                                                                <!--StackPanel Grid.Column="4" Orientation="Horizontal">
+                                                                    <TextBlock Text="{Binding ItadAllTimeLow.PriceCut}" />
+                                                                    <TextBlock Text="%" />
+                                                                </StackPanel-->
+                                                                <TextBlock Grid.Column="6" Text="{Binding ItadAllTimeLow.ShopName}" Foreground="{Binding ItadAllTimeLow.ShopColor}" />
+                                                            </Grid>
+
+                                                            <!-- Best Y1 -->
+                                                            <Grid>
+                                                                <Grid.Style>
+                                                                    <Style TargetType="Grid">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding ItadY1.CurrencySign}" Value="">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding ItadY1.CurrencySign}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Grid.Style>
+
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="B"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="C"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadYearLow}" />
+                                                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                                    <TextBlock Text="{Binding ItadY1.PriceNew}" Margin="0,0,5,0" />
+                                                                    <TextBlock Text="{Binding ItadY1.CurrencySign}" />
+                                                                </StackPanel>
+                                                                <!--StackPanel Grid.Column="4" Orientation="Horizontal">
+                                                                    <TextBlock Text="{Binding ItadY1.PriceCut}" />
+                                                                    <TextBlock Text="%" />
+                                                                </StackPanel-->
+                                                                <TextBlock Grid.Column="6" Text="{Binding ItadY1.ShopName}" Foreground="{Binding ItadY1.ShopColor}" />
+                                                            </Grid>
+
+                                                            <!-- Best M3 -->
+                                                            <Grid>
+                                                                <Grid.Style>
+                                                                    <Style TargetType="Grid">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding ItadM3.CurrencySign}" Value="">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding ItadM3.CurrencySign}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Grid.Style>
+
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="B"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="C"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadMonthLow}" />
+                                                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                                    <TextBlock Text="{Binding ItadM3.PriceNew}" Margin="0,0,5,0" />
+                                                                    <TextBlock Text="{Binding ItadM3.CurrencySign}" />
+                                                                </StackPanel>
+                                                                <!--StackPanel Grid.Column="4" Orientation="Horizontal">
+                                                                    <TextBlock Text="{Binding ItadM3.PriceCut}" />
+                                                                    <TextBlock Text="%" />
+                                                                </StackPanel-->
+                                                                <TextBlock Grid.Column="6" Text="{Binding ItadM3.ShopName}" Foreground="{Binding ItadM3.ShopColor}" />
+                                                            </Grid>
+                                                        </StackPanel>
 
                                                         <!-- Store price -->
                                                         <ListBox Grid.Column="3" ItemsSource="{Binding ListItadPriceForWishlistStore}" 
@@ -656,20 +729,20 @@
                                                                         </DockPanel.Resources>
 
                                                                         <TextBlock DockPanel.Dock="Left" 
-                   Text="{DynamicResource LOCItadCurrentStore}" 
-                   VerticalAlignment="Center" 
-                   Margin="0,0,10,0"/>
+                                                                                   Text="{DynamicResource LOCItadCurrentStore}" 
+                                                                                   VerticalAlignment="Center" 
+                                                                                   Margin="0,0,10,0"/>
 
                                                                         <StackPanel DockPanel.Dock="Right" 
-                    Orientation="Horizontal" 
-                    VerticalAlignment="Center">
+                                                                                    Orientation="Horizontal" 
+                                                                                    VerticalAlignment="Center">
                                                                             <Button Name="BtHideWishList" Click="BtHideWishList_Click" 
-                    Content="" FontFamily="{DynamicResource CommonFont}"
-                    ToolTip="{DynamicResource LOCHideGame}" Tag="{Binding}" Margin="5,0,0,0"/>
+                                                                                    Content="" FontFamily="{DynamicResource CommonFont}"
+                                                                                    ToolTip="{DynamicResource LOCHideGame}" Tag="{Binding}" Margin="5,0,0,0"/>
 
                                                                             <Button Name="BtRemoveWishList" Click="BtRemoveWishList_Click"
-                    Content="" FontFamily="{DynamicResource CommonFont}"
-                    ToolTip="{DynamicResource LOCRemoveTitle}" Tag="{Binding}" Margin="6,0,0,0">
+                                                                                    Content="" FontFamily="{DynamicResource CommonFont}"
+                                                                                    ToolTip="{DynamicResource LOCRemoveTitle}" Tag="{Binding}" Margin="6,0,0,0">
                                                                                 <Button.Style>
                                                                                     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                                                                                         <Setter Property="IsEnabled" Value="True" />
@@ -687,23 +760,23 @@
                                                                         </StackPanel>
 
                                                                         <TextBlock DockPanel.Dock="Left" 
-                   Style="{StaticResource PriceVisibilityStyle}"
-                   VerticalAlignment="Center" 
-                   Margin="0,0,10,0">
-            <Run Text="{Binding PriceNew, Mode=OneWay}" /><Run Text="{Binding CurrencySign, Mode=OneWay}" />
+                                                                                   Style="{StaticResource PriceVisibilityStyle}"
+                                                                                   VerticalAlignment="Center" 
+                                                                                   Margin="0,0,10,0">
+                    <Run Text="{Binding PriceNew, Mode=OneWay}" /><Run Text="{Binding CurrencySign, Mode=OneWay}" />
                                                                         </TextBlock>
 
                                                                         <TextBlock DockPanel.Dock="Left" 
-                   Style="{StaticResource PriceVisibilityStyle}"
-                   VerticalAlignment="Center" 
-                   Margin="0,0,10,0">
+                                                                               Style="{StaticResource PriceVisibilityStyle}"
+                                                                               VerticalAlignment="Center" 
+                                                                               Margin="0,0,10,0">
             <Run Text="{Binding PriceCut, Mode=OneWay}" /><Run Text="%" />
                                                                         </TextBlock>
 
                                                                         <TextBlock Text="{Binding ShopName}"
-                   Foreground="{Binding ShopColor}" 
-                   VerticalAlignment="Center" 
-                   TextTrimming="CharacterEllipsis"/>
+                                                                                   Foreground="{Binding ShopColor}" 
+                                                                                   VerticalAlignment="Center" 
+                                                                                   TextTrimming="CharacterEllipsis"/>
                                                                     </DockPanel>
                                                                 </DataTemplate>
                                                             </ListBox.ItemTemplate>

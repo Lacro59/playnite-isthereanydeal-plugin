@@ -16,16 +16,26 @@ namespace IsThereAnyDeal.Models
     public class Wishlist
     {
         public string StoreId { get; set; }
+
         public string StoreName { get; set; }
+
         public string ShopColor { get; set; }
+
         public string StoreUrl { get; set; }
+
         public string Name { get; set; }
+
         public Guid SourceId { get; set; }
+
         public DateTime? ReleaseDate { get; set; }
+
         public DateTime? Added { get; set; }
+
         public string Capsule { get; set; }
+
         [DontSerialize]
         public BitmapImage CapsuleImage => ImageSourceManagerPlugin.GetImage(Capsule, false, new BitmapLoadProperties(200, 200));
+
         [DontSerialize]
         public string CapsuleImagePath => ImageSourceManagerPlugin.GetImagePath(Capsule);
 
@@ -37,16 +47,22 @@ namespace IsThereAnyDeal.Models
             API.Instance.MainView.SelectGame(Id);
             API.Instance.MainView.SwitchToLibraryView();
         });
+
         [DontSerialize]
         public bool InLibrary => API.Instance.Database.Games.Where(x => x.Name.IsEqual(Name) && !x.Hidden)?.Count() > 0;
+
         [DontSerialize]
         public Guid GameId => API.Instance.Database.Games.Where(x => x.Name.IsEqual(Name) && !x.Hidden)?.FirstOrDefault()?.Id ?? default;
 
         // TODO
         public bool IsActive { get; set; }
+
         [DontSerialize]
         public bool IsFind => Game != null;
+
         public ConcurrentDictionary<string, List<ItadGameInfo>> ItadGameInfos { get; set; }
+
+        public List<ItadGameInfo> ItadLow { get; set; } = new List<ItadGameInfo>();
 
         [DontSerialize]
         public string StoreNameIcon
@@ -64,6 +80,7 @@ namespace IsThereAnyDeal.Models
                 return storeNameIcon;
             }
         }
+
         [DontSerialize]
         public List<ItadGameInfo> ItadLastPrice
         {
@@ -86,8 +103,19 @@ namespace IsThereAnyDeal.Models
                 return Result;
             }
         }
+
         [DontSerialize]
-        public ItadGameInfo ItadBestPrice => ItadLastPrice?.OrderBy(item => item.PriceNew).FirstOrDefault() ?? new ItadGameInfo();
+        public ItadGameInfo ItadBestPrice => ItadLastPrice?.OrderBy(item => item.PriceNew).FirstOrDefault(x => x.TypePrice == TypePrice.Deal) ?? new ItadGameInfo();
+
+        [DontSerialize]
+        public ItadGameInfo ItadAllTimeLow => ItadLow.FirstOrDefault(x => x.TypePrice == TypePrice.All) ?? new ItadGameInfo();
+
+        [DontSerialize]
+        public ItadGameInfo ItadY1 => ItadLow.FirstOrDefault(x => x.TypePrice == TypePrice.Y1) ?? new ItadGameInfo();
+
+        [DontSerialize]
+        public ItadGameInfo ItadM3 => ItadLow.FirstOrDefault(x => x.TypePrice == TypePrice.M3) ?? new ItadGameInfo();
+
         [DontSerialize]
         public ItadGameInfo ItadPriceForWishlistStore => ItadLastPrice?.FirstOrDefault(item => item.ShopName?.ToLower().Contains(StoreName.ToLower()) == true) ?? new ItadGameInfo();
 
@@ -99,8 +127,10 @@ namespace IsThereAnyDeal.Models
 
         [DontSerialize]
         public List<Wishlist> Duplicates = new List<Wishlist>();
+
         [DontSerialize]
         public bool hasDuplicates = false;
+
         [DontSerialize]
         public List<ItadGameInfo> ListItadPriceForWishlistStore
         {
@@ -109,7 +139,7 @@ namespace IsThereAnyDeal.Models
                 List<ItadGameInfo> list = new List<ItadGameInfo> { ItadPriceForWishlistStore };
                 if (hasDuplicates)
                 {
-                    foreach(Wishlist duplicate in Duplicates)
+                    foreach (Wishlist duplicate in Duplicates)
                     {
                         list.Add(duplicate.ItadPriceForWishlistStore);
                     }

@@ -58,6 +58,10 @@
     <sys:String x:Key="LOCITADPercentage">Minimum discount percentage</sys:String>
     <sys:String x:Key="LOCITADPrice">Price inferior</sys:String>
 
+    <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
+    <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
+    <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
+    
     <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Current store wishlist</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy best</sys:String>

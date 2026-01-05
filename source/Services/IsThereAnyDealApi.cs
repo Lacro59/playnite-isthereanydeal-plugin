@@ -444,6 +444,7 @@ namespace IsThereAnyDeal.Services
                     {
                         ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
                         List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
+                        List<ItadGameInfo> dataLowPrice = new List<ItadGameInfo>();
 
                         try
                         {
@@ -475,8 +476,88 @@ namespace IsThereAnyDeal.Services
                                     }
                                 }
 
+                                if (gamePrices.HistoryLow != null)
+                                {
+                                    if (gamePrices.HistoryLow.All != null)
+                                    {
+                                        try
+                                        {
+                                            dataLowPrice.Add(new ItadGameInfo
+                                            {
+                                                Name = wishlist.Name,
+                                                StoreId = wishlist.StoreId,
+                                                SourceId = wishlist.SourceId,
+                                                Id = wishlist.Game.Id,
+                                                Slug = wishlist.Game.Slug,
+                                                PriceNew = Math.Round(gamePrices.HistoryLow.All.Amount, 2),
+                                                PriceOld = 0,
+                                                PriceCut = 0,
+                                                CurrencySign = GetCurrencySymbol(gamePrices.HistoryLow.All.Currency),
+                                                ShopName = gamePrices.Deals.FirstOrDefault(x => x.StoreLow?.AmountInt == gamePrices.HistoryLow.All.AmountInt)?.Shop?.Name,
+                                                UrlBuy = string.Empty,
+                                                TypePrice = TypePrice.All
+                                            });
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Common.LogError(ex, false, true, "IsThereAnyDeal");
+                                        }
+                                    }
+                                    if (gamePrices.HistoryLow.Y1 != null)
+                                    {
+                                        try
+                                        {
+                                            dataLowPrice.Add(new ItadGameInfo
+                                            {
+                                                Name = wishlist.Name,
+                                                StoreId = wishlist.StoreId,
+                                                SourceId = wishlist.SourceId,
+                                                Id = wishlist.Game.Id,
+                                                Slug = wishlist.Game.Slug,
+                                                PriceNew = Math.Round(gamePrices.HistoryLow.Y1.Amount, 2),
+                                                PriceOld = 0,
+                                                PriceCut = 0,
+                                                CurrencySign = GetCurrencySymbol(gamePrices.HistoryLow.Y1.Currency),
+                                                ShopName = gamePrices.Deals.FirstOrDefault(x => x.StoreLow?.AmountInt == gamePrices.HistoryLow.Y1.AmountInt)?.Shop?.Name,
+                                                UrlBuy = string.Empty,
+                                                TypePrice = TypePrice.Y1
+                                            });
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Common.LogError(ex, false, true, "IsThereAnyDeal");
+                                        }
+                                    }
+                                    if (gamePrices.HistoryLow.M3 != null)
+                                    {
+                                        try
+                                        {
+                                            dataLowPrice.Add(new ItadGameInfo
+                                            {
+                                                Name = wishlist.Name,
+                                                StoreId = wishlist.StoreId,
+                                                SourceId = wishlist.SourceId,
+                                                Id = wishlist.Game.Id,
+                                                Slug = wishlist.Game.Slug,
+                                                PriceNew = Math.Round(gamePrices.HistoryLow.M3.Amount, 2),
+                                                PriceOld = 0,
+                                                PriceCut = 0,
+                                                CurrencySign = GetCurrencySymbol(gamePrices.HistoryLow.M3.Currency),
+                                                ShopName = gamePrices.Deals.FirstOrDefault(x => x.StoreLow?.AmountInt == gamePrices.HistoryLow.M3.AmountInt)?.Shop?.Name,
+                                                UrlBuy = string.Empty,
+                                                TypePrice = TypePrice.M3
+                                            });
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Common.LogError(ex, false, true, "IsThereAnyDeal");
+                                        }
+                                    }
+                                }
+
                                 _ = itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
                                 wishlist.ItadGameInfos = itadGameInfos;
+                                wishlist.ItadLow = dataLowPrice;
                             }
                             else
                             {
