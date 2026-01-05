@@ -100,6 +100,6 @@ Essayez de vous identifier à votre compte.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Il n'y a pas de lien de liste de souhaits Xbox.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisoft Connect est activé dans l'extension IsThereAnyDeal mais son intégration n'est pas activée dans Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Il n'y a aucun lien vers la liste de souhaits Ubisoft.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">L'application EA est activée dans l'extension IsThereAnyDeal mais son intégration n'est pas activée dans Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">L'application EA est activée dans l'extension IsThereAnyDeal mais son intégration n'est pas activée dans Playnite.</sys:String>
 
 </ResourceDictionary>

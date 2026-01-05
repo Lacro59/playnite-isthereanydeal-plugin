@@ -100,6 +100,6 @@ Intenta identificarte con tu cuenta.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">No hay ningún enlace de lista de deseados de Xbox.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisoft está habilitado en el plugin IsThereAnyDeal pero la extensión de la biblioteca ha sido desactivada en Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">No hay ningún enlace de lista de deseados de Ubisoft.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA está habilitado en el plugin IsThereAnyDeal pero la extensión de la biblioteca ha sido desactivada en Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA está habilitado en el plugin IsThereAnyDeal pero la extensión de la biblioteca ha sido desactivada en Playnite.</sys:String>
 
 </ResourceDictionary>

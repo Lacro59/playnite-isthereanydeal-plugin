@@ -99,6 +99,6 @@
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">No hi ha cap enllaç de llista de desitjos de Xbox.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">El complement d'Ubisoft està disponible a IsThereAnyDeal, però l'extensió de biblioteca està deshabilitada a Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">No hi ha cap enllaç de llista de desitjos d'Ubisoft.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">El complement de l'aplicació d'EA està disponible a IsThereAnyDeal, però l'extensió de biblioteca està deshabilitada a Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">El complement de l'aplicació d'EA està disponible a IsThereAnyDeal, però l'extensió de biblioteca està deshabilitada a Playnite.</sys:String>
 
 </ResourceDictionary>

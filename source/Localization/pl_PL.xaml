@@ -100,6 +100,6 @@ Spróbuj zalogować się na swoje konto.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Nie ma linku do listy życzeń Xbox.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisof jest włączony we wtyczce IsThereAnyDeal, ale rozszerzenie biblioteki zostało wyłączone w Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Nie ma linku do listy życzeń Ubisoft.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Ea app jest włączona we wtyczce IsThereAnyDeal, ale rozszerzenie biblioteki zostało wyłączone w Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">Ea app jest włączona we wtyczce IsThereAnyDeal, ale rozszerzenie biblioteki zostało wyłączone w Playnite.</sys:String>
 
 </ResourceDictionary>

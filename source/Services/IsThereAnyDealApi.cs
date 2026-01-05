@@ -14,43 +14,58 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Threading;
 using CommonPluginsShared.Extensions;
-using System.Text;
-using System.Net.Http;
 using IsThereAnyDeal.Models.Api;
 using IsThereAnyDeal.Models.ApiWebsite;
 using static CommonPluginsShared.PlayniteTools;
 using System.IO;
 using System.Reflection;
-using AngleSharp.Parser.Html;
-using AngleSharp.Dom.Html;
-using AngleSharp.Dom;
 using CommonPlayniteShared.Common;
 
 namespace IsThereAnyDeal.Services
 {
-    public class IsThereAnyDealApi
+	/// <summary>
+	/// Core service class for interacting with the IsThereAnyDeal (ITAD) API and managing multi-store wishlists.
+	/// Handles data retrieval for prices, giveaways, and shop configurations.
+	/// </summary>
+	public class IsThereAnyDealApi
     {
         private static ILogger Logger => LogManager.GetLogger();
 
-        private static string BaseUrl => @"https://isthereanydeal.com";
+		#region Urls
+
+		private static string BaseUrl => @"https://isthereanydeal.com";
         private static string GiveawaysUrl => BaseUrl + @"/giveaways/api/list/";
         private static string ApiUrl => @"https://api.isthereanydeal.com";
         private static string ApiLookupTitles => ApiUrl + @"/lookup/id/title/v1";
         private static string ApiLookupAppIds => ApiUrl + @"/lookup/id/shop/{0}/v1";
-        private static string Key => "fa49308286edcaf76fea58926fd2ea2d216a17ff";
 
-        public List<CountData> CountDatas { get; set; } = new List<CountData>();
+		#endregion
 
-        #region Api
-        /// <summary>
-        /// Return information about shops
-        /// </summary>
-        /// <param name="country"></param>
-        /// <returns></returns>
-        public async Task<List<ServiceShop>> GetServiceShops(string country)
+		/// <summary>
+		/// API Key for ITAD services. 
+		/// REMARK: Should ideally be moved to a secure configuration or encrypted store instead of being hardcoded.
+		/// </summary>
+		private static string Key => "fa49308286edcaf76fea58926fd2ea2d216a17ff";
+
+		/// <summary>
+		/// Tracks the number of items fetched per store during the current session.
+		/// </summary>
+		public List<CountData> CountDatas { get; set; } = new List<CountData>();
+
+		#region Api
+
+		/// <summary>
+		/// Fetches the list of available shops/services supported by ITAD for a specific country.
+		/// </summary>
+		/// <param name="country">ISO Country Code (Alpha-2).</param>
+		/// <returns>A list of <see cref="ServiceShop"/> or null on failure.</returns>
+		public async Task<List<ServiceShop>> GetServiceShops(string country)
         {
-            Thread.Sleep(500);
-            try
+			// REMARK: Sleep is used to respect ITAD's rate limiting. 
+			// Better approach: Use a dedicated RateLimiter or SemaphoreSlim globally.
+			Thread.Sleep(500);
+
+			try
             {
                 string url = ApiUrl + $"/service/shops/v1?country={country}";
                 string data = await Web.DownloadStringData(url).ConfigureAwait(false);
@@ -67,39 +82,39 @@ namespace IsThereAnyDeal.Services
         }
 
 
-        /// <summary>
-        /// Lookup game based on title
-        /// </summary>
-        /// <param name="title"></param>
-        /// <returns></returns>
-        public async Task<GameLookup> GetGamesLookup(string title)
+		/// <summary>
+		/// Looks up a game's ITAD ID using its title.
+		/// </summary>
+		/// <param name="title">Game title.</param>
+		public async Task<GameLookup> GetGamesLookup(string title)
         {
             return await GetGamesLookup(title, string.Empty);
         }
 
-        /// <summary>
-        /// Lookup game based on Steam appid
-        /// </summary>
-        /// <param name="title"></param>
-        /// <returns></returns>
-        public async Task<GameLookup> GetGamesLookup(int appId)
+		/// <summary>
+		/// Looks up a game's ITAD ID using its Steam AppID.
+		/// </summary>
+		/// <param name="appId">Steam Application ID.</param>
+		public async Task<GameLookup> GetGamesLookup(int appId)
         {
             return await GetGamesLookup(string.Empty, appId.ToString());
         }
 
-        /// <summary>
-        /// Lookup game based on title or Steam appid
-        /// </summary>
-        /// <param name="title"></param>
-        /// <returns></returns>
-        private async Task<GameLookup> GetGamesLookup(string title, string appId)
+		/// <summary>
+		/// Internal method to query the lookup API by title or AppID.
+		/// </summary>
+		private async Task<GameLookup> GetGamesLookup(string title, string appId)
         {
-            Thread.Sleep(500);
-            try
+			// REMARK: Sleep is used to respect ITAD's rate limiting. 
+			// Better approach: Use a dedicated RateLimiter or SemaphoreSlim globally.
+			Thread.Sleep(500);
+
+			try
             {
                 if (!title.IsNullOrEmpty() || !appId.IsNullOrEmpty())
                 {
-                    string url = ApiUrl + $"/games/lookup/v1?key={Key}&"
+					// REMARK: PlayniteTools.RemoveGameEdition is used to increase match probability by stripping suffixes like "GOTY".
+					string url = ApiUrl + $"/games/lookup/v1?key={Key}&"
                         + (!title.IsNullOrEmpty() 
                                 ? $"title={WebUtility.UrlEncode(WebUtility.HtmlDecode(PlayniteTools.RemoveGameEdition(title)))}"
                                 : $"appid={appId}");
@@ -117,10 +132,16 @@ namespace IsThereAnyDeal.Services
             return null;
         }
 
-        public async Task<Dictionary<string, string>> GetGamesId(List<string> titles, List<string> appIds)
+		/// <summary>
+		/// Batch retrieves ITAD internal IDs for a list of titles or Steam IDs.
+		/// </summary>
+		public async Task<Dictionary<string, string>> GetGamesId(List<string> titles, List<string> appIds)
         {
-            Thread.Sleep(500);
-            string url = string.Empty;
+			// REMARK: Sleep is used to respect ITAD's rate limiting. 
+			// Better approach: Use a dedicated RateLimiter or SemaphoreSlim globally.
+			Thread.Sleep(500);
+
+			string url = string.Empty;
             string payload = string.Empty;
 
             try
@@ -133,8 +154,9 @@ namespace IsThereAnyDeal.Services
 
                 if (appIds?.Count() > 0)
                 {
-                    url = string.Format(ApiLookupAppIds, 61);
-                    payload = Serialization.ToJson(appIds.Select(x => x.Contains("app/") ? x : "app/" + x));
+					// REMARK: Shop ID 61 refers specifically to Steam in ITAD's database structure.
+					url = string.Format(ApiLookupAppIds, 61);
+					payload = Serialization.ToJson(appIds.Select(x => x.Contains("app/") ? x : "app/" + x));
                 }
 
                 string data = await Web.PostStringDataPayload(url, payload);
@@ -149,17 +171,19 @@ namespace IsThereAnyDeal.Services
             return null;
         }
 
-        /// <summary>
-        /// Get games' prices
-        /// </summary>
-        /// <param name="country"></param>
-        /// <param name="shopsId"></param>
-        /// <param name="gamesId"></param>
-        /// <returns></returns>
-        public async Task<List<GamePrices>> GetGamesPrices(string country, List<int> shopsId, List<string> gamesId)
+		/// <summary>
+		/// Fetches the latest price deals for a list of games from specific shops.
+		/// </summary>
+		/// <param name="country">Alpha-2 country code.</param>
+		/// <param name="shopsId">List of shop IDs to check.</param>
+		/// <param name="gamesId">List of ITAD internal game IDs.</param>
+		public async Task<List<GamePrices>> GetGamesPrices(string country, List<int> shopsId, List<string> gamesId)
         {
-            Thread.Sleep(500);
-            try
+			// REMARK: Sleep is used to respect ITAD's rate limiting. 
+			// Better approach: Use a dedicated RateLimiter or SemaphoreSlim globally.
+			Thread.Sleep(500);
+
+			try
             {
                 string shops = string.Join(",", shopsId);
                 string url = ApiUrl + $"/games/prices/v3?key={Key}&vouchers=true&capacity=0&country={country}&shops={shops}";
@@ -176,9 +200,13 @@ namespace IsThereAnyDeal.Services
 
             return null;
         }
-        #endregion
 
-        public static List<Country> GetCountries()
+		#endregion
+
+		/// <summary>
+		/// Loads the list of supported countries from the local JSON data file.
+		/// </summary>
+		public static List<Country> GetCountries()
         {
             try
             {
@@ -194,10 +222,22 @@ namespace IsThereAnyDeal.Services
             return null;
         }
 
-        #region Plugin
-        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, bool cacheOnly = false, bool forcePrice = false)
+		#region Plugin
+
+		/// <summary>
+		/// Aggregates wishlists from all enabled external stores (Steam, GOG, Epic, etc.).
+		/// It also handles de-duplication if a game is present in multiple store wishlists.
+		/// </summary>
+		/// <param name="plugin">The main plugin instance.</param>
+		/// <param name="cacheOnly">If true, only local data is loaded without web requests.</param>
+		/// <param name="forcePrice">If true, forces a price refresh regardless of cache status.</param>
+		/// <returns>A unified and de-duplicated list of <see cref="Wishlist"/> objects.</returns>
+		public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, bool cacheOnly = false, bool forcePrice = false)
         {
-            List<Wishlist> ListWishlistSteam = new List<Wishlist>();
+			// REMARK: This method pattern iterates through each supported store.
+			// It validates if the store is enabled in settings AND if the Playnite library plugin is active.
+
+			List<Wishlist> ListWishlistSteam = new List<Wishlist>();
             if (plugin.PluginSettings.Settings.EnableSteam)
             {
                 try
@@ -413,31 +453,31 @@ namespace IsThereAnyDeal.Services
                 }
             }
 
-            List<Wishlist> ListWishlisOrigin = new List<Wishlist>();
+            List<Wishlist> ListWishlisEa = new List<Wishlist>();
             if (plugin.PluginSettings.Settings.EnableOrigin)
             {
                 try
                 {
                     if (PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(ExternalPlugin.OriginLibrary)))
                     {
-                        EaWishlist originWishlist = new EaWishlist(plugin);
-                        ListWishlisOrigin = originWishlist.GetWishlist(cacheOnly, forcePrice);
-                        if (ListWishlisOrigin == null)
+                        EaWishlist eaWishlist = new EaWishlist(plugin);
+                        ListWishlisEa = eaWishlist.GetWishlist(cacheOnly, forcePrice);
+                        if (ListWishlisEa == null)
                         {
-                            ListWishlisOrigin = new List<Wishlist>();
+                            ListWishlisEa = new List<Wishlist>();
                         }
                         CountDatas.Add(new CountData
                         {
-                            StoreName = "Origin",
-                            Count = ListWishlisOrigin.Count
+                            StoreName = "EA",
+                            Count = ListWishlisEa.Count
                         });
                     }
                     else
                     {
-                        Logger.Warn("Origin is enable then disabled");
+                        Logger.Warn("EA is enable then disabled");
                         API.Instance.Notifications.Add(new NotificationMessage(
-                            $"IsThereAnyDeal-Origin-disabled",
-                            "IsThereAnyDeal\r\n" + ResourceProvider.GetString("LOCItadNotificationErrorOrigin"),
+                            $"IsThereAnyDeal-EA-disabled",
+                            "IsThereAnyDeal\r\n" + ResourceProvider.GetString("LOCItadNotificationErrorEa"),
                             NotificationType.Error,
                             () => plugin.OpenSettingsView()
                         ));
@@ -449,19 +489,21 @@ namespace IsThereAnyDeal.Services
                 }
             }
 
-
-            List<Wishlist> ListWishlist = ListWishlistSteam
+			// Combine all individual lists
+			List<Wishlist> ListWishlist = ListWishlistSteam
                 .Concat(ListWishlistGog)
                 .Concat(ListWishlistHumble)
                 .Concat(ListWishlistEpic)
                 .Concat(ListWishlistXbox)
-                .Concat(ListWishlisOrigin)
+                .Concat(ListWishlisEa)
                 .Concat(ListWishlistUbisoft)
                 .ToList();
 
+			// REMARK: Game name normalization is used here to group duplicates across different storefronts.
+			IEnumerable<IGrouping<string, Wishlist>> listDuplicates = ListWishlist
+                .GroupBy(c => PlayniteTools.NormalizeGameName(c.Name).ToLower())
+                .Where(g => g.Skip(1).Any());
 
-            // Group same game
-            IEnumerable<IGrouping<string, Wishlist>> listDuplicates = ListWishlist.GroupBy(c => PlayniteTools.NormalizeGameName(c.Name).ToLower()).Where(g => g.Skip(1).Any());
             foreach (IGrouping<string, Wishlist> duplicates in listDuplicates)
             {
                 bool isFirst = true;
@@ -501,7 +543,10 @@ namespace IsThereAnyDeal.Services
             return ListWishlist.OrderBy(wishlist => wishlist.Name).ToList();
         }
 
-        public async Task<List<ItadShops>> GetShops(string country)
+		/// <summary>
+		/// Retrieves the list of shops for a country and converts them to the internal <see cref="ItadShops"/> model.
+		/// </summary>
+		public async Task<List<ItadShops>> GetShops(string country)
         {
             List<ServiceShop> serviceShops = await GetServiceShops(country);
             List<ItadShops> itadShops = new List<ItadShops>();
@@ -516,7 +561,13 @@ namespace IsThereAnyDeal.Services
             return itadShops;
         }
 
-        public async Task<List<Wishlist>> GetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings, bool force)
+		/// <summary>
+		/// Fetches the latest prices for games in the provided wishlist.
+		/// </summary>
+		/// <remarks>
+		/// Games are processed in chunks of 200 to comply with potential URI length limitations or API batching requirements.
+		/// </remarks>
+		public async Task<List<Wishlist>> GetCurrentPrice(List<Wishlist> wishlists, IsThereAnyDealSettings settings, bool force)
         {
             try
             {
@@ -539,9 +590,8 @@ namespace IsThereAnyDeal.Services
                     // Check if in library (exclude game emulated)
                     List<Guid> ListEmulators = API.Instance.Database.Emulators.Select(x => x.Id).ToList();
 
-
-                    // Max 200
-                    List<List<string>> chunks = gamesId
+					// REMARK: Split IDs into groups of 200 for batch processing.
+					List<List<string>> chunks = gamesId
                         .Select((item, index) => new { item, index })
                         .GroupBy(x => x.index / 200)
                         .Select(g => g.Select(x => x.item).ToList())
@@ -615,7 +665,10 @@ namespace IsThereAnyDeal.Services
             return wishlists;
         }
 
-        private string GetCurrencySymbol(string currency)
+		/// <summary>
+		/// Converts currency ISO codes to their corresponding visual symbols.
+		/// </summary>
+		private string GetCurrencySymbol(string currency)
         {
             switch (currency.ToLower())
             {
@@ -638,9 +691,13 @@ namespace IsThereAnyDeal.Services
             }
         }
 
-        public static string GetShopColor(string shopName)
+		/// <summary>
+		/// Returns a specific Hex color code for a given shop name to ensure UI consistency.
+		/// </summary>
+		public static string GetShopColor(string shopName)
         {
-            Dictionary<string, string> shopColor = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+			// REMARK: Large dictionary for shop coloring. This could be moved to a configuration file or static field for performance.
+			Dictionary<string, string> shopColor = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 { "Adventure Shop", "#3e6517" },
                 { "AllYouPlay", "#e9267b" },
@@ -729,9 +786,10 @@ namespace IsThereAnyDeal.Services
             return value.IsNullOrEmpty() ? ResourceProvider.GetResource("TextBrush").ToString() : value;
         }
 
-
-
-        public List<ItadGiveaway> GetGiveaways(string pluginUserDataPath, bool cacheOnly = false)
+		/// <summary>
+		/// Fetches available giveaways from the web and compares them with the local cache to detect new entries.
+		/// </summary>
+		public List<ItadGiveaway> GetGiveaways(string pluginUserDataPath, bool cacheOnly = false)
         {
             // Load previous
             string pluginDirectoryCache = pluginUserDataPath + "\\cache";
@@ -815,14 +873,14 @@ namespace IsThereAnyDeal.Services
                         });
                     });
                 }
-                catch (Exception ex)
-                {
-                    Common.LogError(ex, false, "Error in GetGiveAway() with web data", true, "IsThereAnyDeal");
+				catch (Exception ex)
+                { 
+                    Common.LogError(ex, false, "Error fetching web giveaways", true, "IsThereAnyDeal"); 
                 }
-            }
+			}
 
-            // Compare new with cache
-            if (itadGiveaways.Count != 0)
+			// REMARK: Compare web results with cache to preserve the "HasSeen" status of older giveaways.
+			if (itadGiveaways.Count != 0)
             {
                 Common.LogDebug(true, $"Compare with cache");
                 foreach (ItadGiveaway itadGiveaway in itadGiveawaysCache)
@@ -836,7 +894,7 @@ namespace IsThereAnyDeal.Services
             // No data
             else
             {
-                Logger.Warn("No new data for GetGiveaways()");
+                Logger.Info("No new data for GetGiveaways()");
                 itadGiveaways = itadGiveawaysCache;
             }
 
@@ -853,7 +911,11 @@ namespace IsThereAnyDeal.Services
             return itadGiveaways;
         }
 
-        public static async Task CheckNotifications(IsThereAnyDeal plugin)
+		/// <summary>
+		/// Checks for new notifications regarding wishlist prices and giveaways.
+		/// This method runs asynchronously to prevent blocking the UI.
+		/// </summary>
+		public static async Task CheckNotifications(IsThereAnyDeal plugin)
         {
             await Task.Run(() =>
             {
@@ -913,7 +975,10 @@ namespace IsThereAnyDeal.Services
             });
         }
 
-        public static void UpdateDatas(IsThereAnyDeal plugin)
+		/// <summary>
+		/// Global data update task that refreshes all wishlists with a progress dialog.
+		/// </summary>
+		public static void UpdateDatas(IsThereAnyDeal plugin)
         {
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
 
@@ -945,6 +1010,7 @@ namespace IsThereAnyDeal.Services
                 Logger.Info($"Task UpdateDatas() - {string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
             }, globalProgressOptions);
         }
+
         #endregion
     }
 }
