@@ -15,6 +15,8 @@ using CommonPluginsStores.Models;
 using CommonPluginsStores.Steam;
 using CommonPluginsShared.Extensions;
 using CommonPluginsStores.Steam.Models.SteamKit;
+using CommonPluginsStores.Steam.Models;
+using System.Web.UI.WebControls;
 
 namespace IsThereAnyDeal.Services
 {
@@ -28,7 +30,7 @@ namespace IsThereAnyDeal.Services
             ExternalPlugin = PlayniteTools.ExternalPlugin.SteamLibrary;
         }
 
-        internal override List<Wishlist> GetStoreWishlist(List<Wishlist> cachedData)
+        internal override List<Models.Wishlist> GetStoreWishlist(List<Models.Wishlist> cachedData)
         {
             Logger.Info($"Load data from web for {ClientName}");
 
@@ -46,7 +48,7 @@ namespace IsThereAnyDeal.Services
                 return cachedData;
             }
 
-            List<Wishlist> wishlists = new List<Wishlist>();
+            List<Models.Wishlist> wishlists = new List<Models.Wishlist>();
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             ObservableCollection<AccountWishlist> accountWishlist = SteamApi.GetWishlist(SteamApi.CurrentAccountInfos);
 
@@ -55,7 +57,7 @@ namespace IsThereAnyDeal.Services
                 try
                 {
                     GameLookup gamesLookup = gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse(x.Id)).GetAwaiter().GetResult();
-                    wishlists.Add(new Wishlist
+                    wishlists.Add(new Models.Wishlist
                     {
                         StoreId = x.Id,
                         StoreName = "Steam",
@@ -86,10 +88,10 @@ namespace IsThereAnyDeal.Services
             return SteamApi.RemoveWishlist(storeId);
         }
 
-
+        // TODO Rewrite
         public bool ImportWishlist(string filePath)
         {
-            List<Wishlist> wishlists = new List<Wishlist>();
+            List<Models.Wishlist> wishlists = new List<Models.Wishlist>();
 
             if (File.Exists(filePath) && Serialization.TryFromJsonFile(filePath, out dynamic jObject))
             {
@@ -100,17 +102,16 @@ namespace IsThereAnyDeal.Services
 
                     foreach(dynamic el in rgWishlist)
                     {
-                        SteamApp steamApp = SteamApi.SteamApps.FirstOrDefault(y => y.AppId.ToString().IsEqual((string)el));
-                        //GameInfos gameInfos = SteamApi.GetGameInfos((string)el, null);
+                        string name = SteamApi.GetGameName(uint.Parse((string)el));
 
                         GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(int.Parse((string)el)).GetAwaiter().GetResult();
-                        wishlists.Add(new Wishlist
+                        wishlists.Add(new Models.Wishlist
                         {
                             StoreId = (string)el,
                             StoreName = "Steam",
                             ShopColor = GetShopColor(),
                             StoreUrl = "https://store.steampowered.com/app/" + (string)el,
-                            Name = (steamApp?.Name.IsNullOrEmpty() ?? true) && gamesLookup.Found ? gamesLookup.Game.Title : steamApp?.Name,
+                            Name = (name?.IsNullOrEmpty() ?? true) && gamesLookup.Found ? gamesLookup.Game.Title : name,
                             SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
                             ReleaseDate = null,
                             Capsule = string.Format("https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/{0}/header_292x136.jpg", (string)el),

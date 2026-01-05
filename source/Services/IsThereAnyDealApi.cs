@@ -420,7 +420,7 @@ namespace IsThereAnyDeal.Services
                 {
                     if (PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(ExternalPlugin.OriginLibrary)))
                     {
-                        OriginWishlist originWishlist = new OriginWishlist(plugin);
+                        EaWishlist originWishlist = new EaWishlist(plugin);
                         ListWishlisOrigin = originWishlist.GetWishlist(cacheOnly, forcePrice);
                         if (ListWishlisOrigin == null)
                         {

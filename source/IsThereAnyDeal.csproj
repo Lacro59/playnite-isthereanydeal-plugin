@@ -53,6 +53,9 @@
       <HintPath>packages\AngleSharp.0.9.9\lib\net45\AngleSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Ardalis.GuardClauses, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Ardalis.GuardClauses.5.0.0\lib\netstandard2.0\Ardalis.GuardClauses.dll</HintPath>
+    </Reference>
     <Reference Include="FuzzySharp, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\FuzzySharp.2.0.2\lib\net461\FuzzySharp.dll</HintPath>
     </Reference>
@@ -99,7 +102,7 @@
   <ItemGroup>
     <Compile Include="Clients\EpicWishlist.cs" />
     <Compile Include="Clients\GenericWishlist.cs" />
-    <Compile Include="Clients\OriginWishlist.cs" />
+    <Compile Include="Clients\EaWishlist.cs" />
     <Compile Include="Clients\UplayWishlist.cs" />
     <Compile Include="Clients\XboxWishlist.cs" />
     <Compile Include="Clients\GogWishlist.cs" />

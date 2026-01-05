@@ -9,29 +9,29 @@ using System.Text;
 using IsThereAnyDeal.Models.Api;
 using System.Collections.ObjectModel;
 using CommonPluginsStores.Models;
-using CommonPluginsStores.Origin;
+using CommonPluginsStores.Ea;
 
 namespace IsThereAnyDeal.Clients
 {
-    public class OriginWishlist : GenericWishlist
+    public class EaWishlist : GenericWishlist
     {
-        protected static OriginApi _originApi;
-        internal static OriginApi OriginApi
+        protected static EaApi eaApi;
+        internal static EaApi EaApi
         {
             get
             {
-                if (_originApi == null)
+                if (eaApi == null)
                 {
-                    _originApi = new OriginApi("IsTeherAnyDeals");
+                    eaApi = new EaApi("IsTeherAnyDeals");
                 }
-                return _originApi;
+                return eaApi;
             }
 
-            set => _originApi = value;
+            set => eaApi = value;
         }
 
 
-        public OriginWishlist(IsThereAnyDeal plugin) : base(plugin, "Origin")
+        public EaWishlist(IsThereAnyDeal plugin) : base(plugin, "EA")
         {
             ExternalPlugin = PlayniteTools.ExternalPlugin.OriginLibrary;
         }
@@ -40,7 +40,7 @@ namespace IsThereAnyDeal.Clients
         {
             Logger.Info($"Load data from web for {ClientName}");
 
-            if (!OriginApi.IsUserLoggedIn)
+            if (!EaApi.IsUserLoggedIn)
             {
                 Logger.Warn($"{ClientName}: Not authenticated");
                 API.Instance.Notifications.Add(new NotificationMessage(
@@ -56,7 +56,7 @@ namespace IsThereAnyDeal.Clients
 
             IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             List<Wishlist> wishlists = new List<Wishlist>();
-            ObservableCollection<AccountWishlist> accountWishlist = OriginApi.GetWishlist(OriginApi.CurrentAccountInfos);
+            ObservableCollection<AccountWishlist> accountWishlist = EaApi.GetWishlist(EaApi.CurrentAccountInfos);
 
             accountWishlist.ForEach(x =>
             {
@@ -91,7 +91,7 @@ namespace IsThereAnyDeal.Clients
 
         public override bool RemoveWishlist(string storeId)
         {
-            return OriginApi.RemoveWishlist(storeId);
+            return EaApi.RemoveWishlist(storeId);
         }
     }
 }

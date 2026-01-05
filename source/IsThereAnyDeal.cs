@@ -1,24 +1,26 @@
-﻿using IsThereAnyDeal.Services;
+﻿using CommonPlayniteShared;
+using CommonPlayniteShared.Common;
+using CommonPluginsShared;
+using CommonPluginsShared.Interfaces;
+using CommonPluginsShared.PlayniteExtended;
+using CommonPluginsStores.Epic;
+using CommonPluginsStores.GameJolt;
+using CommonPluginsStores.Gog;
+using CommonPluginsStores.Steam;
+using IsThereAnyDeal.Services;
 using IsThereAnyDeal.Views;
 using Playnite.SDK;
+using Playnite.SDK.Events;
 using Playnite.SDK.Plugins;
-using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
-using System.Windows.Controls;
-using System.Windows;
-using CommonPluginsShared.PlayniteExtended;
-using Playnite.SDK.Events;
 using System.IO;
 using System.Reflection;
-using CommonPlayniteShared;
-using CommonPlayniteShared.Common;
-using CommonPluginsStores.Steam;
-using CommonPluginsStores.Epic;
-using CommonPluginsStores.Gog;
-using System.Windows.Automation;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
 
 namespace IsThereAnyDeal
 {
@@ -32,6 +34,7 @@ namespace IsThereAnyDeal
 
         internal TopPanelItem TopPanelItem { get; set; }
         internal ItadViewSidebar SidebarItem { get; set; }
+
 
         public IsThereAnyDeal(IPlayniteAPI api) : base(api)
         {
@@ -105,8 +108,8 @@ namespace IsThereAnyDeal
             });
         }
 
-
         #region Custom event
+
         private void WindowBase_LoadedEvent(object sender, System.EventArgs e)
         {
             string winIdProperty = string.Empty;
@@ -126,10 +129,11 @@ namespace IsThereAnyDeal
                 Common.LogError(ex, false, $"Error on WindowBase_LoadedEvent for {winIdProperty}", true, "IsThereAnyDeal");
             }
         }
+        
         #endregion
 
-
         #region Theme integration
+        
         // Button on top panel
         public override IEnumerable<TopPanelItem> GetTopPanelItems()
         {
@@ -147,10 +151,11 @@ namespace IsThereAnyDeal
         {
             yield return SidebarItem;
         }
+        
         #endregion
 
-
         #region Menus
+        
         // To add new game menu items override GetGameMenuItems
         public override IEnumerable<GameMenuItem> GetGameMenuItems(GetGameMenuItemsArgs args)
         {
@@ -235,10 +240,11 @@ namespace IsThereAnyDeal
 
             return mainMenuItems;
         }
+
         #endregion
 
-
         #region Game event
+
         public override void OnGameSelected(OnGameSelectedEventArgs args)
         {
 
@@ -273,10 +279,11 @@ namespace IsThereAnyDeal
         {
 
         }
+
         #endregion
 
-
         #region Application event
+
         // Add code to be executed when Playnite is initialized.
         public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
         {
@@ -289,30 +296,65 @@ namespace IsThereAnyDeal
                 })
                 : IsThereAnyDealApi.CheckNotifications(this);
 
-            // StoreAPI intialization
-            SteamApi = new SteamApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal);
-            SteamApi.SetLanguage(API.Instance.ApplicationSettings.Language);
-            SteamApi.StoreSettings = PluginSettings.Settings.SteamStoreSettings;
-            if (PluginSettings.Settings.EnableSteam)
-            {
-                _ = SteamApi.CurrentAccountInfos;
-            }
 
-            EpicApi = new EpicApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal);
-            EpicApi.SetLanguage(API.Instance.ApplicationSettings.Language);
-            EpicApi.StoreSettings = PluginSettings.Settings.EpicStoreSettings;
-            if (PluginSettings.Settings.EnableEpic)
-            {
-                _ = EpicApi.CurrentAccountInfos;
-            }
+			// StoreAPI Initialization
+			Task.Run(async () =>
+			{
+				var tasks = new[]
+				{
+					Task.Run(() =>
+					{
+						try
+						{
+							Logger.Info("SteamApi Initialization");
+							SteamApi = new SteamApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.SuccessStory);
+							SteamApi.Initialization(
+								PluginSettings.Settings.SteamStoreSettings,
+								PluginSettings.Settings.PluginState.SteamIsEnabled && PluginSettings.Settings.EnableSteam
+							);
+						}
+						catch (Exception ex)
+						{
+							Logger.Error(ex, "Error initializing SteamApi");
+						}
+					}),
+					Task.Run(() =>
+					{
+						try
+						{
+							Logger.Info("EpicApi Initialization");
+							EpicApi = new EpicApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.SuccessStory);
+							EpicApi.Initialization(
+								PluginSettings.Settings.EpicStoreSettings,
+								PluginSettings.Settings.PluginState.EpicIsEnabled && PluginSettings.Settings.EnableEpic
+							);
+						}
+						catch (Exception ex)
+						{
+							Logger.Error(ex, "Error initializing EpicApi");
+						}
+					}),
+					Task.Run(() =>
+					{
+						try
+						{
+							Logger.Info("GogApi Initialization");
+							GogApi = new GogApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.SuccessStory);
+							GogApi.Initialization(
+								PluginSettings.Settings.GogStoreSettings,
+								PluginSettings.Settings.PluginState.GogIsEnabled && PluginSettings.Settings.EnableGog
+							);
+						}
+						catch (Exception ex)
+						{
+							Logger.Error(ex, "Error initializing GogApi");
+						}
+					})
+				};
 
-            GogApi = new GogApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal);
-            GogApi.SetLanguage(API.Instance.ApplicationSettings.Language);
-            GogApi.StoreSettings = PluginSettings.Settings.GogStoreSettings;
-            if (PluginSettings.Settings.EnableGog)
-            {
-                _ = GogApi.CurrentAccountInfos;
-            }
+				await Task.WhenAll(tasks);
+				Logger.Info("All API initializations completed");
+			});
         }
 
         // Add code to be executed when Playnite is shutting down.
@@ -320,8 +362,8 @@ namespace IsThereAnyDeal
         {
 
         }
-        #endregion
 
+        #endregion
 
         // Add code to be executed when library is updated.
         public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
@@ -331,6 +373,7 @@ namespace IsThereAnyDeal
 
 
         #region Settings
+ 
         public override ISettings GetSettings(bool firstRunSettings)
         {
             return PluginSettings;
@@ -340,6 +383,7 @@ namespace IsThereAnyDeal
         {
             return new IsThereAnyDealSettingsView(PluginSettings.Settings, this);
         }
+        
         #endregion
     }
 }
