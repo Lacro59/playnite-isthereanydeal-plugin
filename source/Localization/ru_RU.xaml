@@ -58,6 +58,10 @@
     <sys:String x:Key="LOCITADPercentage">Минимальный процент скидки</sys:String>
     <sys:String x:Key="LOCITADPrice">Самая низкая цена</sys:String>
 
+    <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
+    <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
+    <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
+    
     <sys:String x:Key="LOCItadCurrentBest">Лучшая на данный момен</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Текущий список желаемого</sys:String>
     <sys:String x:Key="LOCItadBuy">Купить лучше</sys:String>
@@ -105,6 +109,6 @@
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Отстутствует ссылка на список желемого Xbox.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Нет ссылки на список желаний Ubisoft.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA включен в плагине IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
 
 </ResourceDictionary>
