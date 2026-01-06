@@ -244,15 +244,17 @@ namespace IsThereAnyDeal.Views
                     if (itadGiveaway.Time != null)
                     {
                         bool isExpired = itadGiveaway.Time < DateTime.Now;
-                        SolidColorBrush colorBrush = isExpired ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a")) : null;
 
                         TextBlock tbDateText = new TextBlock
                         {
                             Text = $"{localDateConverter.Convert(itadGiveaway.Time, null, null, CultureInfo.CurrentCulture)}",
                             Margin = new Thickness(10, 0, 0, 0),
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Foreground = colorBrush
+                            VerticalAlignment = VerticalAlignment.Center
                         };
+                        if (isExpired)
+                        {
+                            tbDateText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
+                        }
                         DockPanel.SetDock(tbDateText, Dock.Right);
 
                         TextBlock tbDateIcon = new TextBlock
@@ -260,9 +262,12 @@ namespace IsThereAnyDeal.Views
                             Text = "\uf006",
                             FontFamily = icoFont,
                             Margin = new Thickness(10, 0, 0, 0),
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Foreground = colorBrush
+                            VerticalAlignment = VerticalAlignment.Center
                         };
+                        if (isExpired)
+                        {
+                            tbDateText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
+                        }
                         DockPanel.SetDock(tbDateIcon, Dock.Right);
 
                         dp.Children.Add(tbDateText);
