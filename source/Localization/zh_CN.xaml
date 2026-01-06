@@ -58,6 +58,10 @@
     <sys:String x:Key="LOCITADPercentage">最低折扣百分比</sys:String>
     <sys:String x:Key="LOCITADPrice">价格降低</sys:String>
 
+    <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
+    <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
+    <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
+    
     <sys:String x:Key="LOCItadCurrentBest">当前最佳</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">当前商店愿望单</sys:String>
     <sys:String x:Key="LOCItadBuy">购买最佳</sys:String>
@@ -105,6 +109,6 @@
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">没有 Xbox 愿望单链接</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">没有 Xbox 愿望单链接</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">Epic 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
 
 </ResourceDictionary>
