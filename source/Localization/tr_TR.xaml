@@ -58,6 +58,10 @@
     <sys:String x:Key="LOCITADPercentage">En az indirim yüzdesi</sys:String>
     <sys:String x:Key="LOCITADPrice">Düşük fiyat</sys:String>
 
+    <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
+    <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
+    <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
+    
     <sys:String x:Key="LOCItadCurrentBest">Şu anki en iyi</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Şu anki mağaza istek listesi</sys:String>
     <sys:String x:Key="LOCItadBuy">En iyisini al</sys:String>
@@ -105,6 +109,6 @@ Hesabınıza giriş yapmayı deneyin.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Xbox istek listesi bağlantısı yok.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Ubisoft istek listesi bağlantısı yok.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">IsThereAnyDeal eklentisinde EA uygulaması etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
 
 </ResourceDictionary>
