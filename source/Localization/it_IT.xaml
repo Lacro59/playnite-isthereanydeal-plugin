@@ -58,6 +58,10 @@
     <sys:String x:Key="LOCITADPercentage">Percentuale di sconto minima</sys:String>
     <sys:String x:Key="LOCITADPrice">Prezzo inferiore</sys:String>
 
+    <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
+    <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
+    <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
+    
     <sys:String x:Key="LOCItadCurrentBest">Migliore del momento</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Lista dei desideri del negozio corrente</sys:String>
     <sys:String x:Key="LOCItadBuy">Acquista il meglio</sys:String>
@@ -105,6 +109,6 @@ Prova ad accedere con il tuo account.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Non c'è nessun link alla lista dei desideri Xbox.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisoft è abilitato nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disabilitata in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Non c'è alcun link alla lista dei desideri Ubisoft.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">L'app EA è abilitata nel plugin IsThereAnyDeal ma l'estensione della libreria è stata disabilitata in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
 
 </ResourceDictionary>
