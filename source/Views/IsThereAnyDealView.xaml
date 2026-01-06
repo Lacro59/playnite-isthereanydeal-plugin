@@ -153,14 +153,6 @@
             <Setter Property="VerticalContentAlignment" Value="Top"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="IsTabStop" Value="True"/>
-            <!--Setter Property="Width">
-                <Setter.Value>
-                    <MultiBinding Converter="{StaticResource ValueOperationConverter}" ConverterParameter="-">
-                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource AncestorType=ContentPresenter}"/>
-                        <Binding Source="5"/>
-                    </MultiBinding>
-                </Setter.Value>
-            </Setter-->
             <Setter Property="UseLayoutRounding" Value="True"/>
             <Setter Property="Template">
                 <Setter.Value>
