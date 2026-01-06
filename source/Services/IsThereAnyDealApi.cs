@@ -120,8 +120,8 @@ namespace IsThereAnyDeal.Services
                                 : $"appid={appId}");
                     string data = await Web.DownloadStringData(url);
 
-                    _ = Serialization.TryFromJson(data, out GameLookup gamesLookup);
-                    return gamesLookup;
+                    _ = Serialization.TryFromJson(data, out GameLookup gamesLookup, out Exception ex);
+                    return ex != null ? throw ex : gamesLookup;
                 }
             }
             catch (Exception ex)
@@ -637,12 +637,31 @@ namespace IsThereAnyDeal.Services
                     string data = string.Empty;
                     try
                     {
-                        string payload = "{\"_id\":1,\"offset\":0,\"sort\":null,\"filter\":null,\"options\":[]}";
-                        data = Web.PostStringDataPayload(GiveawaysUrl, payload).GetAwaiter().GetResult();
+                        string GiveawaysUrl = "https://isthereanydeal.com/giveaways/api/list/";
+                        string payload = "{\"offset\":0,\"sort\":null,\"filter\":null}";
+                        string sessionToken = "JiCZgSx7tdBwB9D6zJnBq6nMJjiscvx5zznJWQa_ucgH3sOp";
+
+                        var cookies = new List<HttpCookie>
+                        {
+                            new HttpCookie
+                            {
+                                Name = "sess2",
+                                Value = sessionToken,
+                                Domain = "isthereanydeal.com",
+                                Path = "/"
+                            }
+                        };
+
+                        var moreHeader = new List<KeyValuePair<string, string>>
+                        {
+                            new KeyValuePair<string, string>("ITAD-SessionToken", sessionToken)
+                        };
+
+                        data = Web.PostStringDataPayload(GiveawaysUrl + "?tab=live", payload, cookies, moreHeader).GetAwaiter().GetResult();
                     }
-                    catch (Exception ex2)
+                    catch (Exception e)
                     {
-                        Common.LogError(ex2, false, $"Failed to download {GiveawaysUrl}", true, "IsThereAnyDeal");
+                        Common.LogError(e, false, "Erreur lors de la requête ITAD");
                     }
 
                     _ = Serialization.TryFromJson(data, out Giveaways giveaways, out Exception ex);
