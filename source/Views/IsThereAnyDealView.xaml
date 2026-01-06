@@ -8,6 +8,7 @@
              xmlns:converters1="clr-namespace:CommonPluginsShared.Converters" 
              xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel" 
              xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls" 
+             xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
              mc:Ignorable="d" d:DesignHeight="740" d:DesignWidth="1280" 
              d:DataContext="{d:DesignInstance Type=local:ItadDataContext, IsDesignTimeCreatable=True}" 
              Background="{DynamicResource WindowBackgourndBrush}">
@@ -18,22 +19,22 @@
         <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
         <converters1:ValueOperationConverter x:Key="ValueOperationConverter"/>
         
-        <!-- Color resources for dark cards and buttons (theme-overridable via DynamicResource keys) -->
-        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#2E2F33"/>
-        <SolidColorBrush x:Key="CardForegroundBrush" Color="#FFFFFF"/>
-        <SolidColorBrush x:Key="CardBorderBrush" Color="#444"/>
-        <SolidColorBrush x:Key="PrimaryButtonBackgroundBrush" Color="#5A9BD5"/>
-        <SolidColorBrush x:Key="PrimaryButtonHoverBrush" Color="#4B89C6"/>
-        <SolidColorBrush x:Key="PrimaryButtonForegroundBrush" Color="#FFFFFF"/>
+        <!-- Color resources for dark cards and buttons -->
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#2E2F33" po:Freeze="True"/>
+        <SolidColorBrush x:Key="CardForegroundBrush" Color="#FFFFFF" po:Freeze="True"/>
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#444" po:Freeze="True"/>
+        <SolidColorBrush x:Key="PrimaryButtonBackgroundBrush" Color="#5A9BD5" po:Freeze="True"/>
+        <SolidColorBrush x:Key="PrimaryButtonHoverBrush" Color="#4B89C6" po:Freeze="True"/>
+        <SolidColorBrush x:Key="PrimaryButtonForegroundBrush" Color="#FFFFFF" po:Freeze="True"/>
         
         <!-- Card-like item appearance -->
         <Style x:Key="ItemBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
+            <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/>
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Padding" Value="8"/>
             <Setter Property="Margin" Value="8,6,12,10"/>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CacheMode">
                 <Setter.Value>
@@ -47,7 +48,7 @@
             </Setter>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
-                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryButtonBackgroundBrush}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource PrimaryButtonBackgroundBrush}"/>
                     <Setter Property="BorderThickness" Value="1"/>
                     <Setter Property="Effect">
                         <Setter.Value>
@@ -61,7 +62,7 @@
                     </Setter>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
-                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryButtonBackgroundBrush}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource PrimaryButtonBackgroundBrush}"/>
                     <Setter Property="Background" Value="#33363A"/>
                     <Setter Property="Effect">
                         <Setter.Value>
@@ -79,8 +80,8 @@
         
         <!-- Button look -->
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="{DynamicResource PrimaryButtonBackgroundBrush}"/>
-            <Setter Property="Foreground" Value="{DynamicResource PrimaryButtonForegroundBrush}"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryButtonBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryButtonForegroundBrush}"/>
             <Setter Property="Padding" Value="8,6"/>
             <Setter Property="Margin" Value="0"/>
             <Setter Property="MinWidth" Value="80"/>
@@ -104,7 +105,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource PrimaryButtonHoverBrush}"/>
+                                <Setter Property="Background" Value="{StaticResource PrimaryButtonHoverBrush}"/>
                                 <Setter Property="BorderBrush" Value="#1F6EA0"/>
                                 <Setter Property="Effect">
                                     <Setter.Value>
@@ -152,14 +153,14 @@
             <Setter Property="VerticalContentAlignment" Value="Top"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="IsTabStop" Value="True"/>
-            <Setter Property="Width">
+            <!--Setter Property="Width">
                 <Setter.Value>
                     <MultiBinding Converter="{StaticResource ValueOperationConverter}" ConverterParameter="-">
                         <Binding Path="ActualWidth" RelativeSource="{RelativeSource AncestorType=ContentPresenter}"/>
                         <Binding Source="5"/>
                     </MultiBinding>
                 </Setter.Value>
-            </Setter>
+            </Setter-->
             <Setter Property="UseLayoutRounding" Value="True"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -192,13 +193,13 @@
                     <Setter Property="Visibility" Value="Collapsed"/>
                 </DataTrigger>
 
-                <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                <!--DataTrigger Binding="{Binding InLibrary}" Value="True">
                     <Setter Property="Visibility" Value="Collapsed"/>
                 </DataTrigger>
 
                 <DataTrigger Binding="{Binding IsActive}" Value="False">
                     <Setter Property="Visibility" Value="Collapsed"/>
-                </DataTrigger>
+                </DataTrigger-->
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
@@ -403,7 +404,9 @@
                         </Border>
                         
                         <Grid Name="DataLoaded">
-                            <ListBox Name="lbWishlist" Height="{Binding ElementName=DataLoaded, Path=ActualHeight}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource ListBoxItemContainerStyle}">
+                            <ListBox Name="lbWishlist" Height="{Binding ElementName=DataLoaded, Path=ActualHeight}" 
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                                     ItemContainerStyle="{StaticResource ListBoxItemContainerStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <wpftk:VirtualizingWrapPanel Orientation="Vertical" VirtualizingPanel.CacheLengthUnit="Item" VirtualizingPanel.CacheLength="10,10" VirtualizingPanel.VirtualizationMode="Recycling"/>
@@ -414,7 +417,7 @@
                                     <DataTemplate>
                                         <DataTemplate.Resources>
                                             <Style TargetType="TextBlock">
-                                                <Setter Property="Foreground" Value="{DynamicResource CardForegroundBrush}"/>
+                                                <Setter Property="Foreground" Value="{StaticResource CardForegroundBrush}"/>
                                             </Style>
                                         </DataTemplate.Resources>
                                         
@@ -473,7 +476,7 @@
                                                                 <TextBlock Text="{DynamicResource LOCItadNotFind}" Style="{StaticResource BaseTextBlockStyle}" Visibility="{Binding IsFind, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
                                                                 <TextBlock Visibility="{Binding InLibrary, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource BaseTextBlockStyle}">
 																	<Hyperlink Command="{Binding GoToGame}" CommandParameter="{Binding GameId}">
-																		<TextBlock Text="{DynamicResource LOCItadInLibrary}" Style="{DynamicResource ListExtendStyleTextBlock}"/>
+																		<TextBlock Text="{DynamicResource LOCItadInLibrary}" Style="{DynamicResource ListBoxExtendStyleTextBlock}"/>
 																	</Hyperlink>
 																</TextBlock>
                                                                 <TextBlock Text="{DynamicResource LOCItadNoData}">
