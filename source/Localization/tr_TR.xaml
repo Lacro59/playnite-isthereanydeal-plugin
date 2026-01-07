@@ -45,6 +45,7 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">Fiyat yenile</sys:String>
 
+    <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">En iyi fiyat</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Mağaza fiyatı</sys:String>
     
