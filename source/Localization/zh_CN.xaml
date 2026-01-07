@@ -45,6 +45,7 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">刷新价格</sys:String>
 
+    <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">最好的价格</sys:String>
     <sys:String x:Key="LOCITADStorePrice">商店售价：？</sys:String>
     
