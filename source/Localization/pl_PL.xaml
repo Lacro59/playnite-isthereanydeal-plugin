@@ -45,6 +45,7 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">Odśwież cenę</sys:String>
 
+    <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Najlepsza cena</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Cena sklepu</sys:String>
     
