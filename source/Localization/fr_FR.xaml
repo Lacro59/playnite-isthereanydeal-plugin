@@ -45,6 +45,7 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">Actualiser les prix</sys:String>
 
+    <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Meilleur prix</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Prix magasin</sys:String>
     
