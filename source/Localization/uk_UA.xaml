@@ -45,6 +45,7 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">Оновити ціну</sys:String>
 
+    <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Найкраща ціна</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Ціна крамниці</sys:String>
     
