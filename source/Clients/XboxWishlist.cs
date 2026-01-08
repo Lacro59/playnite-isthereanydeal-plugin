@@ -15,9 +15,9 @@ using System.Text;
 namespace IsThereAnyDeal.Clients
 {
     public class XboxWishlist : GenericWishlist
-	{
-		private readonly Lazy<XboxApi> _lazyApi = new Lazy<XboxApi>(() => new XboxApi("IsThereAnyDeal"));
-		internal XboxApi XboxApi => _lazyApi.Value;
+    {
+        private readonly Lazy<XboxApi> _lazyApi = new Lazy<XboxApi>(() => new XboxApi("IsThereAnyDeal"));
+        internal XboxApi XboxApi => _lazyApi.Value;
 
 
         public XboxWishlist(IsThereAnyDeal plugin) : base(plugin, "Xbox")
@@ -29,7 +29,7 @@ namespace IsThereAnyDeal.Clients
         {
             Logger.Info($"Load data from web for {ClientName}");
 
-            if (Settings.XboxLink.IsNullOrEmpty() 
+            if (Settings.XboxLink.IsNullOrEmpty()
                 && !Settings.XboxLink.StartsWith("https://www.microsoft.com/", StringComparison.InvariantCultureIgnoreCase)
                 && !Settings.XboxLink.Contains("wishlist?id=", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -72,7 +72,7 @@ namespace IsThereAnyDeal.Clients
                 {
                     Common.LogError(ex, false, true, "IsThereAnyDeal");
                 }
-        });
+            });
 
             wishlists = SetCurrentPrice(wishlists, false);
             SaveWishlist(wishlists);
