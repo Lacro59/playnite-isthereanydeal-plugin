@@ -61,7 +61,7 @@ namespace IsThereAnyDeal.Views
             {
                 // Now the UI is ready to display the loading bar
                 RefreshData(id);
-                GetListGiveaways(plugin.GetPluginUserDataPath());
+                GetListGiveaways();
             };
         }
 
@@ -181,13 +181,13 @@ namespace IsThereAnyDeal.Views
             return ListWishlist;
         }
 
-        private List<ItadGiveaway> LoadDatatGiveaways(string pluginUserDataPath)
+        private List<ItadGiveaway> LoadDatatGiveaways()
         {
-            List<ItadGiveaway> itadGiveaways = IsThereAnyDealApi.GetGiveaways(pluginUserDataPath);
+            List<ItadGiveaway> itadGiveaways = IsThereAnyDealApi.GetGiveaways();
             return itadGiveaways;
         }
 
-        private async void GetListGiveaways(string pluginUserDataPath)
+        private async void GetListGiveaways()
         {
             // Initialize UI state: disable the grid and clear previous items
             gGiveaways.IsEnabled = false;
@@ -200,7 +200,7 @@ namespace IsThereAnyDeal.Views
             try
             {
                 // Offload data loading to a background thread to keep UI responsive
-                var itadGiveaways = await Task.Run(() => LoadDatatGiveaways(pluginUserDataPath));
+                var itadGiveaways = await Task.Run(() => LoadDatatGiveaways());
 
                 if (itadGiveaways == null || itadGiveaways.Count == 0)
                 {

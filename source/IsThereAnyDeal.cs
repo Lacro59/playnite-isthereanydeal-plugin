@@ -1,10 +1,8 @@
 ﻿using CommonPlayniteShared;
 using CommonPlayniteShared.Common;
 using CommonPluginsShared;
-using CommonPluginsShared.Interfaces;
 using CommonPluginsShared.PlayniteExtended;
 using CommonPluginsStores.Epic;
-using CommonPluginsStores.GameJolt;
 using CommonPluginsStores.Gog;
 using CommonPluginsStores.Steam;
 using IsThereAnyDeal.Services;
@@ -86,7 +84,7 @@ namespace IsThereAnyDeal
                 timerUpdatePrice.Elapsed += (sender, e) => OnTimedUpdatePriceEvent(sender, e);
                 timerUpdatePrice.Start();
             }
-        }
+		}
 
         private void OnTimedUpdatePriceEvent(object sender, ElapsedEventArgs e)
         {

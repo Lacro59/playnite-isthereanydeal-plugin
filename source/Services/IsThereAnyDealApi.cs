@@ -1,4 +1,5 @@
 ﻿using CommonPlayniteShared.Common;
+using CommonPlayniteShared.PluginLibrary.SteamLibrary.SteamShared;
 using CommonPluginsShared;
 using CommonPluginsShared.Extensions;
 using IsThereAnyDeal.Clients;
@@ -8,6 +9,7 @@ using IsThereAnyDeal.Models.ApiWebsite;
 using IsThereAnyDeal.Views;
 using Playnite.SDK;
 using Playnite.SDK.Data;
+using Playnite.SDK.Plugins;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -18,8 +20,10 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows;
 using static CommonPluginsShared.PlayniteTools;
+using static SteamKit2.DepotManifest;
 
 namespace IsThereAnyDeal.Services
 {
@@ -29,6 +33,7 @@ namespace IsThereAnyDeal.Services
     /// </summary>
     public class IsThereAnyDealApi
     {
+
         private static ILogger Logger => LogManager.GetLogger();
 
         #region Urls
@@ -52,33 +57,51 @@ namespace IsThereAnyDeal.Services
         /// </summary>
         public List<CountData> CountDatas { get; set; } = new List<CountData>();
 
-        #region Api
+		private static string CachePath => Path.Combine(IsThereAnyDeal.PluginUserDataPath, IsThereAnyDeal.PluginName, "ITAD");
+		private static FileDataTools FileDataTools => new FileDataTools(IsThereAnyDeal.PluginName, "ITAD");
 
-        /// <summary>
-        /// Fetches the list of available shops/services supported by ITAD for a specific country.
-        /// </summary>
-        /// <param name="country">ISO Country Code (Alpha-2).</param>
-        /// <returns>A list of <see cref="ServiceShop"/> or null on failure.</returns>
-        public async Task<List<ServiceShop>> GetServiceShops(string country)
+		private readonly SemaphoreSlim _rateLimiter = new SemaphoreSlim(1, 1);
+		private DateTime _lastApiCall = DateTime.MinValue;
+		private const int MinApiCallIntervalMs = 500;
+
+		private static readonly Dictionary<string, string> CurrencySymbols = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-            // REMARK: Sleep is used to respect ITAD's rate limiting. 
-            // Better approach: Use a dedicated RateLimiter or SemaphoreSlim globally.
-            Thread.Sleep(500);
+	        { "eur", "€" },
+	        { "usd", "$" },
+	        { "gpb", "£" },
+	        { "aud", "$" },
+	        { "brl", "R$" },
+	        { "cad", "$" },
+	        { "cny", "¥" }
+        };
 
-            try
+
+		#region Api
+
+		/// <summary>
+		/// Fetches the list of available shops/services supported by ITAD for a specific country.
+		/// </summary>
+		/// <param name="country">ISO Country Code (Alpha-2).</param>
+		/// <returns>A list of <see cref="ServiceShop"/> or null on failure.</returns>
+		public async Task<List<ServiceShop>> GetServiceShops(string country)
+        {
+            return await WithRateLimitAsync(async () =>
             {
-                string url = ApiUrl + $"/service/shops/v1?country={country}";
-                string data = await Web.DownloadStringData(url).ConfigureAwait(false);
+                try
+                {
+                    string url = ApiUrl + $"/service/shops/v1?country={country}";
+                    string data = await Web.DownloadStringData(url).ConfigureAwait(false);
 
-                _ = Serialization.TryFromJson(data, out List<ServiceShop> serviceShops, out Exception ex);
-                return ex != null ? throw ex : serviceShops;
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, false, $"Error in GetGamesPrices({country})", true, "IsThereAnyDeal");
-            }
+                    _ = Serialization.TryFromJson(data, out List<ServiceShop> serviceShops, out Exception ex);
+                    return ex != null ? throw ex : serviceShops;
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, false, $"Error in GetGamesPrices({country})", true, IsThereAnyDeal.PluginName);
+                }
 
-            return null;
+                return null;
+            });
         }
 
 
@@ -88,48 +111,61 @@ namespace IsThereAnyDeal.Services
         /// <param name="title">Game title.</param>
         public async Task<GameLookup> GetGamesLookup(string title)
         {
-            return await GetGamesLookup(title, string.Empty);
+            return await GetGamesLookup(title, 0);
         }
 
         /// <summary>
         /// Looks up a game's ITAD ID using its Steam AppID.
         /// </summary>
         /// <param name="appId">Steam Application ID.</param>
-        public async Task<GameLookup> GetGamesLookup(int appId)
+        public async Task<GameLookup> GetGamesLookup(uint appId)
         {
-            return await GetGamesLookup(string.Empty, appId.ToString());
+            return await GetGamesLookup(string.Empty, appId);
         }
 
         /// <summary>
         /// Internal method to query the lookup API by title or AppID.
         /// </summary>
-        private async Task<GameLookup> GetGamesLookup(string title, string appId)
+        private async Task<GameLookup> GetGamesLookup(string title, uint appId)
         {
-            // REMARK: Sleep is used to respect ITAD's rate limiting. 
-            // Better approach: Use a dedicated RateLimiter or SemaphoreSlim globally.
-            Thread.Sleep(500);
+			string cachePath = Path.Combine(CachePath, $"{(title.IsNullOrEmpty() ? appId.ToString() : title)}.json");
+			var data = await FileDataTools.LoadDataAsync<GameLookup>(cachePath, 4320);
 
-            try
+			if (data == null)
             {
-                if (!title.IsNullOrEmpty() || !appId.IsNullOrEmpty())
+                return await WithRateLimitAsync(async () =>
                 {
-                    // REMARK: PlayniteTools.RemoveGameEdition is used to increase match probability by stripping suffixes like "GOTY".
-                    string url = ApiUrl + $"/games/lookup/v1?key={Key}&"
-                        + (!title.IsNullOrEmpty()
-                                ? $"title={WebUtility.UrlEncode(WebUtility.HtmlDecode(PlayniteTools.RemoveGameEdition(title)))}"
-                                : $"appid={appId}");
-                    string data = await Web.DownloadStringData(url);
+                    try
+                    {
+                        if (!title.IsNullOrEmpty() || appId > 0)
+                        {
+                            // REMARK: PlayniteTools.RemoveGameEdition is used to increase match probability by stripping suffixes like "GOTY".
+                            string url = ApiUrl + $"/games/lookup/v1?key={Key}&"
+                                + (!title.IsNullOrEmpty()
+                                        ? $"title={WebUtility.UrlEncode(WebUtility.HtmlDecode(RemoveGameEdition(title)))}"
+                                        : $"appid={appId}");
+                            string response = await Web.DownloadStringData(url);
 
-                    _ = Serialization.TryFromJson(data, out GameLookup gamesLookup, out Exception ex);
-                    return ex != null ? throw ex : gamesLookup;
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, false, $"Error in GetGamesLookup({(title.IsNullOrEmpty() ? appId : title)})", true, "IsThereAnyDeal");
-            }
+                            _ = Serialization.TryFromJson(response, out data, out Exception ex);
+                            if (ex != null)
+                            {
+                                throw ex;
+                            }
 
-            return null;
+                            FileDataTools.SaveData(cachePath, data);
+                            return data;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Common.LogError(ex, false, $"Error in GetGamesLookup({(title.IsNullOrEmpty() ? appId.ToString() : title)})", true, IsThereAnyDeal.PluginName);
+                    }
+
+					return null;
+				});
+			}
+
+            return data;
         }
 
         /// <summary>
@@ -137,38 +173,37 @@ namespace IsThereAnyDeal.Services
         /// </summary>
         public async Task<Dictionary<string, string>> GetGamesId(List<string> titles, List<string> appIds)
         {
-            // REMARK: Sleep is used to respect ITAD's rate limiting. 
-            // Better approach: Use a dedicated RateLimiter or SemaphoreSlim globally.
-            Thread.Sleep(500);
-
-            string url = string.Empty;
-            string payload = string.Empty;
-
-            try
+            return await WithRateLimitAsync(async () =>
             {
-                if (titles?.Count() > 0)
+                string url = string.Empty;
+                string payload = string.Empty;
+
+                try
                 {
-                    url = ApiLookupTitles;
-                    payload = Serialization.ToJson(titles.Select(x => PlayniteTools.RemoveGameEdition(x)));
+                    if (titles?.Count() > 0)
+                    {
+                        url = ApiLookupTitles;
+                        payload = Serialization.ToJson(titles.Select(x => PlayniteTools.RemoveGameEdition(x)));
+                    }
+
+                    if (appIds?.Count() > 0)
+                    {
+                        // REMARK: Shop ID 61 refers specifically to Steam in ITAD's database structure.
+                        url = string.Format(ApiLookupAppIds, 61);
+                        payload = Serialization.ToJson(appIds.Select(x => x.Contains("app/") ? x : "app/" + x));
+                    }
+
+                    string data = await Web.PostStringDataPayload(url, payload);
+                    _ = Serialization.TryFromJson(data, out Dictionary<string, string> gamesId, out Exception ex);
+                    return ex != null ? throw ex : gamesId;
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, false, $"Error in GetGamesId({payload})", true, IsThereAnyDeal.PluginName);
                 }
 
-                if (appIds?.Count() > 0)
-                {
-                    // REMARK: Shop ID 61 refers specifically to Steam in ITAD's database structure.
-                    url = string.Format(ApiLookupAppIds, 61);
-                    payload = Serialization.ToJson(appIds.Select(x => x.Contains("app/") ? x : "app/" + x));
-                }
-
-                string data = await Web.PostStringDataPayload(url, payload);
-                _ = Serialization.TryFromJson(data, out Dictionary<string, string> gamesId, out Exception ex);
-                return ex != null ? throw ex : gamesId;
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, false, $"Error in GetGamesId({payload})", true, "IsThereAnyDeal");
-            }
-
-            return null;
+                return null;
+            });
         }
 
         /// <summary>
@@ -179,26 +214,25 @@ namespace IsThereAnyDeal.Services
         /// <param name="gamesId">List of ITAD internal game IDs.</param>
         public async Task<List<GamePrices>> GetGamesPrices(string country, List<int> shopsId, List<string> gamesId)
         {
-            // REMARK: Sleep is used to respect ITAD's rate limiting. 
-            // Better approach: Use a dedicated RateLimiter or SemaphoreSlim globally.
-            Thread.Sleep(500);
-
-            try
+            return await WithRateLimitAsync(async () =>
             {
-                string shops = string.Join(",", shopsId);
-                string url = ApiUrl + $"/games/prices/v3?key={Key}&vouchers=true&capacity=0&country={country}&shops={shops}";
-                string payload = Serialization.ToJson(gamesId);
-                string data = await Web.PostStringDataPayload(url, payload);
+                try
+                {
+                    string shops = string.Join(",", shopsId);
+                    string url = ApiUrl + $"/games/prices/v3?key={Key}&vouchers=true&capacity=0&country={country}&shops={shops}";
+                    string payload = Serialization.ToJson(gamesId);
+                    string data = await Web.PostStringDataPayload(url, payload);
 
-                _ = Serialization.TryFromJson(data, out List<GamePrices> gamesPrices, out Exception ex);
-                return ex != null ? throw ex : gamesPrices;
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, false, $"Error in GetGamesPrices({country} / {string.Join(",", shopsId)} / {string.Join(",", gamesId)})", true, "IsThereAnyDeal");
-            }
+                    _ = Serialization.TryFromJson(data, out List<GamePrices> gamesPrices, out Exception ex);
+                    return ex != null ? throw ex : gamesPrices;
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, false, $"Error in GetGamesPrices({country} / {string.Join(",", shopsId)} / {string.Join(",", gamesId)})", true, IsThereAnyDeal.PluginName);
+                }
 
-            return null;
+                return null;
+            });
         }
 
         #endregion
@@ -208,9 +242,7 @@ namespace IsThereAnyDeal.Services
         /// </summary>
         public static List<Country> GetCountries()
         {
-            string pluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var fileDataTools = new FileDataTools("IsThereAnyDeal", "");
-            return fileDataTools.LoadData<List<Country>>(Path.Combine(pluginPath, "Data", "countries.json"), -1);
+            return FileDataTools.LoadData<List<Country>>(Path.Combine(IsThereAnyDeal.PluginFolder, "Data", "countries.json"), -1);
         }
 
         #region Plugin
@@ -302,42 +334,52 @@ namespace IsThereAnyDeal.Services
             };
 
             // 2. Process each store generically
-            foreach (var config in storeConfigs)
-            {
-                if (!config.IsEnabled()) continue;
+            var lockObj = new object();
+            var partitioner = Partitioner.Create(storeConfigs, EnumerablePartitionerOptions.NoBuffering);
 
-                try
-                {
-                    // Check if at least one required library plugin is enabled in Playnite
-                    bool isPluginActive = config.RequiredPlugins.Any(p => PlayniteTools.IsEnabledPlaynitePlugin(PlayniteTools.GetPluginId(p)));
+			Parallel.ForEach(
+				partitioner,
+				new ParallelOptions { MaxDegreeOfParallelism = 4 },
+				config =>
+				{
+					if (!config.IsEnabled()) return;
 
-                    if (isPluginActive)
-                    {
-                        var provider = config.ProviderFactory();
-                        var storeWishlist = provider.GetWishlist(cacheOnly, forcePrice) ?? new List<Wishlist>();
+					try
+					{
+						// Check if at least one required library plugin is enabled in Playnite
+						bool isPluginActive = config.RequiredPlugins.Any(p => IsEnabledPlaynitePlugin(GetPluginId(p)));
 
-                        combinedWishlist.AddRange(storeWishlist);
-                        CountDatas.Add(new CountData { StoreName = config.StoreName, Count = storeWishlist.Count });
-                    }
-                    else
-                    {
-                        Logger.Warn($"{config.StoreName} is enabled in ITAD but the library plugin is disabled in Playnite.");
-                        API.Instance.Notifications.Add(new NotificationMessage(
-                            config.NotificationId,
-                            "IsThereAnyDeal\r\n" + ResourceProvider.GetString(config.LocErrorKey),
-                            NotificationType.Error,
-                            () => plugin.OpenSettingsView()
-                        ));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Common.LogError(ex, false, $"Error on ListWishlist for {config.StoreName}", true, plugin.PluginName);
-                }
-            }
+						if (isPluginActive)
+						{
+							var provider = config.ProviderFactory();
+							var storeWishlist = provider.GetWishlist(cacheOnly, forcePrice) ?? new List<Wishlist>();
 
-            // 3. Deduplication Logic (Normalized by Name)
-            var finalData = DeduplicateWishlist(combinedWishlist);
+							lock (lockObj)
+							{
+								combinedWishlist.AddRange(storeWishlist);
+								CountDatas.Add(new CountData { StoreName = config.StoreName, Count = storeWishlist.Count });
+							}
+						}
+						else
+						{
+							Logger.Warn($"{config.StoreName} is enabled in ITAD but the library plugin is disabled in Playnite.");
+							API.Instance.Notifications.Add(new NotificationMessage(
+								config.NotificationId,
+								"IsThereAnyDeal\r\n" + ResourceProvider.GetString(config.LocErrorKey),
+								NotificationType.Error,
+								() => plugin.OpenSettingsView()
+							));
+						}
+					}
+					catch (Exception ex)
+					{
+						Common.LogError(ex, false, $"Error on ListWishlist for {config.StoreName}", true, IsThereAnyDeal.PluginName);
+					}
+				}
+			);
+
+			// 3. Deduplication Logic (Normalized by Name)
+			var finalData = DeduplicateWishlist(combinedWishlist);
 
             if (!cacheOnly || forcePrice)
             {
@@ -404,172 +446,45 @@ namespace IsThereAnyDeal.Services
         {
             try
             {
-                List<Wishlist> wishlistsData = force
-                    ? wishlists
-                        .Where(x => !x.Game?.Id?.IsNullOrEmpty() ?? false)
-                        .ToList()
-                    : wishlists
-                        .Where(x => (!x.ItadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true) && (!x.Game?.Id?.IsNullOrEmpty() ?? false))
-                        .ToList();
+				var wishlistsData = (force
+			        ? wishlists.Where(x => !x.Game?.Id?.IsNullOrEmpty() ?? false)
+			        : wishlists.Where(x => (!x.ItadGameInfos?.Keys?.Contains(DateTime.Now.ToString("yyyy-MM-dd")) ?? true)
+				        && (!x.Game?.Id?.IsNullOrEmpty() ?? false)))
+			        .ToList();
 
-                // Games list
-                List<string> gamesId = wishlistsData.Select(x => x.Game.Id).ToList();
+				if (!wishlistsData.Any()) return wishlists;
 
-                // Stores list
-                List<int> shopsId = settings.Stores.Select(x => int.Parse(x.Id)).ToList();
+				var gamesId = wishlistsData.Select(x => x.Game.Id).Distinct().ToList();
+				var shopsId = settings.Stores.Select(x => int.Parse(x.Id)).ToList();
 
-                if (gamesId?.Count() != 0)
-                {
-                    // Check if in library (exclude game emulated)
-                    List<Guid> ListEmulators = API.Instance.Database.Emulators.Select(x => x.Id).ToList();
+				const int chunkSize = 200;
+				var chunks = gamesId
+					.Select((item, index) => new { item, index })
+					.GroupBy(x => x.index / chunkSize)
+					.Select(g => g.Select(x => x.item).ToList())
+					.ToList();
 
-                    // REMARK: Split IDs into groups of 200 for batch processing.
-                    List<List<string>> chunks = gamesId
-                        .Select((item, index) => new { item, index })
-                        .GroupBy(x => x.index / 200)
-                        .Select(g => g.Select(x => x.item).ToList())
-                        .ToList();
+				var allGamesPrices = new ConcurrentBag<GamePrices>();
 
-                    List<GamePrices> gamesPrices = new List<GamePrices>();
-                    for (int i = 0; i < chunks.Count; i++)
-                    {
-                        List<GamePrices> prices = await GetGamesPrices(settings.CountrySelected.Alpha2, shopsId, chunks[i]);
-                        if (prices?.Count() > 0)
-                        {
-                            gamesPrices.AddRange(prices);
-                        }
-                    }
+				foreach (var chunk in chunks)
+				{
+					var prices = await GetGamesPrices(settings.CountrySelected.Alpha2, shopsId, chunk);
+					if (prices?.Any() ?? false)
+					{
+						foreach (var price in prices)
+						{
+							allGamesPrices.Add(price);
+						}
+					}
+				}
 
-                    foreach (Wishlist wishlist in wishlistsData)
-                    {
-                        ConcurrentDictionary<string, List<ItadGameInfo>> itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
-                        List<ItadGameInfo> dataCurrentPrice = new List<ItadGameInfo>();
-                        List<ItadGameInfo> dataLowPrice = new List<ItadGameInfo>();
+				var gamesPricesLookup = allGamesPrices.ToDictionary(gp => gp.Id, StringComparer.OrdinalIgnoreCase);
 
-                        try
-                        {
-                            GamePrices gamePrices = gamesPrices.Where(x => x.Id.IsEqual(wishlist.Game.Id))?.FirstOrDefault();
-                            if (gamePrices?.Deals?.Count > 0)
-                            {
-                                foreach (Deal deal in gamePrices.Deals)
-                                {
-                                    try
-                                    {
-                                        dataCurrentPrice.Add(new ItadGameInfo
-                                        {
-                                            Name = wishlist.Name,
-                                            StoreId = wishlist.StoreId,
-                                            SourceId = wishlist.SourceId,
-                                            Id = wishlist.Game.Id,
-                                            Slug = wishlist.Game.Slug,
-                                            PriceNew = Math.Round(deal.Price.Amount, 2),
-                                            PriceOld = Math.Round(deal.Regular.Amount, 2),
-                                            PriceCut = deal.Cut,
-                                            CurrencySign = GetCurrencySymbol(deal.Price.Currency),
-                                            ShopName = deal.Shop.Name,
-                                            UrlBuy = deal.Url
-                                        });
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Common.LogError(ex, false, true, "IsThereAnyDeal");
-                                    }
-                                }
-
-                                if (gamePrices.HistoryLow != null)
-                                {
-                                    if (gamePrices.HistoryLow.All != null)
-                                    {
-                                        try
-                                        {
-                                            dataLowPrice.Add(new ItadGameInfo
-                                            {
-                                                Name = wishlist.Name,
-                                                StoreId = wishlist.StoreId,
-                                                SourceId = wishlist.SourceId,
-                                                Id = wishlist.Game.Id,
-                                                Slug = wishlist.Game.Slug,
-                                                PriceNew = Math.Round(gamePrices.HistoryLow.All.Amount, 2),
-                                                PriceOld = 0,
-                                                PriceCut = 0,
-                                                CurrencySign = GetCurrencySymbol(gamePrices.HistoryLow.All.Currency),
-                                                ShopName = gamePrices.Deals.FirstOrDefault(x => x.StoreLow?.AmountInt == gamePrices.HistoryLow.All.AmountInt)?.Shop?.Name,
-                                                UrlBuy = string.Empty,
-                                                TypePrice = TypePrice.All
-                                            });
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Common.LogError(ex, false, true, "IsThereAnyDeal");
-                                        }
-                                    }
-                                    if (gamePrices.HistoryLow.Y1 != null)
-                                    {
-                                        try
-                                        {
-                                            dataLowPrice.Add(new ItadGameInfo
-                                            {
-                                                Name = wishlist.Name,
-                                                StoreId = wishlist.StoreId,
-                                                SourceId = wishlist.SourceId,
-                                                Id = wishlist.Game.Id,
-                                                Slug = wishlist.Game.Slug,
-                                                PriceNew = Math.Round(gamePrices.HistoryLow.Y1.Amount, 2),
-                                                PriceOld = 0,
-                                                PriceCut = 0,
-                                                CurrencySign = GetCurrencySymbol(gamePrices.HistoryLow.Y1.Currency),
-                                                ShopName = gamePrices.Deals.FirstOrDefault(x => x.StoreLow?.AmountInt == gamePrices.HistoryLow.Y1.AmountInt)?.Shop?.Name,
-                                                UrlBuy = string.Empty,
-                                                TypePrice = TypePrice.Y1
-                                            });
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Common.LogError(ex, false, true, "IsThereAnyDeal");
-                                        }
-                                    }
-                                    if (gamePrices.HistoryLow.M3 != null)
-                                    {
-                                        try
-                                        {
-                                            dataLowPrice.Add(new ItadGameInfo
-                                            {
-                                                Name = wishlist.Name,
-                                                StoreId = wishlist.StoreId,
-                                                SourceId = wishlist.SourceId,
-                                                Id = wishlist.Game.Id,
-                                                Slug = wishlist.Game.Slug,
-                                                PriceNew = Math.Round(gamePrices.HistoryLow.M3.Amount, 2),
-                                                PriceOld = 0,
-                                                PriceCut = 0,
-                                                CurrencySign = GetCurrencySymbol(gamePrices.HistoryLow.M3.Currency),
-                                                ShopName = gamePrices.Deals.FirstOrDefault(x => x.StoreLow?.AmountInt == gamePrices.HistoryLow.M3.AmountInt)?.Shop?.Name,
-                                                UrlBuy = string.Empty,
-                                                TypePrice = TypePrice.M3
-                                            });
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Common.LogError(ex, false, true, "IsThereAnyDeal");
-                                        }
-                                    }
-                                }
-
-                                _ = itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
-                                wishlist.ItadGameInfos = itadGameInfos;
-                                wishlist.ItadLow = dataLowPrice;
-                            }
-                            else
-                            {
-                                Common.LogDebug(true, $"No data for {wishlist.Name}");
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Common.LogError(ex, true);
-                        }
-                    };
-                }
+				Parallel.ForEach(wishlistsData, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount },
+	                wishlist =>
+	                {
+		                ProcessWishlistPrices(wishlist, gamesPricesLookup);
+	                });
             }
             catch (Exception ex)
             {
@@ -579,54 +494,153 @@ namespace IsThereAnyDeal.Services
             return wishlists;
         }
 
-        /// <summary>
-        /// Converts currency ISO codes to their corresponding visual symbols.
-        /// </summary>
-        private string GetCurrencySymbol(string currency)
+        private void ProcessWishlistPrices(Wishlist wishlist, Dictionary<string, GamePrices> pricesLookup)
         {
-            switch (currency.ToLower())
+            if (!pricesLookup.TryGetValue(wishlist.Game.Id, out var gamePrices) || gamePrices?.Deals == null)
             {
-                case "eur":
-                    return "€";
-                case "usd":
-                    return "$";
-                case "gpb":
-                    return "£";
-                case "aud":
-                    return "$";
-                case "brl":
-                    return "R$";
-                case "cad":
-                    return "$";
-                case "cny":
-                    return "¥";
-                default:
-                    return currency;
+                return;
             }
-        }
 
-        /// <summary>
-        /// Returns a specific Hex color code for a given shop name to ensure UI consistency.
-        /// </summary>
-        public static string GetShopColor(string shopName)
+			var itadGameInfos = new ConcurrentDictionary<string, List<ItadGameInfo>>();
+			var dataCurrentPrice = new List<ItadGameInfo>(gamePrices.Deals.Count);
+			var dataLowPrice = new List<ItadGameInfo>(3);
+
+			foreach (Deal deal in gamePrices.Deals)
+			{
+				try
+				{
+					dataCurrentPrice.Add(new ItadGameInfo
+					{
+						Name = wishlist.Name,
+						StoreId = wishlist.StoreId,
+						SourceId = wishlist.SourceId,
+						Id = wishlist.Game.Id,
+						Slug = wishlist.Game.Slug,
+						PriceNew = Math.Round(deal.Price.Amount, 2),
+						PriceOld = Math.Round(deal.Regular.Amount, 2),
+						PriceCut = deal.Cut,
+						CurrencySign = GetCurrencySymbol(deal.Price.Currency),
+						ShopName = deal.Shop.Name,
+						UrlBuy = deal.Url
+					});
+				}
+				catch (Exception ex)
+				{
+					Common.LogError(ex, false, true, IsThereAnyDeal.PluginName);
+				}
+			}
+
+			if (gamePrices.HistoryLow != null)
+			{
+				if (gamePrices.HistoryLow.All != null)
+				{
+					try
+					{
+						dataLowPrice.Add(new ItadGameInfo
+						{
+							Name = wishlist.Name,
+							StoreId = wishlist.StoreId,
+							SourceId = wishlist.SourceId,
+							Id = wishlist.Game.Id,
+							Slug = wishlist.Game.Slug,
+							PriceNew = Math.Round(gamePrices.HistoryLow.All.Amount, 2),
+							PriceOld = 0,
+							PriceCut = 0,
+							CurrencySign = GetCurrencySymbol(gamePrices.HistoryLow.All.Currency),
+							ShopName = gamePrices.Deals.FirstOrDefault(x => x.StoreLow?.AmountInt == gamePrices.HistoryLow.All.AmountInt)?.Shop?.Name,
+							UrlBuy = string.Empty,
+							TypePrice = TypePrice.All
+						});
+					}
+					catch (Exception ex)
+					{
+						Common.LogError(ex, false, true, IsThereAnyDeal.PluginName);
+					}
+				}
+				if (gamePrices.HistoryLow.Y1 != null)
+				{
+					try
+					{
+						dataLowPrice.Add(new ItadGameInfo
+						{
+							Name = wishlist.Name,
+							StoreId = wishlist.StoreId,
+							SourceId = wishlist.SourceId,
+							Id = wishlist.Game.Id,
+							Slug = wishlist.Game.Slug,
+							PriceNew = Math.Round(gamePrices.HistoryLow.Y1.Amount, 2),
+							PriceOld = 0,
+							PriceCut = 0,
+							CurrencySign = GetCurrencySymbol(gamePrices.HistoryLow.Y1.Currency),
+							ShopName = gamePrices.Deals.FirstOrDefault(x => x.StoreLow?.AmountInt == gamePrices.HistoryLow.Y1.AmountInt)?.Shop?.Name,
+							UrlBuy = string.Empty,
+							TypePrice = TypePrice.Y1
+						});
+					}
+					catch (Exception ex)
+					{
+						Common.LogError(ex, false, true, IsThereAnyDeal.PluginName);
+					}
+				}
+				if (gamePrices.HistoryLow.M3 != null)
+				{
+					try
+					{
+						dataLowPrice.Add(new ItadGameInfo
+						{
+							Name = wishlist.Name,
+							StoreId = wishlist.StoreId,
+							SourceId = wishlist.SourceId,
+							Id = wishlist.Game.Id,
+							Slug = wishlist.Game.Slug,
+							PriceNew = Math.Round(gamePrices.HistoryLow.M3.Amount, 2),
+							PriceOld = 0,
+							PriceCut = 0,
+							CurrencySign = GetCurrencySymbol(gamePrices.HistoryLow.M3.Currency),
+							ShopName = gamePrices.Deals.FirstOrDefault(x => x.StoreLow?.AmountInt == gamePrices.HistoryLow.M3.AmountInt)?.Shop?.Name,
+							UrlBuy = string.Empty,
+							TypePrice = TypePrice.M3
+						});
+					}
+					catch (Exception ex)
+					{
+						Common.LogError(ex, false, true, IsThereAnyDeal.PluginName);
+					}
+				}
+			}
+
+			_ = itadGameInfos.TryAdd(DateTime.Now.ToString("yyyy-MM-dd"), dataCurrentPrice);
+			wishlist.ItadGameInfos = itadGameInfos;
+			wishlist.ItadLow = dataLowPrice;
+		}
+
+		/// <summary>
+		/// Converts currency ISO codes to their corresponding visual symbols.
+		/// </summary>
+		private string GetCurrencySymbol(string currency)
+		{
+			return CurrencySymbols.TryGetValue(currency, out var symbol) ? symbol : currency;
+		}
+
+		/// <summary>
+		/// Returns a specific Hex color code for a given shop name to ensure UI consistency.
+		/// </summary>
+		public static string GetShopColor(string shopName)
         {
-            string pluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var fileDataTools = new FileDataTools("IsThereAnyDeal", "");
-            var data = fileDataTools.LoadData<List<Shop>>(Path.Combine(pluginPath, "Data", "shops.json"), -1);
+            var data = FileDataTools.LoadData<List<Shop>>(Path.Combine(IsThereAnyDeal.PluginFolder, "Data", "shops.json"), -1);
             return data?.FirstOrDefault(x => x.Name.IsEqual(shopName))?.Color ?? ResourceProvider.GetResource("TextBrush").ToString();
         }
 
         /// <summary>
         /// Fetches available giveaways from the web and compares them with the local cache to detect new entries.
         /// </summary>
-        public List<ItadGiveaway> GetGiveaways(string pluginUserDataPath, bool cacheOnly = false)
+        public List<ItadGiveaway> GetGiveaways(bool cacheOnly = false)
         {
             // Load previous
-            string pluginDirectoryCache = pluginUserDataPath + "\\cache";
+            string pluginDirectoryCache = IsThereAnyDeal.PluginUserDataPath + "\\cache";
             string pluginFileCache = pluginDirectoryCache + "\\giveways.json";
 
-            var fileDataTools = new FileDataTools("IsThereAnyDeal", "");
-            var itadGiveawaysCache = fileDataTools.LoadData<List<ItadGiveaway>>(pluginFileCache, -1) ?? new List<ItadGiveaway>();
+            var itadGiveawaysCache = FileDataTools.LoadData<List<ItadGiveaway>>(pluginFileCache, -1) ?? new List<ItadGiveaway>();
 
             // Load on web
             List<ItadGiveaway> itadGiveaways = new List<ItadGiveaway>();
@@ -637,7 +651,7 @@ namespace IsThereAnyDeal.Services
                     string data = string.Empty;
                     try
                     {
-                        string GiveawaysUrl = "https://isthereanydeal.com/giveaways/api/list/";
+                        string giveawaysUrl = "https://isthereanydeal.com/giveaways/api/list/";
                         string payload = "{\"offset\":0,\"sort\":null,\"filter\":null}";
                         string sessionToken = "JiCZgSx7tdBwB9D6zJnBq6nMJjiscvx5zznJWQa_ucgH3sOp";
 
@@ -657,7 +671,7 @@ namespace IsThereAnyDeal.Services
                             new KeyValuePair<string, string>("ITAD-SessionToken", sessionToken)
                         };
 
-                        data = Web.PostStringDataPayload(GiveawaysUrl + "?tab=live", payload, cookies, moreHeader).GetAwaiter().GetResult();
+                        data = Web.PostStringDataPayload(giveawaysUrl + "?tab=live", payload, cookies, moreHeader).GetAwaiter().GetResult();
                     }
                     catch (Exception e)
                     {
@@ -690,7 +704,7 @@ namespace IsThereAnyDeal.Services
                         }
                         catch (Exception ex2)
                         {
-                            Common.LogError(ex2, false, $"Failed to download {GiveawaysUrl}", true, "IsThereAnyDeal");
+                            Common.LogError(ex2, false, $"Failed to download {GiveawaysUrl}", true, IsThereAnyDeal.PluginName);
                         }
 
                         itadGiveaways.Add(new ItadGiveaway
@@ -708,7 +722,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, "Error fetching web giveaways", true, "IsThereAnyDeal");
+                    Common.LogError(ex, false, "Error fetching web giveaways", true, IsThereAnyDeal.PluginName);
                 }
             }
 
@@ -731,8 +745,8 @@ namespace IsThereAnyDeal.Services
                 itadGiveaways = itadGiveawaysCache;
             }
 
-            // Save new
-            fileDataTools.SaveData(pluginFileCache, itadGiveaways);
+			// Save new
+			FileDataTools.SaveData(pluginFileCache, itadGiveaways);
 
             return itadGiveaways;
         }
@@ -787,7 +801,7 @@ namespace IsThereAnyDeal.Services
 
                 if (plugin.PluginSettings.Settings.EnableNotificationGiveaways)
                 {
-                    List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways(plugin.GetPluginUserDataPath());
+                    List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways();
                     itadGiveaways.Where(x => !x.HasSeen).ForEach(x =>
                     {
                         API.Instance.Notifications.Add(new NotificationMessage(
@@ -828,7 +842,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, true, plugin.PluginName);
+                    Common.LogError(ex, false, true, IsThereAnyDeal.PluginName);
                 }
 
                 stopWatch.Stop();
@@ -837,6 +851,25 @@ namespace IsThereAnyDeal.Services
             }, globalProgressOptions);
         }
 
-        #endregion
-    }
+		#endregion
+
+		private async Task<T> WithRateLimitAsync<T>(Func<Task<T>> apiCall)
+		{
+			await _rateLimiter.WaitAsync();
+			try
+			{
+				var elapsed = (DateTime.Now - _lastApiCall).TotalMilliseconds;
+				if (elapsed < MinApiCallIntervalMs)
+				{
+					await Task.Delay(MinApiCallIntervalMs - (int)elapsed);
+				}
+				_lastApiCall = DateTime.Now;
+				return await apiCall();
+			}
+			finally
+			{
+				_rateLimiter.Release();
+			}
+		}
+	}
 }

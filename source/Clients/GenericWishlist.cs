@@ -35,11 +35,6 @@ namespace IsThereAnyDeal.Services
 		internal IsThereAnyDealSettings Settings { get; }
 
 		/// <summary>
-		/// Gets the path to the plugin's user data directory.
-		/// </summary>
-		internal static string PluginUserDataPath { get; private set; }
-
-		/// <summary>
 		/// Gets the name of the store client (e.g., "Steam", "Epic", "GOG").
 		/// </summary>
 		internal string ClientName { get; }
@@ -90,13 +85,12 @@ namespace IsThereAnyDeal.Services
 			Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
 			ClientName = clientName ?? throw new ArgumentNullException(nameof(clientName));
 
-			Settings = plugin.PluginSettings.Settings;
-			PluginUserDataPath = plugin.GetPluginUserDataPath();
+			Settings = Plugin.PluginSettings.Settings;
 
-			string dirPath = Path.Combine(PluginUserDataPath, Plugin.PluginName);
+			string dirPath = Path.Combine(IsThereAnyDeal.PluginUserDataPath, IsThereAnyDeal.PluginName);
 			FilePath = Path.Combine(dirPath, $"{ClientName}.json");
 
-			FileDataTools = new FileDataTools(plugin.PluginName, clientName);
+			FileDataTools = new FileDataTools(IsThereAnyDeal.PluginName, clientName);
 		}
 
 		#endregion
@@ -135,7 +129,7 @@ namespace IsThereAnyDeal.Services
 			}
 			catch (Exception ex)
 			{
-				Common.LogError(ex, false, $"Error loading {ClientName} wishlists", true, Plugin.PluginName);
+				Common.LogError(ex, false, $"Error loading {ClientName} wishlists", true, IsThereAnyDeal.PluginName);
 				return new List<Wishlist>();
 			}
 		}
