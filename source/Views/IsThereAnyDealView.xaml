@@ -460,10 +460,10 @@
                                                             <Style TargetType="StackPanel">
                                                                 <Setter Property="Visibility" Value="Visible" />
                                                                 <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding ReleaseDate}" Value="{x:Null}">
-                                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
+																	<DataTrigger Binding="{Binding IsReleaseDateNull}" Value="True">
+																		<Setter Property="Visibility" Value="Collapsed" />
+																	</DataTrigger>
+																</Style.Triggers>
                                                             </Style>
                                                         </StackPanel.Style>
                                                         

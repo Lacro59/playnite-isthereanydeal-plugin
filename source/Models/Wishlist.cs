@@ -28,8 +28,10 @@ namespace IsThereAnyDeal.Models
         public Guid SourceId { get; set; }
 
         public DateTime? ReleaseDate { get; set; }
+        [DontSerialize]
+		public bool IsReleaseDateNull => ReleaseDate == null || ReleaseDate == default || ((DateTime)ReleaseDate).Year == 1;
 
-        public DateTime? Added { get; set; }
+		public DateTime? Added { get; set; }
 
         public string Capsule { get; set; }
 
