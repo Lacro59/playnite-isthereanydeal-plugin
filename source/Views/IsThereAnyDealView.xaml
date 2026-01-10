@@ -18,6 +18,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
         <converters1:ValueOperationConverter x:Key="ValueOperationConverter"/>
+        <converters1:LocalDateConverter x:Key="LocalDateConverter"/>
         
         <!-- Color resources for dark cards and buttons -->
         <SolidColorBrush x:Key="CardBackgroundBrush" Color="#2E2F33" po:Freeze="True"/>
@@ -454,6 +455,22 @@
                                                     </Grid.RowDefinitions>
                                                     
                                                     <Label Grid.Column="0" Grid.Row="0" Content="{Binding Name}" FontWeight="Bold" FontSize="20"/>
+                                                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                                                        <StackPanel.Style>
+                                                            <Style TargetType="StackPanel">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ReleaseDate}" Value="{x:Null}">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </StackPanel.Style>
+                                                        
+                                                        <Label Content="{DynamicResource LOCGameReleaseDateTitle}" Margin="0,0,10,0" />
+                                                        <Label Content="{Binding ReleaseDate, Converter={StaticResource LocalDateConverter}}" />
+                                                    </StackPanel>
+                                                    
                                                     <Grid Grid.Column="0" Grid.Row="2" Grid.RowSpan="3">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="30"/>
@@ -837,6 +854,7 @@
                 <ComboBoxItem Content="{DynamicResource LOCITADOrderBestPrice}" Tag="2"/>
                 <ComboBoxItem Content="{DynamicResource LOCITADOrderStorePriceCut}" Tag="3"/>
                 <ComboBoxItem Content="{DynamicResource LOCITADOrderStorePrice}" Tag="4"/>
+                <ComboBoxItem Content="{DynamicResource LOCGameReleaseDateTitle}" Tag="5"/>
             </ComboBox>
             <ComboBox Grid.Column="5" VerticalAlignment="Center" Name="PART_CbOrder" SelectionChanged="PART_CbOrder_SelectionChanged">
                 <ComboBoxItem Content="{DynamicResource LOCMenuSortAscending}" Tag="0" IsSelected="True"/>

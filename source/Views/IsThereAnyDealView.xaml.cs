@@ -618,6 +618,10 @@ namespace IsThereAnyDeal.Views
                                 lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadPriceForWishlistStore.PriceNew).ToObservable();
                                 break;
 
+                            case "5":
+                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ReleaseDate).ToObservable();
+                                break;
+
                             default:
                                 break;
                         }
@@ -644,6 +648,10 @@ namespace IsThereAnyDeal.Views
 
                             case "4":
                                 lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadPriceForWishlistStore.PriceNew).ToObservable();
+                                break;
+
+                            case "5":
+                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ReleaseDate).ToObservable();
                                 break;
 
                             default:
