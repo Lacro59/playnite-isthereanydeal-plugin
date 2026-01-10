@@ -49,7 +49,7 @@ namespace IsThereAnyDeal.Services
                     wishlists.Add(new Wishlist
                     {
                         StoreId = x.Id,
-                        StoreName = "GOG",
+                        StoreName = ClientName,
                         ShopColor = GetShopColor(),
                         StoreUrl = x.Link,
                         Name = x.Name,

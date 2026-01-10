@@ -103,7 +103,7 @@
     <Compile Include="Clients\EpicWishlist.cs" />
     <Compile Include="Clients\GenericWishlist.cs" />
     <Compile Include="Clients\EaWishlist.cs" />
-    <Compile Include="Clients\UplayWishlist.cs" />
+    <Compile Include="Clients\UbisoftWishlist.cs" />
     <Compile Include="Clients\XboxWishlist.cs" />
     <Compile Include="Clients\GogWishlist.cs" />
     <Compile Include="Clients\HumbleBundleWishlist.cs" />

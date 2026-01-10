@@ -150,7 +150,7 @@ namespace IsThereAnyDeal.Views
             }
             if (Settings.EnableEpic)
             {
-                FilterStoreItems.Add(new ListStore { StoreName = "Epic", StoreNameDisplay = (TransformIcon.Get("Epic") + " Epic").Trim(), IsCheck = false });
+                FilterStoreItems.Add(new ListStore { StoreName = "Epic Games Store", StoreNameDisplay = (TransformIcon.Get("Epic Games Store") + " Epic Games Store").Trim(), IsCheck = false });
             }
             if (Settings.EnableXbox)
             {
@@ -164,7 +164,7 @@ namespace IsThereAnyDeal.Views
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "EA app", StoreNameDisplay = (TransformIcon.Get("EA app") + " EA app").Trim(), IsCheck = false });
             }
-            FilterStoreItems.Sort((x, y) => string.Compare(x.StoreName, y.StoreName));
+            FilterStoreItems.Sort((x, y) => string.Compare(x.StoreName, y.StoreName, true));
             ItadDataContext.FilterStoreItems = FilterStoreItems;
         }
 

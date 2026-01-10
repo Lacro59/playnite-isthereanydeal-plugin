@@ -16,7 +16,7 @@ namespace IsThereAnyDeal.Services
         private static EpicApi EpicApi => IsThereAnyDeal.EpicApi;
 
 
-        public EpicWishlist(IsThereAnyDeal plugin) : base(plugin, "Epic")
+        public EpicWishlist(IsThereAnyDeal plugin) : base(plugin, "Epic Games Store")
         {
             ExternalPlugin = PlayniteTools.ExternalPlugin.EpicLibrary;
         }
@@ -50,7 +50,7 @@ namespace IsThereAnyDeal.Services
                     wishlists.Add(new Wishlist
                     {
                         StoreId = x.Id,
-                        StoreName = "Epic",
+                        StoreName = ClientName,
                         ShopColor = GetShopColor(),
                         StoreUrl = x.Link,
                         Name = x.Name,

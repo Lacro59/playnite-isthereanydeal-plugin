@@ -280,7 +280,7 @@ namespace IsThereAnyDeal.Services
                 // --- Epic Games Store ---
                 new StoreProviderConfig
                 {
-                    StoreName = "Epic Game Store",
+                    StoreName = "Epic Games Store",
                     IsEnabled = () => plugin.PluginSettings.Settings.EnableEpic,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.EpicLibrary, ExternalPlugin.LegendaryLibrary },
                     NotificationId = "IsThereAnyDeal-EpicGameStore-disabled",
@@ -318,7 +318,7 @@ namespace IsThereAnyDeal.Services
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.UplayLibrary },
                     NotificationId = "IsThereAnyDeal-Ubisoft-disabled",
                     LocErrorKey = "LOCItadNotificationErrorUbisoft",
-                    ProviderFactory = () => new UplayWishlist(plugin)
+                    ProviderFactory = () => new UbisoftWishlist(plugin)
                 },
 
                 // --- EA (Origin) ---

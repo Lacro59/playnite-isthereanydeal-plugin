@@ -13,9 +13,9 @@ using System.Text;
 
 namespace IsThereAnyDeal.Clients
 {
-    public class UplayWishlist : GenericWishlist
+    public class UbisoftWishlist : GenericWishlist
     {
-        public UplayWishlist(IsThereAnyDeal plugin) : base(plugin, "UPlay")
+        public UbisoftWishlist(IsThereAnyDeal plugin) : base(plugin, "Ubisoft Connect")
         {
             ExternalPlugin = PlayniteTools.ExternalPlugin.UplayLibrary;
         }
@@ -64,7 +64,7 @@ namespace IsThereAnyDeal.Clients
                     wishlists.Add(new Wishlist
                     {
                         StoreId = storeId.Trim(),
-                        StoreName = "Ubisoft Connect",
+                        StoreName = ClientName,
                         ShopColor = GetShopColor(),
                         StoreUrl = @"https://store.ubi.com/fr/game?pid=" + storeId.Trim(),
                         Name = name.Trim(),
