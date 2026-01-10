@@ -332,6 +332,7 @@
                             Click="Hyperlink_Click" HorizontalAlignment="Right"
                             Grid.ColumnSpan="10" Grid.Row="4" VerticalAlignment="Center"
                             Tag="https://github.com/Lacro59/playnite-isthereanydeal-plugin/wiki/Xbox-wishlist" />
+                    
                     <Grid Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="5" Margin="50,0,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />
@@ -347,18 +348,18 @@
                         </ScrollViewer>
                     </Grid>
 
-                    <CheckBox Name="chk_Origin" Grid.Column="0" Grid.Row="6" IsChecked="{Binding Settings.EnableOrigin}" VerticalAlignment="Center">
+                    <!--CheckBox Name="chk_Origin" Grid.Column="0" Grid.Row="6" IsChecked="{Binding Settings.EnableOrigin}" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableOrigin}" />
-                    </CheckBox>
+                    </CheckBox-->
 
-                    <CheckBox Name="chk_Ubisoft" Grid.Column="0" Grid.Row="7" IsChecked="{Binding Settings.EnableUbisoft}" VerticalAlignment="Center">
+                    <CheckBox Name="chk_Ubisoft" Grid.Column="0" Grid.Row="6" IsChecked="{Binding Settings.EnableUbisoft}" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableUbisoft}" />
                     </CheckBox>
                     <Button Content="&#xefca;" FontFamily="{DynamicResource FontIcoFont}"
                             Click="Hyperlink_Click" HorizontalAlignment="Right"
-                            Grid.ColumnSpan="10" Grid.Row="7" VerticalAlignment="Center"
+                            Grid.ColumnSpan="10" Grid.Row="6" VerticalAlignment="Center"
                             Tag="https://github.com/Lacro59/playnite-isthereanydeal-plugin/wiki/Ubisoft-wishlist" />
-                    <Grid Grid.Column="0" Grid.Row="8" Grid.ColumnSpan="5" Margin="50,0,0,0">
+                    <Grid Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="5" Margin="50,0,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="10" />

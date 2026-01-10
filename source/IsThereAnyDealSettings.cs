@@ -34,7 +34,8 @@ namespace IsThereAnyDeal
         public bool EnableEpic { get; set; } = false;
         public bool EnableXbox { get; set; } = true;
         public bool EnableUbisoft { get; set; } = true;
-        public bool EnableOrigin { get; set; } = true;
+        [DontSerialize]
+        public bool EnableOrigin => false;
 
         public bool EnableNotificationGiveaways { get; set; } = false;
         public bool EnableNotification { get; set; } = false;
