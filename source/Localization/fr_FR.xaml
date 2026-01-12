@@ -10,7 +10,7 @@
     <sys:String x:Key="LOCItadExclusionList">Liste d'exclusion</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">Liste de souhaits</sys:String>
-    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    <sys:String x:Key="LOCItadPrice">Prix</sys:String>
     
     <sys:String x:Key="LOCItadEnableSteam">Activer la liste de souhaits Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Activer la liste de souhaits GOG</sys:String>
@@ -45,7 +45,7 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">Actualiser les prix</sys:String>
 
-    <sys:String x:Key="LOCITADOn">On:</sys:String>
+    <sys:String x:Key="LOCITADOn">Sur :</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Meilleur prix</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Prix magasin</sys:String>
     
@@ -59,9 +59,9 @@
     <sys:String x:Key="LOCITADPercentage">Pourcentage de remise minimum</sys:String>
     <sys:String x:Key="LOCITADPrice">Prix inférieur</sys:String>
 
-    <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
-    <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
-    <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
+    <sys:String x:Key="LOCItadAllTimeLow">Plancher historique</sys:String>
+    <sys:String x:Key="LOCItadYearLow">Plancher sur 1 an</sys:String>
+    <sys:String x:Key="LOCItadMonthLow">Plancher sur 3 mois</sys:String>
     
     <sys:String x:Key="LOCItadCurrentBest">Meilleur actuel</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Liste de souhaits du magasin actuel</sys:String>
@@ -85,8 +85,8 @@
     <sys:String x:Key="LOCItadImportSuccessful">Importation réussie</sys:String>
     <sys:String x:Key="LOCItadImportError">Impossible d'importer le fichier de la liste de souhaits</sys:String>
 
-    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
-    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+    <sys:String x:Key="LOCItadInWaitlist">Dans la liste d'attente</sys:String>
+    <sys:String x:Key="LOCItadInCollection">Dans la collection</sys:String>
 
     <!-- IsThereAnyDeal -->
 
@@ -108,8 +108,8 @@ Essayez de vous identifier à votre compte.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">La liste de souhaits Steam est privée. Vous devez utiliser un bouton d'authentification dans le plugin de la bibliothèque Steam</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox est activé dans le plugin IsThereAnyDeal mais l'extension de la bibliothèque a été désactivée dans Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Il n'y a pas de lien de liste de souhaits Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisoft est activé dans l'extension IsThereAnyDeal mais son intégration n'est pas activée dans Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Il n'y a aucun lien vers la liste de souhaits Ubisoft.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA est activée dans l'extension IsThereAnyDeal mais son intégration n'est pas activée dans Playnite.</sys:String>
 
 </ResourceDictionary>
