@@ -6,7 +6,6 @@ using IsThereAnyDeal.Clients;
 using IsThereAnyDeal.Models;
 using IsThereAnyDeal.Services;
 using Playnite.SDK;
-using Playnite.SDK.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -589,89 +588,6 @@ namespace IsThereAnyDeal.Views
             }
         }
 
-		/*
-        private void PART_CbOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                if (lbWishlist?.ItemsSource != null)
-                {
-                    if (((ComboBoxItem)PART_CbOrder.SelectedItem).Tag.ToString() == "0")
-                    {
-                        switch (((ComboBoxItem)PART_CbOrderType.SelectedItem).Tag.ToString())
-                        {
-                            case "0":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.Name).ToObservable();
-                                break;
-
-                            case "1":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadBestPrice.PriceCut).ToObservable();
-                                break;
-
-                            case "2":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadBestPrice.PriceNew).ToObservable();
-                                break;
-
-                            case "3":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadPriceForWishlistStore.PriceCut).ToObservable();
-                                break;
-
-                            case "4":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadPriceForWishlistStore.PriceNew).ToObservable();
-                                break;
-
-                            case "5":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ReleaseDate).ToObservable();
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        switch (((ComboBoxItem)PART_CbOrderType.SelectedItem).Tag.ToString())
-                        {
-                            case "0":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.Name).ToObservable();
-                                break;
-
-                            case "1":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadBestPrice.PriceCut).ToObservable();
-                                break;
-
-                            case "2":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadBestPrice.PriceNew).ToObservable();
-                                break;
-
-                            case "3":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadPriceForWishlistStore.PriceCut).ToObservable();
-                                break;
-
-                            case "4":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadPriceForWishlistStore.PriceNew).ToObservable();
-                                break;
-
-                            case "5":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ReleaseDate).ToObservable();
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
-
-                    CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(lbWishlist.ItemsSource);
-                    view.Filter = UserFilter;
-                    GetListGame();
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, false);
-            }
-        }
-        */
 		private void PART_CbOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			try
