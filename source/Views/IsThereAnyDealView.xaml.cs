@@ -1,24 +1,25 @@
-﻿using IsThereAnyDeal.Services;
+﻿using CommonPluginsControls.Controls;
+using CommonPluginsShared;
+using CommonPluginsShared.Converters;
+using CommonPluginsShared.Extensions;
+using IsThereAnyDeal.Clients;
 using IsThereAnyDeal.Models;
+using IsThereAnyDeal.Services;
 using Playnite.SDK;
 using Playnite.SDK.Data;
-using CommonPluginsShared;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using IsThereAnyDeal.Clients;
-using CommonPluginsShared.Extensions;
 using System.Windows.Controls.Primitives;
-using CommonPluginsShared.Converters;
-using System.Globalization;
-using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Windows.Media;
-using CommonPluginsControls.Controls;
 
 namespace IsThereAnyDeal.Views
 {
@@ -588,6 +589,7 @@ namespace IsThereAnyDeal.Views
             }
         }
 
+		/*
         private void PART_CbOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -669,12 +671,55 @@ namespace IsThereAnyDeal.Views
                 Common.LogError(ex, false);
             }
         }
+        */
+		private void PART_CbOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			try
+			{
+				if (lbWishlist?.ItemsSource == null) return;
 
-        #endregion
+				var view = CollectionViewSource.GetDefaultView(lbWishlist.ItemsSource);
+				view.SortDescriptions.Clear();
 
-        #region Data refresh
+				string orderType = ((ComboBoxItem)PART_CbOrderType.SelectedItem).Tag.ToString();
+				bool isAscending = ((ComboBoxItem)PART_CbOrder.SelectedItem).Tag.ToString() == "0";
 
-        private void ButtonData_Click(object sender, RoutedEventArgs e)
+				ListSortDirection direction = isAscending ? ListSortDirection.Ascending : ListSortDirection.Descending;
+
+				switch (orderType)
+				{
+					case "0":
+						view.SortDescriptions.Add(new SortDescription("Name", direction));
+						break;
+					case "1":
+						view.SortDescriptions.Add(new SortDescription("ItadBestPrice.PriceCut", direction));
+						break;
+					case "2":
+						view.SortDescriptions.Add(new SortDescription("ItadBestPrice.PriceNew", direction));
+						break;
+					case "3":
+						view.SortDescriptions.Add(new SortDescription("ItadPriceForWishlistStore.PriceCut", direction));
+						break;
+					case "4":
+						view.SortDescriptions.Add(new SortDescription("ItadPriceForWishlistStore.PriceNew", direction));
+						break;
+					case "5":
+						view.SortDescriptions.Add(new SortDescription("ReleaseDate", direction));
+						break;
+				}
+
+				view.Filter = UserFilter;
+			}
+			catch (Exception ex)
+			{
+				Common.LogError(ex, false);
+			}
+		}
+		#endregion
+
+		#region Data refresh
+
+		private void ButtonData_Click(object sender, RoutedEventArgs e)
         {
             RefreshData(string.Empty, false);
         }

@@ -402,7 +402,10 @@
                                      ItemContainerStyle="{StaticResource ListBoxItemContainerStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <wpftk:VirtualizingWrapPanel Orientation="Vertical" VirtualizingPanel.CacheLengthUnit="Item" VirtualizingPanel.CacheLength="10,10" VirtualizingPanel.VirtualizationMode="Recycling"/>
+                                        <wpftk:VirtualizingWrapPanel Orientation="Vertical" 
+                                                                     VirtualizingPanel.CacheLengthUnit="Item" 
+                                                                     VirtualizingPanel.CacheLength="10,10" 
+                                                                     VirtualizingPanel.VirtualizationMode="Recycling"/>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
                                 
@@ -415,15 +418,9 @@
                                         </DataTemplate.Resources>
                                         
                                         <Border Style="{StaticResource ItemBorderStyle}">
-                                            <Grid Margin="0,5">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="6"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                
+                                            <DockPanel LastChildFill="True" Margin="0,5">
                                                 <!-- Image -->
-                                                <StackPanel Grid.Column="0" Height="100" Width="200">
+                                                <StackPanel DockPanel.Dock="Left" Height="100" Width="200">
                                                     <Image x:Name="HltbImage" Source="{Binding CapsuleImagePath, IsAsync=True}" Stretch="UniformToFill" Height="100" Width="200" RenderOptions.BitmapScalingMode="Linear"/>
                                                     <TextBlock Text="{Binding StoreNameIcon}" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="24" FontFamily="{DynamicResource CommonFont}" Margin="0,-40,5,5">
                                                         <TextBlock.Effect>
@@ -433,52 +430,126 @@
                                                 </StackPanel>
                                                 
                                                 <!-- Infos & actions -->
-                                                <Grid Grid.Column="2" Name="PART_Infos">
-                                                    <Grid.MinWidth>
+                                                <DockPanel LastChildFill="True" Margin="10,0,0,0" Name="PART_Infos">
+                                                    <DockPanel.MinWidth>
                                                         <MultiBinding Converter="{StaticResource ValueOperationConverter}" ConverterParameter="-">
                                                             <Binding ElementName="DataLoaded" Path="ActualWidth"/>
                                                             <Binding Source="270" />
                                                         </MultiBinding>
-                                                    </Grid.MinWidth>
+                                                    </DockPanel.MinWidth>
                                                     
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="6"/>
-                                                        <ColumnDefinition Width="100"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="*"/>
-                                                        <RowDefinition Height="6"/>
-                                                        <RowDefinition Height="*"/>
-                                                        <RowDefinition Height="6"/>
-                                                        <RowDefinition Height="*"/>
-                                                    </Grid.RowDefinitions>
-                                                    
-                                                    <Label Grid.Column="0" Grid.Row="0" Content="{Binding Name}" FontWeight="Bold" FontSize="20"/>
-                                                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                                                        <StackPanel.Style>
-                                                            <Style TargetType="StackPanel">
-                                                                <Setter Property="Visibility" Value="Visible" />
-                                                                <Style.Triggers>
-																	<DataTrigger Binding="{Binding IsReleaseDateNull}" Value="True">
-																		<Setter Property="Visibility" Value="Collapsed" />
-																	</DataTrigger>
-																</Style.Triggers>
-                                                            </Style>
-                                                        </StackPanel.Style>
-                                                        
-                                                        <Label Content="{DynamicResource LOCGameReleaseDateTitle}" Margin="0,0,10,0" />
-                                                        <Label Content="{Binding ReleaseDate, Converter={StaticResource LocalDateConverter}}" />
+                                                    <!-- actions buttons -->
+                                                    <StackPanel DockPanel.Dock="Right">
+                                                        <Button Margin="0,0,0,10" Tag="{Binding UrlGame}" Content="{DynamicResource LOCWebsiteLabel}" Click="ButtonWeb_Click"/>
+                                                        <Button Margin="0,0,0,10" Tag="{Binding ItadBestPrice.UrlBuy}" Content="{DynamicResource LOCItadBuy}" Click="ButtonWeb_Click">
+                                                            <Button.Style>
+                                                                <Style TargetType="Button">
+                                                                    <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}"/>
+                                                                    <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+                                                                    <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}"/>
+                                                                    <Setter Property="SnapsToDevicePixels" Value="True"/>
+                                                                    <Setter Property="Padding" Value="10,5,10,5"/>
+                                                                    <Setter Property="Template">
+                                                                        <Setter.Value>
+                                                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                                                <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="{DynamicResource ControlCornerRadius}" Style="{DynamicResource HighlightBorder}">
+                                                                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"/>
+                                                                                </Border>
+                                                                                <ControlTemplate.Triggers>
+                                                                                    <Trigger Property="IsFocused" Value="True">
+                                                                                        <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" TargetName="Border"/>
+                                                                                    </Trigger>
+                                                                                </ControlTemplate.Triggers>
+                                                                            </ControlTemplate>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                    <Style.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                                                                        </Trigger>
+                                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="{x:Null}">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding InLibrary}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Button.Style>
+                                                        </Button>
+                                                        <Button Tag="{Binding StoreUrl}" Content="{DynamicResource LOCItadStore}" Click="ButtonWeb_Click" IsEnabled="False" Name="btStore">
+                                                            <Button.Style>
+                                                                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                                                    <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}"/>
+                                                                    <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+                                                                    <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}"/>
+                                                                    <Setter Property="SnapsToDevicePixels" Value="True"/>
+                                                                    <Setter Property="Padding" Value="10,5,10,5"/>
+                                                                    <Setter Property="Template">
+                                                                        <Setter.Value>
+                                                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                                                <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="{DynamicResource ControlCornerRadius}" Style="{DynamicResource HighlightBorder}">
+                                                                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"/>
+                                                                                </Border>
+                                                                                <ControlTemplate.Triggers>
+                                                                                    <Trigger Property="IsFocused" Value="True">
+                                                                                        <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" TargetName="Border"/>
+                                                                                    </Trigger>
+                                                                                </ControlTemplate.Triggers>
+                                                                            </ControlTemplate>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                    <Style.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                                                                        </Trigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Button.Style>
+                                                        </Button>
                                                     </StackPanel>
-                                                    
-                                                    <Grid Grid.Column="0" Grid.Row="2" Grid.RowSpan="3">
+
+                                                    <!-- Name & Release date -->
+                                                    <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+                                                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal"
+                                                                    Margin="0,0,10,0"
+                                                                    HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                            <StackPanel.Style>
+                                                                <Style TargetType="StackPanel">
+                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsReleaseDateNull}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </StackPanel.Style>
+
+                                                            <Label Content="{DynamicResource LOCGameReleaseDateTitle}" Margin="0,0,10,0" />
+                                                            <Label Content="{Binding ReleaseDate, Converter={StaticResource LocalDateConverter}}" />
+                                                        </StackPanel>
+
+                                                        <Label Content="{Binding Name, FallbackValue='Name'}" FontWeight="Bold" FontSize="20" />
+                                                    </DockPanel>
+
+                                                    <!-- Price & Store -->
+                                                    <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="30"/>
                                                             <ColumnDefinition Width="1.5*"/>
                                                             <ColumnDefinition Width="6"/>
                                                             <ColumnDefinition Width="2*"/>
                                                         </Grid.ColumnDefinitions>
-                                                        
+
                                                         <StackPanel Grid.Column="1" Grid.IsSharedSizeScope="True">
                                                             <StackPanel>
                                                                 <TextBlock Text="{DynamicResource LOCItadNotActive}" Style="{StaticResource BaseTextBlockStyle}" Visibility="{Binding IsActive, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
@@ -510,9 +581,9 @@
                                                                     </TextBlock.Style>
                                                                 </TextBlock>
                                                             </StackPanel>
-                                                            
+
                                                             <!-- Best price -->
-                                                            <Grid>
+                                                            <Grid Margin="0,0,0,10">
                                                                 <Grid.Style>
                                                                     <Style TargetType="Grid">
                                                                         <Setter Property="Visibility" Value="Visible"/>
@@ -532,7 +603,7 @@
                                                                         </Style.Triggers>
                                                                     </Style>
                                                                 </Grid.Style>
-                                                                
+
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
                                                                     <ColumnDefinition Width="10"/>
@@ -542,7 +613,7 @@
                                                                     <ColumnDefinition Width="10"/>
                                                                     <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
                                                                 </Grid.ColumnDefinitions>
-                                                                
+
                                                                 <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadCurrentBest}"/>
                                                                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                                                                     <TextBlock Text="{Binding ItadBestPrice.PriceNew}" Margin="0,0,5,0"/>
@@ -554,7 +625,7 @@
                                                                 </StackPanel>
                                                                 <TextBlock Grid.Column="6" Text="{Binding ItadBestPrice.ShopName}" Foreground="{Binding ItadBestPrice.ShopColor}"/>
                                                             </Grid>
-                                                            
+
                                                             <!-- Best all time low -->
                                                             <Grid>
                                                                 <Grid.Style>
@@ -576,7 +647,7 @@
                                                                         </Style.Triggers>
                                                                     </Style>
                                                                 </Grid.Style>
-                                                                
+
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
                                                                     <ColumnDefinition Width="10"/>
@@ -586,7 +657,7 @@
                                                                     <ColumnDefinition Width="10"/>
                                                                     <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
                                                                 </Grid.ColumnDefinitions>
-                                                                
+
                                                                 <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadAllTimeLow}"/>
                                                                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                                                                     <TextBlock Text="{Binding ItadAllTimeLow.PriceNew}" Margin="0,0,5,0"/>
@@ -598,7 +669,7 @@
                                                                 </StackPanel-->
                                                                 <TextBlock Grid.Column="6" Text="{Binding ItadAllTimeLow.ShopName}" Foreground="{Binding ItadAllTimeLow.ShopColor}"/>
                                                             </Grid>
-                                                            
+
                                                             <!-- Best Y1 -->
                                                             <Grid>
                                                                 <Grid.Style>
@@ -620,7 +691,7 @@
                                                                         </Style.Triggers>
                                                                     </Style>
                                                                 </Grid.Style>
-                                                                
+
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
                                                                     <ColumnDefinition Width="10"/>
@@ -630,7 +701,7 @@
                                                                     <ColumnDefinition Width="10"/>
                                                                     <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
                                                                 </Grid.ColumnDefinitions>
-                                                                
+
                                                                 <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadYearLow}"/>
                                                                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                                                                     <TextBlock Text="{Binding ItadY1.PriceNew}" Margin="0,0,5,0"/>
@@ -642,7 +713,7 @@
                                                                 </StackPanel-->
                                                                 <TextBlock Grid.Column="6" Text="{Binding ItadY1.ShopName}" Foreground="{Binding ItadY1.ShopColor}"/>
                                                             </Grid>
-                                                            
+
                                                             <!-- Best M3 -->
                                                             <Grid>
                                                                 <Grid.Style>
@@ -664,7 +735,7 @@
                                                                         </Style.Triggers>
                                                                     </Style>
                                                                 </Grid.Style>
-                                                                
+
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
                                                                     <ColumnDefinition Width="10"/>
@@ -674,7 +745,7 @@
                                                                     <ColumnDefinition Width="10"/>
                                                                     <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
                                                                 </Grid.ColumnDefinitions>
-                                                                
+
                                                                 <TextBlock Grid.Column="0" Text="{DynamicResource LOCItadMonthLow}"/>
                                                                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                                                                     <TextBlock Text="{Binding ItadM3.PriceNew}" Margin="0,0,5,0"/>
@@ -687,9 +758,13 @@
                                                                 <TextBlock Grid.Column="6" Text="{Binding ItadM3.ShopName}" Foreground="{Binding ItadM3.ShopColor}"/>
                                                             </Grid>
                                                         </StackPanel>
-                                                        
+
                                                         <!-- Store price -->
-                                                        <ListBox Grid.Column="3" ItemsSource="{Binding ListItadPriceForWishlistStore}" Name="lbStorePrice" SelectionChanged="LbStorePrice_SelectionChanged" BorderThickness="0" Padding="0" Margin="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                        <ListBox Grid.Column="3" ItemsSource="{Binding ListItadPriceForWishlistStore}" 
+                                                                 Name="lbStorePrice" SelectionChanged="LbStorePrice_SelectionChanged" 
+                                                                 BorderThickness="0" Padding="0" Margin="0" 
+                                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                                                 ScrollViewer.VerticalScrollBarVisibility="Auto">
                                                             <ListBox.ItemTemplate>
                                                                 <DataTemplate>
                                                                     <DockPanel Margin="0,2" LastChildFill="True">
@@ -726,86 +801,8 @@
                                                             </ListBox.ItemTemplate>
                                                         </ListBox>
                                                     </Grid>
-                                                    
-                                                    <!-- actions buttons -->
-                                                    <Button Height="30" Grid.Column="2" Grid.Row="0" Tag="{Binding UrlGame}" Content="{DynamicResource LOCWebsiteLabel}" Click="ButtonWeb_Click"/>
-                                                    <Button Height="30" Grid.Column="2" Grid.Row="2" Tag="{Binding ItadBestPrice.UrlBuy}" Content="{DynamicResource LOCItadBuy}" Click="ButtonWeb_Click">
-                                                        <Button.Style>
-                                                            <Style TargetType="Button">
-                                                                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
-                                                                <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}"/>
-                                                                <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
-                                                                <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}"/>
-                                                                <Setter Property="SnapsToDevicePixels" Value="True"/>
-                                                                <Setter Property="Padding" Value="10,5,10,5"/>
-                                                                <Setter Property="Template">
-                                                                    <Setter.Value>
-                                                                        <ControlTemplate TargetType="{x:Type Button}">
-                                                                            <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="{DynamicResource ControlCornerRadius}" Style="{DynamicResource HighlightBorder}">
-                                                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"/>
-                                                                            </Border>
-                                                                            <ControlTemplate.Triggers>
-                                                                                <Trigger Property="IsFocused" Value="True">
-                                                                                    <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" TargetName="Border"/>
-                                                                                </Trigger>
-                                                                            </ControlTemplate.Triggers>
-                                                                        </ControlTemplate>
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                                <Setter Property="Visibility" Value="Visible"/>
-                                                                <Style.Triggers>
-                                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-                                                                    </Trigger>
-                                                                    <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="{x:Null}">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding InLibrary}" Value="True">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding IsActive}" Value="False">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Button.Style>
-                                                    </Button>
-                                                    <Button Height="30" Grid.Column="2" Grid.Row="4" Tag="{Binding StoreUrl}" Content="{DynamicResource LOCItadStore}" Click="ButtonWeb_Click" IsEnabled="False" Name="btStore">
-                                                        <Button.Style>
-                                                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                                                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
-                                                                <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}"/>
-                                                                <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
-                                                                <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}"/>
-                                                                <Setter Property="SnapsToDevicePixels" Value="True"/>
-                                                                <Setter Property="Padding" Value="10,5,10,5"/>
-                                                                <Setter Property="Template">
-                                                                    <Setter.Value>
-                                                                        <ControlTemplate TargetType="{x:Type Button}">
-                                                                            <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="{DynamicResource ControlCornerRadius}" Style="{DynamicResource HighlightBorder}">
-                                                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"/>
-                                                                            </Border>
-                                                                            <ControlTemplate.Triggers>
-                                                                                <Trigger Property="IsFocused" Value="True">
-                                                                                    <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" TargetName="Border"/>
-                                                                                </Trigger>
-                                                                            </ControlTemplate.Triggers>
-                                                                        </ControlTemplate>
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                                <Style.Triggers>
-                                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-                                                                    </Trigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Button.Style>
-                                                    </Button>
-                                                </Grid>
-                                            </Grid>
+                                                </DockPanel>
+                                            </DockPanel>
                                         </Border>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
