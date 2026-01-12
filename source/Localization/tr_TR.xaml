@@ -10,6 +10,8 @@
     <sys:String x:Key="LOCItadExclusionList">Dışlama listesi</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">İstek listesi</sys:String>
+    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    
     <sys:String x:Key="LOCItadEnableSteam">Steam istek listesini etkinleştir</sys:String>
     <sys:String x:Key="LOCItadEnableGog">GOG istek listesini etkinleştir</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Epic Games Mağazası istek listesini etkinleştir</sys:String>
@@ -43,6 +45,7 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">Fiyat yenile</sys:String>
 
+    <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">En iyi fiyat</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Mağaza fiyatı</sys:String>
     
@@ -56,6 +59,10 @@
     <sys:String x:Key="LOCITADPercentage">En az indirim yüzdesi</sys:String>
     <sys:String x:Key="LOCITADPrice">Düşük fiyat</sys:String>
 
+    <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
+    <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
+    <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
+    
     <sys:String x:Key="LOCItadCurrentBest">Şu anki en iyi</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Şu anki mağaza istek listesi</sys:String>
     <sys:String x:Key="LOCItadBuy">En iyisini al</sys:String>
@@ -78,6 +85,9 @@
     <sys:String x:Key="LOCItadImportSuccessful">İçe aktarma başarılı</sys:String>
     <sys:String x:Key="LOCItadImportError">İstek listesi dosyasını içe aktarmak imkansız</sys:String>
 
+    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
+    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">IsThereAnyDeal verisini görüntüle</sys:String>
@@ -98,7 +108,7 @@ Hesabınıza giriş yapmayı deneyin.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam istek listesi gizli. Steam Kütüphanesi eklentisinde kimlik doğrulama düğmesini kullanmalısınız</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">IsThereAnyDeal eklentisinde Xbox etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Xbox istek listesi bağlantısı yok.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">IsThereAnyDeal eklentisinde Ubisoft etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Ubisoft istek listesi bağlantısı yok.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">IsThereAnyDeal eklentisinde EA uygulaması etkinleştirilmiş ancak Playnite'da kütüphane eklentisi devre dışı bırakılmış.</sys:String>
 
