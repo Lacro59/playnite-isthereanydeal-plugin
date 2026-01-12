@@ -109,6 +109,6 @@
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">No hi ha cap enllaç de llista de desitjos de Xbox.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">No hi ha cap enllaç de llista de desitjos d'Ubisoft.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">El complement de l'aplicació d'EA està disponible a IsThereAnyDeal, però l'extensió de biblioteca està deshabilitada a Playnite.</sys:String>
 
 </ResourceDictionary>

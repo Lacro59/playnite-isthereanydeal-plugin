@@ -9,29 +9,17 @@ using System.Text;
 using IsThereAnyDeal.Models.Api;
 using System.Collections.ObjectModel;
 using CommonPluginsStores.Models;
-using CommonPluginsStores.Origin;
+using CommonPluginsStores.Ea;
 
 namespace IsThereAnyDeal.Clients
 {
-    public class OriginWishlist : GenericWishlist
+    public class EaWishlist : GenericWishlist
     {
-        protected static OriginApi _originApi;
-        internal static OriginApi OriginApi
-        {
-            get
-            {
-                if (_originApi == null)
-                {
-                    _originApi = new OriginApi("IsTeherAnyDeals");
-                }
-                return _originApi;
-            }
-
-            set => _originApi = value;
-        }
+		private readonly Lazy<EaApi> _lazyApi = new Lazy<EaApi>(() => new EaApi("IsThereAnyDeal"));
+		internal EaApi EaApi => _lazyApi.Value;
 
 
-        public OriginWishlist(IsThereAnyDeal plugin) : base(plugin, "Origin")
+		public EaWishlist(IsThereAnyDeal plugin) : base(plugin, "EA")
         {
             ExternalPlugin = PlayniteTools.ExternalPlugin.OriginLibrary;
         }
@@ -40,7 +28,7 @@ namespace IsThereAnyDeal.Clients
         {
             Logger.Info($"Load data from web for {ClientName}");
 
-            if (!OriginApi.IsUserLoggedIn)
+            if (!EaApi.IsUserLoggedIn)
             {
                 Logger.Warn($"{ClientName}: Not authenticated");
                 API.Instance.Notifications.Add(new NotificationMessage(
@@ -54,15 +42,14 @@ namespace IsThereAnyDeal.Clients
                 return cachedData;
             }
 
-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             List<Wishlist> wishlists = new List<Wishlist>();
-            ObservableCollection<AccountWishlist> accountWishlist = OriginApi.GetWishlist(OriginApi.CurrentAccountInfos);
+            ObservableCollection<AccountWishlist> accountWishlist = EaApi.GetWishlist(EaApi.CurrentAccountInfos);
 
             accountWishlist.ForEach(x =>
             {
                 try
                 {
-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
                     wishlists.Add(new Wishlist
                     {
                         StoreId = x.Id,
@@ -91,7 +78,7 @@ namespace IsThereAnyDeal.Clients
 
         public override bool RemoveWishlist(string storeId)
         {
-            return OriginApi.RemoveWishlist(storeId);
+            return EaApi.RemoveWishlist(storeId);
         }
     }
 }

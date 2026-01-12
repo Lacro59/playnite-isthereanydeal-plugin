@@ -1,0 +1,310 @@
+[
+  {
+    "Name": "Adventure Shop",
+    "Color": "#3e6517"
+  },
+  {
+    "Name": "AllYouPlay",
+    "Color": "#e9267b"
+  },
+  {
+    "Name": "Amazon",
+    "Color": "#fcc588"
+  },
+  {
+    "Name": "Blizzard",
+    "Color": "#00cbe6"
+  },
+  {
+    "Name": "Bohemia Interactive Store",
+    "Color": "#f74040"
+  },
+  {
+    "Name": "Steam",
+    "Color": "#9ffc3a"
+  },
+  {
+    "Name": "GamersGate",
+    "Color": "#fc5d5d"
+  },
+  {
+    "Name": "Fanatical",
+    "Color": "#ff9800"
+  },
+  {
+    "Name": "Impulse",
+    "Color": "#c63f62"
+  },
+  {
+    "Name": "GamesPlanet UK",
+    "Color": "#f6a740"
+  },
+  {
+    "Name": "GamesPlanet DE",
+    "Color": "#f6a740"
+  },
+  {
+    "Name": "GamesPlanet FR",
+    "Color": "#f6a740"
+  },
+  {
+    "Name": "GamesPlanet US",
+    "Color": "#f6a740"
+  },
+  {
+    "Name": "GameTap",
+    "Color": "#f6a740"
+  },
+  {
+    "Name": "GreenManGaming",
+    "Color": "#21a930"
+  },
+  {
+    "Name": "GetGames",
+    "Color": "#fa1f1f"
+  },
+  {
+    "Name": "Desura",
+    "Color": "#03bee0"
+  },
+  {
+    "Name": "GOG",
+    "Color": "#f16421"
+  },
+  {
+    "Name": "DotEmu",
+    "Color": "#f6931c"
+  },
+  {
+    "Name": "Nuuvem",
+    "Color": "#b5e0f4"
+  },
+  {
+    "Name": "IndieGala Store",
+    "Color": "#ffb4e0"
+  },
+  {
+    "Name": "IndieGala",
+    "Color": "#ffb4e0"
+  },
+  {
+    "Name": "DLGamer",
+    "Color": "#f5fe94"
+  },
+  {
+    "Name": "GameFly",
+    "Color": "#f0a690"
+  },
+  {
+    "Name": "Direct2Drive",
+    "Color": "#1df884"
+  },
+  {
+    "Name": "EA Store",
+    "Color": "#ddff1c"
+  },
+  {
+    "Name": "Ubisoft Store",
+    "Color": "#01657a"
+  },
+  {
+    "Name": "Uplay",
+    "Color": "#01657a"
+  },
+  {
+    "Name": "ShinyLoot",
+    "Color": "#bfa236"
+  },
+  {
+    "Name": "Humble Store",
+    "Color": "#ff3e1b"
+  },
+  {
+    "Name": "Humble Widgets",
+    "Color": "#f8300c"
+  },
+  {
+    "Name": "IndieGameStand",
+    "Color": "#73c175"
+  },
+  {
+    "Name": "GamesRocket",
+    "Color": "#e1bc4e"
+  },
+  {
+    "Name": "Squenix",
+    "Color": "#b41919"
+  },
+  {
+    "Name": "Gameolith",
+    "Color": "#80e5ff"
+  },
+  {
+    "Name": "Fireflower",
+    "Color": "#29698c"
+  },
+  {
+    "Name": "Newegg",
+    "Color": "#f79328"
+  },
+  {
+    "Name": "Games Republic",
+    "Color": "#ef0e38"
+  },
+  {
+    "Name": "Coinplay",
+    "Color": "#1b4284"
+  },
+  {
+    "Name": "Funstock",
+    "Color": "#7f3f98"
+  },
+  {
+    "Name": "WinGameStore",
+    "Color": "#2790da"
+  },
+  {
+    "Name": "MacGameStore",
+    "Color": "#2790da"
+  },
+  {
+    "Name": "GameBillet",
+    "Color": "#f22f15"
+  },
+  {
+    "Name": "Sila Games",
+    "Color": "#f9cf6b"
+  },
+  {
+    "Name": "Playfield",
+    "Color": "#e84c31"
+  },
+  {
+    "Name": "Imperial Games",
+    "Color": "#16a085"
+  },
+  {
+    "Name": "Itch.io",
+    "Color": "#fa5c5c"
+  },
+  {
+    "Name": "Itchio",
+    "Color": "#fa5c5c"
+  },
+  {
+    "Name": "Game Jolt",
+    "Color": "#2f7f6f"
+  },
+  {
+    "Name": "Digital Download",
+    "Color": "#0166ff"
+  },
+  {
+    "Name": "DreamGame",
+    "Color": "#497791"
+  },
+  {
+    "Name": "Paradox",
+    "Color": "#bc2a31"
+  },
+  {
+    "Name": "Chrono",
+    "Color": "#59c4c5"
+  },
+  {
+    "Name": "TwoGame",
+    "Color": "#523f95"
+  },
+  {
+    "Name": "2Game",
+    "Color": "#523f95"
+  },
+  {
+    "Name": "Less4Games",
+    "Color": "#ff9900"
+  },
+  {
+    "Name": "Savemi",
+    "Color": "#01add3"
+  },
+  {
+    "Name": "Gemly",
+    "Color": "#ce2745"
+  },
+  {
+    "Name": "Voidu",
+    "Color": "#f47820"
+  },
+  {
+    "Name": "Cybermanta",
+    "Color": "#00b2ee"
+  },
+  {
+    "Name": "LBOstore",
+    "Color": "#005268"
+  },
+  {
+    "Name": "Razer",
+    "Color": "#00ff00"
+  },
+  {
+    "Name": "Microsoft Store",
+    "Color": "#ffd800"
+  },
+  {
+    "Name": "Microsoft",
+    "Color": "#ffd800"
+  },
+  {
+    "Name": "Oculus",
+    "Color": "#5161a6"
+  },
+  {
+    "Name": "Discord",
+    "Color": "#6f85d4"
+  },
+  {
+    "Name": "Epic",
+    "Color": "#0078f2"
+  },
+  {
+    "Name": "Epic Game Store",
+    "Color": "#0078f2"
+  },
+  {
+    "Name": "Epic Games Store",
+    "Color": "#0078f2"
+  },
+  {
+    "Name": "Epic Game",
+    "Color": "#0078f2"
+  },
+  {
+    "Name": "Epic Games",
+    "Color": "#0078f2"
+  },
+  {
+    "Name": "Playism",
+    "Color": "#b8934f"
+  },
+  {
+    "Name": "GamesLoad",
+    "Color": "#b76cc7"
+  },
+  {
+    "Name": "JoyBuggy",
+    "Color": "#43c68d"
+  },
+  {
+    "Name": "Noctre",
+    "Color": "#1a83ff"
+  },
+  {
+    "Name": "ETailMarket",
+    "Color": "#358192"
+  },
+  {
+    "Name": "ETail.Market",
+    "Color": "#358192"
+  }
+]

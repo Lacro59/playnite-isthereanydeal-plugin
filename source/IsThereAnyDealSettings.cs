@@ -9,7 +9,7 @@ using IsThereAnyDeal.Models.Api;
 using CommonPluginsShared.Extensions;
 using IsThereAnyDeal.Models.ApiWebsite;
 using CommonPluginsShared.Plugins;
-using CommonPluginsStores;
+using CommonPluginsStores.Models;
 
 namespace IsThereAnyDeal
 {
@@ -34,7 +34,8 @@ namespace IsThereAnyDeal
         public bool EnableEpic { get; set; } = false;
         public bool EnableXbox { get; set; } = true;
         public bool EnableUbisoft { get; set; } = true;
-        public bool EnableOrigin { get; set; } = true;
+        [DontSerialize]
+        public bool EnableOrigin => false;
 
         public bool EnableNotificationGiveaways { get; set; } = false;
         public bool EnableNotification { get; set; } = false;
@@ -126,31 +127,10 @@ namespace IsThereAnyDeal
         // This method should save settings made to Option1 and Option2.
         public void EndEdit()
         {
-            // StoreAPI intialization
-            IsThereAnyDeal.SteamApi.StoreSettings = Settings.SteamStoreSettings;
-            if (Settings.EnableSteam)
-            {
-                IsThereAnyDeal.SteamApi.SaveCurrentUser();
-                IsThereAnyDeal.SteamApi.CurrentAccountInfos = null;
-                _ = IsThereAnyDeal.SteamApi.CurrentAccountInfos;
-            }
-
-            IsThereAnyDeal.EpicApi.StoreSettings = Settings.EpicStoreSettings;
-            if (Settings.EnableEpic)
-            {
-                IsThereAnyDeal.EpicApi.SaveCurrentUser();
-                IsThereAnyDeal.EpicApi.CurrentAccountInfos = null;
-                _ = IsThereAnyDeal.EpicApi.CurrentAccountInfos;
-            }
-
-            IsThereAnyDeal.GogApi.StoreSettings = Settings.GogStoreSettings;
-            if (Settings.EnableGog)
-            {
-                IsThereAnyDeal.GogApi.SaveCurrentUser();
-                IsThereAnyDeal.GogApi.CurrentAccountInfos = null;
-                _ = IsThereAnyDeal.GogApi.CurrentAccountInfos;
-            }
-
+			// StoreAPI intialization
+			IsThereAnyDeal.SteamApi.SaveSettings(Settings.SteamStoreSettings, Settings.PluginState.SteamIsEnabled && Settings.EnableSteam);
+			IsThereAnyDeal.EpicApi.SaveSettings(Settings.EpicStoreSettings, Settings.PluginState.EpicIsEnabled && Settings.EnableEpic);
+			IsThereAnyDeal.GogApi.SaveSettings(Settings.GogStoreSettings, Settings.PluginState.GogIsEnabled && Settings.EnableGog);
 
             Plugin.SavePluginSettings(Settings);
 

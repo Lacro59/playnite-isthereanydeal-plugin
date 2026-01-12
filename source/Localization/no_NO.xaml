@@ -110,6 +110,6 @@ Prøv å logge inn med kontoen din.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Det finnes ingen lenke for Xbox-ønskelisten.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Det finnes ingen ønskeliste-lenke for Ubisoft.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA app er aktivert i IsThereAnyDeal-utvidelsen, men bibliotekets utvidelse er deaktivert i Playnite.</sys:String>
 
 </ResourceDictionary>

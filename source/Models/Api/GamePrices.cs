@@ -14,6 +14,21 @@ namespace IsThereAnyDeal.Models.Api
 
         [SerializationPropertyName("deals")]
         public List<Deal> Deals { get; set; }
+
+        [SerializationPropertyName("historyLow")]
+        public HistoryLow HistoryLow { get; set; }
+    }
+
+    public class HistoryLow
+    {
+        [SerializationPropertyName("all")]
+        public Price All { get; set; }
+
+        [SerializationPropertyName("y1")]
+        public Price Y1 { get; set; }
+
+        [SerializationPropertyName("m3")]
+        public Price M3 { get; set; }
     }
 
     public class Deal

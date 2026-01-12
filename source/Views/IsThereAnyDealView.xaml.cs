@@ -1,24 +1,24 @@
-﻿using IsThereAnyDeal.Services;
-using IsThereAnyDeal.Models;
-using Playnite.SDK;
-using Playnite.SDK.Data;
+﻿using CommonPluginsControls.Controls;
 using CommonPluginsShared;
+using CommonPluginsShared.Converters;
+using CommonPluginsShared.Extensions;
+using IsThereAnyDeal.Clients;
+using IsThereAnyDeal.Models;
+using IsThereAnyDeal.Services;
+using Playnite.SDK;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using IsThereAnyDeal.Clients;
-using CommonPluginsShared.Extensions;
 using System.Windows.Controls.Primitives;
-using CommonPluginsShared.Converters;
-using System.Globalization;
-using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Windows.Media;
-using CommonPluginsControls.Controls;
 
 namespace IsThereAnyDeal.Views
 {
@@ -48,64 +48,89 @@ namespace IsThereAnyDeal.Views
             Settings = plugin.PluginSettings.Settings;
             Plugin = plugin;
 
-            // Load data
-            RefreshData(id);
-            GetListGiveaways(plugin.GetPluginUserDataPath());
-
             DataContext = ItadDataContext;
             ItadDataContext.MinPrice = Settings.MinPrice;
             ItadDataContext.MaxPrice = Settings.MaxPrice;
 
+            PART_DateData.Content = "";
+
             lbWishlist.ItemsSource = new ObservableCollection<Wishlist>();
+
+            // Subscribe to the Loaded event instead of calling methods here
+            Loaded += (s, e) =>
+            {
+                // Now the UI is ready to display the loading bar
+                RefreshData(id);
+                GetListGiveaways();
+            };
         }
 
-        private void RefreshData(string id, bool cachOnly = true, bool forcePrice = false)
+
+        // Optimized RefreshData method to prevent UI blocking
+        private async void RefreshData(string id, bool cachOnly = true, bool forcePrice = false)
         {
             DataLoadWishlist.Visibility = Visibility.Visible;
             dpData.IsEnabled = false;
 
-            Task task = Task.Run(() => LoadData(cachOnly, forcePrice))
-                .ContinueWith(antecedent =>
+            try
+            {
+                // 1. Heavy background loading
+                var result = await Task.Run(() => LoadData(cachOnly, forcePrice));
+
+                if (result == null) return;
+
+                // 2. IMPORTANT: Give the UI a moment to refresh the ProgressBar animation
+                // before starting the heavy UI attachment
+                await Task.Yield();
+
+                // 3. Assign data
+                lbWishlist.ItemsSource = result;
+
+                // 4. Update Infos (Ensure this method isn't doing too much heavy math)
+                SetInfos();
+
+                // Safe currency sign retrieval
+                var firstItem = result.FirstOrDefault(x => x.ItadLastPrice?.Any(y => !string.IsNullOrEmpty(y.CurrencySign)) == true);
+                if (firstItem != null)
                 {
-                    Application.Current.Dispatcher?.Invoke(new Action(() =>
+                    ItadDataContext.CurrencySign = firstItem.ItadBestPrice.CurrencySign;
+                }
+
+                // 5. Yield again before heavy Filtering/Sorting
+                await Task.Delay(10);
+
+                // 6. Execute Sorting and Filtering with lower priority
+                // This prevents the UI from freezing while the CollectionView is being rebuilt
+                await Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (!string.IsNullOrEmpty(id))
                     {
-                        try
+                        var selectedItem = result.FirstOrDefault(x => x.Game?.Id?.IsEqual(id) ?? false);
+                        if (selectedItem != null)
                         {
-                            lbWishlist.ItemsSource = antecedent.Result;
-
-                            SetInfos();
-
-                            ItadDataContext.CurrencySign = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource)?.Where(x => x.ItadLastPrice != null && x.ItadLastPrice.Where(y => !y.CurrencySign.IsNullOrEmpty()).Count() > 0)?.FirstOrDefault()?.ItadBestPrice.CurrencySign;
-
-                            if (!id.IsNullOrEmpty())
-                            {
-                                int index = 0;
-                                foreach (Wishlist wishlist in lbWishlist.ItemsSource)
-                                {
-                                    if (wishlist.Game?.Id?.IsEqual(id) ?? false)
-                                    {
-                                        index = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).ToList().FindIndex(x => x == wishlist);
-                                        lbWishlist.SelectedIndex = index;
-                                        lbWishlist.ScrollIntoView(lbWishlist.SelectedItem);
-                                        break;
-                                    }
-                                }
-                            }
-                            PART_DateData.Content = new LocalDateTimeConverter().Convert(Settings.LastRefresh, null, null, CultureInfo.CurrentCulture);
-                            DataLoadWishlist.Visibility = Visibility.Collapsed;
-                            dpData.IsEnabled = true;
-
-                            // Order
-                            PART_CbOrder_SelectionChanged(null, null);
-
-                            SetFilterStore();
+                            lbWishlist.SelectedItem = selectedItem;
+                            lbWishlist.ScrollIntoView(selectedItem);
                         }
-                        catch (Exception ex)
-                        {
-                            Common.LogError(ex, false, true, "IsThereAnyDeal");
-                        }
-                    }));
-                });
+                    }
+
+                    PART_DateData.Content = new LocalDateTimeConverter().Convert(Settings.LastRefresh, null, null, CultureInfo.CurrentCulture);
+
+                    // These two are the real "UI blockers" as they trigger re-rendering of the whole list
+                    PART_CbOrder_SelectionChanged(null, null);
+                    SetFilterStore();
+
+                }), System.Windows.Threading.DispatcherPriority.Background);
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, false, true, "IsThereAnyDeal");
+            }
+            finally
+            {
+                // We only hide the loader once everything (including Background priority tasks) is done
+                DataLoadWishlist.Visibility = Visibility.Collapsed;
+                dpData.IsEnabled = true;
+            }
         }
 
         private void SetFilterStore()
@@ -125,7 +150,7 @@ namespace IsThereAnyDeal.Views
             }
             if (Settings.EnableEpic)
             {
-                FilterStoreItems.Add(new ListStore { StoreName = "Epic", StoreNameDisplay = (TransformIcon.Get("Epic") + " Epic").Trim(), IsCheck = false });
+                FilterStoreItems.Add(new ListStore { StoreName = "Epic Games Store", StoreNameDisplay = (TransformIcon.Get("Epic Games Store") + " Epic Games Store").Trim(), IsCheck = false });
             }
             if (Settings.EnableXbox)
             {
@@ -139,7 +164,7 @@ namespace IsThereAnyDeal.Views
             {
                 FilterStoreItems.Add(new ListStore { StoreName = "EA app", StoreNameDisplay = (TransformIcon.Get("EA app") + " EA app").Trim(), IsCheck = false });
             }
-            FilterStoreItems.Sort((x, y) => string.Compare(x.StoreName, y.StoreName));
+            FilterStoreItems.Sort((x, y) => string.Compare(x.StoreName, y.StoreName, true));
             ItadDataContext.FilterStoreItems = FilterStoreItems;
         }
 
@@ -156,140 +181,161 @@ namespace IsThereAnyDeal.Views
             return ListWishlist;
         }
 
-        private List<ItadGiveaway> LoadDatatGiveaways(string pluginUserDataPath)
+        private List<ItadGiveaway> LoadDatatGiveaways()
         {
-            List<ItadGiveaway> itadGiveaways = IsThereAnyDealApi.GetGiveaways(pluginUserDataPath);
+            List<ItadGiveaway> itadGiveaways = IsThereAnyDealApi.GetGiveaways();
             return itadGiveaways;
         }
 
-        private void GetListGiveaways(string pluginUserDataPath)
+        private async void GetListGiveaways()
         {
-            _ = Task.Run(() => LoadDatatGiveaways(pluginUserDataPath))
-                .ContinueWith(antecedent =>
+            // Initialize UI state: disable the grid and clear previous items
+            gGiveaways.IsEnabled = false;
+            gGiveaways.Children.Clear();
+            gGiveaways.RowDefinitions.Clear();
+
+            // Add the first row definition (default height)
+            gGiveaways.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
+
+            try
+            {
+                // Offload data loading to a background thread to keep UI responsive
+                var itadGiveaways = await Task.Run(() => LoadDatatGiveaways());
+
+                if (itadGiveaways == null || itadGiveaways.Count == 0)
                 {
-                    if (antecedent?.Result == null)
+                    return;
+                }
+
+                // Execution resumes here on the UI Thread automatically
+                int row = 0;
+                int col = 0;
+                LocalDateConverter localDateConverter = new LocalDateConverter();
+                FontFamily icoFont = ResourceProvider.GetResource("FontIcoFont") as FontFamily;
+
+                foreach (ItadGiveaway itadGiveaway in itadGiveaways)
+                {
+                    // Grid layout logic: 4 columns per row (stepping by 2 for spacing/layout)
+                    if (col > 3)
                     {
-                        return;
+                        col = 0;
+                        row += 1;
+                        gGiveaways.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
                     }
 
-                    Application.Current.Dispatcher?.Invoke(new Action(() =>
+                    // Create the main container for the giveaway item
+                    DockPanel dp = new DockPanel { Width = 540 };
+
+                    // Website Button - Docked Right
+                    Button bt = new Button
                     {
-                        List<ItadGiveaway> itadGiveaways = antecedent.Result;
-                        int row = 0;
-                        int col = 0;
-                        foreach (ItadGiveaway itadGiveaway in itadGiveaways)
+                        ToolTip = ResourceProvider.GetString("LOCWebsiteLabel"),
+                        Content = "\uf028",
+                        FontFamily = icoFont,
+                        Tag = itadGiveaway.Link,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Margin = new Thickness(10, 0, 0, 0),
+                    };
+                    bt.Click += WebGiveaway;
+                    DockPanel.SetDock(bt, Dock.Right);
+                    dp.Children.Add(bt);
+
+                    // Expiration Date handling - Docked Right
+                    if (itadGiveaway.Time != null)
+                    {
+                        bool isExpired = itadGiveaway.Time < DateTime.Now;
+
+                        TextBlock tbDateText = new TextBlock
                         {
-                            if (col > 3)
-                            {
-                                col = 0;
-                                row += 1;
-                                RowDefinition rowAuto = new RowDefinition
-                                {
-                                    Height = new GridLength(40)
-                                };
-                                gGiveaways.RowDefinitions.Add(rowAuto);
-                            }
-
-                            DockPanel dp = new DockPanel
-                            {
-                                Width = 540
-                            };
-
-                            TextBlockTrimmed tb = new TextBlockTrimmed
-                            {
-                                Text = itadGiveaway.Title,
-                                VerticalAlignment = VerticalAlignment.Center,
-                                MaxWidth = 350
-                            };
-
-                            TextBlockTrimmed tbShop = new TextBlockTrimmed
-                            {
-                                Text = itadGiveaway.ShopName,
-                                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(itadGiveaway.ShopColor)),
-                                Margin = new Thickness(10, 0, 0, 0),
-                                VerticalAlignment = VerticalAlignment.Center
-                            };
-
-                            TextBlock tbWaitlist = new TextBlock
-                            {
-                                Text = "\uec3f",
-                                FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily,
-                                ToolTip = ResourceProvider.GetString("LOCItadInWaitlist"),
-                                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#02b65a")),
-                                Margin = new Thickness(10, 0, 0, 0),
-                                VerticalAlignment = VerticalAlignment.Center
-                            };
-
-                            TextBlock tbCollection = new TextBlock
-                            {
-                                Text = "\uec5c",
-                                FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily,
-                                ToolTip = ResourceProvider.GetString("LOCItadInCollection"),
-                                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1494e4")),
-                                Margin = new Thickness(10, 0, 0, 0),
-                                VerticalAlignment = VerticalAlignment.Center
-                            };
-
-                            LocalDateConverter localDateConverter = new LocalDateConverter();
-                            TextBlock tbDate = new TextBlock
-                            {
-                                Text = "\uf006",
-                                FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily,
-                                Margin = new Thickness(10, 0, 0, 0),
-                                VerticalAlignment = VerticalAlignment.Center,
-                                Visibility = itadGiveaway.Time == null ? Visibility.Hidden : Visibility.Visible
-                            };
-                            TextBlock tbDate2 = new TextBlock
-                            {
-                                Text = $"{localDateConverter.Convert(itadGiveaway.Time, null, null, CultureInfo.CurrentCulture)}",
-                                Margin = new Thickness(10, 0, 0, 0),
-                                VerticalAlignment = VerticalAlignment.Center,
-                                Visibility = itadGiveaway.Time == null ? Visibility.Hidden : Visibility.Visible
-                            };
-                            if (itadGiveaway.Time < DateTime.Now)
-                            {
-                                tbDate.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
-                                tbDate2.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
-                            }
-                            DockPanel.SetDock(tbDate, Dock.Right);
-                            DockPanel.SetDock(tbDate2, Dock.Right);
-
-                            Button bt = new Button
-                            {
-                                ToolTip = ResourceProvider.GetString("LOCWebsiteLabel"),
-                                Content = "\uf028",
-                                FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily,
-                                Tag = itadGiveaway.Link,
-                                VerticalAlignment = VerticalAlignment.Center,
-                                Margin = new Thickness(10, 0, 0, 0),
-                            };
-                            bt.Click += new RoutedEventHandler(WebGiveaway);
-                            DockPanel.SetDock(bt, Dock.Right);
-
-                            _ = dp.Children.Add(bt);
-                            _ = dp.Children.Add(tbDate2);
-                            _ = dp.Children.Add(tbDate);
-                            _ = dp.Children.Add(tb);
-                            _ = dp.Children.Add(tbShop);
-
-                            if (itadGiveaway.InWaitlist)
-                            {
-                                _ = dp.Children.Add(tbWaitlist);
-                            }
-                            if (itadGiveaway.InCollection)
-                            {
-                                _ = dp.Children.Add(tbCollection);
-                            }
-
-                            Grid.SetRow(dp, row);
-                            Grid.SetColumn(dp, col);
-
-                            col += 2;
-
-                            _ = gGiveaways.Children.Add(dp);
+                            Text = $"{localDateConverter.Convert(itadGiveaway.Time, null, null, CultureInfo.CurrentCulture)}",
+                            Margin = new Thickness(10, 0, 0, 0),
+                            VerticalAlignment = VerticalAlignment.Center
+                        };
+                        if (isExpired)
+                        {
+                            tbDateText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
                         }
-                    }));
-                });
+                        DockPanel.SetDock(tbDateText, Dock.Right);
+
+                        TextBlock tbDateIcon = new TextBlock
+                        {
+                            Text = "\uf006",
+                            FontFamily = icoFont,
+                            Margin = new Thickness(10, 0, 0, 0),
+                            VerticalAlignment = VerticalAlignment.Center
+                        };
+                        if (isExpired)
+                        {
+                            tbDateText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
+                        }
+                        DockPanel.SetDock(tbDateIcon, Dock.Right);
+
+                        dp.Children.Add(tbDateText);
+                        dp.Children.Add(tbDateIcon);
+                    }
+
+                    // Title - Main content
+                    TextBlockTrimmed tbTitle = new TextBlockTrimmed
+                    {
+                        Text = itadGiveaway.Title,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        MaxWidth = 350
+                    };
+                    dp.Children.Add(tbTitle);
+
+                    // Store Name
+                    TextBlockTrimmed tbShop = new TextBlockTrimmed
+                    {
+                        Text = itadGiveaway.ShopName,
+                        Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(itadGiveaway.ShopColor)),
+                        Margin = new Thickness(10, 0, 0, 0),
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
+                    dp.Children.Add(tbShop);
+
+                    // Status Badges (Waitlist / Collection)
+                    if (itadGiveaway.InWaitlist)
+                    {
+                        dp.Children.Add(new TextBlock
+                        {
+                            Text = "\uec3f",
+                            FontFamily = icoFont,
+                            ToolTip = ResourceProvider.GetString("LOCItadInWaitlist"),
+                            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#02b65a")),
+                            Margin = new Thickness(10, 0, 0, 0),
+                            VerticalAlignment = VerticalAlignment.Center
+                        });
+                    }
+                    if (itadGiveaway.InCollection)
+                    {
+                        dp.Children.Add(new TextBlock
+                        {
+                            Text = "\uec5c",
+                            FontFamily = icoFont,
+                            ToolTip = ResourceProvider.GetString("LOCItadInCollection"),
+                            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1494e4")),
+                            Margin = new Thickness(10, 0, 0, 0),
+                            VerticalAlignment = VerticalAlignment.Center
+                        });
+                    }
+
+                    // Set Grid position and add to the container
+                    Grid.SetRow(dp, row);
+                    Grid.SetColumn(dp, col);
+                    gGiveaways.Children.Add(dp);
+
+                    col += 2;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error while getting giveaways list");
+            }
+            finally
+            {
+                // Ensure the UI is re-enabled even if an error occurs
+                gGiveaways.IsEnabled = true;
+            }
         }
 
         private void WebGiveaway(object sender, RoutedEventArgs e)
@@ -299,6 +345,7 @@ namespace IsThereAnyDeal.Views
 
 
         #region Button for each game in wishlist
+
         private void ButtonWeb_Click(object sender, RoutedEventArgs e)
         {
             string Tag = (string)((Button)sender).Tag;
@@ -386,7 +433,7 @@ namespace IsThereAnyDeal.Views
 
                                 case "origin":
                                 case "ea app":
-                                    OriginWishlist originWishlist = new OriginWishlist(Plugin);
+                                    EaWishlist originWishlist = new EaWishlist(Plugin);
                                     IsDeleted = originWishlist.RemoveWishlist(StorePriceSelected.StoreId);
                                     if (IsDeleted)
                                     {
@@ -451,10 +498,11 @@ namespace IsThereAnyDeal.Views
                 }
             }
         }
+
         #endregion
 
-
         #region Search
+
         private bool UserFilter(object item)
         {
             Wishlist wishlist = item as Wishlist;
@@ -526,10 +574,11 @@ namespace IsThereAnyDeal.Views
 
             GetListGame();
         }
+
         #endregion
 
-
         #region Order
+
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TabControl tc = sender as TabControl;
@@ -539,84 +588,54 @@ namespace IsThereAnyDeal.Views
             }
         }
 
-        private void PART_CbOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                if (lbWishlist?.ItemsSource != null)
-                {
-                    if (((ComboBoxItem)PART_CbOrder.SelectedItem).Tag.ToString() == "0")
-                    {
-                        switch (((ComboBoxItem)PART_CbOrderType.SelectedItem).Tag.ToString())
-                        {
-                            case "0":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.Name).ToObservable();
-                                break;
+		private void PART_CbOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			try
+			{
+				if (lbWishlist?.ItemsSource == null) return;
 
-                            case "1":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadBestPrice.PriceCut).ToObservable();
-                                break;
+				var view = CollectionViewSource.GetDefaultView(lbWishlist.ItemsSource);
+				view.SortDescriptions.Clear();
 
-                            case "2":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadBestPrice.PriceNew).ToObservable();
-                                break;
+				string orderType = ((ComboBoxItem)PART_CbOrderType.SelectedItem).Tag.ToString();
+				bool isAscending = ((ComboBoxItem)PART_CbOrder.SelectedItem).Tag.ToString() == "0";
 
-                            case "3":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadPriceForWishlistStore.PriceCut).ToObservable();
-                                break;
+				ListSortDirection direction = isAscending ? ListSortDirection.Ascending : ListSortDirection.Descending;
 
-                            case "4":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderBy(x => x.ItadPriceForWishlistStore.PriceNew).ToObservable();
-                                break;
+				switch (orderType)
+				{
+					case "0":
+						view.SortDescriptions.Add(new SortDescription("Name", direction));
+						break;
+					case "1":
+						view.SortDescriptions.Add(new SortDescription("ItadBestPrice.PriceCut", direction));
+						break;
+					case "2":
+						view.SortDescriptions.Add(new SortDescription("ItadBestPrice.PriceNew", direction));
+						break;
+					case "3":
+						view.SortDescriptions.Add(new SortDescription("ItadPriceForWishlistStore.PriceCut", direction));
+						break;
+					case "4":
+						view.SortDescriptions.Add(new SortDescription("ItadPriceForWishlistStore.PriceNew", direction));
+						break;
+					case "5":
+						view.SortDescriptions.Add(new SortDescription("ReleaseDate", direction));
+						break;
+				}
 
-                            default:
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        switch (((ComboBoxItem)PART_CbOrderType.SelectedItem).Tag.ToString())
-                        {
-                            case "0":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.Name).ToObservable();
-                                break;
+				view.Filter = UserFilter;
+			}
+			catch (Exception ex)
+			{
+				Common.LogError(ex, false);
+			}
+		}
+		#endregion
 
-                            case "1":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadBestPrice.PriceCut).ToObservable();
-                                break;
+		#region Data refresh
 
-                            case "2":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadBestPrice.PriceNew).ToObservable();
-                                break;
-
-                            case "3":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadPriceForWishlistStore.PriceCut).ToObservable();
-                                break;
-
-                            case "4":
-                                lbWishlist.ItemsSource = ((ObservableCollection<Wishlist>)lbWishlist.ItemsSource).OrderByDescending(x => x.ItadPriceForWishlistStore.PriceNew).ToObservable();
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
-
-                    CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(lbWishlist.ItemsSource);
-                    view.Filter = UserFilter;
-                    GetListGame();
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, false);
-            }
-        }
-        #endregion
-
-
-        #region Data refresh
-        private void ButtonData_Click(object sender, RoutedEventArgs e)
+		private void ButtonData_Click(object sender, RoutedEventArgs e)
         {
             RefreshData(string.Empty, false);
         }
@@ -625,6 +644,7 @@ namespace IsThereAnyDeal.Views
         {
             RefreshData(string.Empty, true, true);
         }
+
         #endregion
 
 

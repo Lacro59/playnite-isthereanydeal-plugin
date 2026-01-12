@@ -110,6 +110,6 @@
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Xbox ウィッシュリストのリンクがありません。</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Ubisoft ウィッシュリストのリンクがありません。</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA App は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています</sys:String>
 
 </ResourceDictionary>
