@@ -1,6 +1,4 @@
-﻿using CommonPlayniteShared.Common;
-using CommonPlayniteShared.PluginLibrary.SteamLibrary.SteamShared;
-using CommonPluginsShared;
+﻿using CommonPluginsShared;
 using CommonPluginsShared.Extensions;
 using IsThereAnyDeal.Clients;
 using IsThereAnyDeal.Models;
@@ -9,7 +7,6 @@ using IsThereAnyDeal.Models.ApiWebsite;
 using IsThereAnyDeal.Views;
 using Playnite.SDK;
 using Playnite.SDK.Data;
-using Playnite.SDK.Plugins;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -17,13 +14,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.UI.WebControls;
 using System.Windows;
 using static CommonPluginsShared.PlayniteTools;
-using static SteamKit2.DepotManifest;
 
 namespace IsThereAnyDeal.Services
 {
@@ -68,7 +62,7 @@ namespace IsThereAnyDeal.Services
         {
 	        { "eur", "€" },
 	        { "usd", "$" },
-	        { "gpb", "£" },
+	        { "gbp", "£" },
 	        { "aud", "$" },
 	        { "brl", "R$" },
 	        { "cad", "$" },
