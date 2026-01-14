@@ -46,6 +46,21 @@ namespace IsThereAnyDeal.Services
         /// </summary>
         private static string Key => "fa49308286edcaf76fea58926fd2ea2d216a17ff";
 
+        private static string _sessionToken;
+        private static string SessionToken
+        {
+            get
+            {
+                if (_sessionToken == null)
+                {
+					_sessionToken = GetSessionToken();
+                }
+                return _sessionToken;
+
+			}
+            set { _sessionToken = value; }
+		}
+
         /// <summary>
         /// Tracks the number of items fetched per store during the current session.
         /// </summary>
@@ -647,14 +662,13 @@ namespace IsThereAnyDeal.Services
                     {
                         string giveawaysUrl = "https://isthereanydeal.com/giveaways/api/list/";
                         string payload = "{\"offset\":0,\"sort\":null,\"filter\":null}";
-                        string sessionToken = "JiCZgSx7tdBwB9D6zJnBq6nMJjiscvx5zznJWQa_ucgH3sOp";
 
                         var cookies = new List<HttpCookie>
                         {
                             new HttpCookie
                             {
                                 Name = "sess2",
-                                Value = sessionToken,
+                                Value = SessionToken,
                                 Domain = "isthereanydeal.com",
                                 Path = "/"
                             }
@@ -662,7 +676,7 @@ namespace IsThereAnyDeal.Services
 
                         var moreHeader = new List<KeyValuePair<string, string>>
                         {
-                            new KeyValuePair<string, string>("ITAD-SessionToken", sessionToken)
+                            new KeyValuePair<string, string>("ITAD-SessionToken", SessionToken)
                         };
 
                         data = Web.PostStringDataPayload(giveawaysUrl + "?tab=live", payload, cookies, moreHeader).GetAwaiter().GetResult();
@@ -865,5 +879,20 @@ namespace IsThereAnyDeal.Services
 				_rateLimiter.Release();
 			}
 		}
+
+        private static string GetSessionToken()
+        {
+            using (var webView = API.Instance.WebViews.CreateOffscreenView(new WebViewSettings
+            {
+                JavaScriptEnabled = true,
+                UserAgent = Web.UserAgent
+            }))
+            {
+                webView.NavigateAndWait("https://isthereanydeal.com/");
+                var cookies = webView.GetCookies();
+                var sessionCookie = cookies.FirstOrDefault(c => c.Name == "sess2" && c.Domain.IsEqual("isthereanydeal.com"));
+                return sessionCookie?.Value;
+            }
+        }
 	}
 }
