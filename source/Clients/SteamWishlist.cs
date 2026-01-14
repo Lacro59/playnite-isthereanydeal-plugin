@@ -50,21 +50,29 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(uint.Parse(x.Id)).GetAwaiter().GetResult();
-                    wishlists.Add(new Models.Wishlist
+                    uint.TryParse(x.Id, out uint appId);
+                    if (appId > 0)
                     {
-                        StoreId = x.Id,
-                        StoreName = ClientName,
-                        ShopColor = GetShopColor(),
-                        StoreUrl = x.Link,
-                        Name = x.Name.IsEqual($"SteamApp? - {x.Id}") && (gamesLookup?.Found ?? false) ? gamesLookup.Game.Title : x.Name,
-                        SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
-                        ReleaseDate = x.Released,
-                        Added = x.Added,
-                        Capsule = x.Image,
-                        Game = (gamesLookup?.Found ?? false) ? gamesLookup.Game : null,
-                        IsActive = true
-                    });
+                        GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(appId).GetAwaiter().GetResult();
+                        wishlists.Add(new Models.Wishlist
+                        {
+                            StoreId = x.Id,
+                            StoreName = ClientName,
+                            ShopColor = GetShopColor(),
+                            StoreUrl = x.Link,
+                            Name = x.Name.IsEqual($"SteamApp? - {x.Id}") && (gamesLookup?.Found ?? false) ? gamesLookup.Game.Title : x.Name,
+                            SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
+                            ReleaseDate = x.Released,
+                            Added = x.Added,
+                            Capsule = x.Image,
+                            Game = (gamesLookup?.Found ?? false) ? gamesLookup.Game : null,
+                            IsActive = true
+                        });
+                    }
+                    else
+                    {
+                        Logger.Warn($"{ClientName}: Invalid AppID {x.Id} for {x.Name}");
+					}
                 }
                 catch (Exception ex)
                 {
