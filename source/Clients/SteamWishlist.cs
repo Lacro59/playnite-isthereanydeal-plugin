@@ -114,7 +114,7 @@ namespace IsThereAnyDeal.Services
                             ReleaseDate = DateHelper.ParseReleaseDate(gameData?.data?.release_date?.date)?.Date,
                             Capsule = gameData?.data?.header_image ?? string.Empty,
 
-							Game = gamesLookup.Found ? gamesLookup.Game : null,
+							Game = gamesLookup != null ? gamesLookup.Found ? gamesLookup.Game : null : null,
                             IsActive = true
                         });
                     });
