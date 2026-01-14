@@ -109,7 +109,7 @@ namespace IsThereAnyDeal.Services
                             StoreName = ClientName,
                             ShopColor = GetShopColor(),
                             StoreUrl = $"https://store.steampowered.com/app/{appId}",
-                            Name = (gameData?.data?.name.IsNullOrEmpty() ?? true) && (gamesLookup?.Found ?? false) ? gamesLookup.Game.Title : gameData?.data?.name,
+                            Name = (gameData?.data?.name.IsNullOrEmpty() ?? true) && (gamesLookup?.Found ?? false) ? gamesLookup.Game.Title : gameData?.data?.name ?? $"SteamApp - {appId}",
                             SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
                             ReleaseDate = DateHelper.ParseReleaseDate(gameData?.data?.release_date?.date)?.Date,
                             Capsule = gameData?.data?.header_image ?? string.Empty,
