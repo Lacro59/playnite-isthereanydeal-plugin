@@ -266,7 +266,7 @@ namespace IsThereAnyDeal.Views
                         };
                         if (isExpired)
                         {
-                            tbDateText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
+							tbDateIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
                         }
                         DockPanel.SetDock(tbDateIcon, Dock.Right);
 
