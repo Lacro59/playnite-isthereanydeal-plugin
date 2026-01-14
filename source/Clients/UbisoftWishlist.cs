@@ -13,9 +13,9 @@ using System.Text;
 
 namespace IsThereAnyDeal.Clients
 {
-    public class UplayWishlist : GenericWishlist
+    public class UbisoftWishlist : GenericWishlist
     {
-        public UplayWishlist(IsThereAnyDeal plugin) : base(plugin, "Ubisoft")
+        public UbisoftWishlist(IsThereAnyDeal plugin) : base(plugin, "Ubisoft Connect")
         {
             ExternalPlugin = PlayniteTools.ExternalPlugin.UplayLibrary;
         }
@@ -48,7 +48,6 @@ namespace IsThereAnyDeal.Clients
                 HtmlParser parser = new HtmlParser();
                 IHtmlDocument HtmlRequirement = parser.Parse(response);
 
-                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                 foreach (IElement searchElement in HtmlRequirement.QuerySelectorAll(".wishlist-items-list li"))
                 {
                     string storeId = string.Empty;
@@ -60,12 +59,12 @@ namespace IsThereAnyDeal.Clients
                     capsule = searchElement.QuerySelector("img").GetAttribute("data-src");
                     name = searchElement.QuerySelector("div.card-title div.prod-title").InnerHtml.Trim();
 
-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(name).GetAwaiter().GetResult();
+                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(name).GetAwaiter().GetResult();
 
                     wishlists.Add(new Wishlist
                     {
                         StoreId = storeId.Trim(),
-                        StoreName = "Ubisoft Connect",
+                        StoreName = ClientName,
                         ShopColor = GetShopColor(),
                         StoreUrl = @"https://store.ubi.com/fr/game?pid=" + storeId.Trim(),
                         Name = name.Trim(),

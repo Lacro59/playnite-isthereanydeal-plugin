@@ -57,7 +57,6 @@ namespace IsThereAnyDeal.Services
 
                 dynamic dataObj = Serialization.FromJson<dynamic>(resultWeb);
 
-                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
                 foreach (dynamic gameWish in dataObj["products_json"])
                 {
                     string storeId = string.Empty;
@@ -71,7 +70,7 @@ namespace IsThereAnyDeal.Services
                     name = WebUtility.HtmlDecode((string)gameWish["human_name"]);
                     capsule = (string)gameWish["standard_carousel_image"];
 
-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(name).GetAwaiter().GetResult();
+                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(name).GetAwaiter().GetResult();
 
                     wishlists.Add(new Wishlist
                     {

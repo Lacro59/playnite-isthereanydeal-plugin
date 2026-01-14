@@ -10,6 +10,8 @@
     <sys:String x:Key="LOCItadExclusionList">Exclusion list</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">Wishlist</sys:String>
+    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    
     <sys:String x:Key="LOCItadEnableSteam">Habilitar llista de desitjos de Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Habilitar llista de desitjos de GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Habilitar llista de desitjos de Epic Games</sys:String>
@@ -43,6 +45,7 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">Actualitzar preus</sys:String>
 
+    <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Millor preu</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Preu de botiga</sys:String>
     
@@ -56,6 +59,10 @@
     <sys:String x:Key="LOCITADPercentage">Descompte mínim</sys:String>
     <sys:String x:Key="LOCITADPrice">Preu màxim</sys:String>
 
+    <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
+    <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
+    <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
+    
     <sys:String x:Key="LOCItadCurrentBest">Millor actual</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Botiga desitjada actual</sys:String>
     <sys:String x:Key="LOCItadBuy">Comprar a millor</sys:String>
@@ -78,6 +85,9 @@
     <sys:String x:Key="LOCItadImportSuccessful">Importació completada</sys:String>
     <sys:String x:Key="LOCItadImportError">No s'ha pogut importar el fitxer de la llista de desitjos</sys:String>
 
+    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
+    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">Veure les dades de IsThereAnyDeal</sys:String>
@@ -97,8 +107,8 @@
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">La teva llista de desitjos de Steam és privada. Has d'utilitzar el botó d'autentificació al complement de la Biblioteca de Steam</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">El complement de Xbox està disponible a IsThereAnyDeal, però l'extensió de biblioteca està deshabilitada a Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">No hi ha cap enllaç de llista de desitjos de Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">El complement d'Ubisoft està disponible a IsThereAnyDeal, però l'extensió de biblioteca està deshabilitada a Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">No hi ha cap enllaç de llista de desitjos d'Ubisoft.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">El complement de l'aplicació d'EA està disponible a IsThereAnyDeal, però l'extensió de biblioteca està deshabilitada a Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">El complement de l'aplicació d'EA està disponible a IsThereAnyDeal, però l'extensió de biblioteca està deshabilitada a Playnite.</sys:String>
 
 </ResourceDictionary>

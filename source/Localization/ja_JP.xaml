@@ -10,6 +10,8 @@
     <sys:String x:Key="LOCItadExclusionList">除外リスト</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">ウィッシュリスト</sys:String>
+    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    
     <sys:String x:Key="LOCItadEnableSteam">Steam ウィッシュリストを有効にする</sys:String>
     <sys:String x:Key="LOCItadEnableGog">GOG ウィッシュリストを有効にする</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Epic Games Store ウィッシュリストを有効にする</sys:String>
@@ -43,6 +45,7 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">価格を更新</sys:String>
 
+    <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Best price</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Store price</sys:String>
     
@@ -56,6 +59,10 @@
     <sys:String x:Key="LOCITADPercentage">最小割引率</sys:String>
     <sys:String x:Key="LOCITADPrice">値下げ価格</sys:String>
 
+    <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
+    <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
+    <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
+    
     <sys:String x:Key="LOCItadCurrentBest">現在の最安値</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">現在のストアのウィッシュリスト</sys:String>
     <sys:String x:Key="LOCItadBuy">最安値で購入</sys:String>
@@ -78,6 +85,9 @@
     <sys:String x:Key="LOCItadImportSuccessful">正常にインポートされました</sys:String>
     <sys:String x:Key="LOCItadImportError">ウィッシュリストファイルをインポートできません</sys:String>
 
+    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
+    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">IsThereAnyDeal データを表示</sys:String>
@@ -98,8 +108,8 @@
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam ウィッシュリストがプライベートに設定されています。Steam ライブラリプラグインでユーザーを認証してください。</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Xbox ウィッシュリストのリンクがありません。</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisoft は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Ubisoft ウィッシュリストのリンクがありません。</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA App は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA App は IsThereAnyDeal プラグインで有効になっていますが、Playnite でライブラリ拡張機能が無効になっています</sys:String>
 
 </ResourceDictionary>

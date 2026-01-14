@@ -16,7 +16,7 @@ namespace IsThereAnyDeal.Services
         private static EpicApi EpicApi => IsThereAnyDeal.EpicApi;
 
 
-        public EpicWishlist(IsThereAnyDeal plugin) : base(plugin, "Epic")
+        public EpicWishlist(IsThereAnyDeal plugin) : base(plugin, "Epic Games Store")
         {
             ExternalPlugin = PlayniteTools.ExternalPlugin.EpicLibrary;
         }
@@ -39,7 +39,6 @@ namespace IsThereAnyDeal.Services
                 return cachedData;
             }
 
-            IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
             List<Wishlist> wishlists = new List<Wishlist>();
             ObservableCollection<AccountWishlist> accountWishlist = EpicApi.GetWishlist(EpicApi.CurrentAccountInfos);
 
@@ -47,11 +46,11 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    GameLookup gamesLookup = isThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
+                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
                     wishlists.Add(new Wishlist
                     {
                         StoreId = x.Id,
-                        StoreName = "Epic",
+                        StoreName = ClientName,
                         ShopColor = GetShopColor(),
                         StoreUrl = x.Link,
                         Name = x.Name,

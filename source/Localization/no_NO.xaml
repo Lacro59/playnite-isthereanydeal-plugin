@@ -10,6 +10,8 @@
     <sys:String x:Key="LOCItadExclusionList">Eksklusjonsliste</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">Ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    
     <sys:String x:Key="LOCItadEnableSteam">Aktiver Steam-ønskeliste</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Aktiver GOG-ønskeliste</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Aktiver Epic Games Store-ønskeliste</sys:String>
@@ -43,6 +45,7 @@
 
     <sys:String x:Key="LOCITADRefreshPrice">Oppdater pris</sys:String>
 
+    <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Best price</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Store price</sys:String>
     
@@ -56,6 +59,10 @@
     <sys:String x:Key="LOCITADPercentage">Minimum rabattprosent</sys:String>
     <sys:String x:Key="LOCITADPrice">Lavere pris enn</sys:String>
 
+    <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
+    <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
+    <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
+    
     <sys:String x:Key="LOCItadCurrentBest">Nåværende beste</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Gjeldende butikks ønskeliste</sys:String>
     <sys:String x:Key="LOCItadBuy">Kjøp beste</sys:String>
@@ -78,6 +85,9 @@
     <sys:String x:Key="LOCItadImportSuccessful">Importering var vellykket</sys:String>
     <sys:String x:Key="LOCItadImportError">Umulig å importere ønskeliste-fil</sys:String>
 
+    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
+    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+
     <!-- IsThereAnyDeal -->
 
     <sys:String x:Key="LOCItadPluginView">Vis IsThereAnyDeal-data</sys:String>
@@ -98,8 +108,8 @@ Prøv å logge inn med kontoen din.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam-ønskelisten er privat. Du må bruke autentiseringsknappen i Steam-bibliotekutvidelsen</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox er aktivert i IsThereAnyDeal-utvidelsen, men bibliotekutvidelsen er deaktivert i Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Det finnes ingen lenke for Xbox-ønskelisten.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisof" xml:space="preserve">Ubisoft er aktivert i IsThereAnyDeal-utvidelsen, men bibliotekets utvidelse er deaktivert i Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Det finnes ingen ønskeliste-lenke for Ubisoft.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorOrigin" xml:space="preserve">EA app er aktivert i IsThereAnyDeal-utvidelsen, men bibliotekets utvidelse er deaktivert i Playnite.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA app er aktivert i IsThereAnyDeal-utvidelsen, men bibliotekets utvidelse er deaktivert i Playnite.</sys:String>
 
 </ResourceDictionary>
