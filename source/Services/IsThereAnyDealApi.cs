@@ -91,7 +91,7 @@ namespace IsThereAnyDeal.Services
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, $"Error in GetGamesPrices({country})", true, IsThereAnyDeal.PluginName);
+                    Common.LogError(ex, false, $"Error in GetServiceShops({country})", true, IsThereAnyDeal.PluginName);
                 }
 
                 return null;
