@@ -192,6 +192,11 @@ namespace IsThereAnyDeal.Services
 
 		#region Price Management
 
+		public List<Wishlist> SetCurrentPrice(List<Wishlist> wishlists, bool force)
+		{
+			return SetCurrentPriceAsync(wishlists, force).GetAwaiter().GetResult();
+		}
+
 		/// <summary>
 		/// Updates the current price information for all items in the wishlist using the IsThereAnyDeal API.
 		/// </summary>
