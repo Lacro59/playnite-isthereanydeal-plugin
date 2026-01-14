@@ -42,7 +42,7 @@ namespace IsThereAnyDeal.Services
 		/// <summary>
 		/// Gets or sets the external plugin reference.
 		/// </summary>
-		internal static PlayniteTools.ExternalPlugin ExternalPlugin { get; set; }
+		internal PlayniteTools.ExternalPlugin ExternalPlugin { get; set; }
 
 		/// <summary>
 		/// Gets the file data tools instance for managing cached data.
