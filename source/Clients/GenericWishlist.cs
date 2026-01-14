@@ -198,14 +198,14 @@ namespace IsThereAnyDeal.Services
 		/// <param name="wishlists">The list of wishlist items to update with current prices.</param>
 		/// <param name="force">If true, forces a refresh even if recent price data exists.</param>
 		/// <returns>The wishlist with updated price information.</returns>
-		public List<Wishlist> SetCurrentPrice(List<Wishlist> wishlists, bool force)
+		public async Task<List<Wishlist>> SetCurrentPriceAsync(List<Wishlist> wishlists, bool force)
 		{
 			if (wishlists == null || wishlists.Count == 0)
 			{
 				return wishlists ?? new List<Wishlist>();
 			}
 
-			return IsThereAnyDealApi.GetCurrentPrice(wishlists, Settings, force).GetAwaiter().GetResult();
+			return await IsThereAnyDealApi.GetCurrentPrice(wishlists, Settings, force).ConfigureAwait(false);
 		}
 
 		#endregion
