@@ -82,3 +82,14 @@ Packages:
       - 'Fixed: Issue with Steam wishlist'
       - 'Updated: ITAD api'
       - 'Added: Options for background updates'
+  - Version: 3.4
+    RequiredApiVersion: 6.14.0
+    ReleaseDate: 2026-01-19
+    PackageUrl: https://github.com/Lacro59/playnite-isthereanydeal-plugin/releases/download/v3.4/playnite-isthereanydeal-plugin_3_4.pext
+    Changelog:
+      - 'UI: Visual and performance optimizations'
+      - 'Added: Release date'
+      - 'Fixed: Missing date for giveaways'
+      - 'Improved: Reliability of wishlist synchronization (Steam/Xbox)'
+      - 'Updated: Translations'
+      - 'Added: Wishlist entries show richer price history (all-time, 1y, 3m)'
