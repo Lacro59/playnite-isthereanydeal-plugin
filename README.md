@@ -49,14 +49,14 @@ The plugin is a alternative version to [bburky](https://github.com/bburky/isther
   </picture>
 </a>
 
-With this plugin you can
-* get whislit from Steam, GOG, Epic Game Store, Humble Bundle, Oringin and Xbox
-* manual Steam whislit import
-* remove a game in your wish list for GOG, Epci Game Store and Origin
-* show best price for different game in wishlit
-* notification when percent reduc is above limit defined
-* show giveaways
-* notification for new giveaways
+With this plugin you can:
+* Retrieve your wishlist from Steam, GOG, Epic Games Store, Humble Bundle and Xbox.
+* Import your Steam wishlist manually.
+* Remove a game from your wishlist on GOG and Epic Games Store (currently broken).
+* Display the best price for games in your wishlist.
+* Receive notifications when a discount exceeds a defined threshold.
+* View available giveaways.
+* Receive notifications for new giveaways.
 
 ## Translations
 You can help to translate the extensions do different languages via the project [Crowdin](https://crowdin.com/project/playnite-extensions) page.
