@@ -1,4 +1,4 @@
-﻿using CommonPluginsShared;
+using CommonPluginsShared;
 using IsThereAnyDeal.Views;
 using Playnite.SDK;
 using Playnite.SDK.Plugins;
@@ -40,7 +40,7 @@ namespace IsThereAnyDeal.Services
                 Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
                 _ = windowExtension.ShowDialog();
             };
-            Visible = plugin.PluginSettings.Settings.EnableIntegrationButtonHeader;
+            Visible = plugin.PluginSettingsViewModel.Settings.EnableIntegrationButtonHeader;
         }
     }
 }

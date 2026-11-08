@@ -15,13 +15,13 @@ namespace IsThereAnyDeal.Clients
 {
     public class EaWishlist : GenericWishlist
     {
-		private readonly Lazy<EaApi> _lazyApi = new Lazy<EaApi>(() => new EaApi("IsThereAnyDeal"));
+		private readonly Lazy<EaApi> _lazyApi = new Lazy<EaApi>(() => new EaApi("IsThereAnyDeal", PlayniteTools.ExternalPlugin.IsThereAnyDeal));
 		internal EaApi EaApi => _lazyApi.Value;
 
 
 		public EaWishlist(IsThereAnyDeal plugin) : base(plugin, "EA")
         {
-            ExternalPlugin = PlayniteTools.ExternalPlugin.OriginLibrary;
+            ExternalPlugin = PlayniteTools.ExternalPlugin.IsThereAnyDeal;
         }
 
         internal override List<Wishlist> GetStoreWishlist(List<Wishlist> cachedData)

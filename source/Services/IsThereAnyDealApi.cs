@@ -1,5 +1,6 @@
-ï»¿using CommonPluginsShared;
+using CommonPluginsShared;
 using CommonPluginsShared.Extensions;
+using CommonPluginsShared.IO;
 using IsThereAnyDeal.Clients;
 using IsThereAnyDeal.Models;
 using IsThereAnyDeal.Models.Api;
@@ -67,7 +68,7 @@ namespace IsThereAnyDeal.Services
         public List<CountData> CountDatas { get; set; } = new List<CountData>();
 
 		private static string CachePath => Path.Combine(IsThereAnyDeal.PluginUserDataPath, IsThereAnyDeal.PluginName, "ITAD");
-		private static FileDataTools FileDataTools => new FileDataTools(IsThereAnyDeal.PluginName, "ITAD");
+		private static FileDataService FileDataService => new FileDataService(IsThereAnyDeal.PluginName, "ITAD");
 
 		private readonly SemaphoreSlim _rateLimiter = new SemaphoreSlim(1, 1);
 		private DateTime _lastApiCall = DateTime.MinValue;
@@ -75,13 +76,13 @@ namespace IsThereAnyDeal.Services
 
 		private static readonly Dictionary<string, string> CurrencySymbols = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-	        { "eur", "â‚¬" },
+	        { "eur", "€" },
 	        { "usd", "$" },
-	        { "gbp", "Â£" },
+	        { "gbp", "£" },
 	        { "aud", "$" },
 	        { "brl", "R$" },
 	        { "cad", "$" },
-	        { "cny", "Â¥" }
+	        { "cny", "¥" }
         };
 
 
@@ -138,7 +139,7 @@ namespace IsThereAnyDeal.Services
         private async Task<GameLookup> GetGamesLookup(string title, uint appId)
         {
 			string cachePath = Path.Combine(CachePath, $"{(title.IsNullOrEmpty() ? appId.ToString() : title)}.json");
-			var data = await FileDataTools.LoadDataAsync<GameLookup>(cachePath, 4320);
+			var data = await FileDataService.LoadDataAsync<GameLookup>(cachePath, 4320);
 
 			if (data == null)
             {
@@ -161,7 +162,7 @@ namespace IsThereAnyDeal.Services
                                 throw ex;
                             }
 
-                            FileDataTools.SaveData(cachePath, data);
+                            FileDataService.SaveData(cachePath, data);
                             return data;
                         }
                     }
@@ -251,7 +252,7 @@ namespace IsThereAnyDeal.Services
         /// </summary>
         public static List<Country> GetCountries()
         {
-            return FileDataTools.LoadData<List<Country>>(Path.Combine(IsThereAnyDeal.PluginFolder, "Data", "countries.json"), -1);
+            return FileDataService.LoadData<List<Country>>(Path.Combine(IsThereAnyDeal.PluginFolder, "Data", "countries.json"), -1);
         }
 
         #region Plugin
@@ -268,7 +269,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "Steam",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableSteam,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableSteam,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.SteamLibrary },
                     NotificationId = "IsThereAnyDeal-Steam-disabled",
                     LocErrorKey = "LOCItadNotificationErrorSteam",
@@ -279,7 +280,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "GOG",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableGog,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableGog,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.GogLibrary, ExternalPlugin.GogOssLibrary },
                     NotificationId = "IsThereAnyDeal-GOG-disabled",
                     LocErrorKey = "LOCItadNotificationErrorGog",
@@ -290,7 +291,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "Epic Games Store",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableEpic,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableEpic,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.EpicLibrary, ExternalPlugin.LegendaryLibrary },
                     NotificationId = "IsThereAnyDeal-EpicGameStore-disabled",
                     LocErrorKey = "LOCItadNotificationErrorEpic",
@@ -301,7 +302,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "Humble Bundle",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableHumble,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableHumble,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.HumbleLibrary },
                     NotificationId = "IsThereAnyDeal-HumbleBundle-disabled",
                     LocErrorKey = "LOCItadNotificationErrorHumble",
@@ -312,7 +313,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "Xbox",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableXbox,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableXbox,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.XboxLibrary },
                     NotificationId = "IsThereAnyDeal-Xbox-disabled",
                     LocErrorKey = "LOCItadNotificationErrorXbox",
@@ -323,7 +324,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "Ubisoft Connect",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableUbisoft,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableUbisoft,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.UplayLibrary },
                     NotificationId = "IsThereAnyDeal-Ubisoft-disabled",
                     LocErrorKey = "LOCItadNotificationErrorUbisoft",
@@ -334,7 +335,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "EA",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableOrigin,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableOrigin,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.OriginLibrary },
                     NotificationId = "IsThereAnyDeal-EA-disabled",
                     LocErrorKey = "LOCItadNotificationErrorEa",
@@ -392,8 +393,8 @@ namespace IsThereAnyDeal.Services
 
             if (!cacheOnly || forcePrice)
             {
-                plugin.PluginSettings.Settings.LastRefresh = DateTime.Now.ToUniversalTime();
-                plugin.SavePluginSettings(plugin.PluginSettings.Settings);
+                plugin.PluginSettingsViewModel.Settings.LastRefresh = DateTime.Now.ToUniversalTime();
+                plugin.SavePluginSettings(plugin.PluginSettingsViewModel.Settings);
             }
 
             return finalData.OrderBy(x => x.Name).ToList();
@@ -636,7 +637,7 @@ namespace IsThereAnyDeal.Services
 		/// </summary>
 		public static string GetShopColor(string shopName)
         {
-            var data = FileDataTools.LoadData<List<Shop>>(Path.Combine(IsThereAnyDeal.PluginFolder, "Data", "shops.json"), -1);
+            var data = FileDataService.LoadData<List<Shop>>(Path.Combine(IsThereAnyDeal.PluginFolder, "Data", "shops.json"), -1);
             return data?.FirstOrDefault(x => x.Name.IsEqual(shopName))?.Color ?? ResourceProvider.GetResource("TextBrush").ToString();
         }
 
@@ -649,7 +650,7 @@ namespace IsThereAnyDeal.Services
             string pluginDirectoryCache = IsThereAnyDeal.PluginUserDataPath + "\\cache";
             string pluginFileCache = pluginDirectoryCache + "\\giveways.json";
 
-            var itadGiveawaysCache = FileDataTools.LoadData<List<ItadGiveaway>>(pluginFileCache, -1) ?? new List<ItadGiveaway>();
+            var itadGiveawaysCache = FileDataService.LoadData<List<ItadGiveaway>>(pluginFileCache, -1) ?? new List<ItadGiveaway>();
 
             // Load on web
             List<ItadGiveaway> itadGiveaways = new List<ItadGiveaway>();
@@ -683,7 +684,7 @@ namespace IsThereAnyDeal.Services
                     }
                     catch (Exception e)
                     {
-                        Common.LogError(e, false, "Erreur lors de la requÃªte ITAD");
+                        Common.LogError(e, false, "Erreur lors de la requête ITAD");
                     }
 
                     _ = Serialization.TryFromJson(data, out Giveaways giveaways, out Exception ex);
@@ -737,7 +738,7 @@ namespace IsThereAnyDeal.Services
             // REMARK: Compare web results with cache to preserve the "HasSeen" status of older giveaways.
             if (itadGiveaways.Count != 0)
             {
-                Common.LogDebug(true, $"Compare with cache");
+                Common.LogDebug($"Compare with cache");
                 foreach (ItadGiveaway itadGiveaway in itadGiveawaysCache)
                 {
                     if (itadGiveaways.Find(x => x.TitleAll == itadGiveaway.TitleAll) != null)
@@ -754,7 +755,7 @@ namespace IsThereAnyDeal.Services
             }
 
 			// Save new
-			FileDataTools.SaveData(pluginFileCache, itadGiveaways);
+			FileDataService.SaveData(pluginFileCache, itadGiveaways);
 
             return itadGiveaways;
         }
@@ -769,10 +770,10 @@ namespace IsThereAnyDeal.Services
             {
                 IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
 
-                if (plugin.PluginSettings.Settings.EnableNotification)
+                if (plugin.PluginSettingsViewModel.Settings.EnableNotification)
                 {
                     List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, true);
-                    ListWishlist.Where(x => x.Game != null && x.GetNotification(plugin.PluginSettings.Settings.NotificationCriterias))
+                    ListWishlist.Where(x => x.Game != null && x.GetNotification(plugin.PluginSettingsViewModel.Settings.NotificationCriterias))
                       .ForEach(x =>
                       {
                           API.Instance.Notifications.Add(new NotificationMessage(
@@ -807,7 +808,7 @@ namespace IsThereAnyDeal.Services
                       });
                 }
 
-                if (plugin.PluginSettings.Settings.EnableNotificationGiveaways)
+                if (plugin.PluginSettingsViewModel.Settings.EnableNotificationGiveaways)
                 {
                     List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways();
                     itadGiveaways.Where(x => !x.HasSeen).ForEach(x =>

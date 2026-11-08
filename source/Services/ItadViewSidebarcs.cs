@@ -1,4 +1,4 @@
-﻿using CommonPluginsShared.Controls;
+using CommonPluginsShared.Controls;
 using IsThereAnyDeal.Views;
 using Playnite.SDK;
 using Playnite.SDK.Plugins;
@@ -34,7 +34,7 @@ namespace IsThereAnyDeal.Services
                 }
                 return SidebarItemControl;
             };
-            Visible = plugin.PluginSettings.Settings.EnableIntegrationButtonSide;
+            Visible = plugin.PluginSettingsViewModel.Settings.EnableIntegrationButtonSide;
         }
 
         public void ResetView()

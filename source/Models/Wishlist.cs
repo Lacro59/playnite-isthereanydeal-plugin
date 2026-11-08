@@ -1,6 +1,7 @@
 ﻿using Playnite.SDK;
 using Playnite.SDK.Data;
 using CommonPluginsShared;
+using CommonPluginsShared.Images;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

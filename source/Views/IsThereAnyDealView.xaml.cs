@@ -1,4 +1,4 @@
-﻿using CommonPluginsControls.Controls;
+using CommonPluginsControls.Controls;
 using CommonPluginsShared;
 using CommonPluginsShared.Converters;
 using CommonPluginsShared.Extensions;
@@ -45,8 +45,8 @@ namespace IsThereAnyDeal.Views
         {
             InitializeComponent();
 
-            Settings = plugin.PluginSettings.Settings;
             Plugin = plugin;
+            Settings = plugin.PluginSettingsViewModel.Settings;
 
             DataContext = ItadDataContext;
             ItadDataContext.MinPrice = Settings.MinPrice;

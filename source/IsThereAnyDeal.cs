@@ -1,6 +1,7 @@
-﻿using CommonPlayniteShared;
+using CommonPlayniteShared;
 using CommonPlayniteShared.Common;
 using CommonPluginsShared;
+using CommonPluginsShared.Caching;
 using CommonPluginsShared.PlayniteExtended;
 using CommonPluginsStores.Epic;
 using CommonPluginsStores.Gog;
@@ -36,9 +37,12 @@ namespace IsThereAnyDeal
 
         public IsThereAnyDeal(IPlayniteAPI api) : base(api, "IsThereAnyDeal")
         {
+            Logger.Info("[Startup] ctor entered");
+
             string pluginCachePath = Path.Combine(PlaynitePaths.DataCachePath, PluginName);
-            HttpFileCachePlugin.CacheDirectory = pluginCachePath;
+            HttpFileCacheService.CacheDirectory = pluginCachePath;
             FileSystem.CreateDirectory(pluginCachePath);
+            Logger.Info($"[Startup] cache ready path={pluginCachePath}");
 
             // Manual dll load
             try
@@ -48,6 +52,11 @@ namespace IsThereAnyDeal
                 if (File.Exists(PathDLL))
                 {
                     Assembly DLL = Assembly.LoadFile(PathDLL);
+                    Logger.Info($"[Startup] dll loaded name=VirtualizingWrapPanel");
+                }
+                else
+                {
+                    Logger.Info("[Startup] dll skipped name=VirtualizingWrapPanel reason=missing");
                 }
             }
             catch (Exception ex)
@@ -57,34 +66,44 @@ namespace IsThereAnyDeal
 
             // Add Event for WindowBase for get the "WindowSettings".
             EventManager.RegisterClassHandler(typeof(Window), Window.LoadedEvent, new RoutedEventHandler(WindowBase_LoadedEvent));
+            Logger.Info("[Startup] window_loaded handler registered");
 
             // Initialize top & side bar
             if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
             {
                 TopPanelItem = new ItadTopPanelItem(this);
                 SidebarItem = new ItadViewSidebar(this);
+                Logger.Info("[Startup] desktop chrome ready topPanel=true sidebar=true");
+            }
+            else
+            {
+                Logger.Info("[Startup] desktop chrome skipped mode=fullscreen");
             }
 
             // Timer
-            if (PluginSettings.Settings.UpdateWishlist.EveryHours)
+            if (PluginSettingsViewModel.Settings.UpdateWishlist.EveryHours)
             {
-                Timer timerUpdateWishlist = new Timer(PluginSettings.Settings.UpdateWishlist.Hours * 3600000)
+                Timer timerUpdateWishlist = new Timer(PluginSettingsViewModel.Settings.UpdateWishlist.Hours * 3600000)
                 {
                     AutoReset = true
                 };
                 timerUpdateWishlist.Elapsed += (sender, e) => OnTimedUpdateWishlistEvent(sender, e);
                 timerUpdateWishlist.Start();
+                Logger.Info($"[Startup] timer started kind=wishlist hours={PluginSettingsViewModel.Settings.UpdateWishlist.Hours}");
             }
-            if (PluginSettings.Settings.UpdatePrice.EveryHours)
+            if (PluginSettingsViewModel.Settings.UpdatePrice.EveryHours)
             {
-                Timer timerUpdatePrice = new Timer(PluginSettings.Settings.UpdatePrice.Hours * 3600000)
+                Timer timerUpdatePrice = new Timer(PluginSettingsViewModel.Settings.UpdatePrice.Hours * 3600000)
                 {
                     AutoReset = true
                 };
                 timerUpdatePrice.Elapsed += (sender, e) => OnTimedUpdatePriceEvent(sender, e);
                 timerUpdatePrice.Start();
+                Logger.Info($"[Startup] timer started kind=price hours={PluginSettingsViewModel.Settings.UpdatePrice.Hours}");
             }
-		}
+
+            Logger.Info("[Startup] ctor completed");
+        }
 
         private void OnTimedUpdatePriceEvent(object sender, ElapsedEventArgs e)
         {
@@ -127,11 +146,11 @@ namespace IsThereAnyDeal
                 Common.LogError(ex, false, $"Error on WindowBase_LoadedEvent for {winIdProperty}", true, PluginName);
             }
         }
-        
+
         #endregion
 
         #region Theme integration
-        
+
         // Button on top panel
         public override IEnumerable<TopPanelItem> GetTopPanelItems()
         {
@@ -149,11 +168,11 @@ namespace IsThereAnyDeal
         {
             yield return SidebarItem;
         }
-        
+
         #endregion
 
         #region Menus
-        
+
         // To add new game menu items override GetGameMenuItems
         public override IEnumerable<GameMenuItem> GetGameMenuItems(GetGameMenuItemsArgs args)
         {
@@ -177,7 +196,7 @@ namespace IsThereAnyDeal
         public override IEnumerable<MainMenuItem> GetMainMenuItems(GetMainMenuItemsArgs args)
         {
             string MenuInExtensions = string.Empty;
-            if (PluginSettings.Settings.MenuInExtensions)
+            if (PluginSettingsViewModel.Settings.MenuInExtensions)
             {
                 MenuInExtensions = "@";
             }
@@ -285,74 +304,78 @@ namespace IsThereAnyDeal
         // Add code to be executed when Playnite is initialized.
         public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
         {
-            _ = PluginSettings.Settings.UpdateWishlist.OnStart || PluginSettings.Settings.UpdateWishlist.OnStart
+            Logger.Info("[Startup] OnApplicationStarted entered");
+
+            _ = Task.Run(async () =>
+            {
+                await PluginSettingsViewModel.MigrateLegacyStoresIdsAsync().ConfigureAwait(false);
+            });
+
+            _ = PluginSettingsViewModel.Settings.UpdateWishlist.OnStart || PluginSettingsViewModel.Settings.UpdateWishlist.OnStart
                 ? Task.Run(() =>
                 {
                     IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                    _ = isThereAnyDealApi.LoadWishlist(this, PluginSettings.Settings.UpdateWishlist.OnStart, PluginSettings.Settings.UpdateWishlist.OnStart);
+                    _ = isThereAnyDealApi.LoadWishlist(this, PluginSettingsViewModel.Settings.UpdateWishlist.OnStart, PluginSettingsViewModel.Settings.UpdateWishlist.OnStart);
                     _ = IsThereAnyDealApi.CheckNotifications(this);
                 })
                 : IsThereAnyDealApi.CheckNotifications(this);
 
 
-			// StoreAPI Initialization
-			Task.Run(async () =>
-			{
-				var tasks = new[]
-				{
-					Task.Run(() =>
-					{
-						try
-						{
-							Logger.Info("SteamApi Initialization");
-							SteamApi = new SteamApi(PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
-							SteamApi.Initialization(
-								PluginSettings.Settings.SteamStoreSettings,
-								PluginSettings.Settings.PluginState.SteamIsEnabled && PluginSettings.Settings.EnableSteam
-							);
-						}
-						catch (Exception ex)
-						{
-							Logger.Error(ex, "Error initializing SteamApi");
-						}
-					}),
-					Task.Run(() =>
-					{
-						try
-						{
-							Logger.Info("EpicApi Initialization");
-							EpicApi = new EpicApi(PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
-							EpicApi.Initialization(
-								PluginSettings.Settings.EpicStoreSettings,
-								PluginSettings.Settings.PluginState.EpicIsEnabled && PluginSettings.Settings.EnableEpic
-							);
-						}
-						catch (Exception ex)
-						{
-							Logger.Error(ex, "Error initializing EpicApi");
-						}
-					}),
-					Task.Run(() =>
-					{
-						try
-						{
-							Logger.Info("GogApi Initialization");
-							GogApi = new GogApi(PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
-							GogApi.Initialization(
-								PluginSettings.Settings.GogStoreSettings,
-								PluginSettings.Settings.PluginState.GogIsEnabled && PluginSettings.Settings.EnableGog
-							);
-						}
-						catch (Exception ex)
-						{
-							Logger.Error(ex, "Error initializing GogApi");
-						}
-					})
-				};
+            // StoreAPI Initialization
+            Task.Run(async () =>
+            {
+                bool steamLoadUser = PluginSettingsViewModel.Settings.PluginState.SteamIsEnabled && PluginSettingsViewModel.Settings.EnableSteam;
+                bool epicLoadUser = PluginSettingsViewModel.Settings.PluginState.EpicIsEnabled && PluginSettingsViewModel.Settings.EnableEpic;
+                bool gogLoadUser = PluginSettingsViewModel.Settings.PluginState.GogIsEnabled && PluginSettingsViewModel.Settings.EnableGog;
 
-				await Task.WhenAll(tasks);
-				Logger.Info("All API initializations completed");
-			});
+                Logger.Info($"[Store][init] batch starting steamLoadUser={steamLoadUser} epicLoadUser={epicLoadUser} gogLoadUser={gogLoadUser}");
+
+                var tasks = new[]
+                {
+                    Task.Run(() =>
+                    {
+                        try
+                        {
+                            Logger.Info($"[Store][init] steam starting enable={PluginSettingsViewModel.Settings.EnableSteam} libraryEnabled={PluginSettingsViewModel.Settings.PluginState.SteamIsEnabled}");
+                            SteamApi = new SteamApi(PluginName, PlayniteTools.ExternalPlugin.IsThereAnyDeal);
+                            SteamApi.Initialization(PluginSettingsViewModel.Settings.SteamStoreSettings, steamLoadUser);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex, "[Store][init] steam failed");
+                        }
+                    }),
+                    Task.Run(() =>
+                    {
+                        try
+                        {
+                            Logger.Info($"[Store][init] epic starting enable={PluginSettingsViewModel.Settings.EnableEpic} libraryEnabled={PluginSettingsViewModel.Settings.PluginState.EpicIsEnabled}");
+                            EpicApi = new EpicApi(PluginName, PlayniteTools.ExternalPlugin.IsThereAnyDeal);
+                            EpicApi.Initialization(PluginSettingsViewModel.Settings.EpicStoreSettings, epicLoadUser);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex, "[Store][init] epic failed");
+                        }
+                    }),
+                    Task.Run(() =>
+                    {
+                        try
+                        {
+                            Logger.Info($"[Store][init] gog starting enable={PluginSettingsViewModel.Settings.EnableGog} libraryEnabled={PluginSettingsViewModel.Settings.PluginState.GogIsEnabled}");
+                            GogApi = new GogApi(PluginName, PlayniteTools.ExternalPlugin.IsThereAnyDeal);
+                            GogApi.Initialization(PluginSettingsViewModel.Settings.GogStoreSettings, gogLoadUser);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex, "[Store][init] gog failed");
+                        }
+                    })
+                };
+
+                await Task.WhenAll(tasks);
+                Logger.Info("[Store][init] batch completed");
+            });
         }
 
         // Add code to be executed when Playnite is shutting down.
@@ -371,17 +394,17 @@ namespace IsThereAnyDeal
 
 
         #region Settings
- 
+
         public override ISettings GetSettings(bool firstRunSettings)
         {
-            return PluginSettings;
+            return PluginSettingsViewModel;
         }
 
         public override UserControl GetSettingsView(bool firstRunSettings)
         {
-            return new IsThereAnyDealSettingsView(PluginSettings.Settings, this);
+            return new IsThereAnyDealSettingsView();
         }
-        
+
         #endregion
     }
 }

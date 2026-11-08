@@ -1,6 +1,7 @@
-﻿using IsThereAnyDeal.Models;
+using IsThereAnyDeal.Models;
 using Playnite.SDK;
 using CommonPluginsShared;
+using CommonPluginsShared.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,7 +48,7 @@ namespace IsThereAnyDeal.Services
 		/// <summary>
 		/// Gets the file data tools instance for managing cached data.
 		/// </summary>
-		internal FileDataTools FileDataTools { get; }
+		internal FileDataService FileDataService { get; }
 
 		/// <summary>
 		/// Gets the full file path where wishlist data is stored for this client.
@@ -85,12 +86,12 @@ namespace IsThereAnyDeal.Services
 			Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
 			ClientName = clientName ?? throw new ArgumentNullException(nameof(clientName));
 
-			Settings = Plugin.PluginSettings.Settings;
+			Settings = Plugin.PluginSettingsViewModel.Settings;
 
 			string dirPath = Path.Combine(IsThereAnyDeal.PluginUserDataPath, IsThereAnyDeal.PluginName);
 			FilePath = Path.Combine(dirPath, $"{ClientName}.json");
 
-			FileDataTools = new FileDataTools(IsThereAnyDeal.PluginName, clientName);
+			FileDataService = new FileDataService(IsThereAnyDeal.PluginName, clientName);
 		}
 
 		#endregion
@@ -112,7 +113,7 @@ namespace IsThereAnyDeal.Services
 			try
 			{
 				int cacheTimeout = cacheOnly ? -1 : CacheTimeoutMinutes;
-				var data = FileDataTools.LoadData<List<Wishlist>>(FilePath, cacheTimeout);
+				var data = FileDataService.LoadData<List<Wishlist>>(FilePath, cacheTimeout);
 
 				if (data == null)
 				{
@@ -138,7 +139,7 @@ namespace IsThereAnyDeal.Services
 		/// Saves wishlist data to the local cache file.
 		/// </summary>
 		/// <param name="wishlists">The list of wishlist items to save.</param>
-		public void SaveWishlist(List<Wishlist> wishlists) => FileDataTools.SaveData(FilePath, wishlists);
+		public void SaveWishlist(List<Wishlist> wishlists) => FileDataService.SaveData(FilePath, wishlists);
 
 		#endregion
 
