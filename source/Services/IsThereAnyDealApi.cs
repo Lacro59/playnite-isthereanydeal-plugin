@@ -42,7 +42,7 @@ namespace IsThereAnyDeal.Services
         #endregion
 
         /// <summary>
-        /// API Key for ITAD services. 
+        /// API Key for ITAD services.
         /// REMARK: Should ideally be moved to a secure configuration or encrypted store instead of being hardcoded.
         /// </summary>
         private static string Key => "fa49308286edcaf76fea58926fd2ea2d216a17ff";
@@ -70,19 +70,23 @@ namespace IsThereAnyDeal.Services
 		private static string CachePath => Path.Combine(IsThereAnyDeal.PluginUserDataPath, IsThereAnyDeal.PluginName, "ITAD");
 		private static FileDataService FileDataService => new FileDataService(IsThereAnyDeal.PluginName, "ITAD");
 
-		private readonly SemaphoreSlim _rateLimiter = new SemaphoreSlim(1, 1);
-		private DateTime _lastApiCall = DateTime.MinValue;
+		/// <summary>
+		/// Process-wide ITAD API gate: all <see cref="IsThereAnyDealApi"/> instances share one limiter
+		/// so parallel store fetches cannot burst concurrent HTTP calls to ITAD.
+		/// </summary>
+		private static readonly SemaphoreSlim RateLimiter = new SemaphoreSlim(1, 1);
+		private static DateTime _lastApiCall = DateTime.MinValue;
 		private const int MinApiCallIntervalMs = 500;
 
 		private static readonly Dictionary<string, string> CurrencySymbols = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-	        { "eur", "€" },
+	        { "eur", "\u20AC" },
 	        { "usd", "$" },
-	        { "gbp", "£" },
+	        { "gbp", "\u00A3" },
 	        { "aud", "$" },
 	        { "brl", "R$" },
 	        { "cad", "$" },
-	        { "cny", "¥" }
+	        { "cny", "\u00A5" }
         };
 
 
@@ -343,8 +347,9 @@ namespace IsThereAnyDeal.Services
                 }
             };
 
-            // 2. Process each store generically
+            // 2. Process each store generically (fetch only ? ITAD enrichment is centralised below)
             var lockObj = new object();
+            var storeLoads = new ConcurrentBag<(GenericWishlist Provider, List<Wishlist> Items)>();
             var partitioner = Partitioner.Create(storeConfigs, EnumerablePartitionerOptions.NoBuffering);
 
 			Parallel.ForEach(
@@ -367,6 +372,7 @@ namespace IsThereAnyDeal.Services
 							lock (lockObj)
 							{
 								combinedWishlist.AddRange(storeWishlist);
+								storeLoads.Add((provider, storeWishlist));
 								CountDatas.Add(new CountData { StoreName = config.StoreName, Count = storeWishlist.Count });
 							}
 						}
@@ -388,17 +394,220 @@ namespace IsThereAnyDeal.Services
 				}
 			);
 
-			// 3. Deduplication Logic (Normalized by Name)
-			var finalData = DeduplicateWishlist(combinedWishlist);
+			// 3. Central ITAD pipeline: batch game ids, one price pass, then persist store caches
+			if (!cacheOnly || forcePrice)
+			{
+				Logger.Info($"[ITAD][pipeline] start items={combinedWishlist.Count} cacheOnly={cacheOnly} forcePrice={forcePrice}");
+				EnrichWishlistGameIds(combinedWishlist);
+				Logger.Info($"[ITAD][price] pass force={forcePrice} items={combinedWishlist.Count}");
+				_ = GetCurrentPrice(combinedWishlist, plugin.PluginSettingsViewModel.Settings, forcePrice)
+					.GetAwaiter()
+					.GetResult();
 
-            if (!cacheOnly || forcePrice)
-            {
-                plugin.PluginSettingsViewModel.Settings.LastRefresh = DateTime.Now.ToUniversalTime();
-                plugin.SavePluginSettings(plugin.PluginSettingsViewModel.Settings);
-            }
+				foreach (var load in storeLoads)
+				{
+					try
+					{
+						load.Provider.SaveWishlist(load.Items);
+					}
+					catch (Exception ex)
+					{
+						Common.LogError(ex, false, $"[ITAD][pipeline] saveCache failed client={load.Provider.ClientName}", true, IsThereAnyDeal.PluginName);
+					}
+				}
+
+				plugin.PluginSettingsViewModel.Settings.LastRefresh = DateTime.Now.ToUniversalTime();
+				plugin.SavePluginSettings(plugin.PluginSettingsViewModel.Settings);
+				Logger.Info($"[ITAD][pipeline] done savedStores={storeLoads.Count}");
+			}
+
+			// 4. Deduplication Logic (Normalized by Name)
+			var finalData = DeduplicateWishlist(combinedWishlist);
 
             return finalData.OrderBy(x => x.Name).ToList();
         }
+
+		/// <summary>
+		/// Resolves missing ITAD game ids: batch <see cref="GetGamesId"/> (Steam AppIDs vs titles), then 1x1 <see cref="GetGamesLookup"/> fallback.
+		/// </summary>
+		private void EnrichWishlistGameIds(List<Wishlist> wishlists)
+		{
+			if (wishlists == null || wishlists.Count == 0)
+			{
+				return;
+			}
+
+			var missing = wishlists
+				.Where(x => string.IsNullOrEmpty(x?.Game?.Id))
+				.ToList();
+
+			if (missing.Count == 0)
+			{
+				Logger.Debug("[ITAD][lookup] nothingToResolve");
+				return;
+			}
+
+			var steamItems = missing
+				.Where(x => x.StoreName.IsEqual("Steam") && uint.TryParse(x.StoreId, out _))
+				.ToList();
+			var titleItems = missing.Except(steamItems).ToList();
+
+			var steamAppIds = steamItems
+				.Select(x => x.StoreId)
+				.Where(id => !string.IsNullOrEmpty(id))
+				.Distinct(StringComparer.OrdinalIgnoreCase)
+				.ToList();
+			var titles = titleItems
+				.Select(x => x.Name)
+				.Where(name => !string.IsNullOrEmpty(name))
+				.Distinct(StringComparer.OrdinalIgnoreCase)
+				.ToList();
+
+			Logger.Info($"[ITAD][lookup] batch missing={missing.Count} steamAppIds={steamAppIds.Count} titles={titles.Count}");
+
+			var steamMap = GetGamesIdBatched(null, steamAppIds);
+			foreach (var item in steamItems)
+			{
+				if (TryGetBatchedId(steamMap, item.StoreId, out var gameId)
+					|| TryGetBatchedId(steamMap, "app/" + item.StoreId, out gameId))
+				{
+					ApplyBatchedGameId(item, gameId);
+				}
+			}
+
+			var titleMap = GetGamesIdBatched(titles, null);
+			foreach (var item in titleItems)
+			{
+				if (TryGetBatchedId(titleMap, item.Name, out var gameId)
+					|| TryGetBatchedId(titleMap, RemoveGameEdition(item.Name), out gameId))
+				{
+					ApplyBatchedGameId(item, gameId);
+				}
+			}
+
+			var unresolvedAfterBatch = wishlists.Count(x => string.IsNullOrEmpty(x?.Game?.Id));
+			Logger.Debug($"[ITAD][lookup] afterBatch unresolved={unresolvedAfterBatch} steamHits={steamMap.Count} titleHits={titleMap.Count}");
+
+			var stillMissing = wishlists
+				.Where(x => string.IsNullOrEmpty(x?.Game?.Id))
+				.ToList();
+
+			if (stillMissing.Count == 0)
+			{
+				return;
+			}
+
+			Logger.Warn($"[ITAD][lookup] fallback1x1 count={stillMissing.Count}");
+			foreach (var item in stillMissing)
+			{
+				try
+				{
+					GameLookup lookup;
+					if (item.StoreName.IsEqual("Steam") && uint.TryParse(item.StoreId, out uint appId) && appId > 0)
+					{
+						lookup = GetGamesLookup(appId).GetAwaiter().GetResult();
+					}
+					else if (!string.IsNullOrEmpty(item.Name))
+					{
+						lookup = GetGamesLookup(item.Name).GetAwaiter().GetResult();
+					}
+					else
+					{
+						continue;
+					}
+
+					if (lookup?.Found == true && lookup.Game != null)
+					{
+						item.Game = lookup.Game;
+						if (item.StoreName.IsEqual("Steam")
+							&& item.Game.Title != null
+							&& item.Name.IsEqual($"SteamApp? - {item.StoreId}"))
+						{
+							item.Name = item.Game.Title;
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Common.LogError(ex, false, $"[ITAD][lookup] fallback failed store={item.StoreName} storeId={item.StoreId} name={item.Name}", true, IsThereAnyDeal.PluginName);
+				}
+			}
+		}
+
+		private Dictionary<string, string> GetGamesIdBatched(List<string> titles, List<string> appIds)
+		{
+			var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+			const int chunkSize = 200;
+
+			var source = titles?.Count > 0 ? titles : appIds;
+			if (source == null || source.Count == 0)
+			{
+				return result;
+			}
+
+			var useTitles = titles?.Count > 0;
+			var chunks = source
+				.Select((item, index) => new { item, index })
+				.GroupBy(x => x.index / chunkSize)
+				.Select(g => g.Select(x => x.item).ToList())
+				.ToList();
+
+			foreach (var chunk in chunks)
+			{
+				try
+				{
+					var ids = GetGamesId(
+						useTitles ? chunk : null,
+						useTitles ? null : chunk
+					).GetAwaiter().GetResult();
+
+					if (ids == null || ids.Count == 0)
+					{
+						continue;
+					}
+
+					foreach (var kvp in ids)
+					{
+						if (!string.IsNullOrEmpty(kvp.Key) && !string.IsNullOrEmpty(kvp.Value))
+						{
+							result[kvp.Key] = kvp.Value;
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Common.LogError(ex, false, "[ITAD][lookup] GetGamesIdBatched failed", true, IsThereAnyDeal.PluginName);
+				}
+			}
+
+			return result;
+		}
+
+		private static bool TryGetBatchedId(Dictionary<string, string> map, string key, out string gameId)
+		{
+			gameId = null;
+			if (map == null || string.IsNullOrEmpty(key))
+			{
+				return false;
+			}
+
+			return map.TryGetValue(key, out gameId) && !string.IsNullOrEmpty(gameId);
+		}
+
+		private static void ApplyBatchedGameId(Wishlist item, string gameId)
+		{
+			if (item == null || string.IsNullOrEmpty(gameId))
+			{
+				return;
+			}
+
+			item.Game = new Models.Api.Game
+			{
+				Id = gameId,
+				Title = item.Name,
+				Slug = item.Game?.Slug
+			};
+		}
 
         /// <summary>
         /// Groups duplicate games across different storefronts into a single entry with a list of duplicates.
@@ -684,7 +893,7 @@ namespace IsThereAnyDeal.Services
                     }
                     catch (Exception e)
                     {
-                        Common.LogError(e, false, "Erreur lors de la requête ITAD");
+                        Common.LogError(e, false, "Error on ITAD request");
                     }
 
                     _ = Serialization.TryFromJson(data, out Giveaways giveaways, out Exception ex);
@@ -862,22 +1071,22 @@ namespace IsThereAnyDeal.Services
 
 		#endregion
 
-		private async Task<T> WithRateLimitAsync<T>(Func<Task<T>> apiCall)
+		private static async Task<T> WithRateLimitAsync<T>(Func<Task<T>> apiCall)
 		{
-			await _rateLimiter.WaitAsync();
+			await RateLimiter.WaitAsync().ConfigureAwait(false);
 			try
 			{
 				var elapsed = (DateTime.Now - _lastApiCall).TotalMilliseconds;
 				if (elapsed < MinApiCallIntervalMs)
 				{
-					await Task.Delay(MinApiCallIntervalMs - (int)elapsed);
+					await Task.Delay(MinApiCallIntervalMs - (int)elapsed).ConfigureAwait(false);
 				}
 				_lastApiCall = DateTime.Now;
-				return await apiCall();
+				return await apiCall().ConfigureAwait(false);
 			}
 			finally
 			{
-				_rateLimiter.Release();
+				_ = RateLimiter.Release();
 			}
 		}
 

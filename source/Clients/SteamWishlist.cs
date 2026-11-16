@@ -4,7 +4,6 @@ using CommonPluginsShared.Extensions;
 using CommonPluginsStores.Models;
 using CommonPluginsStores.Steam;
 using CommonPluginsStores.Steam.Models;
-using IsThereAnyDeal.Models.Api;
 using Playnite.SDK;
 using Playnite.SDK.Data;
 using System;
@@ -53,19 +52,18 @@ namespace IsThereAnyDeal.Services
                     uint.TryParse(x.Id, out uint appId);
                     if (appId > 0)
                     {
-                        GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(appId).GetAwaiter().GetResult();
                         wishlists.Add(new Models.Wishlist
                         {
                             StoreId = x.Id,
                             StoreName = ClientName,
                             ShopColor = GetShopColor(),
                             StoreUrl = x.Link,
-                            Name = x.Name.IsEqual($"SteamApp? - {x.Id}") && (gamesLookup?.Found ?? false) ? gamesLookup.Game.Title : x.Name,
+                            Name = x.Name,
                             SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
                             ReleaseDate = x.Released,
                             Added = x.Added,
                             Capsule = x.Image,
-                            Game = (gamesLookup?.Found ?? false) ? gamesLookup.Game : null,
+                            Game = null,
                             IsActive = true
                         });
                     }
@@ -80,7 +78,16 @@ namespace IsThereAnyDeal.Services
                 }
             });
 
-			wishlists = SetCurrentPrice(wishlists, false);
+            MergeCachedItadData(wishlists, cachedData);
+            foreach (var item in wishlists)
+            {
+                if (item.Game?.Title != null
+                    && item.Name.IsEqual($"SteamApp? - {item.StoreId}"))
+                {
+                    item.Name = item.Game.Title;
+                }
+            }
+
             SaveWishlist(wishlists);
             return wishlists;
         }
@@ -101,7 +108,6 @@ namespace IsThereAnyDeal.Services
 					steamUserData?.RgWishlist?.ForEach(appId =>
                     {
 						var gameData = SteamApi.GetAppDetails(appId, 1);
-						GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(appId).GetAwaiter().GetResult();
 
                         wishlists.Add(new Models.Wishlist
                         {
@@ -109,17 +115,15 @@ namespace IsThereAnyDeal.Services
                             StoreName = ClientName,
                             ShopColor = GetShopColor(),
                             StoreUrl = $"https://store.steampowered.com/app/{appId}",
-                            Name = (gameData?.data?.name.IsNullOrEmpty() ?? true) && (gamesLookup?.Found ?? false) ? gamesLookup.Game.Title : gameData?.data?.name ?? $"SteamApp - {appId}",
+                            Name = gameData?.data?.name ?? $"SteamApp - {appId}",
                             SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
                             ReleaseDate = DateHelper.ParseReleaseDate(gameData?.data?.release_date?.date)?.Date,
                             Capsule = gameData?.data?.header_image ?? string.Empty,
-
-							Game = gamesLookup != null ? gamesLookup.Found ? gamesLookup.Game : null : null,
+							Game = null,
                             IsActive = true
                         });
                     });
 
-                    wishlists = SetCurrentPrice(wishlists, false);
                     SaveWishlist(wishlists);
 
                     return true;

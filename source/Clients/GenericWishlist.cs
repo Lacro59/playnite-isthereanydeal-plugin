@@ -106,7 +106,7 @@ namespace IsThereAnyDeal.Services
 		/// <returns>A list of wishlist items, or an empty list if data is unavailable or an error occurs.</returns>
 		/// <remarks>
 		/// When cacheOnly is false, data older than 1440 minutes (24 hours) will be considered stale.
-		/// If forcePrice is true, the method will fetch current prices and save the updated data.
+		/// Price / ITAD enrichment is handled centrally by <see cref="IsThereAnyDealApi.LoadWishlist"/> (not here).
 		/// </remarks>
 		internal List<Wishlist> LoadWishlists(bool cacheOnly = false, bool forcePrice = false)
 		{
@@ -115,18 +115,7 @@ namespace IsThereAnyDeal.Services
 				int cacheTimeout = cacheOnly ? -1 : CacheTimeoutMinutes;
 				var data = FileDataService.LoadData<List<Wishlist>>(FilePath, cacheTimeout);
 
-				if (data == null)
-				{
-					return new List<Wishlist>();
-				}
-
-				if (forcePrice)
-				{
-					data = SetCurrentPrice(data, forcePrice);
-					SaveWishlist(data);
-				}
-
-				return data;
+				return data ?? new List<Wishlist>();
 			}
 			catch (Exception ex)
 			{
@@ -188,6 +177,55 @@ namespace IsThereAnyDeal.Services
 		/// <param name="storeId">The store-specific identifier of the game to remove.</param>
 		/// <returns>True if the removal was successful, false otherwise.</returns>
 		public abstract bool RemoveWishlist(string storeId);
+
+		/// <summary>
+		/// Copies ITAD game id / price fields from a previous store cache onto freshly fetched rows (matched by StoreId).
+		/// Store clients no longer call the ITAD API during <see cref="GetStoreWishlist"/>; enrichment is centralised later.
+		/// </summary>
+		internal static void MergeCachedItadData(List<Wishlist> wishlists, List<Wishlist> cachedData)
+		{
+			if (wishlists == null || wishlists.Count == 0 || cachedData == null || cachedData.Count == 0)
+			{
+				return;
+			}
+
+			var cacheByStoreId = new Dictionary<string, Wishlist>(StringComparer.OrdinalIgnoreCase);
+			foreach (var cached in cachedData)
+			{
+				if (string.IsNullOrEmpty(cached?.StoreId) || cacheByStoreId.ContainsKey(cached.StoreId))
+				{
+					continue;
+				}
+
+				cacheByStoreId[cached.StoreId] = cached;
+			}
+
+			foreach (var item in wishlists)
+			{
+				if (string.IsNullOrEmpty(item?.StoreId)
+					|| !cacheByStoreId.TryGetValue(item.StoreId, out var cached))
+				{
+					continue;
+				}
+
+				if (item.Game == null && cached.Game != null)
+				{
+					item.Game = cached.Game;
+				}
+
+				if (item.ItadGameInfos == null && cached.ItadGameInfos != null)
+				{
+					item.ItadGameInfos = cached.ItadGameInfos;
+				}
+
+				if ((item.ItadLow == null || item.ItadLow.Count == 0)
+					&& cached.ItadLow != null
+					&& cached.ItadLow.Count > 0)
+				{
+					item.ItadLow = cached.ItadLow;
+				}
+			}
+		}
 
 		#endregion
 
