@@ -61,9 +61,17 @@
                                         <Label Content="{DynamicResource LOCItadWishlist}" VerticalAlignment="Top" DockPanel.Dock="Left" Width="100" />
 
                                         <StackPanel>
-                                            <CheckBox IsChecked="{Binding Settings.UpdateWishlist.OnStart}">
+                                            <CheckBox Name="PART_UpdateWishlistOnStart"
+                                                      IsChecked="{Binding Settings.UpdateWishlist.OnStart}"
+                                                      Checked="PART_UpdateWishlistOnStart_Changed"
+                                                      Unchecked="PART_UpdateWishlistOnStart_Changed">
                                                 <Label Content="{DynamicResource LOCCommonUpdateOnStart}" />
                                             </CheckBox>
+                                            <TextBlock Margin="24,4,0,0"
+                                                       Style="{DynamicResource BaseTextBlockStyle}"
+                                                       Text="{DynamicResource LOCItadUpdateWishlistOnStartIncludesPrices}"
+                                                       TextWrapping="Wrap"
+                                                       Opacity="0.75" />
 
                                             <CheckBox IsChecked="{Binding Settings.UpdateWishlist.EveryHours}" Margin="0,10,0,0">
                                                 <StackPanel Orientation="Horizontal">
@@ -79,9 +87,17 @@
                                         <Label Content="{DynamicResource LOCItadPrice}" VerticalAlignment="Top" DockPanel.Dock="Left" Width="100" />
 
                                         <StackPanel>
-                                            <CheckBox IsChecked="{Binding Settings.UpdatePrice.OnStart}">
+                                            <CheckBox Name="PART_UpdatePriceOnStart"
+                                                      IsChecked="{Binding Settings.UpdatePrice.OnStart}">
                                                 <Label Content="{DynamicResource LOCCommonUpdateOnStart}" />
                                             </CheckBox>
+                                            <TextBlock Name="PART_PriceOnStartIncludedHint"
+                                                       Margin="24,4,0,0"
+                                                       Style="{DynamicResource BaseTextBlockStyle}"
+                                                       Text="{DynamicResource LOCItadUpdatePriceIncludedWithWishlist}"
+                                                       TextWrapping="Wrap"
+                                                       Opacity="0.75"
+                                                       Visibility="Collapsed" />
 
                                             <CheckBox IsChecked="{Binding Settings.UpdatePrice.EveryHours}" Margin="0,10,0,0">
                                                 <StackPanel Orientation="Horizontal">

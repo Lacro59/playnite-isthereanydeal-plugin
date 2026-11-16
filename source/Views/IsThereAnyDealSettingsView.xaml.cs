@@ -35,6 +35,7 @@ namespace IsThereAnyDeal.Views
         private bool _storeUiInitialized;
         private bool _wishlistUiInitialized;
         private IsThereAnyDealSettings _subscribedSettings;
+        private bool? _priceOnStartBeforeWishlist;
 
         public IsThereAnyDealSettingsView()
         {
@@ -115,6 +116,53 @@ namespace IsThereAnyDeal.Views
             PART_SelectCountry.ItemsSource = settings.Countries;
             int idx = ((List<Country>)PART_SelectCountry.ItemsSource).FindIndex(x => x.Alpha3 == settings.CountrySelected.Alpha3);
             PART_SelectCountry.SelectedIndex = idx;
+
+            SyncUpdateOnStartUi();
+        }
+
+        private void PART_UpdateWishlistOnStart_Changed(object sender, RoutedEventArgs e)
+        {
+            SyncUpdateOnStartUi();
+        }
+
+        /// <summary>
+        /// When wishlist update on start is enabled, prices are included: disable the price-only checkbox and show the hint.
+        /// </summary>
+        private void SyncUpdateOnStartUi()
+        {
+            if (PART_UpdateWishlistOnStart == null || PART_UpdatePriceOnStart == null)
+            {
+                return;
+            }
+
+            bool wishlistOnStart = PART_UpdateWishlistOnStart.IsChecked == true;
+
+            if (wishlistOnStart)
+            {
+                if (_priceOnStartBeforeWishlist == null)
+                {
+                    _priceOnStartBeforeWishlist = PART_UpdatePriceOnStart.IsChecked == true;
+                }
+
+                PART_UpdatePriceOnStart.IsChecked = true;
+                PART_UpdatePriceOnStart.IsEnabled = false;
+            }
+            else
+            {
+                PART_UpdatePriceOnStart.IsEnabled = true;
+                if (_priceOnStartBeforeWishlist != null)
+                {
+                    PART_UpdatePriceOnStart.IsChecked = _priceOnStartBeforeWishlist;
+                    _priceOnStartBeforeWishlist = null;
+                }
+            }
+
+            if (PART_PriceOnStartIncludedHint != null)
+            {
+                PART_PriceOnStartIncludedHint.Visibility = wishlistOnStart ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            Logger.Debug($"[Settings][update-on-start] sync wishlistOnStart={wishlistOnStart} priceOnStartEnabled={PART_UpdatePriceOnStart.IsEnabled} priceOnStartChecked={PART_UpdatePriceOnStart.IsChecked}");
         }
 
         private void AttachWishlistEnableListeners()

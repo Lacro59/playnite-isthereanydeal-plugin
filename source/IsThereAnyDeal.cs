@@ -109,9 +109,18 @@ namespace IsThereAnyDeal
         {
             _ = Task.Run(() =>
             {
-                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                _ = isThereAnyDealApi.LoadWishlist(this, false, true);
-                _ = IsThereAnyDealApi.CheckNotifications(this);
+                try
+                {
+                    Logger.Info("[Timer][price] starting cacheOnly=true forcePrice=true");
+                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                    _ = isThereAnyDealApi.LoadWishlist(this, true, true);
+                    _ = IsThereAnyDealApi.CheckNotifications(this);
+                    Logger.Info("[Timer][price] completed");
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, false, "Error on timed price update", true, PluginName);
+                }
             });
         }
 
@@ -119,9 +128,18 @@ namespace IsThereAnyDeal
         {
             _ = Task.Run(() =>
             {
-                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                _ = isThereAnyDealApi.LoadWishlist(this, true, false);
-                _ = IsThereAnyDealApi.CheckNotifications(this);
+                try
+                {
+                    Logger.Info("[Timer][wishlist] starting cacheOnly=false forcePrice=false");
+                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                    _ = isThereAnyDealApi.LoadWishlist(this, false, false);
+                    _ = IsThereAnyDealApi.CheckNotifications(this);
+                    Logger.Info("[Timer][wishlist] completed");
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, false, "Error on timed wishlist update", true, PluginName);
+                }
             });
         }
 
@@ -311,14 +329,36 @@ namespace IsThereAnyDeal
                 await PluginSettingsViewModel.MigrateLegacyStoresIdsAsync().ConfigureAwait(false);
             });
 
-            _ = PluginSettingsViewModel.Settings.UpdateWishlist.OnStart || PluginSettingsViewModel.Settings.UpdateWishlist.OnStart
-                ? Task.Run(() =>
+            bool updateWishlistOnStart = PluginSettingsViewModel.Settings.UpdateWishlist.OnStart;
+            bool updatePriceOnStart = PluginSettingsViewModel.Settings.UpdatePrice.OnStart;
+
+            if (updateWishlistOnStart || updatePriceOnStart)
+            {
+                // Wishlist OnStart: stores + prices (false, true). Price OnStart only: prices from cache (true, true).
+                bool cacheOnly = !updateWishlistOnStart;
+                bool forcePrice = true;
+
+                _ = Task.Run(() =>
                 {
-                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-                    _ = isThereAnyDealApi.LoadWishlist(this, PluginSettingsViewModel.Settings.UpdateWishlist.OnStart, PluginSettingsViewModel.Settings.UpdateWishlist.OnStart);
-                    _ = IsThereAnyDealApi.CheckNotifications(this);
-                })
-                : IsThereAnyDealApi.CheckNotifications(this);
+                    try
+                    {
+                        Logger.Info($"[Startup][update] starting cacheOnly={cacheOnly} forcePrice={forcePrice} wishlistOnStart={updateWishlistOnStart} priceOnStart={updatePriceOnStart}");
+                        IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                        _ = isThereAnyDealApi.LoadWishlist(this, cacheOnly, forcePrice);
+                        _ = IsThereAnyDealApi.CheckNotifications(this);
+                        Logger.Info("[Startup][update] completed");
+                    }
+                    catch (Exception ex)
+                    {
+                        Common.LogError(ex, false, "Error on startup wishlist/price update", true, PluginName);
+                    }
+                });
+            }
+            else
+            {
+                Logger.Info("[Startup][update] skipped wishlistOnStart=false priceOnStart=false");
+                _ = IsThereAnyDealApi.CheckNotifications(this);
+            }
 
 
             // StoreAPI Initialization
