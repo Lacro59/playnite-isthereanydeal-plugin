@@ -66,41 +66,55 @@ namespace IsThereAnyDeal.Views
         }
 
 
-        // Optimized RefreshData method to prevent UI blocking
+        /// <summary>
+        /// Reloads wishlist data. Store and price refresh block filter/scroll; cache-only keeps the list interactive (SWR).
+        /// </summary>
         private async void RefreshData(string id, bool cachOnly = true, bool forcePrice = false)
         {
+            // Store or price refresh → block interaction. Cache-only open → keep filter & scroll.
+            bool blockInteraction = !cachOnly || forcePrice;
+
             DataLoadWishlist.Visibility = Visibility.Visible;
-            dpData.IsEnabled = false;
+            DataLoadWishlist.IsHitTestVisible = blockInteraction;
+            dpData.IsEnabled = !blockInteraction;
+            string initialPhase = cachOnly && !forcePrice ? "cache" : (cachOnly && forcePrice ? "lookup" : "stores");
+            ItadDataContext.LoadStatus = ResolveWishlistProgressLabel(initialPhase);
+
+            Logger.Info($"[ITAD][ui] refresh start cacheOnly={cachOnly} forcePrice={forcePrice} blockInteraction={blockInteraction}");
 
             try
             {
-                // 1. Heavy background loading
-                var result = await Task.Run(() => LoadData(cachOnly, forcePrice));
+                Action<string> progress = phase =>
+                {
+                    var label = ResolveWishlistProgressLabel(phase);
+                    _ = Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        ItadDataContext.LoadStatus = label;
+                    }));
+                };
 
-                if (result == null) return;
+                var result = await Task.Run(() => LoadData(cachOnly, forcePrice, progress));
 
-                // 2. IMPORTANT: Give the UI a moment to refresh the ProgressBar animation
-                // before starting the heavy UI attachment
+                if (result == null)
+                {
+                    Logger.Warn($"[ITAD][ui] refresh empty result cacheOnly={cachOnly} forcePrice={forcePrice}");
+                    return;
+                }
+
                 await Task.Yield();
 
-                // 3. Assign data
                 lbWishlist.ItemsSource = result;
 
-                // 4. Update Infos (Ensure this method isn't doing too much heavy math)
                 SetInfos();
 
-                // Safe currency sign retrieval
                 var firstItem = result.FirstOrDefault(x => x.ItadLastPrice?.Any(y => !string.IsNullOrEmpty(y.CurrencySign)) == true);
                 if (firstItem != null)
                 {
                     ItadDataContext.CurrencySign = firstItem.ItadBestPrice.CurrencySign;
                 }
 
-                // 5. Yield again before heavy Filtering/Sorting
                 await Task.Delay(10);
 
-                // 6. Execute Sorting and Filtering with lower priority
-                // This prevents the UI from freezing while the CollectionView is being rebuilt
                 await Dispatcher.BeginInvoke(new Action(() =>
                 {
                     if (!string.IsNullOrEmpty(id))
@@ -115,7 +129,6 @@ namespace IsThereAnyDeal.Views
 
                     PART_DateData.Content = new LocalDateTimeConverter().Convert(Settings.LastRefresh, null, null, CultureInfo.CurrentCulture);
 
-                    // These two are the real "UI blockers" as they trigger re-rendering of the whole list
                     PART_CbOrder_SelectionChanged(null, null);
                     SetFilterStore();
 
@@ -127,9 +140,30 @@ namespace IsThereAnyDeal.Views
             }
             finally
             {
-                // We only hide the loader once everything (including Background priority tasks) is done
                 DataLoadWishlist.Visibility = Visibility.Collapsed;
+                DataLoadWishlist.IsHitTestVisible = true;
                 dpData.IsEnabled = true;
+                ItadDataContext.LoadStatus = string.Empty;
+                Logger.Info($"[ITAD][ui] refresh done cacheOnly={cachOnly} forcePrice={forcePrice}");
+            }
+        }
+
+        private static string ResolveWishlistProgressLabel(string phase)
+        {
+            switch (phase)
+            {
+                case "cache":
+                    return ResourceProvider.GetString("LOCItadProgressCache");
+                case "stores":
+                    return ResourceProvider.GetString("LOCItadProgressStores");
+                case "lookup":
+                    return ResourceProvider.GetString("LOCItadProgressLookup");
+                case "price":
+                    return ResourceProvider.GetString("LOCItadProgressPrice");
+                case "save":
+                    return ResourceProvider.GetString("LOCItadProgressSave");
+                default:
+                    return ResourceProvider.GetString("LOCDownloadingLabel");
             }
         }
 
@@ -175,9 +209,9 @@ namespace IsThereAnyDeal.Views
         }
 
 
-        private ObservableCollection<Wishlist> LoadData(bool cachOnly = true, bool forcePrice = false)
+        private ObservableCollection<Wishlist> LoadData(bool cachOnly = true, bool forcePrice = false, Action<string> progress = null)
         {
-            ObservableCollection<Wishlist> ListWishlist = IsThereAnyDealApi.LoadWishlist(Plugin, cachOnly, forcePrice).ToObservable();
+            ObservableCollection<Wishlist> ListWishlist = IsThereAnyDealApi.LoadWishlist(Plugin, cachOnly, forcePrice, progress).ToObservable();
             return ListWishlist;
         }
 
@@ -376,7 +410,7 @@ namespace IsThereAnyDeal.Views
 
             MessageBoxResult RessultDialog = API.Instance.Dialogs.ShowMessage(
                 string.Format(ResourceProvider.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
-                "IsThereAnyDeal", 
+                "IsThereAnyDeal",
                 MessageBoxButton.YesNo
             );
             if (RessultDialog == MessageBoxResult.Yes)
@@ -683,6 +717,9 @@ namespace IsThereAnyDeal.Views
 
         private List<ListStore> _filterStoreItems = new List<ListStore>();
         public List<ListStore> FilterStoreItems { get => _filterStoreItems; set => SetValue(ref _filterStoreItems, value); }
+
+        private string _loadStatus = string.Empty;
+        public string LoadStatus { get => _loadStatus; set => SetValue(ref _loadStatus, value); }
     }
 
 

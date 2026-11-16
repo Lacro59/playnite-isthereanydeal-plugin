@@ -812,7 +812,10 @@
                     
                     <Grid Name="DataLoadWishlist">
                         <ProgressBar IsIndeterminate="True" Width="350" Height="40"/>
-                        <TextBlock Text="{DynamicResource LOCDownloadingLabel}" Style="{DynamicResource BaseTextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding LoadStatus}"
+                                   Style="{DynamicResource BaseTextBlockStyle}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
                     </Grid>
                 </Grid>
             </TabItem>

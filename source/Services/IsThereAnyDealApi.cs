@@ -261,10 +261,18 @@ namespace IsThereAnyDeal.Services
 
         #region Plugin
 
-        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, bool cacheOnly = false, bool forcePrice = false)
+        /// <summary>
+        /// Loads wishlists from enabled stores, optionally enriching ITAD ids/prices.
+        /// </summary>
+        /// <param name="progress">Optional phase codes: cache, stores, lookup, price, save.</param>
+        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, bool cacheOnly = false, bool forcePrice = false, Action<string> progress = null)
         {
             List<Wishlist> combinedWishlist = new List<Wishlist>();
             CountDatas = new List<CountData>();
+
+            // cache-only open → cache; price-only → lookup; store refresh → stores
+            string initialPhase = cacheOnly && !forcePrice ? "cache" : (cacheOnly && forcePrice ? "lookup" : "stores");
+            ReportWishlistProgress(progress, initialPhase);
 
             // 1. Define the configurations for all supported stores
             var storeConfigs = new List<StoreProviderConfig>
@@ -398,12 +406,15 @@ namespace IsThereAnyDeal.Services
 			if (!cacheOnly || forcePrice)
 			{
 				Logger.Info($"[ITAD][pipeline] start items={combinedWishlist.Count} cacheOnly={cacheOnly} forcePrice={forcePrice}");
+				ReportWishlistProgress(progress, "lookup");
 				EnrichWishlistGameIds(combinedWishlist);
 				Logger.Info($"[ITAD][price] pass force={forcePrice} items={combinedWishlist.Count}");
+				ReportWishlistProgress(progress, "price");
 				_ = GetCurrentPrice(combinedWishlist, plugin.PluginSettingsViewModel.Settings, forcePrice)
 					.GetAwaiter()
 					.GetResult();
 
+				ReportWishlistProgress(progress, "save");
 				foreach (var load in storeLoads)
 				{
 					try
@@ -426,6 +437,23 @@ namespace IsThereAnyDeal.Services
 
             return finalData.OrderBy(x => x.Name).ToList();
         }
+
+		private static void ReportWishlistProgress(Action<string> progress, string phase)
+		{
+			if (progress == null || string.IsNullOrEmpty(phase))
+			{
+				return;
+			}
+
+			try
+			{
+				progress(phase);
+			}
+			catch (Exception ex)
+			{
+				Common.LogError(ex, false, $"[ITAD][pipeline] progress callback failed phase={phase}", true, IsThereAnyDeal.PluginName);
+			}
+		}
 
 		/// <summary>
 		/// Resolves missing ITAD game ids: batch <see cref="GetGamesId"/> (Steam AppIDs vs titles), then 1x1 <see cref="GetGamesLookup"/> fallback.

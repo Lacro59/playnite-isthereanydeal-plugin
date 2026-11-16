@@ -96,6 +96,11 @@
     <sys:String x:Key="LOCItadCheckNotifications">Check notifications</sys:String>
     <sys:String x:Key="LOCItadUpdateDatas">Update IsThereAnyDeal data</sys:String>
     <sys:String x:Key="LOCITADDataDownloading">Downloading IsThereAnyDeal data...</sys:String>
+    <sys:String x:Key="LOCItadProgressCache">Loading wishlist cache…</sys:String>
+    <sys:String x:Key="LOCItadProgressStores">Refreshing store wishlists…</sys:String>
+    <sys:String x:Key="LOCItadProgressLookup">Resolving games on IsThereAnyDeal…</sys:String>
+    <sys:String x:Key="LOCItadProgressPrice">Updating prices…</sys:String>
+    <sys:String x:Key="LOCItadProgressSave">Saving wishlist cache…</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Giveaway notification for {0} ({1} game(s))</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">Price notification for {0} - {1} {2} ({3}%)</sys:String>
