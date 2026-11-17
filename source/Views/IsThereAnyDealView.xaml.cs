@@ -389,17 +389,44 @@ namespace IsThereAnyDeal.Views
             }
         }
 
-        // Active store button
+        // Resolve btStore under PART_Infos and arm it with the selected shop buy URL.
         private void LbStorePrice_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (((ListBox)sender).SelectedItem != null)
+            ListBox listBox = sender as ListBox;
+            if (listBox?.SelectedItem == null)
             {
-                StorePriceSelected = (ItadGameInfo)((ListBox)sender).SelectedItem;
-
-                Button bt = (Button)((Grid)((Grid)((ListBox)sender).Parent).Parent).FindName("btStore");
-                bt.IsEnabled = true;
-                bt.Tag = StorePriceSelected.UrlBuy;
+                return;
             }
+
+            StorePriceSelected = listBox.SelectedItem as ItadGameInfo;
+            if (StorePriceSelected == null)
+            {
+                Logger.Debug("[ITAD][ui] LbStorePrice_SelectionChanged: SelectedItem is not ItadGameInfo");
+                return;
+            }
+
+            FrameworkElement current = listBox.Parent as FrameworkElement;
+            while (current != null && current.Name != "PART_Infos")
+            {
+                current = current.Parent as FrameworkElement;
+            }
+
+            if (current == null)
+            {
+                Logger.Warn("[ITAD][ui] LbStorePrice_SelectionChanged: PART_Infos not found");
+                return;
+            }
+
+            Button bt = current.FindName("btStore") as Button;
+            if (bt == null)
+            {
+                Logger.Warn("[ITAD][ui] LbStorePrice_SelectionChanged: btStore not found");
+                return;
+            }
+
+            bt.IsEnabled = true;
+            bt.Tag = StorePriceSelected.UrlBuy;
+            Logger.Debug($"[ITAD][ui] LbStorePrice_SelectionChanged: btStore enabled shop={StorePriceSelected.ShopName} hasUrl={!StorePriceSelected.UrlBuy.IsNullOrEmpty()}");
         }
 
         // Remove game
