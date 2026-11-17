@@ -1005,58 +1005,87 @@ namespace IsThereAnyDeal.Services
         {
             await Task.Run(() =>
             {
-                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-
-                if (plugin.PluginSettingsViewModel.Settings.EnableNotification)
+                try
                 {
-                    List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, true);
-                    ListWishlist.Where(x => x.Game != null && x.GetNotification(plugin.PluginSettingsViewModel.Settings.NotificationCriterias))
-                      .ForEach(x =>
-                      {
-                          API.Instance.Notifications.Add(new NotificationMessage(
-                                  $"IsThereAnyDeal-{x.Game.Slug}",
-                                  "IsThereAnyDeal\r\n" + string.Format(ResourceProvider.GetString("LOCItadNotification"),
-                                      x.Name, x.ItadBestPrice.PriceNew, x.ItadBestPrice.CurrencySign, x.ItadBestPrice.PriceCut),
-                                  NotificationType.Info,
-                                  () =>
-                                  {
-                                      if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
-                                      {
-                                          WindowOptions windowOptions = new WindowOptions
-                                          {
-                                              ShowMinimizeButton = false,
-                                              ShowMaximizeButton = false,
-                                              ShowCloseButton = true,
-                                              CanBeResizable = false,
-                                              Width = 1180,
-                                              Height = 720
-                                          };
+                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                    IsThereAnyDealSettings settings = plugin.PluginSettingsViewModel.Settings;
+                    Logger.Info($"[Notif][check] start price={settings.EnableNotification} giveaways={settings.EnableNotificationGiveaways} criteriaCount={settings.NotificationCriterias?.Count ?? 0}");
 
-                                          IsThereAnyDealView viewExtension = new IsThereAnyDealView(plugin, x.Game.Id);
-                                          Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
-                                          _ = windowExtension.ShowDialog();
-                                      }
-                                      else
-                                      {
-                                          _ = Process.Start(x.UrlGame);
-                                      }
-                                  }
-                              ));
-                      });
-                }
-
-                if (plugin.PluginSettingsViewModel.Settings.EnableNotificationGiveaways)
-                {
-                    List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways();
-                    itadGiveaways.Where(x => !x.HasSeen).ForEach(x =>
+                    if (settings.EnableNotification)
                     {
-                        API.Instance.Notifications.Add(new NotificationMessage(
-                              $"IsThereAnyDeal-{x.Title}",
-                              "IsThereAnyDeal\r\n" + string.Format(ResourceProvider.GetString("LOCItadNotificationGiveaway"), x.TitleAll, x.Count),
-                              NotificationType.Info,
-                              () => Process.Start(x.Link)
-                          ));
-                    });
+                        if (settings.NotificationCriterias == null || settings.NotificationCriterias.Count == 0)
+                        {
+                            Logger.Warn("[Notif][check] price notifications enabled but no criteria configured");
+                        }
+
+                        List<Wishlist> listWishlist = isThereAnyDealApi.LoadWishlist(plugin, true);
+                        List<Wishlist> pendingAlerts = listWishlist
+                            .Where(x => x.Game != null && x.GetNotification(settings.NotificationCriterias))
+                            .ToList();
+
+                        Logger.Debug($"[Notif][aggregate] matching={pendingAlerts.Count}");
+
+                        if (pendingAlerts.Count > 0)
+                        {
+                            // Fixed id replaces any previous price-alert toast (anti-spam without persistent dismiss).
+                            const string aggregatedNotificationId = "IsThereAnyDeal-PriceAlerts";
+                            API.Instance.Notifications.Add(new NotificationMessage(
+                                aggregatedNotificationId,
+                                "IsThereAnyDeal\r\n" + string.Format(
+                                    ResourceProvider.GetString("LOCItadNotificationAggregated"),
+                                    pendingAlerts.Count),
+                                NotificationType.Info,
+                                () =>
+                                {
+                                    if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
+                                    {
+                                        WindowOptions windowOptions = new WindowOptions
+                                        {
+                                            ShowMinimizeButton = false,
+                                            ShowMaximizeButton = false,
+                                            ShowCloseButton = true,
+                                            CanBeResizable = false,
+                                            Width = 1180,
+                                            Height = 720
+                                        };
+
+                                        IsThereAnyDealView viewExtension = new IsThereAnyDealView(plugin, string.Empty, true);
+                                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
+                                        _ = windowExtension.ShowDialog();
+                                    }
+                                    else
+                                    {
+                                        Wishlist first = pendingAlerts.FirstOrDefault();
+                                        if (first != null && !first.UrlGame.IsNullOrEmpty())
+                                        {
+                                            _ = Process.Start(first.UrlGame);
+                                        }
+                                    }
+                                }));
+
+                            Logger.Info($"[Notif][aggregate] count={pendingAlerts.Count}");
+                        }
+                    }
+
+                    if (settings.EnableNotificationGiveaways)
+                    {
+                        List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways();
+                        int unseenGiveaways = itadGiveaways.Count(x => !x.HasSeen);
+                        Logger.Debug($"[Notif][giveaways] total={itadGiveaways.Count} unseen={unseenGiveaways}");
+                        itadGiveaways.Where(x => !x.HasSeen).ForEach(x =>
+                        {
+                            API.Instance.Notifications.Add(new NotificationMessage(
+                                  $"IsThereAnyDeal-{x.Title}",
+                                  "IsThereAnyDeal\r\n" + string.Format(ResourceProvider.GetString("LOCItadNotificationGiveaway"), x.TitleAll, x.Count),
+                                  NotificationType.Info,
+                                  () => Process.Start(x.Link)
+                              ));
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, false, "[Notif][check] failed", true, IsThereAnyDeal.PluginName);
                 }
             });
         }

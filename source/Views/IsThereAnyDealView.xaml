@@ -371,6 +371,8 @@
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="10"/>
                                     <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
@@ -378,6 +380,7 @@
                                 <ToggleButton Grid.Column="2" Content="{DynamicResource LOCItadWhishListOptionsIncludeInLibrary}" VerticalAlignment="Center" Name="PART_TbIncludeInLibrary" Click="PART_Tb_Click"/>
                                 <ToggleButton Grid.Column="4" Content="{DynamicResource LOCItadWhishListOptionsIncludeWithoutData}" VerticalAlignment="Center" Name="PART_TbIncludeWithoutData" Click="PART_Tb_Click"/>
                                 <ToggleButton Grid.Column="6" Content="{DynamicResource LOCItadWhishListOptionsOnlyInLibrary}" VerticalAlignment="Center" Name="PART_TbOnlyInLibrary" Click="PART_Tb_Click"/>
+                                <ToggleButton Grid.Column="8" Content="{DynamicResource LOCItadWhishListOptionsAlerts}" VerticalAlignment="Center" Name="PART_TbAlerts" Click="PART_Tb_Click"/>
                                 <Grid Grid.Column="10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"/>
@@ -420,14 +423,25 @@
                                         <Border Style="{StaticResource ItemBorderStyle}">
                                             <DockPanel LastChildFill="True" Margin="0,5">
                                                 <!-- Image -->
-                                                <StackPanel DockPanel.Dock="Left" Height="100" Width="200">
+                                                <Grid DockPanel.Dock="Left" Height="100" Width="200">
                                                     <Image x:Name="HltbImage" Source="{Binding CapsuleImagePath, IsAsync=True}" Stretch="UniformToFill" Height="100" Width="200" RenderOptions.BitmapScalingMode="Linear"/>
-                                                    <TextBlock Text="{Binding StoreNameIcon}" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="24" FontFamily="{DynamicResource CommonFont}" Margin="0,-40,5,5">
+                                                    <TextBlock Text="{Binding StoreNameIcon}" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="24" FontFamily="{DynamicResource CommonFont}" Margin="0,0,5,5">
                                                         <TextBlock.Effect>
                                                             <DropShadowEffect Color="Black" Opacity="1" BlurRadius="5" ShadowDepth="0" RenderingBias="Performance"/>
                                                         </TextBlock.Effect>
                                                     </TextBlock>
-                                                </StackPanel>
+                                                    <Border HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4"
+                                                            Padding="4,1"
+                                                            Background="{DynamicResource GlyphBrush}"
+                                                            CornerRadius="{DynamicResource ControlCornerRadius}"
+                                                            Visibility="{Binding IsAlert, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                            ToolTip="{Binding AlertCriteriaTooltip}">
+                                                        <TextBlock Text="{DynamicResource LOCItadAlertBadge}"
+                                                                   Style="{DynamicResource BaseTextBlockStyle}"
+                                                                   Foreground="{DynamicResource TextBrush}"
+                                                                   FontSize="{DynamicResource FontSizeSmall}"/>
+                                                    </Border>
+                                                </Grid>
                                                 
                                                 <!-- Infos & actions -->
                                                 <DockPanel LastChildFill="True" Margin="10,0,0,0" Name="PART_Infos">

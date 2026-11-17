@@ -1,4 +1,4 @@
-﻿using Playnite.SDK;
+using Playnite.SDK;
 using Playnite.SDK.Data;
 using CommonPluginsShared;
 using CommonPluginsShared.Images;
@@ -57,7 +57,6 @@ namespace IsThereAnyDeal.Models
         [DontSerialize]
         public Guid GameId => API.Instance.Database.Games.Where(x => x.Name.IsEqual(Name) && !x.Hidden)?.FirstOrDefault()?.Id ?? default;
 
-        // TODO
         public bool IsActive { get; set; }
 
         [DontSerialize]
@@ -184,35 +183,152 @@ namespace IsThereAnyDeal.Models
             }
         }
 
-        public bool GetNotification(List<ItadNotificationCriteria> Criterias)
+        /// <summary>
+        /// Criteria snapshot used by UI bindings (<see cref="IsAlert"/> / tooltip). Not persisted.
+        /// </summary>
+        [DontSerialize]
+        public List<ItadNotificationCriteria> NotificationCriterias { get; set; }
+
+        /// <summary>
+        /// Whether the current deals match the attached notification criteria.
+        /// </summary>
+        [DontSerialize]
+        public bool IsAlert => GetNotification(NotificationCriterias);
+
+        /// <summary>
+        /// Localized criteria labels matched by the current deals (newline-separated for ToolTip).
+        /// </summary>
+        [DontSerialize]
+        public string AlertCriteriaTooltip
         {
-            foreach (ItadGameInfo item in ItadLastPrice)
+            get
             {
-                foreach (ItadNotificationCriteria Criteria in Criterias)
+                List<ItadNotificationCriteria> matching = GetMatchingCriterias(NotificationCriterias);
+                if (matching.Count == 0)
                 {
-                    if (Criteria.PriceCut > -1 && Criteria.PriceInferior > -1)
+                    return string.Empty;
+                }
+
+                return string.Join("\n", matching.Select(c => c.Criteria).Where(s => !s.IsNullOrEmpty()));
+            }
+        }
+
+        /// <summary>
+        /// Attaches the settings criteria list for alert bindings on the wishlist item.
+        /// </summary>
+        /// <param name="criterias">Plugin notification criteria.</param>
+        public void AttachNotificationCriterias(List<ItadNotificationCriteria> criterias)
+        {
+            NotificationCriterias = criterias;
+        }
+
+        /// <summary>
+        /// Returns whether any current deal matches at least one notification criteria.
+        /// </summary>
+        /// <param name="criterias">Configured price-cut / price-cap rules.</param>
+        /// <returns><c>true</c> when at least one deal matches.</returns>
+        public bool GetNotification(List<ItadNotificationCriteria> criterias)
+        {
+            return GetMatchingNotificationDeals(criterias).Count > 0;
+        }
+
+        /// <summary>
+        /// Lists notification criteria that match at least one current deal.
+        /// </summary>
+        /// <param name="criterias">Configured rules.</param>
+        /// <returns>Matching criteria; never <c>null</c>.</returns>
+        public List<ItadNotificationCriteria> GetMatchingCriterias(List<ItadNotificationCriteria> criterias)
+        {
+            List<ItadNotificationCriteria> result = new List<ItadNotificationCriteria>();
+            if (criterias == null || criterias.Count == 0 || ItadLastPrice == null)
+            {
+                return result;
+            }
+
+            foreach (ItadNotificationCriteria criteria in criterias)
+            {
+                if (criteria == null)
+                {
+                    continue;
+                }
+
+                foreach (ItadGameInfo item in ItadLastPrice)
+                {
+                    if (item == null || item.TypePrice != TypePrice.Deal)
                     {
-                        if (item.PriceCut >= Criteria.PriceCut && item.PriceNew <= Criteria.PriceInferior)
-                        {
-                            return true;
-                        }
+                        continue;
                     }
-                    else if (Criteria.PriceCut > -1)
+
+                    if (MatchesSingleCriteria(item, criteria))
                     {
-                        if (item.PriceCut >= Criteria.PriceCut)
-                        {
-                            return true;
-                        }
-                    }
-                    else if (Criteria.PriceInferior > -1)
-                    {
-                        if (item.PriceNew <= Criteria.PriceInferior)
-                        {
-                            return true;
-                        }
+                        result.Add(criteria);
+                        break;
                     }
                 }
             }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Lists deals from the latest price snapshot that match the given criteria.
+        /// </summary>
+        /// <param name="criterias">Configured price-cut / price-cap rules.</param>
+        /// <returns>Matching deals (may be empty); never <c>null</c>.</returns>
+        public List<ItadGameInfo> GetMatchingNotificationDeals(List<ItadNotificationCriteria> criterias)
+        {
+            List<ItadGameInfo> matches = new List<ItadGameInfo>();
+            if (criterias == null || criterias.Count == 0 || ItadLastPrice == null)
+            {
+                return matches;
+            }
+
+            foreach (ItadGameInfo item in ItadLastPrice)
+            {
+                if (item == null || item.TypePrice != TypePrice.Deal)
+                {
+                    continue;
+                }
+
+                if (MatchesAnyCriteria(item, criterias))
+                {
+                    matches.Add(item);
+                }
+            }
+
+            return matches;
+        }
+
+        private static bool MatchesAnyCriteria(ItadGameInfo item, List<ItadNotificationCriteria> criterias)
+        {
+            foreach (ItadNotificationCriteria criteria in criterias)
+            {
+                if (criteria != null && MatchesSingleCriteria(item, criteria))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool MatchesSingleCriteria(ItadGameInfo item, ItadNotificationCriteria criteria)
+        {
+            if (criteria.PriceCut > -1 && criteria.PriceInferior > -1)
+            {
+                return item.PriceCut >= criteria.PriceCut && item.PriceNew <= criteria.PriceInferior;
+            }
+
+            if (criteria.PriceCut > -1)
+            {
+                return item.PriceCut >= criteria.PriceCut;
+            }
+
+            if (criteria.PriceInferior > -1)
+            {
+                return item.PriceNew <= criteria.PriceInferior;
+            }
+
             return false;
         }
     }

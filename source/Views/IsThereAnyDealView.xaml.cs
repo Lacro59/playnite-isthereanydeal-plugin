@@ -37,16 +37,32 @@ namespace IsThereAnyDeal.Views
         private IsThereAnyDealApi IsThereAnyDealApi { get; set; } = new IsThereAnyDealApi();
         private ItadGameInfo StorePriceSelected { get; set; }
 
+        /// <summary>
+        /// When true, <see cref="UserFilter"/> additionally requires a notification-criteria match (AND with other filters).
+        /// </summary>
+        private bool FilterAlertsOnly { get; set; }
+
 
         private ItadDataContext ItadDataContext { get; set; } = new ItadDataContext();
 
 
-        public IsThereAnyDealView(IsThereAnyDeal plugin, string id = "")
+        /// <summary>
+        /// Creates the main ITAD wishlist / giveaways view.
+        /// </summary>
+        /// <param name="plugin">Plugin instance.</param>
+        /// <param name="id">Optional ITAD game id to select after load.</param>
+        /// <param name="filterAlerts">When true, opens with the alerts-only filter active.</param>
+        public IsThereAnyDealView(IsThereAnyDeal plugin, string id = "", bool filterAlerts = false)
         {
             InitializeComponent();
 
             Plugin = plugin;
             Settings = plugin.PluginSettingsViewModel.Settings;
+            FilterAlertsOnly = filterAlerts;
+            if (filterAlerts)
+            {
+                Logger.Debug("[ITAD][ui] open with filterAlerts=true");
+            }
 
             DataContext = ItadDataContext;
             ItadDataContext.MinPrice = Settings.MinPrice;
@@ -59,6 +75,11 @@ namespace IsThereAnyDeal.Views
             // Subscribe to the Loaded event instead of calling methods here
             Loaded += (s, e) =>
             {
+                if (FilterAlertsOnly && PART_TbAlerts != null)
+                {
+                    PART_TbAlerts.IsChecked = true;
+                }
+
                 // Now the UI is ready to display the loading bar
                 RefreshData(id);
                 GetListGiveaways();
@@ -102,6 +123,12 @@ namespace IsThereAnyDeal.Views
                 }
 
                 await Task.Yield();
+
+                List<ItadNotificationCriteria> criterias = Settings.NotificationCriterias ?? new List<ItadNotificationCriteria>();
+                foreach (Wishlist wishlist in result)
+                {
+                    wishlist.AttachNotificationCriterias(criterias);
+                }
 
                 lbWishlist.ItemsSource = result;
 
@@ -567,12 +594,37 @@ namespace IsThereAnyDeal.Views
         private bool UserFilter(object item)
         {
             Wishlist wishlist = item as Wishlist;
-            return ((bool)PART_RbBest.IsChecked ? wishlist.ItadBestPrice.PriceCut >= ItadDataContext.DiscountPercent : wishlist.ItadPriceForWishlistStore.PriceCut >= ItadDataContext.DiscountPercent)
-                && ((bool)PART_RbBest.IsChecked ? wishlist.ItadBestPrice.PriceNew <= ItadDataContext.PriceLimit : wishlist.ItadPriceForWishlistStore.PriceNew <= ItadDataContext.PriceLimit)
-                && (TextboxSearch.Text.IsNullOrEmpty() || wishlist.Name.Contains(TextboxSearch.Text, StringComparison.InvariantCultureIgnoreCase))
-                && (SearchStores.Count == 0 || SearchStores.Contains(wishlist.StoreName) || wishlist.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0)
-                && Settings.wishlistIgnores.All(y => y.StoreId != wishlist.StoreId && !y.Name.IsEqual(wishlist.Name))
-                && ((bool)PART_TbOnlyInLibrary.IsChecked ? wishlist.InLibrary : (!(bool)PART_TbIncludeInLibrary.IsChecked ? !wishlist.InLibrary : (false && (bool)PART_TbIncludeWithoutData.IsChecked) || wishlist.HasItadData));
+            if (wishlist == null)
+            {
+                return false;
+            }
+
+            bool matchesSearch = TextboxSearch.Text.IsNullOrEmpty()
+                || wishlist.Name.Contains(TextboxSearch.Text, StringComparison.InvariantCultureIgnoreCase);
+            bool matchesStore = SearchStores.Count == 0
+                || SearchStores.Contains(wishlist.StoreName)
+                || wishlist.Duplicates.FindAll(y => SearchStores.Contains(y.StoreName)).Count > 0;
+            bool notIgnored = Settings.wishlistIgnores.All(y => y.StoreId != wishlist.StoreId && !y.Name.IsEqual(wishlist.Name));
+            bool matchesDiscount = (bool)PART_RbBest.IsChecked
+                ? wishlist.ItadBestPrice.PriceCut >= ItadDataContext.DiscountPercent
+                : wishlist.ItadPriceForWishlistStore.PriceCut >= ItadDataContext.DiscountPercent;
+            bool matchesPriceLimit = (bool)PART_RbBest.IsChecked
+                ? wishlist.ItadBestPrice.PriceNew <= ItadDataContext.PriceLimit
+                : wishlist.ItadPriceForWishlistStore.PriceNew <= ItadDataContext.PriceLimit;
+            bool matchesLibraryOptions = (bool)PART_TbOnlyInLibrary.IsChecked
+                ? wishlist.InLibrary
+                : (!(bool)PART_TbIncludeInLibrary.IsChecked
+                    ? !wishlist.InLibrary
+                    : (false && (bool)PART_TbIncludeWithoutData.IsChecked) || wishlist.HasItadData);
+            bool matchesAlert = !FilterAlertsOnly || wishlist.GetNotification(Settings.NotificationCriterias);
+
+            return matchesDiscount
+                && matchesPriceLimit
+                && matchesSearch
+                && matchesStore
+                && notIgnored
+                && matchesLibraryOptions
+                && matchesAlert;
         }
 
         // Get list
@@ -623,6 +675,19 @@ namespace IsThereAnyDeal.Views
         private void PART_Tb_Click(object sender, RoutedEventArgs e)
         {
             ToggleButton tb = sender as ToggleButton;
+            if (tb == null)
+            {
+                return;
+            }
+
+            if (tb.Name == "PART_TbAlerts")
+            {
+                FilterAlertsOnly = tb.IsChecked == true;
+                Logger.Debug($"[ITAD][ui] alertsFilter active={FilterAlertsOnly}");
+                GetListGame();
+                return;
+            }
+
             if (tb.Name == "PART_TbOnlyInLibrary")
             {
                 PART_TbIncludeInLibrary.IsChecked = false;
