@@ -10,7 +10,7 @@
     <sys:String x:Key="LOCItadExclusionList">Dışlama listesi</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">İstek listesi</sys:String>
-    <sys:String x:Key="LOCItadPrice">Price</sys:String>
+    <sys:String x:Key="LOCItadPrice">Fiyat</sys:String>
     
     <sys:String x:Key="LOCItadEnableSteam">Steam istek listesini etkinleştir</sys:String>
     <sys:String x:Key="LOCItadEnableGog">GOG istek listesini etkinleştir</sys:String>
