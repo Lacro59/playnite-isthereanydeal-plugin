@@ -73,7 +73,7 @@
     <sys:String x:Key="LOCItadNotFind">Auf IsThereAnyDeal nicht gefunden</sys:String>
 
     <sys:String x:Key="LOCItadDeleteOnStoreWishList">{0} bei {1} löschen?</sys:String>
-    <sys:String x:Key="LOCItadHideOnStoreWishList">{0} bei {1} ausschließen?</sys:String>
+    <sys:String x:Key="LOCItadHideOnStoreWishList">{0} bei {1} ausblenden?</sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">Wunschlistenoptionen</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Spiele in der Bibliothek einbeziehen</sys:String>
