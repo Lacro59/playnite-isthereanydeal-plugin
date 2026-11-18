@@ -25,6 +25,9 @@ namespace IsThereAnyDeal
 
         public List<WishlistIgnore> wishlistIgnores { get; set; } = new List<WishlistIgnore>();
 
+        /// <summary>Wishlist panel filter UI state (not exposed in Settings view).</summary>
+        public WishlistUiFilters WishlistUiFilters { get; set; } = WishlistUiFilters.CreateDefaults();
+
         [DontSerialize]
         public List<Country> Countries => IsThereAnyDealApi.GetCountries();
         public Country CountrySelected { get; set; } = new Country { Alpha2 = "US", Alpha3 = "USA", M49 = "003", Name = "United States of America", Currency = "USD", RCurrency = "USD" };
@@ -105,6 +108,7 @@ namespace IsThereAnyDeal
             // LoadPluginSettings returns null if not saved data is available.
             Settings = savedSettings ?? new IsThereAnyDealSettings();
             EnsureStoreSettingsDefaults(Settings);
+            EnsureWishlistUiFiltersDefaults(Settings);
             Logger.Info($"[Settings][startup] settings loaded hasSaved={(savedSettings != null)} storesCount={Settings.Stores?.Count ?? 0}");
 
             // Legacy store Id migration must not block plugin load (sync-over-async hang risk).
@@ -142,6 +146,39 @@ namespace IsThereAnyDeal
             {
                 settings.GogStoreSettings = new StoreSettings { UseAuth = true, ForceAuth = true };
                 Logger.Debug("[Settings][stores] GogStoreSettings defaulted after load");
+            }
+        }
+
+        /// <summary>
+        /// Ensures <see cref="WishlistUiFilters"/> exists after load (older settings JSON).
+        /// </summary>
+        private static void EnsureWishlistUiFiltersDefaults(IsThereAnyDealSettings settings)
+        {
+            if (settings == null)
+            {
+                return;
+            }
+
+            if (settings.WishlistUiFilters == null)
+            {
+                settings.WishlistUiFilters = WishlistUiFilters.CreateDefaults();
+                Logger.Debug("[Settings][filters] WishlistUiFilters defaulted after load");
+                return;
+            }
+
+            if (settings.WishlistUiFilters.SelectedStores == null)
+            {
+                settings.WishlistUiFilters.SelectedStores = new List<string>();
+            }
+
+            if (string.IsNullOrEmpty(settings.WishlistUiFilters.OrderTypeTag))
+            {
+                settings.WishlistUiFilters.OrderTypeTag = "0";
+            }
+
+            if (string.IsNullOrEmpty(settings.WishlistUiFilters.OrderDirectionTag))
+            {
+                settings.WishlistUiFilters.OrderDirectionTag = "0";
             }
         }
 

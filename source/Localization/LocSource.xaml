@@ -82,6 +82,7 @@
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Include games without IsThereAnyDeal data</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Only games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsAlerts">Alerts only</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsResetFilters">Reset filters</sys:String>
     <sys:String x:Key="LOCItadAlertBadge">Alert</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>

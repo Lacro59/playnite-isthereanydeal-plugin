@@ -373,6 +373,8 @@
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="10"/>
                                     <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
@@ -381,7 +383,8 @@
                                 <ToggleButton Grid.Column="4" Content="{DynamicResource LOCItadWhishListOptionsIncludeWithoutData}" VerticalAlignment="Center" Name="PART_TbIncludeWithoutData" Click="PART_Tb_Click"/>
                                 <ToggleButton Grid.Column="6" Content="{DynamicResource LOCItadWhishListOptionsOnlyInLibrary}" VerticalAlignment="Center" Name="PART_TbOnlyInLibrary" Click="PART_Tb_Click"/>
                                 <ToggleButton Grid.Column="8" Content="{DynamicResource LOCItadWhishListOptionsAlerts}" VerticalAlignment="Center" Name="PART_TbAlerts" Click="PART_Tb_Click"/>
-                                <Grid Grid.Column="10">
+                                <Button Grid.Column="10" Content="{DynamicResource LOCItadWhishListOptionsResetFilters}" VerticalAlignment="Center" Name="PART_BtResetFilters" Click="PART_BtResetFilters_Click"/>
+                                <Grid Grid.Column="12">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="10"/>

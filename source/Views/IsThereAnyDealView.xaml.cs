@@ -19,6 +19,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace IsThereAnyDeal.Views
 {
@@ -42,6 +43,13 @@ namespace IsThereAnyDeal.Views
         /// </summary>
         private bool FilterAlertsOnly { get; set; }
 
+        /// <summary>
+        /// When true, the view was opened from a price-alert notification: Alerts-only is forced for this instance and must not be written to <see cref="WishlistUiFilters"/>.
+        /// </summary>
+        private bool _notificationAlertsOverride;
+
+        private bool _suppressFilterPersist;
+        private readonly DispatcherTimer _filterPersistTimer;
 
         private ItadDataContext ItadDataContext { get; set; } = new ItadDataContext();
 
@@ -59,10 +67,26 @@ namespace IsThereAnyDeal.Views
             Plugin = plugin;
             Settings = plugin.PluginSettingsViewModel.Settings;
             FilterAlertsOnly = filterAlerts;
+            _notificationAlertsOverride = filterAlerts;
             if (filterAlerts)
             {
-                Logger.Debug("[ITAD][ui] open with filterAlerts=true");
+                Logger.Debug("[ITAD][ui] open with filterAlerts=true override=transient");
             }
+
+            if (Settings.WishlistUiFilters == null)
+            {
+                Settings.WishlistUiFilters = WishlistUiFilters.CreateDefaults();
+            }
+
+            _filterPersistTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(400)
+            };
+            _filterPersistTimer.Tick += (s, e) =>
+            {
+                _filterPersistTimer.Stop();
+                PersistWishlistUiFiltersNow();
+            };
 
             DataContext = ItadDataContext;
             ItadDataContext.MinPrice = Settings.MinPrice;
@@ -75,10 +99,8 @@ namespace IsThereAnyDeal.Views
             // Subscribe to the Loaded event instead of calling methods here
             Loaded += (s, e) =>
             {
-                if (FilterAlertsOnly && PART_TbAlerts != null)
-                {
-                    PART_TbAlerts.IsChecked = true;
-                }
+                ApplyWishlistUiFilters(Settings.WishlistUiFilters, applyStores: false);
+                ApplyNotificationAlertsOverride();
 
                 // Now the UI is ready to display the loading bar
                 RefreshData(id);
@@ -158,6 +180,7 @@ namespace IsThereAnyDeal.Views
 
                     PART_CbOrder_SelectionChanged(null, null);
                     SetFilterStore();
+                    ApplyNotificationAlertsOverride();
 
                 }), System.Windows.Threading.DispatcherPriority.Background);
             }
@@ -227,6 +250,7 @@ namespace IsThereAnyDeal.Views
             }
             FilterStoreItems.Sort((x, y) => string.Compare(x.StoreName, y.StoreName, true));
             ItadDataContext.FilterStoreItems = FilterStoreItems;
+            ApplyWishlistUiFilters(Settings.WishlistUiFilters, applyStores: true);
         }
 
         private void SetInfos()
@@ -670,6 +694,7 @@ namespace IsThereAnyDeal.Views
             }
 
             GetListGame();
+            ScheduleWishlistUiFiltersPersist();
         }
 
         private void PART_Tb_Click(object sender, RoutedEventArgs e)
@@ -682,7 +707,14 @@ namespace IsThereAnyDeal.Views
 
             if (tb.Name == "PART_TbAlerts")
             {
+                // Alerts filter is session-only (never written to WishlistUiFilters)
                 FilterAlertsOnly = tb.IsChecked == true;
+                if (_notificationAlertsOverride && FilterAlertsOnly == false)
+                {
+                    _notificationAlertsOverride = false;
+                    Logger.Debug("[ITAD][filters] notification alerts override cleared by user");
+                }
+
                 Logger.Debug($"[ITAD][ui] alertsFilter active={FilterAlertsOnly}");
                 GetListGame();
                 return;
@@ -699,6 +731,50 @@ namespace IsThereAnyDeal.Views
             }
 
             GetListGame();
+            ScheduleWishlistUiFiltersPersist();
+        }
+
+        private void PART_BtResetFilters_Click(object sender, RoutedEventArgs e)
+        {
+            WishlistUiFilters defaults = WishlistUiFilters.CreateDefaults();
+            ApplyWishlistUiFilters(defaults, applyStores: true);
+
+            // Wishlist options row: Include / WithoutData / Only / Alerts → defaults (all off)
+            _suppressFilterPersist = true;
+            try
+            {
+                if (PART_TbIncludeInLibrary != null)
+                {
+                    PART_TbIncludeInLibrary.IsChecked = false;
+                }
+
+                if (PART_TbIncludeWithoutData != null)
+                {
+                    PART_TbIncludeWithoutData.IsChecked = false;
+                }
+
+                if (PART_TbOnlyInLibrary != null)
+                {
+                    PART_TbOnlyInLibrary.IsChecked = false;
+                }
+
+                if (PART_TbAlerts != null)
+                {
+                    PART_TbAlerts.IsChecked = false;
+                }
+
+                FilterAlertsOnly = false;
+                _notificationAlertsOverride = false;
+            }
+            finally
+            {
+                _suppressFilterPersist = false;
+            }
+
+            Settings.WishlistUiFilters = defaults.Clone();
+            PersistWishlistUiFiltersNow();
+            GetListGame();
+            Logger.Info("[ITAD][filters] reset to defaults wishlistOptions=off");
         }
 
         #endregion
@@ -751,6 +827,10 @@ namespace IsThereAnyDeal.Views
 				}
 
 				view.Filter = UserFilter;
+                if (sender != null)
+                {
+                    ScheduleWishlistUiFiltersPersist();
+                }
 			}
 			catch (Exception ex)
 			{
@@ -779,12 +859,226 @@ namespace IsThereAnyDeal.Views
         private void On_DragCompleted(object sender, DragCompletedEventArgs e)
         {
             GetListGame();
+            ScheduleWishlistUiFiltersPersist();
         }
 
         private void PART_Rb_Click(object sender, RoutedEventArgs e)
         {
             GetListGame();
+            ScheduleWishlistUiFiltersPersist();
         }
+
+        #region Wishlist UI filter persistence
+
+        /// <summary>
+        /// Forces Alerts-only for a notification-opened view without scheduling a settings save.
+        /// </summary>
+        private void ApplyNotificationAlertsOverride()
+        {
+            if (!_notificationAlertsOverride)
+            {
+                return;
+            }
+
+            bool alreadyActive = FilterAlertsOnly && PART_TbAlerts?.IsChecked == true;
+            _filterPersistTimer.Stop();
+            _suppressFilterPersist = true;
+            try
+            {
+                FilterAlertsOnly = true;
+                if (PART_TbAlerts != null)
+                {
+                    PART_TbAlerts.IsChecked = true;
+                }
+
+                if (!alreadyActive)
+                {
+                    Logger.Debug("[ITAD][filters] notification alerts override applied persist=false");
+                }
+            }
+            finally
+            {
+                _suppressFilterPersist = false;
+            }
+        }
+
+        private void ScheduleWishlistUiFiltersPersist()
+        {
+            if (_suppressFilterPersist)
+            {
+                return;
+            }
+
+            _filterPersistTimer.Stop();
+            _filterPersistTimer.Start();
+        }
+
+        private void PersistWishlistUiFiltersNow()
+        {
+            if (_suppressFilterPersist)
+            {
+                return;
+            }
+
+            try
+            {
+                Settings.WishlistUiFilters = CaptureWishlistUiFilters();
+                Plugin.SavePluginSettings(Settings);
+                Logger.Debug(
+                    $"[ITAD][filters] persisted include={Settings.WishlistUiFilters.IncludeInLibrary} only={Settings.WishlistUiFilters.OnlyInLibrary} stores={Settings.WishlistUiFilters.SelectedStores?.Count ?? 0}");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "[ITAD][filters] persist failed");
+            }
+        }
+
+        private WishlistUiFilters CaptureWishlistUiFilters()
+        {
+            string orderType = "0";
+            string orderDirection = "0";
+            if (PART_CbOrderType?.SelectedItem is ComboBoxItem orderTypeItem && orderTypeItem.Tag != null)
+            {
+                orderType = orderTypeItem.Tag.ToString();
+            }
+
+            if (PART_CbOrder?.SelectedItem is ComboBoxItem orderDirItem && orderDirItem.Tag != null)
+            {
+                orderDirection = orderDirItem.Tag.ToString();
+            }
+
+            return new WishlistUiFilters
+            {
+                IncludeInLibrary = PART_TbIncludeInLibrary?.IsChecked == true,
+                OnlyInLibrary = PART_TbOnlyInLibrary?.IsChecked == true,
+                UseBestPrice = PART_RbBest?.IsChecked != false,
+                DiscountPercent = ItadDataContext.DiscountPercent,
+                PriceLimit = ItadDataContext.PriceLimit,
+                SelectedStores = SearchStores != null ? new List<string>(SearchStores) : new List<string>(),
+                OrderTypeTag = orderType,
+                OrderDirectionTag = orderDirection
+            };
+        }
+
+        private void ApplyWishlistUiFilters(WishlistUiFilters filters, bool applyStores)
+        {
+            if (filters == null)
+            {
+                filters = WishlistUiFilters.CreateDefaults();
+            }
+
+            _suppressFilterPersist = true;
+            try
+            {
+                if (PART_TbOnlyInLibrary != null)
+                {
+                    PART_TbOnlyInLibrary.IsChecked = filters.OnlyInLibrary;
+                }
+
+                if (PART_TbIncludeInLibrary != null)
+                {
+                    PART_TbIncludeInLibrary.IsChecked = filters.IncludeInLibrary && !filters.OnlyInLibrary;
+                }
+
+                if (PART_RbBest != null && PART_RbStore != null)
+                {
+                    PART_RbBest.IsChecked = filters.UseBestPrice;
+                    PART_RbStore.IsChecked = !filters.UseBestPrice;
+                }
+
+                double minPrice = Settings.MinPrice;
+                double maxPrice = Settings.MaxPrice;
+                double priceLimit = filters.PriceLimit;
+                if (priceLimit < minPrice)
+                {
+                    priceLimit = minPrice;
+                }
+
+                if (priceLimit > maxPrice)
+                {
+                    priceLimit = maxPrice;
+                }
+
+                ItadDataContext.DiscountPercent = filters.DiscountPercent;
+                ItadDataContext.PriceLimit = priceLimit;
+
+                SelectComboByTag(PART_CbOrderType, filters.OrderTypeTag);
+                SelectComboByTag(PART_CbOrder, filters.OrderDirectionTag);
+
+                if (applyStores)
+                {
+                    ApplyStoreFilterSelection(filters.SelectedStores);
+                }
+
+                int storeCount = filters.SelectedStores?.Count ?? 0;
+                if (!applyStores)
+                {
+                    Logger.Info(
+                        $"[ITAD][filters] restored include={filters.IncludeInLibrary} only={filters.OnlyInLibrary} best={filters.UseBestPrice} discount={filters.DiscountPercent} priceLimit={priceLimit} order={filters.OrderTypeTag}/{filters.OrderDirectionTag}");
+                }
+                else
+                {
+                    Logger.Debug($"[ITAD][filters] stores reapplied count={storeCount}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "[ITAD][filters] apply failed");
+            }
+            finally
+            {
+                _suppressFilterPersist = false;
+            }
+        }
+
+        private void ApplyStoreFilterSelection(List<string> selectedStores)
+        {
+            SearchStores = new List<string>();
+            FilterStore.Text = string.Empty;
+
+            List<string> selected = selectedStores ?? new List<string>();
+            if (ItadDataContext.FilterStoreItems == null)
+            {
+                return;
+            }
+
+            foreach (ListStore store in ItadDataContext.FilterStoreItems)
+            {
+                store.IsCheck = selected.Exists(x => x.IsEqual(store.StoreName));
+            }
+
+            // Rebuild after CheckBox events that may have mutated SearchStores during IsCheck assign
+            SearchStores = ItadDataContext.FilterStoreItems
+                .Where(x => x.IsCheck)
+                .Select(x => x.StoreName)
+                .ToList();
+
+            if (SearchStores.Count != 0)
+            {
+                FilterStore.Text = string.Join(", ", SearchStores);
+            }
+        }
+
+        private static void SelectComboByTag(ComboBox combo, string tag)
+        {
+            if (combo == null)
+            {
+                return;
+            }
+
+            string target = string.IsNullOrEmpty(tag) ? "0" : tag;
+            foreach (object item in combo.Items)
+            {
+                ComboBoxItem comboItem = item as ComboBoxItem;
+                if (comboItem?.Tag != null && comboItem.Tag.ToString() == target)
+                {
+                    combo.SelectedItem = comboItem;
+                    return;
+                }
+            }
+        }
+
+        #endregion
     }
 
 
