@@ -8,8 +8,8 @@ namespace IsThereAnyDeal.Models
     /// </summary>
     public class WishlistUiFilters
     {
-        /// <summary>Include games already in the Playnite library.</summary>
-        public bool IncludeInLibrary { get; set; }
+        /// <summary>Include games already in the Playnite library (default on for first-run / reset).</summary>
+        public bool IncludeInLibrary { get; set; } = true;
 
         /// <summary>Show only games already in the Playnite library.</summary>
         public bool OnlyInLibrary { get; set; }

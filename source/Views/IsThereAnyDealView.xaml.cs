@@ -739,23 +739,13 @@ namespace IsThereAnyDeal.Views
             WishlistUiFilters defaults = WishlistUiFilters.CreateDefaults();
             ApplyWishlistUiFilters(defaults, applyStores: true);
 
-            // Wishlist options row: Include / WithoutData / Only / Alerts → defaults (all off)
+            // Include / Only already applied from defaults; clear session-only toggles
             _suppressFilterPersist = true;
             try
             {
-                if (PART_TbIncludeInLibrary != null)
-                {
-                    PART_TbIncludeInLibrary.IsChecked = false;
-                }
-
                 if (PART_TbIncludeWithoutData != null)
                 {
                     PART_TbIncludeWithoutData.IsChecked = false;
-                }
-
-                if (PART_TbOnlyInLibrary != null)
-                {
-                    PART_TbOnlyInLibrary.IsChecked = false;
                 }
 
                 if (PART_TbAlerts != null)
@@ -774,7 +764,8 @@ namespace IsThereAnyDeal.Views
             Settings.WishlistUiFilters = defaults.Clone();
             PersistWishlistUiFiltersNow();
             GetListGame();
-            Logger.Info("[ITAD][filters] reset to defaults wishlistOptions=off");
+            Logger.Info(
+                $"[ITAD][filters] reset to defaults include={defaults.IncludeInLibrary} only={defaults.OnlyInLibrary}");
         }
 
         #endregion
