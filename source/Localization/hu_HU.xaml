@@ -11,7 +11,9 @@
 
     <sys:String x:Key="LOCItadWishlist">Kívánságlista</sys:String>
     <sys:String x:Key="LOCItadPrice">Ár</sys:String>
-    
+    <sys:String x:Key="LOCItadUpdateWishlistOnStartIncludesPrices">Also refreshes prices after store wishlists.</sys:String>
+    <sys:String x:Key="LOCItadUpdatePriceIncludedWithWishlist">Included when wishlist update on start is enabled (prices only when this option is used alone).</sys:String>
+
     <sys:String x:Key="LOCItadEnableSteam">Steam kívánságlista engedélyezése</sys:String>
     <sys:String x:Key="LOCItadEnableGog">GOG kívánságlista engedélyezése</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Epic Games Store kívánságlista engedélyezése</sys:String>
@@ -48,13 +50,13 @@
     <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Legjobb ár</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Bolti ár</sys:String>
-    
+
     <sys:String x:Key="LOCITADOrderBestPriceCut">Best - Price cut</sys:String>
     <sys:String x:Key="LOCITADOrderBestPrice">Legjobb - Ár</sys:String>
 
     <sys:String x:Key="LOCITADOrderStorePriceCut">Store - Price cut</sys:String>
     <sys:String x:Key="LOCITADOrderStorePrice">Bolt - Ár</sys:String>
-    
+
     <sys:String x:Key="LOCITADFilterSource">Szűrés bolt(ok) szerint</sys:String>
     <sys:String x:Key="LOCITADPercentage">Minimum discount percentage</sys:String>
     <sys:String x:Key="LOCITADPrice">Alacsonyabb ár</sys:String>
@@ -62,7 +64,7 @@
     <sys:String x:Key="LOCItadAllTimeLow">Valaha volt legalacsonyabb</sys:String>
     <sys:String x:Key="LOCItadYearLow">1 éve a legalacsonyabb</sys:String>
     <sys:String x:Key="LOCItadMonthLow">3 hónapja a legalacsonyabb</sys:String>
-    
+
     <sys:String x:Key="LOCItadCurrentBest">Jelenleg a legjobb</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Jelenlegi bolt kívánságlistája</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy best</sys:String>
@@ -79,6 +81,10 @@
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Include games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Include games without IsThereAnyDeal data</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Csak a könyvtárban lévő játékok</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsAlerts">Alerts only</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsResetFilters">Reset filters</sys:String>
+    <sys:String x:Key="LOCItadAlertBadge">Alert</sys:String>
+    <sys:String x:Key="LOCItadLibraryBadge">Library</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">Steam kívánságlista importálása</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam kívánságlista linkje</sys:String>
@@ -94,9 +100,15 @@
     <sys:String x:Key="LOCItadCheckNotifications">Értesítések ellenőrzése</sys:String>
     <sys:String x:Key="LOCItadUpdateDatas">IsThereAnyDeal adatainak frissítése</sys:String>
     <sys:String x:Key="LOCITADDataDownloading">IsThereAnyDeal adatainak letöltése...</sys:String>
+    <sys:String x:Key="LOCItadProgressCache">Loading wishlist cache…</sys:String>
+    <sys:String x:Key="LOCItadProgressStores">Refreshing store wishlists…</sys:String>
+    <sys:String x:Key="LOCItadProgressLookup">Resolving games on IsThereAnyDeal…</sys:String>
+    <sys:String x:Key="LOCItadProgressPrice">Updating prices…</sys:String>
+    <sys:String x:Key="LOCItadProgressSave">Saving wishlist cache…</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Giveaway notification for {0} ({1} game(s))</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">Price notification for {0} - {1}{2} ({3}%)</sys:String>
+    <sys:String x:Key="LOCItadNotificationAggregated" xml:space="preserve">{0} wishlist game(s) match your price alerts</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">An error occurred while retrieving the wishlist from {0}.
 Try login in with your account.</sys:String>
@@ -108,7 +120,7 @@ Try login in with your account.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam wishlist is private. You must use authenticate buton in Steam Library plugin</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Az Xbox engedélyezve van a IsThereAnyDeal-ben, de a könyvtárbővítmény le van tiltva a Playnite-ban.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Nincsen Xbox kívánságlista link.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">A Ubisoft engedélyezve van a IsThereAnyDeal-ben, de a könyvtárbővítmény le van tiltva a Playnite-ban.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">A Ubisoft engedélyezve van a IsThereAnyDeal-ben, de a könyvtárbővítmény le van tiltva a Playnite-ban.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Nincsen Ubisoft kívánságlista link.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">Az EA app engedélyezve van a IsThereAnyDeal-ben, de a könyvtárbővítmény le van tiltva a Playnite-ban.</sys:String>
 
