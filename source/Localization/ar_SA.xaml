@@ -11,7 +11,9 @@
 
     <sys:String x:Key="LOCItadWishlist">قائمة الرغبات</sys:String>
     <sys:String x:Key="LOCItadPrice">Price</sys:String>
-    
+    <sys:String x:Key="LOCItadUpdateWishlistOnStartIncludesPrices">Also refreshes prices after store wishlists.</sys:String>
+    <sys:String x:Key="LOCItadUpdatePriceIncludedWithWishlist">Included when wishlist update on start is enabled (prices only when this option is used alone).</sys:String>
+
     <sys:String x:Key="LOCItadEnableSteam">تمكين قائمة رغبات Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">تمكين قائمة رغبات GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">تمكين قائمة رغبات Epic Games</sys:String>
@@ -48,13 +50,13 @@
     <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Best price</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Store price</sys:String>
-    
+
     <sys:String x:Key="LOCITADOrderBestPriceCut">Best - Price cut</sys:String>
     <sys:String x:Key="LOCITADOrderBestPrice">Best - Price</sys:String>
 
     <sys:String x:Key="LOCITADOrderStorePriceCut">Store - Price cut</sys:String>
     <sys:String x:Key="LOCITADOrderStorePrice">Store - Price</sys:String>
-    
+
     <sys:String x:Key="LOCITADFilterSource">تصفية حسب المتجر</sys:String>
     <sys:String x:Key="LOCITADPercentage">Minimum discount percentage</sys:String>
     <sys:String x:Key="LOCITADPrice">السعر أ</sys:String>
@@ -62,7 +64,7 @@
     <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
     <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
     <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
-    
+
     <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">قائمة رغبات المتجر الحا</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy best</sys:String>
@@ -79,6 +81,10 @@
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Include games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Include games without IsThereAnyDeal data</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">فقط الألعاب في المكت</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsAlerts">Alerts only</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsResetFilters">Reset filters</sys:String>
+    <sys:String x:Key="LOCItadAlertBadge">Alert</sys:String>
+    <sys:String x:Key="LOCItadLibraryBadge">Library</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">استيراد قائمة رغبات Steam</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">رابط قائمة رغبات Steam</sys:String>
@@ -94,9 +100,15 @@
     <sys:String x:Key="LOCItadCheckNotifications">فحص الإشعارات</sys:String>
     <sys:String x:Key="LOCItadUpdateDatas">Update IsThereAnyDeal data</sys:String>
     <sys:String x:Key="LOCITADDataDownloading">Downloading IsThereAnyDeal data...</sys:String>
+    <sys:String x:Key="LOCItadProgressCache">Loading wishlist cache…</sys:String>
+    <sys:String x:Key="LOCItadProgressStores">Refreshing store wishlists…</sys:String>
+    <sys:String x:Key="LOCItadProgressLookup">Resolving games on IsThereAnyDeal…</sys:String>
+    <sys:String x:Key="LOCItadProgressPrice">Updating prices…</sys:String>
+    <sys:String x:Key="LOCItadProgressSave">Saving wishlist cache…</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Giveaway notification for {0} ({1} game(s))</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">Price notification for {0} - {1}{2} ({3}%)</sys:String>
+    <sys:String x:Key="LOCItadNotificationAggregated" xml:space="preserve">{0} wishlist game(s) match your price alerts</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">حدث خطأ أثناء استرداد قائمة الأمنيات من {0}.
 جرب تسجيل الدخول مع حسابك.</sys:String>
@@ -108,7 +120,7 @@
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">قائمة رغبات Steam مخفية. يجب عليك استخدام زر المصادقة في إعدادات إضافة مكتبة Steam</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">لا يوجد رابط قائمة رغبات Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">There is no Ubisoft wishlist link.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA app is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
 
