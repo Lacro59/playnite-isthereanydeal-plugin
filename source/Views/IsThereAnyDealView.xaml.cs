@@ -289,8 +289,11 @@ namespace IsThereAnyDeal.Views
 
                 if (itadGiveaways == null || itadGiveaways.Count == 0)
                 {
+                    Logger.Debug("[ITAD][ui] giveaways loaded count=0");
                     return;
                 }
+
+                Logger.Debug($"[ITAD][ui] giveaways loaded count={itadGiveaways.Count}");
 
                 // Execution resumes here on the UI Thread automatically
                 int row = 0;
@@ -300,7 +303,7 @@ namespace IsThereAnyDeal.Views
 
                 foreach (ItadGiveaway itadGiveaway in itadGiveaways)
                 {
-                    // Grid layout logic: 4 columns per row (stepping by 2 for spacing/layout)
+                    // Two content columns (* / gap / *) — step by 2 for the spacer column
                     if (col > 3)
                     {
                         col = 0;
@@ -308,8 +311,12 @@ namespace IsThereAnyDeal.Views
                         gGiveaways.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
                     }
 
-                    // Create the main container for the giveaway item
-                    DockPanel dp = new DockPanel { Width = 540 };
+                    // Stretch to the star-sized grid column (no fixed 540 width)
+                    DockPanel dp = new DockPanel
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Stretch,
+                        LastChildFill = true
+                    };
 
                     // Website Button - Docked Right
                     Button bt = new Button
@@ -351,7 +358,7 @@ namespace IsThereAnyDeal.Views
                         };
                         if (isExpired)
                         {
-							tbDateIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
+                            tbDateIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
                         }
                         DockPanel.SetDock(tbDateIcon, Dock.Right);
 
@@ -359,29 +366,10 @@ namespace IsThereAnyDeal.Views
                         dp.Children.Add(tbDateIcon);
                     }
 
-                    // Title - Main content
-                    TextBlockTrimmed tbTitle = new TextBlockTrimmed
-                    {
-                        Text = itadGiveaway.Title,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        MaxWidth = 350
-                    };
-                    dp.Children.Add(tbTitle);
-
-                    // Store Name
-                    TextBlockTrimmed tbShop = new TextBlockTrimmed
-                    {
-                        Text = itadGiveaway.ShopName,
-                        Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(itadGiveaway.ShopColor)),
-                        Margin = new Thickness(10, 0, 0, 0),
-                        VerticalAlignment = VerticalAlignment.Center
-                    };
-                    dp.Children.Add(tbShop);
-
-                    // Status Badges (Waitlist / Collection)
+                    // Status badges — docked right, inside of date/button
                     if (itadGiveaway.InWaitlist)
                     {
-                        dp.Children.Add(new TextBlock
+                        TextBlock tbWaitlist = new TextBlock
                         {
                             Text = "\uec3f",
                             FontFamily = icoFont,
@@ -389,11 +377,13 @@ namespace IsThereAnyDeal.Views
                             Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#02b65a")),
                             Margin = new Thickness(10, 0, 0, 0),
                             VerticalAlignment = VerticalAlignment.Center
-                        });
+                        };
+                        DockPanel.SetDock(tbWaitlist, Dock.Right);
+                        dp.Children.Add(tbWaitlist);
                     }
                     if (itadGiveaway.InCollection)
                     {
-                        dp.Children.Add(new TextBlock
+                        TextBlock tbCollection = new TextBlock
                         {
                             Text = "\uec5c",
                             FontFamily = icoFont,
@@ -401,8 +391,31 @@ namespace IsThereAnyDeal.Views
                             Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1494e4")),
                             Margin = new Thickness(10, 0, 0, 0),
                             VerticalAlignment = VerticalAlignment.Center
-                        });
+                        };
+                        DockPanel.SetDock(tbCollection, Dock.Right);
+                        dp.Children.Add(tbCollection);
                     }
+
+                    // Store name — right-docked next to title (LTR: title | shop | badges | date | button)
+                    TextBlockTrimmed tbShop = new TextBlockTrimmed
+                    {
+                        Text = itadGiveaway.ShopName,
+                        Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(itadGiveaway.ShopColor)),
+                        Margin = new Thickness(10, 0, 0, 0),
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
+                    DockPanel.SetDock(tbShop, Dock.Right);
+                    dp.Children.Add(tbShop);
+
+                    // Title last → LastChildFill uses remaining width (ellipsis when truncated)
+                    TextBlockTrimmed tbTitle = new TextBlockTrimmed
+                    {
+                        Text = itadGiveaway.Title,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        TextTrimming = TextTrimming.CharacterEllipsis,
+                        TextWrapping = TextWrapping.NoWrap
+                    };
+                    dp.Children.Add(tbTitle);
 
                     // Set Grid position and add to the container
                     Grid.SetRow(dp, row);
@@ -414,7 +427,7 @@ namespace IsThereAnyDeal.Views
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Error while getting giveaways list");
+                Logger.Error(ex, "[ITAD][ui] giveaways list failed");
             }
             finally
             {

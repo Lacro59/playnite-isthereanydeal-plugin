@@ -836,16 +836,20 @@
             </TabItem>
             
             <TabItem Header="Giveaways">
-                <Grid Name="gGiveaways" Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="540"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="540"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                </Grid>
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              CanContentScroll="False">
+                    <Grid Name="gGiveaways" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" MinWidth="280"/>
+                            <ColumnDefinition Width="48"/>
+                            <ColumnDefinition Width="*" MinWidth="280"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
         
