@@ -84,6 +84,7 @@
     <sys:String x:Key="LOCItadWhishListOptionsAlerts">Alerts only</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsResetFilters">Reset filters</sys:String>
     <sys:String x:Key="LOCItadAlertBadge">Alert</sys:String>
+    <sys:String x:Key="LOCItadLibraryBadge">Library</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">Import Steam wishlist</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam wishlist link</sys:String>

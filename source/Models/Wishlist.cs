@@ -52,10 +52,47 @@ namespace IsThereAnyDeal.Models
         });
 
         [DontSerialize]
-        public bool InLibrary => API.Instance.Database.Games.Where(x => x.Name.IsEqual(Name) && !x.Hidden)?.Count() > 0;
+        public bool InLibrary => EnumerateMatchingLibraryGames().Any();
 
+        /// <summary>
+        /// First matching Playnite library game id (for <see cref="GoToGame"/>). Prefer the earliest match; tooltip lists all sources.
+        /// </summary>
         [DontSerialize]
-        public Guid GameId => API.Instance.Database.Games.Where(x => x.Name.IsEqual(Name) && !x.Hidden)?.FirstOrDefault()?.Id ?? default;
+        public Guid GameId => EnumerateMatchingLibraryGames().FirstOrDefault()?.Id ?? default;
+
+        /// <summary>
+        /// Distinct Playnite source names for all library games matching this wishlist title (name equality, non-hidden).
+        /// </summary>
+        [DontSerialize]
+        public List<string> LibrarySourceNames
+        {
+            get
+            {
+                List<string> names = new List<string>();
+                foreach (Playnite.SDK.Models.Game game in EnumerateMatchingLibraryGames())
+                {
+                    string sourceName = game.Source?.Name;
+                    if (sourceName.IsNullOrEmpty())
+                    {
+                        sourceName = "Playnite";
+                    }
+
+                    if (!names.Any(n => n.Equals(sourceName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        names.Add(sourceName);
+                    }
+                }
+
+                names.Sort(StringComparer.OrdinalIgnoreCase);
+                return names;
+            }
+        }
+
+        /// <summary>
+        /// Newline-separated source names for the library badge ToolTip (same shape as <see cref="AlertCriteriaTooltip"/>).
+        /// </summary>
+        [DontSerialize]
+        public string LibrarySourcesTooltip => string.Join("\n", LibrarySourceNames);
 
         public bool IsActive { get; set; }
 
@@ -297,6 +334,19 @@ namespace IsThereAnyDeal.Models
             }
 
             return matches;
+        }
+
+        /// <summary>
+        /// Playnite library games matching this wishlist title (case-insensitive name, not hidden).
+        /// </summary>
+        private IEnumerable<Playnite.SDK.Models.Game> EnumerateMatchingLibraryGames()
+        {
+            if (API.Instance?.Database?.Games == null || Name.IsNullOrEmpty())
+            {
+                return Enumerable.Empty<Playnite.SDK.Models.Game>();
+            }
+
+            return API.Instance.Database.Games.Where(x => x.Name.IsEqual(Name) && !x.Hidden);
         }
 
         private static bool MatchesAnyCriteria(ItadGameInfo item, List<ItadNotificationCriteria> criterias)
