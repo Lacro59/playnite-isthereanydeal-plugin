@@ -326,8 +326,7 @@
                                                 TickFrequency="5"
                                                 LargeChange="10"
                                                 SmallChange="1"
-                                                Name="sPercentage" 
-                                                Thumb.DragCompleted="On_DragCompleted"
+                                                Name="sPercentage"
                                                 AutoToolTipPlacement="BottomRight"
                                                 AutoToolTipPrecision="0"
                                                 IsMoveToPointEnabled="True"/>
@@ -352,8 +351,7 @@
                                                 TickFrequency="5"
                                                 LargeChange="25"
                                                 SmallChange="5"
-                                                Name="sPrice" 
-                                                Thumb.DragCompleted="On_DragCompleted"
+                                                Name="sPrice"
                                                 AutoToolTipPlacement="BottomRight"
                                                 AutoToolTipPrecision="0"
                                                 IsMoveToPointEnabled="True"/>
@@ -403,7 +401,7 @@
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" Content="{DynamicResource LOCCommonDateData}"/>
-                                    <Label Grid.Column="2" Content="xx/xx/xx xx:xx:xx" Name="PART_DateData"/>
+                                    <Label Grid.Column="2" Content="" Name="PART_DateData"/>
                                     <Button Grid.Column="4" Content="{DynamicResource LOCITADRefreshPrice}" Click="ButtonPrice_Click"/>
                                     <Button Grid.Column="6" Content="{DynamicResource LOCCommonRefreshGameData}" Click="ButtonData_Click"/>
                                 </Grid>
@@ -1052,7 +1050,7 @@
             </ComboBox>
             <StackPanel Grid.Column="7" Orientation="Horizontal">
                 <TextBlock Style="{DynamicResource BaseTextBlockStyle}" Text="{DynamicResource LOCCommonTotalFound}" VerticalAlignment="Center"/>
-                <TextBlock Style="{DynamicResource BaseTextBlockStyle}" Name="PART_TotalFoundCount" Text="{Binding ElementName=lbWishlist, Path=ItemsSource.Count, FallbackValue=0}" VerticalAlignment="Center" Width="40" TextAlignment="Right"/>
+                <TextBlock Style="{DynamicResource BaseTextBlockStyle}" Name="PART_TotalFoundCount" Text="{Binding ElementName=lbWishlist, Path=Items.Count, FallbackValue=0}" VerticalAlignment="Center" Width="40" TextAlignment="Right"/>
             </StackPanel>
             <Label Grid.Column="9" FontFamily="{DynamicResource CommonFont}" Content="" Name="ItadInfo" FontSize="22">
                 <Label.ToolTip>

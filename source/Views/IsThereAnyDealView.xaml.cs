@@ -50,6 +50,7 @@ namespace IsThereAnyDeal.Views
 
         private bool _suppressFilterPersist;
         private readonly DispatcherTimer _filterPersistTimer;
+        private readonly DispatcherTimer _sliderFilterTimer;
 
         private ItadDataContext ItadDataContext { get; set; } = new ItadDataContext();
 
@@ -88,9 +89,21 @@ namespace IsThereAnyDeal.Views
                 PersistWishlistUiFiltersNow();
             };
 
+            _sliderFilterTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(200)
+            };
+            _sliderFilterTimer.Tick += (s, e) =>
+            {
+                _sliderFilterTimer.Stop();
+                GetListGame();
+                ScheduleWishlistUiFiltersPersist();
+            };
+
             DataContext = ItadDataContext;
             ItadDataContext.MinPrice = Settings.MinPrice;
             ItadDataContext.MaxPrice = Settings.MaxPrice;
+            ItadDataContext.PropertyChanged += ItadDataContext_PropertyChanged;
 
             PART_DateData.Content = "";
 
@@ -542,11 +555,26 @@ namespace IsThereAnyDeal.Views
             bool matchesPriceLimit = (bool)PART_RbBest.IsChecked
                 ? wishlist.ItadBestPrice.PriceNew <= ItadDataContext.PriceLimit
                 : wishlist.ItadPriceForWishlistStore.PriceNew <= ItadDataContext.PriceLimit;
-            bool matchesLibraryOptions = (bool)PART_TbOnlyInLibrary.IsChecked
-                ? wishlist.InLibrary
-                : (!(bool)PART_TbIncludeInLibrary.IsChecked
-                    ? !wishlist.InLibrary
-                    : (false && (bool)PART_TbIncludeWithoutData.IsChecked) || wishlist.HasItadData);
+
+            bool onlyInLibrary = PART_TbOnlyInLibrary?.IsChecked == true;
+            bool includeInLibrary = PART_TbIncludeInLibrary?.IsChecked == true;
+            bool includeWithoutData = PART_TbIncludeWithoutData?.IsChecked == true;
+
+            bool matchesLibraryOptions;
+            if (onlyInLibrary)
+            {
+                matchesLibraryOptions = wishlist.InLibrary;
+            }
+            else if (!includeInLibrary)
+            {
+                matchesLibraryOptions = !wishlist.InLibrary;
+            }
+            else
+            {
+                matchesLibraryOptions = true;
+            }
+
+            bool matchesItadData = wishlist.HasItadData || includeWithoutData;
             bool matchesAlert = !FilterAlertsOnly || wishlist.GetNotification(Settings.NotificationCriterias);
 
             return matchesDiscount
@@ -555,6 +583,7 @@ namespace IsThereAnyDeal.Views
                 && matchesStore
                 && notIgnored
                 && matchesLibraryOptions
+                && matchesItadData
                 && matchesAlert;
         }
 
@@ -627,12 +656,19 @@ namespace IsThereAnyDeal.Views
                 return;
             }
 
+            // Session-only: not written to WishlistUiFilters; independent from library toggles
+            if (tb.Name == "PART_TbIncludeWithoutData")
+            {
+                Logger.Debug($"[ITAD][ui] includeWithoutData active={tb.IsChecked == true}");
+                GetListGame();
+                return;
+            }
+
             if (tb.Name == "PART_TbOnlyInLibrary")
             {
                 PART_TbIncludeInLibrary.IsChecked = false;
-                PART_TbIncludeWithoutData.IsChecked = false;
             }
-            else
+            else if (tb.Name == "PART_TbIncludeInLibrary")
             {
                 PART_TbOnlyInLibrary.IsChecked = false;
             }
@@ -752,12 +788,21 @@ namespace IsThereAnyDeal.Views
         #endregion
 
 
-        // Search price
-        // Search percentage
-        private void On_DragCompleted(object sender, DragCompletedEventArgs e)
+        private void ItadDataContext_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            GetListGame();
-            ScheduleWishlistUiFiltersPersist();
+            if (e.PropertyName != nameof(ItadDataContext.DiscountPercent)
+                && e.PropertyName != nameof(ItadDataContext.PriceLimit))
+            {
+                return;
+            }
+
+            if (_suppressFilterPersist)
+            {
+                return;
+            }
+
+            _sliderFilterTimer.Stop();
+            _sliderFilterTimer.Start();
         }
 
         private void PART_Rb_Click(object sender, RoutedEventArgs e)
@@ -780,6 +825,7 @@ namespace IsThereAnyDeal.Views
 
             bool alreadyActive = FilterAlertsOnly && PART_TbAlerts?.IsChecked == true;
             _filterPersistTimer.Stop();
+            _sliderFilterTimer.Stop();
             _suppressFilterPersist = true;
             try
             {
@@ -865,6 +911,7 @@ namespace IsThereAnyDeal.Views
                 filters = WishlistUiFilters.CreateDefaults();
             }
 
+            _sliderFilterTimer.Stop();
             _suppressFilterPersist = true;
             try
             {
