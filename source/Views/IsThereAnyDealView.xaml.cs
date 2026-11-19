@@ -266,179 +266,73 @@ namespace IsThereAnyDeal.Views
             return ListWishlist;
         }
 
-        private List<ItadGiveaway> LoadDatatGiveaways()
+        private List<ItadGiveaway> LoadDatatGiveaways(bool cacheOnly = false)
         {
-            List<ItadGiveaway> itadGiveaways = IsThereAnyDealApi.GetGiveaways();
-            return itadGiveaways;
+            return IsThereAnyDealApi.GetGiveaways(cacheOnly);
         }
 
-        private async void GetListGiveaways()
+        private void UpdateGiveawaysLastRefreshLabel()
         {
-            // Initialize UI state: disable the grid and clear previous items
-            gGiveaways.IsEnabled = false;
-            gGiveaways.Children.Clear();
-            gGiveaways.RowDefinitions.Clear();
+            DateTime? lastRefresh = IsThereAnyDealApi.GetGiveawaysLastRefresh();
+            if (lastRefresh == null)
+            {
+                PART_GiveawaysDateData.Text = string.Empty;
+                return;
+            }
 
-            // Add the first row definition (default height)
-            gGiveaways.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
+            PART_GiveawaysDateData.Text = new LocalDateTimeConverter()
+                .Convert(lastRefresh, null, null, CultureInfo.CurrentCulture)
+                ?.ToString() ?? string.Empty;
+        }
+
+        private async void GetListGiveaways(bool cacheOnly = false)
+        {
+            PART_GiveawaysList.IsEnabled = false;
+            PART_GiveawaysRefresh.IsEnabled = false;
+            PART_GiveawaysList.ItemsSource = null;
 
             try
             {
-                // Offload data loading to a background thread to keep UI responsive
-                var itadGiveaways = await Task.Run(() => LoadDatatGiveaways());
+                Logger.Info($"[ITAD][ui][giveaways] refresh start cacheOnly={cacheOnly}");
+                var itadGiveaways = await Task.Run(() => LoadDatatGiveaways(cacheOnly));
+
+                UpdateGiveawaysLastRefreshLabel();
 
                 if (itadGiveaways == null || itadGiveaways.Count == 0)
                 {
-                    Logger.Debug("[ITAD][ui] giveaways loaded count=0");
+                    Logger.Debug("[ITAD][ui][giveaways] loaded count=0");
                     return;
                 }
 
-                Logger.Debug($"[ITAD][ui] giveaways loaded count={itadGiveaways.Count}");
-
-                // Execution resumes here on the UI Thread automatically
-                int row = 0;
-                int col = 0;
-                LocalDateConverter localDateConverter = new LocalDateConverter();
-                FontFamily icoFont = ResourceProvider.GetResource("FontIcoFont") as FontFamily;
-
-                foreach (ItadGiveaway itadGiveaway in itadGiveaways)
-                {
-                    // Two content columns (* / gap / *) — step by 2 for the spacer column
-                    if (col > 3)
-                    {
-                        col = 0;
-                        row += 1;
-                        gGiveaways.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
-                    }
-
-                    // Stretch to the star-sized grid column (no fixed 540 width)
-                    DockPanel dp = new DockPanel
-                    {
-                        HorizontalAlignment = HorizontalAlignment.Stretch,
-                        LastChildFill = true
-                    };
-
-                    // Website Button - Docked Right
-                    Button bt = new Button
-                    {
-                        ToolTip = ResourceProvider.GetString("LOCWebsiteLabel"),
-                        Content = "\uf028",
-                        FontFamily = icoFont,
-                        Tag = itadGiveaway.Link,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Margin = new Thickness(10, 0, 0, 0),
-                    };
-                    bt.Click += WebGiveaway;
-                    DockPanel.SetDock(bt, Dock.Right);
-                    dp.Children.Add(bt);
-
-                    // Expiration Date handling - Docked Right
-                    if (itadGiveaway.Time != null)
-                    {
-                        bool isExpired = itadGiveaway.Time < DateTime.Now;
-
-                        TextBlock tbDateText = new TextBlock
-                        {
-                            Text = $"{localDateConverter.Convert(itadGiveaway.Time, null, null, CultureInfo.CurrentCulture)}",
-                            Margin = new Thickness(10, 0, 0, 0),
-                            VerticalAlignment = VerticalAlignment.Center
-                        };
-                        if (isExpired)
-                        {
-                            tbDateText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
-                        }
-                        DockPanel.SetDock(tbDateText, Dock.Right);
-
-                        TextBlock tbDateIcon = new TextBlock
-                        {
-                            Text = "\uf006",
-                            FontFamily = icoFont,
-                            Margin = new Thickness(10, 0, 0, 0),
-                            VerticalAlignment = VerticalAlignment.Center
-                        };
-                        if (isExpired)
-                        {
-                            tbDateIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#89363a"));
-                        }
-                        DockPanel.SetDock(tbDateIcon, Dock.Right);
-
-                        dp.Children.Add(tbDateText);
-                        dp.Children.Add(tbDateIcon);
-                    }
-
-                    // Status badges — docked right, inside of date/button
-                    if (itadGiveaway.InWaitlist)
-                    {
-                        TextBlock tbWaitlist = new TextBlock
-                        {
-                            Text = "\uec3f",
-                            FontFamily = icoFont,
-                            ToolTip = ResourceProvider.GetString("LOCItadInWaitlist"),
-                            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#02b65a")),
-                            Margin = new Thickness(10, 0, 0, 0),
-                            VerticalAlignment = VerticalAlignment.Center
-                        };
-                        DockPanel.SetDock(tbWaitlist, Dock.Right);
-                        dp.Children.Add(tbWaitlist);
-                    }
-                    if (itadGiveaway.InCollection)
-                    {
-                        TextBlock tbCollection = new TextBlock
-                        {
-                            Text = "\uec5c",
-                            FontFamily = icoFont,
-                            ToolTip = ResourceProvider.GetString("LOCItadInCollection"),
-                            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1494e4")),
-                            Margin = new Thickness(10, 0, 0, 0),
-                            VerticalAlignment = VerticalAlignment.Center
-                        };
-                        DockPanel.SetDock(tbCollection, Dock.Right);
-                        dp.Children.Add(tbCollection);
-                    }
-
-                    // Store name — right-docked next to title (LTR: title | shop | badges | date | button)
-                    TextBlockTrimmed tbShop = new TextBlockTrimmed
-                    {
-                        Text = itadGiveaway.ShopName,
-                        Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(itadGiveaway.ShopColor)),
-                        Margin = new Thickness(10, 0, 0, 0),
-                        VerticalAlignment = VerticalAlignment.Center
-                    };
-                    DockPanel.SetDock(tbShop, Dock.Right);
-                    dp.Children.Add(tbShop);
-
-                    // Title last → LastChildFill uses remaining width (ellipsis when truncated)
-                    TextBlockTrimmed tbTitle = new TextBlockTrimmed
-                    {
-                        Text = itadGiveaway.Title,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        TextTrimming = TextTrimming.CharacterEllipsis,
-                        TextWrapping = TextWrapping.NoWrap
-                    };
-                    dp.Children.Add(tbTitle);
-
-                    // Set Grid position and add to the container
-                    Grid.SetRow(dp, row);
-                    Grid.SetColumn(dp, col);
-                    gGiveaways.Children.Add(dp);
-
-                    col += 2;
-                }
+                Logger.Info($"[ITAD][ui][giveaways] loaded count={itadGiveaways.Count}");
+                PART_GiveawaysList.ItemsSource = itadGiveaways;
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "[ITAD][ui] giveaways list failed");
+                Logger.Error(ex, "[ITAD][ui][giveaways] list failed");
             }
             finally
             {
-                // Ensure the UI is re-enabled even if an error occurs
-                gGiveaways.IsEnabled = true;
+                PART_GiveawaysList.IsEnabled = true;
+                PART_GiveawaysRefresh.IsEnabled = true;
             }
+        }
+
+        private void PART_GiveawaysRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            GetListGiveaways(cacheOnly: false);
         }
 
         private void WebGiveaway(object sender, RoutedEventArgs e)
         {
-            _ = Process.Start((string)((Button)sender).Tag);
+            string link = (sender as Button)?.Tag as string;
+            if (link.IsNullOrEmpty())
+            {
+                Logger.Warn("[ITAD][ui][giveaways] website click ignored link=empty");
+                return;
+            }
+
+            _ = Process.Start(link);
         }
 
 

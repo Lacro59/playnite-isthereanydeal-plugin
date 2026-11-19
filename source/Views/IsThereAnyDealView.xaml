@@ -7,7 +7,8 @@
              xmlns:converters="clr-namespace:CommonPlayniteShared.Converters" 
              xmlns:converters1="clr-namespace:CommonPluginsShared.Converters" 
              xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel" 
-             xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls" 
+             xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls"
+             xmlns:controls="clr-namespace:CommonPluginsControls.Controls"
              xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
              mc:Ignorable="d" d:DesignHeight="740" d:DesignWidth="1280" 
              d:DataContext="{d:DesignInstance Type=local:ItadDataContext, IsDesignTimeCreatable=True}" 
@@ -194,6 +195,13 @@
                     <Setter Property="Visibility" Value="Collapsed"/>
                 </DataTrigger-->
             </Style.Triggers>
+        </Style>
+
+        <Style x:Key="GiveawayItemBorderStyle" TargetType="Border" BasedOn="{StaticResource ItemBorderStyle}">
+            <Setter Property="Margin" Value="4,3"/>
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
         </Style>
     </UserControl.Resources>
     
@@ -835,21 +843,184 @@
                 </Grid>
             </TabItem>
             
-            <TabItem Header="Giveaways">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled"
-                              CanContentScroll="False">
-                    <Grid Name="gGiveaways" Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" MinWidth="280"/>
-                            <ColumnDefinition Width="48"/>
-                            <ColumnDefinition Width="*" MinWidth="280"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                    </Grid>
-                </ScrollViewer>
+            <TabItem Header="{DynamicResource LOCItadGiveaways}">
+                <Grid Margin="6">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <ListBox Name="PART_GiveawaysList"
+                             Grid.Row="0"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.CanContentScroll="False"
+                             HorizontalContentAlignment="Stretch"
+                             ItemContainerStyle="{StaticResource ListBoxItemContainerStyle}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <!-- Top-aligned: otherwise rows are stretched to the viewport height. -->
+                                <UniformGrid Columns="2" VerticalAlignment="Top"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource GiveawayItemBorderStyle}">
+                                    <DockPanel LastChildFill="True">
+                                        <Grid DockPanel.Dock="Left"
+                                              Margin="0,0,8,0"
+                                              VerticalAlignment="Center"
+                                              Visibility="{Binding HasImage, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <Image Source="{Binding ImagePath, IsAsync=True}"
+                                                   Stretch="UniformToFill"
+                                                   Width="145"
+                                                   Height="72"
+                                                   ClipToBounds="True"
+                                                   RenderOptions.BitmapScalingMode="Linear"/>
+                                            <Border HorizontalAlignment="Right"
+                                                    VerticalAlignment="Top"
+                                                    Margin="4"
+                                                    Padding="4,1"
+                                                    Background="{DynamicResource GlyphBrush}"
+                                                    CornerRadius="{DynamicResource ControlCornerRadius}"
+                                                    Visibility="{Binding HasMultipleGames, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                    ToolTip="{DynamicResource LOCItadGiveawayExtraGames}">
+                                                <TextBlock Text="{Binding ExtraGamesLabel}"
+                                                           Style="{DynamicResource BaseTextBlockStyle}"
+                                                           Foreground="{DynamicResource TextBrush}"
+                                                           FontSize="{DynamicResource FontSizeSmall}"/>
+                                            </Border>
+                                        </Grid>
+
+                                        <Button DockPanel.Dock="Right"
+                                                Style="{DynamicResource IconButton}"
+                                                Content="&#xef71;"
+                                                ToolTip="{DynamicResource LOCWebsiteLabel}"
+                                                Tag="{Binding Link}"
+                                                Click="WebGiveaway"
+                                                VerticalAlignment="Center"
+                                                Margin="8,0,0,0"/>
+
+                                        <StackPanel VerticalAlignment="Center">
+                                            <controls:TextBlockTrimmed Text="{Binding Title}"
+                                                                       Style="{DynamicResource BaseTextBlockStyle}"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       TextWrapping="NoWrap"/>
+                                            <controls:TextBlockTrimmed Text="{Binding ShopName}"
+                                                                       Style="{DynamicResource BaseTextBlockStyle}"
+                                                                       Foreground="{Binding ShopColorBrush}"
+                                                                       Margin="0,1,0,0"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       TextWrapping="NoWrap"/>
+
+                                            <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                                <StackPanel Orientation="Horizontal"
+                                                            Margin="0,0,8,0"
+                                                            Visibility="{Binding HasStart, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <TextBlock Text="{DynamicResource LOCItadGiveawayStarts}"
+                                                               Style="{DynamicResource BaseTextBlockStyle}"
+                                                               Margin="0,0,4,0"
+                                                               Opacity="0.75"/>
+                                                    <TextBlock Text="{Binding Start, Converter={StaticResource LocalDateConverter}}"
+                                                               Style="{DynamicResource BaseTextBlockStyle}"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal"
+                                                            Visibility="{Binding HasExpiry, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <TextBlock Text="{DynamicResource LOCItadGiveawayEnds}"
+                                                               Style="{DynamicResource BaseTextBlockStyle}"
+                                                               Margin="0,0,4,0"
+                                                               Opacity="0.75"/>
+                                                    <TextBlock Text="{Binding Time, Converter={StaticResource LocalDateConverter}}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsExpired}" Value="True">
+                                                                        <Setter Property="Foreground" Value="{DynamicResource WarningBrush}"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                                <Border Margin="0,0,4,0"
+                                                        Padding="4,1"
+                                                        Background="{DynamicResource PositiveRatingBrush}"
+                                                        CornerRadius="{DynamicResource ControlCornerRadius}"
+                                                        Visibility="{Binding InWaitlist, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                        ToolTip="{DynamicResource LOCItadInWaitlist}">
+                                                    <TextBlock Text="{DynamicResource LOCItadInWaitlist}"
+                                                               Style="{DynamicResource BaseTextBlockStyle}"
+                                                               Foreground="{DynamicResource TextBrush}"
+                                                               FontSize="{DynamicResource FontSizeSmall}"/>
+                                                </Border>
+                                                <Border Margin="0,0,4,0"
+                                                        Padding="4,1"
+                                                        Background="{DynamicResource GlyphBrush}"
+                                                        CornerRadius="{DynamicResource ControlCornerRadius}"
+                                                        Visibility="{Binding InCollection, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                        ToolTip="{DynamicResource LOCItadInCollection}">
+                                                    <TextBlock Text="{DynamicResource LOCItadInCollection}"
+                                                               Style="{DynamicResource BaseTextBlockStyle}"
+                                                               Foreground="{DynamicResource TextBrush}"
+                                                               FontSize="{DynamicResource FontSizeSmall}"/>
+                                                </Border>
+                                                <Border Margin="0,0,4,0"
+                                                        Padding="4,1"
+                                                        Background="{DynamicResource WarningBrush}"
+                                                        CornerRadius="{DynamicResource ControlCornerRadius}"
+                                                        Visibility="{Binding IsMature, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                        ToolTip="{DynamicResource LOCItadMature}">
+                                                    <TextBlock Text="{DynamicResource LOCItadMature}"
+                                                               Style="{DynamicResource BaseTextBlockStyle}"
+                                                               Foreground="{DynamicResource TextBrush}"
+                                                               FontSize="{DynamicResource FontSizeSmall}"/>
+                                                </Border>
+                                                <Border Padding="4,1"
+                                                        Background="{DynamicResource ControlBackgroundBrush}"
+                                                        BorderBrush="{DynamicResource GlyphBrush}"
+                                                        BorderThickness="{DynamicResource ControlBorderThickness}"
+                                                        CornerRadius="{DynamicResource ControlCornerRadius}"
+                                                        Visibility="{Binding DrmFree, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                        ToolTip="{DynamicResource LOCItadDrmFree}">
+                                                    <TextBlock Text="{DynamicResource LOCItadDrmFree}"
+                                                               Style="{DynamicResource BaseTextBlockStyle}"
+                                                               Foreground="{DynamicResource TextBrush}"
+                                                               FontSize="{DynamicResource FontSizeSmall}"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <StackPanel Grid.Row="1"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Margin="0,8,0,0">
+                        <TextBlock Text="{DynamicResource LOCCommonDateData}"
+                                   Style="{DynamicResource BaseTextBlockStyle}"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,8,0"/>
+                        <TextBlock Name="PART_GiveawaysDateData"
+                                   Style="{DynamicResource BaseTextBlockStyle}"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,0"
+                                   MinWidth="120"/>
+                        <Button Name="PART_GiveawaysRefresh"
+                                Style="{DynamicResource IconButton}"
+                                Content="&#xefd1;"
+                                ToolTip="{DynamicResource LOCItadRefreshGiveaways}"
+                                Click="PART_GiveawaysRefresh_Click"/>
+                    </StackPanel>
+                </Grid>
             </TabItem>
         </TabControl>
         

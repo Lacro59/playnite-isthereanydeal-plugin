@@ -879,19 +879,45 @@ namespace IsThereAnyDeal.Services
         }
 
         /// <summary>
+        /// Local cache path for persisted giveaways (<c>giveways.json</c>).
+        /// </summary>
+        public static string GetGiveawaysCachePath()
+        {
+            return Path.Combine(IsThereAnyDeal.PluginUserDataPath, "cache", "giveways.json");
+        }
+
+        /// <summary>
+        /// Last write time of the giveaways cache file, or <c>null</c> if missing.
+        /// </summary>
+        public static DateTime? GetGiveawaysLastRefresh()
+        {
+            string path = GetGiveawaysCachePath();
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+
+            return File.GetLastWriteTime(path);
+        }
+
+        /// <summary>
         /// Fetches available giveaways from the web and compares them with the local cache to detect new entries.
         /// </summary>
         public List<ItadGiveaway> GetGiveaways(bool cacheOnly = false)
         {
             // Load previous
-            string pluginDirectoryCache = IsThereAnyDeal.PluginUserDataPath + "\\cache";
-            string pluginFileCache = pluginDirectoryCache + "\\giveways.json";
+            string pluginFileCache = GetGiveawaysCachePath();
+            string pluginDirectoryCache = Path.GetDirectoryName(pluginFileCache);
+            if (!string.IsNullOrEmpty(pluginDirectoryCache) && !Directory.Exists(pluginDirectoryCache))
+            {
+                _ = Directory.CreateDirectory(pluginDirectoryCache);
+            }
 
             var itadGiveawaysCache = FileDataService.LoadData<List<ItadGiveaway>>(pluginFileCache, -1) ?? new List<ItadGiveaway>();
 
             // Load on web
             List<ItadGiveaway> itadGiveaways = new List<ItadGiveaway>();
-            if (!cacheOnly && itadGiveawaysCache != new List<ItadGiveaway>())
+            if (!cacheOnly)
             {
                 try
                 {
@@ -921,17 +947,23 @@ namespace IsThereAnyDeal.Services
                     }
                     catch (Exception e)
                     {
-                        Common.LogError(e, false, "Error on ITAD request");
+                        Common.LogError(e, false, "[ITAD][giveaways] request failed", true, IsThereAnyDeal.PluginName);
                     }
 
                     _ = Serialization.TryFromJson(data, out Giveaways giveaways, out Exception ex);
                     if (ex != null)
                     {
-                        Common.LogError(ex, false, true, "IsThereAnyDeals");
+                        Common.LogError(ex, false, "[ITAD][giveaways] json parse failed", true, IsThereAnyDeal.PluginName);
                     }
 
                     giveaways?.Data?.ForEach(x =>
                     {
+                        DateTime? start = null;
+                        if (x.Start != null)
+                        {
+                            start = DateTimeOffset.FromUnixTimeSeconds(x.Start ?? 0).DateTime;
+                        }
+
                         DateTime? time = null;
                         if (x.Expiry != null)
                         {
@@ -950,32 +982,43 @@ namespace IsThereAnyDeal.Services
                         }
                         catch (Exception ex2)
                         {
-                            Common.LogError(ex2, false, $"Failed to download {GiveawaysUrl}", true, IsThereAnyDeal.PluginName);
+                            Logger.Warn(ex2, $"[ITAD][giveaways] shop parse failed title=\"{x.Title}\"");
                         }
+
+                        Game firstGame = x.Games?.FirstOrDefault();
 
                         itadGiveaways.Add(new ItadGiveaway
                         {
                             TitleAll = x.Title,
-                            Title = x.Games?.FirstOrDefault()?.Title,
+                            Title = firstGame?.Title,
+                            Start = start,
                             Time = time,
                             Link = x.Url,
                             ShopName = shop,
-                            Count = x.Games?.Count() ?? 0,
-                            InWaitlist = x.Counts.Waitlist != 0,
-                            InCollection = x.Counts.Collection != 0,
+                            ShopId = x.Shop,
+                            Count = x.Games?.Count ?? 0,
+                            Banner145 = firstGame?.Assets?.Banner145,
+                            Boxart = firstGame?.Assets?.Boxart,
+                            InWaitlist = (x.Counts?.Waitlist ?? 0) != 0,
+                            InCollection = (x.Counts?.Collection ?? 0) != 0,
+                            IsMature = x.IsMature,
+                            DrmFree = firstGame != null && firstGame.DrmFree,
+                            Comments = x.Counts?.Comments ?? 0,
                         });
                     });
+
+                    Logger.Info($"[ITAD][giveaways] fetched count={itadGiveaways.Count}");
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, "Error fetching web giveaways", true, IsThereAnyDeal.PluginName);
+                    Common.LogError(ex, false, "[ITAD][giveaways] fetch failed", true, IsThereAnyDeal.PluginName);
                 }
             }
 
             // REMARK: Compare web results with cache to preserve the "HasSeen" status of older giveaways.
             if (itadGiveaways.Count != 0)
             {
-                Common.LogDebug($"Compare with cache");
+                Logger.Debug($"[ITAD][giveaways] compareCache web={itadGiveaways.Count} cache={itadGiveawaysCache.Count}");
                 foreach (ItadGiveaway itadGiveaway in itadGiveawaysCache)
                 {
                     if (itadGiveaways.Find(x => x.TitleAll == itadGiveaway.TitleAll) != null)
@@ -987,7 +1030,15 @@ namespace IsThereAnyDeal.Services
             // No data
             else
             {
-                Logger.Info("No new data for GetGiveaways()");
+                if (cacheOnly)
+                {
+                    Logger.Debug($"[ITAD][giveaways] cacheOnly count={itadGiveawaysCache.Count}");
+                }
+                else
+                {
+                    Logger.Info($"[ITAD][giveaways] noWebData usingCache count={itadGiveawaysCache.Count}");
+                }
+
                 itadGiveaways = itadGiveawaysCache;
             }
 

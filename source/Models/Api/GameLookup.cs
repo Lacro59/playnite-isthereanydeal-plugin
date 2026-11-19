@@ -34,6 +34,30 @@ namespace IsThereAnyDeal.Models.Api
         public bool Mature { get; set; }
 
         [SerializationPropertyName("assets")]
-        public object Assets { get; set; }
+        public Assets Assets { get; set; }
+
+        [SerializationPropertyName("drmfree")]
+        public bool DrmFree { get; set; }
+    }
+
+    /// <summary>
+    /// Image assets returned by the ITAD game / giveaways API.
+    /// </summary>
+    public class Assets
+    {
+        [SerializationPropertyName("boxart")]
+        public string Boxart { get; set; }
+
+        [SerializationPropertyName("banner145")]
+        public string Banner145 { get; set; }
+
+        [SerializationPropertyName("banner300")]
+        public string Banner300 { get; set; }
+
+        [SerializationPropertyName("banner400")]
+        public string Banner400 { get; set; }
+
+        [SerializationPropertyName("banner600")]
+        public string Banner600 { get; set; }
     }
 }
