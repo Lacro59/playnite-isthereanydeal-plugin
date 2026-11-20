@@ -112,6 +112,7 @@ namespace IsThereAnyDeal.Views
             // Subscribe to the Loaded event instead of calling methods here
             Loaded += (s, e) =>
             {
+                ApplyFiltersPanelExpanded();
                 ApplyWishlistUiFilters(Settings.WishlistUiFilters, applyStores: false);
                 ApplyNotificationAlertsOverride();
 
@@ -154,6 +155,8 @@ namespace IsThereAnyDeal.Views
                 if (result == null)
                 {
                     Logger.Warn($"[ITAD][ui] refresh empty result cacheOnly={cachOnly} forcePrice={forcePrice}");
+                    lbWishlist.ItemsSource = new ObservableCollection<Wishlist>();
+                    UpdateWishlistEmptyState();
                     return;
                 }
 
@@ -166,6 +169,7 @@ namespace IsThereAnyDeal.Views
                 }
 
                 lbWishlist.ItemsSource = result;
+                UpdateWishlistEmptyState();
 
                 SetInfos();
 
@@ -207,6 +211,7 @@ namespace IsThereAnyDeal.Views
                 DataLoadWishlist.IsHitTestVisible = true;
                 dpData.IsEnabled = true;
                 ItadDataContext.LoadStatus = string.Empty;
+                UpdateWishlistEmptyState();
                 Logger.Info($"[ITAD][ui] refresh done cacheOnly={cachOnly} forcePrice={forcePrice}");
             }
         }
@@ -314,15 +319,20 @@ namespace IsThereAnyDeal.Views
                 if (itadGiveaways == null || itadGiveaways.Count == 0)
                 {
                     Logger.Debug("[ITAD][ui][giveaways] loaded count=0");
+                    PART_GiveawaysList.ItemsSource = null;
+                    UpdateGiveawaysEmptyState();
                     return;
                 }
 
                 Logger.Info($"[ITAD][ui][giveaways] loaded count={itadGiveaways.Count}");
                 PART_GiveawaysList.ItemsSource = itadGiveaways;
+                UpdateGiveawaysEmptyState();
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, "[ITAD][ui][giveaways] list failed");
+                PART_GiveawaysList.ItemsSource = null;
+                UpdateGiveawaysEmptyState();
             }
             finally
             {
@@ -556,8 +566,8 @@ namespace IsThereAnyDeal.Views
                 ? wishlist.ItadBestPrice.PriceNew <= ItadDataContext.PriceLimit
                 : wishlist.ItadPriceForWishlistStore.PriceNew <= ItadDataContext.PriceLimit;
 
-            bool onlyInLibrary = PART_TbOnlyInLibrary?.IsChecked == true;
-            bool includeInLibrary = PART_TbIncludeInLibrary?.IsChecked == true;
+            bool onlyInLibrary = PART_RbLibraryOnly?.IsChecked == true;
+            bool includeInLibrary = PART_RbLibraryInclude?.IsChecked == true;
             bool includeWithoutData = PART_TbIncludeWithoutData?.IsChecked == true;
 
             bool matchesLibraryOptions;
@@ -587,6 +597,62 @@ namespace IsThereAnyDeal.Views
                 && matchesAlert;
         }
 
+
+        private void UpdateWishlistEmptyState()
+        {
+            if (PART_WishlistEmpty == null || PART_WishlistNoResults == null || lbWishlist == null)
+            {
+                return;
+            }
+
+            bool loading = DataLoadWishlist != null && DataLoadWishlist.Visibility == Visibility.Visible;
+            if (loading)
+            {
+                PART_WishlistEmpty.Visibility = Visibility.Collapsed;
+                PART_WishlistNoResults.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            int sourceCount = 0;
+            System.Collections.ICollection source = lbWishlist.ItemsSource as System.Collections.ICollection;
+            if (source != null)
+            {
+                sourceCount = source.Count;
+            }
+
+            int filteredCount = lbWishlist.Items.Count;
+
+            if (sourceCount == 0)
+            {
+                PART_WishlistEmpty.Visibility = Visibility.Visible;
+                PART_WishlistNoResults.Visibility = Visibility.Collapsed;
+                Logger.Debug("[ITAD][ui] wishlistEmptyState mode=empty source=0");
+            }
+            else if (filteredCount == 0)
+            {
+                PART_WishlistEmpty.Visibility = Visibility.Collapsed;
+                PART_WishlistNoResults.Visibility = Visibility.Visible;
+                Logger.Debug($"[ITAD][ui] wishlistEmptyState mode=noResults source={sourceCount} filtered=0");
+            }
+            else
+            {
+                PART_WishlistEmpty.Visibility = Visibility.Collapsed;
+                PART_WishlistNoResults.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void UpdateGiveawaysEmptyState()
+        {
+            if (PART_GiveawaysEmpty == null)
+            {
+                return;
+            }
+
+            System.Collections.ICollection source = PART_GiveawaysList?.ItemsSource as System.Collections.ICollection;
+            int count = source != null ? source.Count : 0;
+            PART_GiveawaysEmpty.Visibility = count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         // Get list
         private void GetListGame()
         {
@@ -594,6 +660,8 @@ namespace IsThereAnyDeal.Views
             {
                 CollectionViewSource.GetDefaultView(lbWishlist.ItemsSource).Refresh();
             }
+
+            UpdateWishlistEmptyState();
         }
 
         // Search by name
@@ -656,7 +724,7 @@ namespace IsThereAnyDeal.Views
                 return;
             }
 
-            // Session-only: not written to WishlistUiFilters; independent from library toggles
+            // Session-only: not written to WishlistUiFilters; independent from library radios
             if (tb.Name == "PART_TbIncludeWithoutData")
             {
                 Logger.Debug($"[ITAD][ui] includeWithoutData active={tb.IsChecked == true}");
@@ -664,17 +732,16 @@ namespace IsThereAnyDeal.Views
                 return;
             }
 
-            if (tb.Name == "PART_TbOnlyInLibrary")
-            {
-                PART_TbIncludeInLibrary.IsChecked = false;
-            }
-            else if (tb.Name == "PART_TbIncludeInLibrary")
-            {
-                PART_TbOnlyInLibrary.IsChecked = false;
-            }
-
             GetListGame();
             ScheduleWishlistUiFiltersPersist();
+        }
+
+        private void PART_RbLibrary_Click(object sender, RoutedEventArgs e)
+        {
+            GetListGame();
+            ScheduleWishlistUiFiltersPersist();
+            Logger.Debug(
+                $"[ITAD][ui] libraryMode only={PART_RbLibraryOnly?.IsChecked == true} include={PART_RbLibraryInclude?.IsChecked == true}");
         }
 
         private void PART_BtResetFilters_Click(object sender, RoutedEventArgs e)
@@ -715,67 +782,152 @@ namespace IsThereAnyDeal.Views
 
         #region Order
 
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void PART_CbOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            TabControl tc = sender as TabControl;
-            if (PART_Order != null)
+            try
             {
-                PART_Order.Visibility = tc.SelectedIndex == 0 ? Visibility.Visible : Visibility.Collapsed;
-            }
-        }
+                if (lbWishlist?.ItemsSource == null)
+                {
+                    return;
+                }
 
-		private void PART_CbOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			try
-			{
-				if (lbWishlist?.ItemsSource == null) return;
+                if (PART_CbOrderType?.SelectedItem == null)
+                {
+                    return;
+                }
 
-				var view = CollectionViewSource.GetDefaultView(lbWishlist.ItemsSource);
-				view.SortDescriptions.Clear();
+                ICollectionView view = CollectionViewSource.GetDefaultView(lbWishlist.ItemsSource);
+                view.SortDescriptions.Clear();
 
-				string orderType = ((ComboBoxItem)PART_CbOrderType.SelectedItem).Tag.ToString();
-				bool isAscending = ((ComboBoxItem)PART_CbOrder.SelectedItem).Tag.ToString() == "0";
+                string orderType = ((ComboBoxItem)PART_CbOrderType.SelectedItem).Tag.ToString();
+                bool isAscending = GetOrderDirectionTag() == "0";
 
-				ListSortDirection direction = isAscending ? ListSortDirection.Ascending : ListSortDirection.Descending;
+                ListSortDirection direction = isAscending ? ListSortDirection.Ascending : ListSortDirection.Descending;
 
-				switch (orderType)
-				{
-					case "0":
-						view.SortDescriptions.Add(new SortDescription("Name", direction));
-						break;
-					case "1":
-						view.SortDescriptions.Add(new SortDescription("ItadBestPrice.PriceCut", direction));
-						break;
-					case "2":
-						view.SortDescriptions.Add(new SortDescription("ItadBestPrice.PriceNew", direction));
-						break;
-					case "3":
-						view.SortDescriptions.Add(new SortDescription("ItadPriceForWishlistStore.PriceCut", direction));
-						break;
-					case "4":
-						view.SortDescriptions.Add(new SortDescription("ItadPriceForWishlistStore.PriceNew", direction));
-						break;
-					case "5":
-						view.SortDescriptions.Add(new SortDescription("ReleaseDate", direction));
-						break;
-				}
+                switch (orderType)
+                {
+                    case "0":
+                        view.SortDescriptions.Add(new SortDescription("Name", direction));
+                        break;
+                    case "1":
+                        view.SortDescriptions.Add(new SortDescription("ItadBestPrice.PriceCut", direction));
+                        break;
+                    case "2":
+                        view.SortDescriptions.Add(new SortDescription("ItadBestPrice.PriceNew", direction));
+                        break;
+                    case "3":
+                        view.SortDescriptions.Add(new SortDescription("ItadPriceForWishlistStore.PriceCut", direction));
+                        break;
+                    case "4":
+                        view.SortDescriptions.Add(new SortDescription("ItadPriceForWishlistStore.PriceNew", direction));
+                        break;
+                    case "5":
+                        view.SortDescriptions.Add(new SortDescription("ReleaseDate", direction));
+                        break;
+                }
 
-				view.Filter = UserFilter;
+                view.Filter = UserFilter;
                 if (sender != null)
                 {
                     ScheduleWishlistUiFiltersPersist();
                 }
-			}
-			catch (Exception ex)
-			{
-				Common.LogError(ex, false);
-			}
-		}
-		#endregion
 
-		#region Data refresh
+                UpdateWishlistEmptyState();
+            }
+            catch (Exception ex)
+            {
+                Common.LogError(ex, false);
+            }
+        }
 
-		private void ButtonData_Click(object sender, RoutedEventArgs e)
+        private void PART_BtOrderDir_Click(object sender, RoutedEventArgs e)
+        {
+            string current = GetOrderDirectionTag();
+            ApplyOrderDirectionTag(current == "0" ? "1" : "0");
+            PART_CbOrder_SelectionChanged(sender, null);
+        }
+
+        private string GetOrderDirectionTag()
+        {
+            if (PART_BtOrderDir?.Tag == null)
+            {
+                return "0";
+            }
+
+            return PART_BtOrderDir.Tag.ToString();
+        }
+
+        private void ApplyOrderDirectionTag(string tag)
+        {
+            if (PART_BtOrderDir == null)
+            {
+                return;
+            }
+
+            string target = string.IsNullOrEmpty(tag) ? "0" : tag;
+            PART_BtOrderDir.Tag = target;
+            bool ascending = target == "0";
+            // Playnite Expander chevrons (Media / DefaultControls): up = ascending, down = descending
+            PART_BtOrderDir.Content = ascending ? "\uEA99" : "\uEAA1";
+            PART_BtOrderDir.ToolTip = ResourceProvider.GetString(
+                ascending ? "LOCMenuSortAscending" : "LOCMenuSortDescending");
+        }
+
+        #endregion
+
+
+        private void ApplyFiltersPanelExpanded()
+        {
+            if (PART_FiltersExpander == null)
+            {
+                return;
+            }
+
+            _suppressFilterPersist = true;
+            try
+            {
+                PART_FiltersExpander.IsExpanded = Settings.WishlistFiltersPanelExpanded;
+            }
+            finally
+            {
+                _suppressFilterPersist = false;
+            }
+        }
+
+        private void PART_FiltersExpander_ExpandedChanged(object sender, RoutedEventArgs e)
+        {
+            if (_suppressFilterPersist || PART_FiltersExpander == null)
+            {
+                return;
+            }
+
+            try
+            {
+                Settings.WishlistFiltersPanelExpanded = PART_FiltersExpander.IsExpanded;
+                Plugin.SavePluginSettings(Settings);
+                Logger.Debug($"[ITAD][filters] panelExpanded={Settings.WishlistFiltersPanelExpanded}");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "[ITAD][filters] panel expand persist failed");
+            }
+        }
+
+        #region Data refresh
+
+        private void PART_BtRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button?.ContextMenu == null)
+            {
+                return;
+            }
+
+            button.ContextMenu.PlacementTarget = button;
+            button.ContextMenu.IsOpen = true;
+        }
+
+        private void ButtonData_Click(object sender, RoutedEventArgs e)
         {
             RefreshData(string.Empty, false);
         }
@@ -877,6 +1029,28 @@ namespace IsThereAnyDeal.Views
             }
         }
 
+
+        private void ApplyLibraryRadios(bool includeInLibrary, bool onlyInLibrary)
+        {
+            if (PART_RbLibraryExclude == null || PART_RbLibraryInclude == null || PART_RbLibraryOnly == null)
+            {
+                return;
+            }
+
+            if (onlyInLibrary)
+            {
+                PART_RbLibraryOnly.IsChecked = true;
+            }
+            else if (includeInLibrary)
+            {
+                PART_RbLibraryInclude.IsChecked = true;
+            }
+            else
+            {
+                PART_RbLibraryExclude.IsChecked = true;
+            }
+        }
+
         private WishlistUiFilters CaptureWishlistUiFilters()
         {
             string orderType = "0";
@@ -886,15 +1060,12 @@ namespace IsThereAnyDeal.Views
                 orderType = orderTypeItem.Tag.ToString();
             }
 
-            if (PART_CbOrder?.SelectedItem is ComboBoxItem orderDirItem && orderDirItem.Tag != null)
-            {
-                orderDirection = orderDirItem.Tag.ToString();
-            }
+            orderDirection = GetOrderDirectionTag();
 
             return new WishlistUiFilters
             {
-                IncludeInLibrary = PART_TbIncludeInLibrary?.IsChecked == true,
-                OnlyInLibrary = PART_TbOnlyInLibrary?.IsChecked == true,
+                IncludeInLibrary = PART_RbLibraryInclude?.IsChecked == true,
+                OnlyInLibrary = PART_RbLibraryOnly?.IsChecked == true,
                 UseBestPrice = PART_RbBest?.IsChecked != false,
                 DiscountPercent = ItadDataContext.DiscountPercent,
                 PriceLimit = ItadDataContext.PriceLimit,
@@ -915,15 +1086,7 @@ namespace IsThereAnyDeal.Views
             _suppressFilterPersist = true;
             try
             {
-                if (PART_TbOnlyInLibrary != null)
-                {
-                    PART_TbOnlyInLibrary.IsChecked = filters.OnlyInLibrary;
-                }
-
-                if (PART_TbIncludeInLibrary != null)
-                {
-                    PART_TbIncludeInLibrary.IsChecked = filters.IncludeInLibrary && !filters.OnlyInLibrary;
-                }
+                ApplyLibraryRadios(filters.IncludeInLibrary, filters.OnlyInLibrary);
 
                 if (PART_RbBest != null && PART_RbStore != null)
                 {
@@ -948,7 +1111,7 @@ namespace IsThereAnyDeal.Views
                 ItadDataContext.PriceLimit = priceLimit;
 
                 SelectComboByTag(PART_CbOrderType, filters.OrderTypeTag);
-                SelectComboByTag(PART_CbOrder, filters.OrderDirectionTag);
+                ApplyOrderDirectionTag(filters.OrderDirectionTag);
 
                 if (applyStores)
                 {

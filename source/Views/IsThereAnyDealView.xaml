@@ -160,100 +160,176 @@
     </UserControl.Resources>
 
     <Grid Margin="10">
-        <TabControl SelectionChanged="TabControl_SelectionChanged">
+        <TabControl>
             <TabItem Header="{DynamicResource LOCItadWishlist}" Name="PART_Tb">
                 <Grid Margin="10">
                     <DockPanel Name="dpData" LastChildFill="True">
-                        <Border DockPanel.Dock="Top" BorderThickness="{DynamicResource PopupBorderThickness}" BorderBrush="{DynamicResource NormalBorderBrush}" Margin="0,0,0,10">
-                            <DockPanel Margin="10" LastChildFill="True">
+                        <!-- Wishlist toolbar: search, stores, sort, total, store info, refresh menu -->
+                        <Border DockPanel.Dock="Top"
+                                BorderThickness="{DynamicResource PopupBorderThickness}"
+                                BorderBrush="{DynamicResource NormalBorderBrush}"
+                                Margin="0,0,0,10">
+                            <DockPanel Margin="10" LastChildFill="False">
+                                <playnitecontrols:SearchBox x:Name="TextboxSearch"
+                                                           DockPanel.Dock="Left"
+                                                           TextChanged="TextboxSearch_TextChanged"
+                                                           Width="220"
+                                                           Margin="0,0,10,0"
+                                                           VerticalAlignment="Center"/>
 
-                                <!-- ===== LEFT SECTION: SEARCH & FILTERS ===== -->
-                                <StackPanel DockPanel.Dock="Left" Margin="0,0,20,0">
-                                    <!-- Search -->
-                                    <DockPanel Margin="0,0,0,10">
-                                        <playnitecontrols:SearchBox x:Name="TextboxSearch"
-                                                                   TextChanged="TextboxSearch_TextChanged"
-                                                                   Width="250"
-                                                                   Margin="10,0,0,0"
-                                                                   DockPanel.Dock="Right"
-                                                                   VerticalAlignment="Center"/>
+                                <ComboBox Name="FilterStore"
+                                          DockPanel.Dock="Left"
+                                          IsEditable="True"
+                                          IsReadOnly="True"
+                                          Width="200"
+                                          Margin="0,0,10,0"
+                                          VerticalAlignment="Center"
+                                          VirtualizingPanel.IsVirtualizing="True"
+                                          ToolTip="{DynamicResource LOCITADFilterSource}"
+                                          ItemsSource="{Binding FilterStoreItems}">
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="Padding" Value="4,2"/>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Checked="ChkStore_Checked"
+                                                      Unchecked="ChkStore_Unchecked"
+                                                      Tag="{Binding StoreName}"
+                                                      Content="{Binding StoreNameDisplay}"
+                                                      IsChecked="{Binding IsCheck, Mode=TwoWay}"
+                                                      FontFamily="{DynamicResource CommonFont}"
+                                                      Focusable="False"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
 
-                                        <TextBlock Text="{DynamicResource LOCSearchLabel}"
-                                                   Style="{DynamicResource BaseTextBlockStyle}"
-                                                   VerticalAlignment="Center"/>
-                                    </DockPanel>
+                                <Button Name="PART_BtRefresh"
+                                        DockPanel.Dock="Right"
+                                        Style="{DynamicResource IconButton}"
+                                        Content="&#xefd1;"
+                                        ToolTip="{DynamicResource LOCItadRefresh}"
+                                        Click="PART_BtRefresh_Click"
+                                        VerticalAlignment="Center"
+                                        Margin="10,0,0,0">
+                                    <Button.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="{DynamicResource LOCITADRefreshPrice}"
+                                                      Click="ButtonPrice_Click"/>
+                                            <MenuItem Header="{DynamicResource LOCCommonRefreshGameData}"
+                                                      Click="ButtonData_Click"/>
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
 
-                                    <!-- Filter Store -->
-                                    <DockPanel>
-                                        <ComboBox Name="FilterStore"
-                                                 IsEditable="True"
-                                                 IsReadOnly="True"
-                                                 Width="250"
-                                                 Margin="10,0,0,0"
-                                                 VerticalAlignment="Center"
-                                                 VirtualizingPanel.IsVirtualizing="True"
-                                                 DockPanel.Dock="Right"
-                                                 ItemsSource="{Binding FilterStoreItems}">
-                                            <ComboBox.ItemContainerStyle>
-                                                <Style TargetType="ComboBoxItem">
-                                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                                    <Setter Property="Padding" Value="4,2"/>
-                                                </Style>
-                                            </ComboBox.ItemContainerStyle>
-                                            <ComboBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <CheckBox Checked="ChkStore_Checked"
-                                                             Unchecked="ChkStore_Unchecked"
-                                                             Tag="{Binding StoreName}"
-                                                             Content="{Binding StoreNameDisplay}"
-                                                             IsChecked="{Binding IsCheck, Mode=TwoWay}"
-                                                             FontFamily="{DynamicResource CommonFont}"
-                                                             Focusable="False"/>
-                                                </DataTemplate>
-                                            </ComboBox.ItemTemplate>
-                                        </ComboBox>
-
-                                        <TextBlock Text="{DynamicResource LOCITADFilterSource}"
-                                                   Style="{DynamicResource BaseTextBlockStyle}"
-                                                   VerticalAlignment="Center"/>
-                                    </DockPanel>
+                                <StackPanel DockPanel.Dock="Right"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <ComboBox Name="PART_CbOrderType"
+                                              Width="160"
+                                              VerticalAlignment="Center"
+                                              SelectionChanged="PART_CbOrder_SelectionChanged"
+                                              ToolTip="{DynamicResource LOCSettingsTopPanelSortingItem}">
+                                        <ComboBoxItem Content="{DynamicResource LOCNameLabel}" Tag="0" IsSelected="True"/>
+                                        <ComboBoxItem Content="{DynamicResource LOCITADOrderBestPriceCut}" Tag="1"/>
+                                        <ComboBoxItem Content="{DynamicResource LOCITADOrderBestPrice}" Tag="2"/>
+                                        <ComboBoxItem Content="{DynamicResource LOCITADOrderStorePriceCut}" Tag="3"/>
+                                        <ComboBoxItem Content="{DynamicResource LOCITADOrderStorePrice}" Tag="4"/>
+                                        <ComboBoxItem Content="{DynamicResource LOCGameReleaseDateTitle}" Tag="5"/>
+                                    </ComboBox>
+                                    <Button Name="PART_BtOrderDir"
+                                            Style="{DynamicResource IconButton}"
+                                            Content="&#xea99;"
+                                            Tag="0"
+                                            ToolTip="{DynamicResource LOCMenuSortAscending}"
+                                            Click="PART_BtOrderDir_Click"
+                                            VerticalAlignment="Center"
+                                            Margin="6,0,0,0"/>
+                                    <TextBlock Style="{DynamicResource BaseTextBlockStyle}"
+                                               Text="{DynamicResource LOCCommonTotalFound}"
+                                               VerticalAlignment="Center"
+                                               Margin="12,0,0,0"/>
+                                    <TextBlock Name="PART_TotalFoundCount"
+                                               Style="{DynamicResource BaseTextBlockStyle}"
+                                               Text="{Binding ElementName=lbWishlist, Path=Items.Count, FallbackValue=0}"
+                                               VerticalAlignment="Center"
+                                               Width="40"
+                                               TextAlignment="Right"/>
+                                    <TextBlock Name="ItadInfo"
+                                               Text=""
+                                               FontFamily="{DynamicResource CommonFont}"
+                                               FontSize="{DynamicResource FontSizeLarger}"
+                                               Style="{DynamicResource BaseTextBlockStyle}"
+                                               VerticalAlignment="Center"
+                                               Margin="10,0,0,0">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip>
+                                                <ListBox Name="tpListBox" BorderThickness="0">
+                                                    <ListBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0"
+                                                                           Text="{Binding StoreName}"
+                                                                           Style="{DynamicResource BaseTextBlockStyle}"/>
+                                                                <TextBlock Grid.Column="1"
+                                                                           Text="{Binding Count}"
+                                                                           Style="{DynamicResource BaseTextBlockStyle}"
+                                                                           HorizontalAlignment="Right"
+                                                                           Margin="10,0,0,0"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ListBox.ItemTemplate>
+                                                </ListBox>
+                                            </ToolTip>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </StackPanel>
+                            </DockPanel>
+                        </Border>
 
-                                <!-- ===== RIGHT SECTION: SLIDERS & OPTIONS ===== -->
-                                <DockPanel LastChildFill="True">
-                                    <!-- Radio buttons - left -->
+                        <Expander Name="PART_FiltersExpander"
+                                  DockPanel.Dock="Top"
+                                  Style="{DynamicResource ModernExpanderStyle}"
+                                  Header="{DynamicResource LOCItadFilters}"
+                                  Margin="0,0,0,10"
+                                  Expanded="PART_FiltersExpander_ExpandedChanged"
+                                  Collapsed="PART_FiltersExpander_ExpandedChanged">
+                            <StackPanel Margin="0,8,0,0">
+                                <DockPanel LastChildFill="True" Margin="0,0,0,10">
                                     <Grid DockPanel.Dock="Right" Margin="20,0,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="10"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="12"/>
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
-
                                         <TextBlock Text="{DynamicResource LOCITADOn}"
                                                    Style="{DynamicResource BaseTextBlockStyle}"
                                                    VerticalAlignment="Center"/>
                                         <RadioButton Name="PART_RbBest" VerticalAlignment="Center"
-                                                    Grid.Column="2"
-                                                    Content="{DynamicResource LOCITADBestPrice}"
-                                                    GroupName="Price"
-                                                    IsChecked="True"
-                                                    Click="PART_Rb_Click"
-                                                    Margin="30,0,0,8"/>
+                                                     Grid.Column="2"
+                                                     Content="{DynamicResource LOCITADBestPrice}"
+                                                     GroupName="Price"
+                                                     IsChecked="True"
+                                                     Click="PART_Rb_Click"
+                                                     Margin="30,0,0,8"/>
                                         <RadioButton Name="PART_RbStore" VerticalAlignment="Center"
-                                                    Grid.Row="2" Grid.Column="2"
-                                                    Content="{DynamicResource LOCITADStorePrice}"
-                                                    GroupName="Price"
-                                                    Click="PART_Rb_Click"
-                                                    Margin="30,0,0,8"/>
+                                                     Grid.Row="2" Grid.Column="2"
+                                                     Content="{DynamicResource LOCITADStorePrice}"
+                                                     GroupName="Price"
+                                                     Click="PART_Rb_Click"
+                                                     Margin="30,0,0,8"/>
                                     </Grid>
-
-                                    <!-- Sliders - center -->
                                     <Grid DockPanel.Dock="Left" HorizontalAlignment="Right">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
@@ -262,20 +338,15 @@
                                             <ColumnDefinition Width="8"/>
                                             <ColumnDefinition Width="55"/>
                                         </Grid.ColumnDefinitions>
-
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="12"/>
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
-
-                                        <!-- ===== PERCENTAGE SLIDER ===== -->
                                         <TextBlock Grid.Column="0" Grid.Row="0"
                                                    Text="{DynamicResource LOCITADPercentage}"
                                                    Style="{DynamicResource BaseTextBlockStyle}"
-                                                   Height="{Binding ElementName=TextboxSearch, Path=ActualHeight}"
                                                    VerticalAlignment="Center"/>
-
                                         <Slider Grid.Column="2" Grid.Row="0"
                                                 Minimum="0"
                                                 Maximum="100"
@@ -289,20 +360,15 @@
                                                 AutoToolTipPlacement="BottomRight"
                                                 AutoToolTipPrecision="0"
                                                 IsMoveToPointEnabled="True"/>
-
                                         <TextBlock Grid.Column="4" Grid.Row="0"
                                                    Style="{DynamicResource BaseTextBlockStyle}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center"
                                                    Text="{Binding DiscountPercent, StringFormat={}{0:0}%}"/>
-
-                                        <!-- ===== PRICE SLIDER ===== -->
                                         <TextBlock Grid.Column="0" Grid.Row="2"
                                                    Text="{DynamicResource LOCITADPrice}"
                                                    Style="{DynamicResource BaseTextBlockStyle}"
-                                                   Height="{Binding ElementName=TextboxSearch, Path=ActualHeight}"
                                                    VerticalAlignment="Center"/>
-
                                         <Slider Grid.Column="2" Grid.Row="2"
                                                 Minimum="{Binding MinPrice}"
                                                 Maximum="{Binding MaxPrice}"
@@ -316,7 +382,6 @@
                                                 AutoToolTipPlacement="BottomRight"
                                                 AutoToolTipPrecision="0"
                                                 IsMoveToPointEnabled="True"/>
-
                                         <TextBlock Grid.Column="4" Grid.Row="2"
                                                    Style="{DynamicResource BaseTextBlockStyle}"
                                                    HorizontalAlignment="Right"
@@ -326,63 +391,93 @@
                                         </TextBlock>
                                     </Grid>
                                 </DockPanel>
-                            </DockPanel>
-                        </Border>
+                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <RadioButton Style="{DynamicResource ModernRadio}"
+                                                 Content="{DynamicResource LOCItadWhishListOptionsExcludeInLibrary}"
+                                                 GroupName="ItadLibrary"
+                                                 Name="PART_RbLibraryExclude"
+                                                 Click="PART_RbLibrary_Click"
+                                                 Margin="0,0,8,4"
+                                                 VerticalAlignment="Center"/>
+                                    <RadioButton Style="{DynamicResource ModernRadio}"
+                                                 Content="{DynamicResource LOCItadWhishListOptionsIncludeInLibrary}"
+                                                 GroupName="ItadLibrary"
+                                                 Name="PART_RbLibraryInclude"
+                                                 IsChecked="True"
+                                                 Click="PART_RbLibrary_Click"
+                                                 Margin="0,0,8,4"
+                                                 VerticalAlignment="Center"/>
+                                    <RadioButton Style="{DynamicResource ModernRadio}"
+                                                 Content="{DynamicResource LOCItadWhishListOptionsOnlyInLibrary}"
+                                                 GroupName="ItadLibrary"
+                                                 Name="PART_RbLibraryOnly"
+                                                 Click="PART_RbLibrary_Click"
+                                                 Margin="0,0,8,4"
+                                                 VerticalAlignment="Center"/>
+                                    <ToggleButton Content="{DynamicResource LOCItadWhishListOptionsIncludeWithoutData}"
+                                                  VerticalAlignment="Center"
+                                                  Name="PART_TbIncludeWithoutData"
+                                                  Click="PART_Tb_Click"
+                                                  Margin="0,0,8,4"/>
+                                    <ToggleButton Content="{DynamicResource LOCItadWhishListOptionsAlerts}"
+                                                  VerticalAlignment="Center"
+                                                  Name="PART_TbAlerts"
+                                                  Click="PART_Tb_Click"
+                                                  Margin="0,0,8,4"/>
+                                    <Button Content="{DynamicResource LOCItadWhishListOptionsResetFilters}"
+                                            VerticalAlignment="Center"
+                                            Name="PART_BtResetFilters"
+                                            Click="PART_BtResetFilters_Click"
+                                            Margin="0,0,0,4"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Expander>
 
-                        <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" BorderBrush="{StaticResource NormalBorderBrush}" Margin="0,10,0,0">
-                            <Grid Margin="0, 10, 0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="10"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="10"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="10"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="10"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="10"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0"
-                                           Text="{DynamicResource LOCItadWhishListOptions}"
+                        <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource NormalBorderBrush}" Margin="0,10,0,0">
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Right">
+                                <TextBlock Text="{DynamicResource LOCCommonDateData}"
+                                           Style="{DynamicResource BaseTextBlockStyle}"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <TextBlock Name="PART_DateData"
+                                           Text=""
                                            Style="{DynamicResource BaseTextBlockStyle}"
                                            VerticalAlignment="Center"/>
-                                <ToggleButton Grid.Column="2" Content="{DynamicResource LOCItadWhishListOptionsIncludeInLibrary}" VerticalAlignment="Center" Name="PART_TbIncludeInLibrary" Click="PART_Tb_Click"/>
-                                <ToggleButton Grid.Column="4" Content="{DynamicResource LOCItadWhishListOptionsIncludeWithoutData}" VerticalAlignment="Center" Name="PART_TbIncludeWithoutData" Click="PART_Tb_Click"/>
-                                <ToggleButton Grid.Column="6" Content="{DynamicResource LOCItadWhishListOptionsOnlyInLibrary}" VerticalAlignment="Center" Name="PART_TbOnlyInLibrary" Click="PART_Tb_Click"/>
-                                <ToggleButton Grid.Column="8" Content="{DynamicResource LOCItadWhishListOptionsAlerts}" VerticalAlignment="Center" Name="PART_TbAlerts" Click="PART_Tb_Click"/>
-                                <Button Grid.Column="10" Content="{DynamicResource LOCItadWhishListOptionsResetFilters}" VerticalAlignment="Center" Name="PART_BtResetFilters" Click="PART_BtResetFilters_Click"/>
-                                <Grid Grid.Column="12">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="10"/>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="10"/>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="10"/>
-                                        <ColumnDefinition Width="auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0"
-                                               Text="{DynamicResource LOCCommonDateData}"
-                                               Style="{DynamicResource BaseTextBlockStyle}"
-                                               VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Column="2"
-                                               Name="PART_DateData"
-                                               Text=""
-                                               Style="{DynamicResource BaseTextBlockStyle}"
-                                               VerticalAlignment="Center"/>
-                                    <Button Grid.Column="4" Content="{DynamicResource LOCITADRefreshPrice}" Click="ButtonPrice_Click"/>
-                                    <Button Grid.Column="6" Content="{DynamicResource LOCCommonRefreshGameData}" Click="ButtonData_Click"/>
-                                </Grid>
-                            </Grid>
+                            </StackPanel>
                         </Border>
 
                         <Grid Name="DataLoaded">
-                            <ListBox Name="lbWishlist" Height="{Binding ElementName=DataLoaded, Path=ActualHeight}"
-                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            <StackPanel Name="PART_WishlistEmpty"
+                                        Visibility="Collapsed"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Margin="20">
+                                <TextBlock Text="{DynamicResource LOCItadWishlistEmpty}"
+                                           Style="{DynamicResource BaseTextBlockStyle}"
+                                           HorizontalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           TextAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Name="PART_WishlistNoResults"
+                                        Visibility="Collapsed"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Margin="20">
+                                <TextBlock Text="{DynamicResource LOCItadWishlistNoResults}"
+                                           Style="{DynamicResource BaseTextBlockStyle}"
+                                           HorizontalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           TextAlignment="Center"/>
+                                <Button Content="{DynamicResource LOCItadWhishListOptionsResetFilters}"
+                                        Click="PART_BtResetFilters_Click"
+                                        HorizontalAlignment="Center"
+                                        Margin="0,12,0,0"/>
+                            </StackPanel>
+                            <ListBox Name="lbWishlist"
+                                     VerticalAlignment="Stretch"
+                                     HorizontalAlignment="Stretch"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                                      ItemContainerStyle="{StaticResource ListBoxItemContainerStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -633,8 +728,17 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <ListBox Name="PART_GiveawaysList"
-                             Grid.Row="0"
+                    <Grid Grid.Row="0">
+                        <TextBlock Name="PART_GiveawaysEmpty"
+                                   Text="{DynamicResource LOCItadGiveawaysEmpty}"
+                                   Style="{DynamicResource BaseTextBlockStyle}"
+                                   Visibility="Collapsed"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Center"
+                                   Margin="20"/>
+                        <ListBox Name="PART_GiveawaysList"
                              BorderThickness="0"
                              Background="Transparent"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -774,7 +878,8 @@
                                 </Border>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
-                    </ListBox>
+                        </ListBox>
+                    </Grid>
 
                     <StackPanel Grid.Row="1"
                                 Orientation="Horizontal"
@@ -799,72 +904,5 @@
                 </Grid>
             </TabItem>
         </TabControl>
-
-        <Grid Name="PART_Order" Height="{Binding ElementName=PART_Tb, Path=ActualHeight}" VerticalAlignment="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="160"/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="160"/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="1"
-                       Text="{DynamicResource LOCSettingsTopPanelSortingItem}"
-                       Style="{DynamicResource BaseTextBlockStyle}"
-                       VerticalAlignment="Center"/>
-            <ComboBox Grid.Column="3" VerticalAlignment="Center" Name="PART_CbOrderType" SelectionChanged="PART_CbOrder_SelectionChanged">
-                <ComboBoxItem Content="{DynamicResource LOCNameLabel}" Tag="0" IsSelected="True"/>
-                <ComboBoxItem Content="{DynamicResource LOCITADOrderBestPriceCut}" Tag="1"/>
-                <ComboBoxItem Content="{DynamicResource LOCITADOrderBestPrice}" Tag="2"/>
-                <ComboBoxItem Content="{DynamicResource LOCITADOrderStorePriceCut}" Tag="3"/>
-                <ComboBoxItem Content="{DynamicResource LOCITADOrderStorePrice}" Tag="4"/>
-                <ComboBoxItem Content="{DynamicResource LOCGameReleaseDateTitle}" Tag="5"/>
-            </ComboBox>
-            <ComboBox Grid.Column="5" VerticalAlignment="Center" Name="PART_CbOrder" SelectionChanged="PART_CbOrder_SelectionChanged">
-                <ComboBoxItem Content="{DynamicResource LOCMenuSortAscending}" Tag="0" IsSelected="True"/>
-                <ComboBoxItem Content="{DynamicResource LOCMenuSortDescending}" Tag="1"/>
-            </ComboBox>
-            <StackPanel Grid.Column="7" Orientation="Horizontal">
-                <TextBlock Style="{DynamicResource BaseTextBlockStyle}" Text="{DynamicResource LOCCommonTotalFound}" VerticalAlignment="Center"/>
-                <TextBlock Style="{DynamicResource BaseTextBlockStyle}" Name="PART_TotalFoundCount" Text="{Binding ElementName=lbWishlist, Path=Items.Count, FallbackValue=0}" VerticalAlignment="Center" Width="40" TextAlignment="Right"/>
-            </StackPanel>
-            <TextBlock Grid.Column="9"
-                       Name="ItadInfo"
-                       Text=""
-                       FontFamily="{DynamicResource CommonFont}"
-                       FontSize="{DynamicResource FontSizeLarger}"
-                       Style="{DynamicResource BaseTextBlockStyle}"
-                       VerticalAlignment="Center">
-                <TextBlock.ToolTip>
-                    <ToolTip>
-                        <ListBox Name="tpListBox" BorderThickness="0">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0"
-                                                   Text="{Binding StoreName}"
-                                                   Style="{DynamicResource BaseTextBlockStyle}"/>
-                                        <TextBlock Grid.Column="1"
-                                                   Text="{Binding Count}"
-                                                   Style="{DynamicResource BaseTextBlockStyle}"
-                                                   HorizontalAlignment="Right"
-                                                   Margin="10,0,0,0"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </ToolTip>
-                </TextBlock.ToolTip>
-            </TextBlock>
-        </Grid>
     </Grid>
 </UserControl>

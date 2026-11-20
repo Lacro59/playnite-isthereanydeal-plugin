@@ -30,6 +30,9 @@ namespace IsThereAnyDeal.Services
                 {
                     SidebarItemControl = new SidebarItemControl();
                     SidebarItemControl.SetTitle(ResourceProvider.GetString("LOCItad"));
+                    // Wishlist / Giveaways already scroll internally; outer Auto scroll
+                    // would grow the page when the filters Expander opens.
+                    SidebarItemControl.SetContentVerticalScrollBarVisibility(ScrollBarVisibility.Disabled);
                     SidebarItemControl.AddContent(new IsThereAnyDealView(plugin));
                 }
                 return SidebarItemControl;
