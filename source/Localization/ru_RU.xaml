@@ -81,10 +81,10 @@
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Добавить игры из библиотеки</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Включить игры без данных IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Только игры в библиотеке</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsAlerts">Alerts only</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsResetFilters">Reset filters</sys:String>
-    <sys:String x:Key="LOCItadAlertBadge">Alert</sys:String>
-    <sys:String x:Key="LOCItadLibraryBadge">Library</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsAlerts">Только оповещения</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsResetFilters">Сбросить фильтры</sys:String>
+    <sys:String x:Key="LOCItadAlertBadge">Оповещение</sys:String>
+    <sys:String x:Key="LOCItadLibraryBadge">Библиотека</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">Импортировать список желаемого Steam</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">Ссылка на список желаемого Steam</sys:String>
@@ -103,8 +103,8 @@
     <sys:String x:Key="LOCItadProgressCache">Loading wishlist cache…</sys:String>
     <sys:String x:Key="LOCItadProgressStores">Refreshing store wishlists…</sys:String>
     <sys:String x:Key="LOCItadProgressLookup">Resolving games on IsThereAnyDeal…</sys:String>
-    <sys:String x:Key="LOCItadProgressPrice">Updating prices…</sys:String>
-    <sys:String x:Key="LOCItadProgressSave">Saving wishlist cache…</sys:String>
+    <sys:String x:Key="LOCItadProgressPrice">Обновление цен…</sys:String>
+    <sys:String x:Key="LOCItadProgressSave">Сохранение кэша списка желаемого…</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Уведомляем о раздаче {0} ({1} игр(ы))</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">Уведомление о цене для {0} - {1}{2} ({3}%)</sys:String>
