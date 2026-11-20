@@ -4,12 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:IsThereAnyDeal.Views"
+             xmlns:vm="clr-namespace:IsThereAnyDeal.ViewModels"
              xmlns:converters="clr-namespace:CommonPlayniteShared.Converters"
              xmlns:converters1="clr-namespace:CommonPluginsShared.Converters"
              xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls"
              xmlns:controls="clr-namespace:CommonPluginsControls.Controls"
              mc:Ignorable="d" d:DesignHeight="740" d:DesignWidth="1280"
-             d:DataContext="{d:DesignInstance Type=local:ItadDataContext, IsDesignTimeCreatable=True}"
+             d:DataContext="{d:DesignInstance Type=vm:IsThereAnyDealViewModel}"
              Background="{DynamicResource WindowBackgourndBrush}">
 
     <UserControl.Resources>
@@ -221,22 +222,20 @@
         <TabControl>
             <TabItem Header="{DynamicResource LOCItadWishlist}" Name="PART_Tb">
                 <Grid Margin="10">
-                    <DockPanel Name="dpData" LastChildFill="True">
+                    <DockPanel IsEnabled="{Binding IsWishlistContentEnabled}" LastChildFill="True">
                         <!-- Wishlist toolbar: search, stores, sort, total, store info, refresh menu -->
                         <Border DockPanel.Dock="Top"
                                 BorderThickness="{DynamicResource PopupBorderThickness}"
                                 BorderBrush="{DynamicResource NormalBorderBrush}"
                                 Margin="0,0,0,10">
                             <DockPanel Margin="10" LastChildFill="False">
-                                <playnitecontrols:SearchBox x:Name="TextboxSearch"
-                                                           DockPanel.Dock="Left"
-                                                           TextChanged="TextboxSearch_TextChanged"
+                                <playnitecontrols:SearchBox DockPanel.Dock="Left"
+                                                           Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                            Width="220"
                                                            Margin="0,0,10,0"
                                                            VerticalAlignment="Center"/>
 
-                                <ComboBox Name="FilterStore"
-                                          DockPanel.Dock="Left"
+                                <ComboBox DockPanel.Dock="Left"
                                           IsEditable="True"
                                           IsReadOnly="True"
                                           Width="200"
@@ -244,7 +243,8 @@
                                           VerticalAlignment="Center"
                                           VirtualizingPanel.IsVirtualizing="True"
                                           ToolTip="{DynamicResource LOCITADFilterSource}"
-                                          ItemsSource="{Binding FilterStoreItems}">
+                                          ItemsSource="{Binding FilterStoreItems}"
+                                          Text="{Binding SelectedStoresText, Mode=OneWay}">
                                     <ComboBox.ItemContainerStyle>
                                         <Style TargetType="ComboBoxItem">
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -253,10 +253,7 @@
                                     </ComboBox.ItemContainerStyle>
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
-                                            <CheckBox Checked="ChkStore_Checked"
-                                                      Unchecked="ChkStore_Unchecked"
-                                                      Tag="{Binding StoreName}"
-                                                      Content="{Binding StoreNameDisplay}"
+                                            <CheckBox Content="{Binding StoreNameDisplay}"
                                                       IsChecked="{Binding IsCheck, Mode=TwoWay}"
                                                       FontFamily="{DynamicResource CommonFont}"
                                                       Focusable="False"/>
@@ -273,11 +270,11 @@
                                         VerticalAlignment="Center"
                                         Margin="10,0,0,0">
                                     <Button.ContextMenu>
-                                        <ContextMenu>
+                                        <ContextMenu DataContext="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                             <MenuItem Header="{DynamicResource LOCITADRefreshPrice}"
-                                                      Click="ButtonPrice_Click"/>
+                                                      Command="{Binding RefreshPricesCommand}"/>
                                             <MenuItem Header="{DynamicResource LOCCommonRefreshGameData}"
-                                                      Click="ButtonData_Click"/>
+                                                      Command="{Binding RefreshStoresCommand}"/>
                                         </ContextMenu>
                                     </Button.ContextMenu>
                                 </Button>
@@ -285,46 +282,43 @@
                                 <StackPanel DockPanel.Dock="Right"
                                             Orientation="Horizontal"
                                             VerticalAlignment="Center">
-                                    <ComboBox Name="PART_CbOrderType"
-                                              Width="160"
+                                    <ComboBox Width="160"
                                               VerticalAlignment="Center"
-                                              SelectionChanged="PART_CbOrder_SelectionChanged"
+                                              SelectedValue="{Binding OrderTypeTag, Mode=TwoWay}"
+                                              SelectedValuePath="Tag"
                                               ToolTip="{DynamicResource LOCSettingsTopPanelSortingItem}">
-                                        <ComboBoxItem Content="{DynamicResource LOCNameLabel}" Tag="0" IsSelected="True"/>
+                                        <ComboBoxItem Content="{DynamicResource LOCNameLabel}" Tag="0"/>
                                         <ComboBoxItem Content="{DynamicResource LOCITADOrderBestPriceCut}" Tag="1"/>
                                         <ComboBoxItem Content="{DynamicResource LOCITADOrderBestPrice}" Tag="2"/>
                                         <ComboBoxItem Content="{DynamicResource LOCITADOrderStorePriceCut}" Tag="3"/>
                                         <ComboBoxItem Content="{DynamicResource LOCITADOrderStorePrice}" Tag="4"/>
                                         <ComboBoxItem Content="{DynamicResource LOCGameReleaseDateTitle}" Tag="5"/>
                                     </ComboBox>
-                                    <Button Name="PART_BtOrderDir"
-                                            Style="{DynamicResource IconButton}"
-                                            Content="&#xea99;"
-                                            Tag="0"
-                                            ToolTip="{DynamicResource LOCMenuSortAscending}"
-                                            Click="PART_BtOrderDir_Click"
+                                    <Button Style="{DynamicResource IconButton}"
+                                            Content="{Binding OrderDirectionGlyph}"
+                                            ToolTip="{Binding OrderDirectionToolTip}"
+                                            Command="{Binding ToggleOrderDirectionCommand}"
                                             VerticalAlignment="Center"
                                             Margin="6,0,0,0"/>
                                     <TextBlock Style="{DynamicResource BaseTextBlockStyle}"
                                                Text="{DynamicResource LOCCommonTotalFound}"
                                                VerticalAlignment="Center"
                                                Margin="12,0,0,0"/>
-                                    <TextBlock Name="PART_TotalFoundCount"
-                                               Style="{DynamicResource BaseTextBlockStyle}"
-                                               Text="{Binding ElementName=lbWishlist, Path=Items.Count, FallbackValue=0}"
+                                    <TextBlock Style="{DynamicResource BaseTextBlockStyle}"
+                                               Text="{Binding FilteredCount, FallbackValue=0}"
                                                VerticalAlignment="Center"
                                                Width="40"
                                                TextAlignment="Right"/>
-                                    <TextBlock Name="ItadInfo"
-                                               Text=""
+                                    <TextBlock Text=""
                                                FontFamily="{DynamicResource CommonFont}"
                                                FontSize="{DynamicResource FontSizeLarger}"
                                                Style="{DynamicResource BaseTextBlockStyle}"
                                                VerticalAlignment="Center"
                                                Margin="10,0,0,0">
                                         <TextBlock.ToolTip>
-                                            <ToolTip>
-                                                <ListBox Name="tpListBox" BorderThickness="0">
+                                            <ToolTip DataContext="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                                <ListBox BorderThickness="0"
+                                                         ItemsSource="{Binding StoreCountDatas}">
                                                     <ListBox.ItemTemplate>
                                                         <DataTemplate>
                                                             <Grid>
@@ -351,13 +345,11 @@
                             </DockPanel>
                         </Border>
 
-                        <Expander Name="PART_FiltersExpander"
-                                  DockPanel.Dock="Top"
+                        <Expander DockPanel.Dock="Top"
                                   Style="{DynamicResource ModernExpanderStyle}"
                                   Header="{DynamicResource LOCItadFilters}"
                                   Margin="0,0,0,10"
-                                  Expanded="PART_FiltersExpander_ExpandedChanged"
-                                  Collapsed="PART_FiltersExpander_ExpandedChanged">
+                                  IsExpanded="{Binding FiltersPanelExpanded, Mode=TwoWay}">
                             <StackPanel Margin="0,8,0,0">
                                 <DockPanel LastChildFill="True" Margin="0,0,0,10">
                                     <Grid DockPanel.Dock="Right" Margin="20,0,0,0">
@@ -374,18 +366,17 @@
                                         <TextBlock Text="{DynamicResource LOCITADOn}"
                                                    Style="{DynamicResource BaseTextBlockStyle}"
                                                    VerticalAlignment="Center"/>
-                                        <RadioButton Name="PART_RbBest" VerticalAlignment="Center"
+                                        <RadioButton VerticalAlignment="Center"
                                                      Grid.Column="2"
                                                      Content="{DynamicResource LOCITADBestPrice}"
                                                      GroupName="Price"
-                                                     IsChecked="True"
-                                                     Click="PART_Rb_Click"
+                                                     IsChecked="{Binding IsBestPriceMode, Mode=TwoWay}"
                                                      Margin="30,0,0,8"/>
-                                        <RadioButton Name="PART_RbStore" VerticalAlignment="Center"
+                                        <RadioButton VerticalAlignment="Center"
                                                      Grid.Row="2" Grid.Column="2"
                                                      Content="{DynamicResource LOCITADStorePrice}"
                                                      GroupName="Price"
-                                                     Click="PART_Rb_Click"
+                                                     IsChecked="{Binding IsStorePriceMode, Mode=TwoWay}"
                                                      Margin="30,0,0,8"/>
                                     </Grid>
                                     <Grid DockPanel.Dock="Left" HorizontalAlignment="Right">
@@ -453,39 +444,32 @@
                                     <RadioButton Style="{DynamicResource ModernRadio}"
                                                  Content="{DynamicResource LOCItadWhishListOptionsExcludeInLibrary}"
                                                  GroupName="ItadLibrary"
-                                                 Name="PART_RbLibraryExclude"
-                                                 Click="PART_RbLibrary_Click"
+                                                 IsChecked="{Binding IsLibraryExclude, Mode=TwoWay}"
                                                  Margin="0,0,8,4"
                                                  VerticalAlignment="Center"/>
                                     <RadioButton Style="{DynamicResource ModernRadio}"
                                                  Content="{DynamicResource LOCItadWhishListOptionsIncludeInLibrary}"
                                                  GroupName="ItadLibrary"
-                                                 Name="PART_RbLibraryInclude"
-                                                 IsChecked="True"
-                                                 Click="PART_RbLibrary_Click"
+                                                 IsChecked="{Binding IsLibraryInclude, Mode=TwoWay}"
                                                  Margin="0,0,8,4"
                                                  VerticalAlignment="Center"/>
                                     <RadioButton Style="{DynamicResource ModernRadio}"
                                                  Content="{DynamicResource LOCItadWhishListOptionsOnlyInLibrary}"
                                                  GroupName="ItadLibrary"
-                                                 Name="PART_RbLibraryOnly"
-                                                 Click="PART_RbLibrary_Click"
+                                                 IsChecked="{Binding IsLibraryOnly, Mode=TwoWay}"
                                                  Margin="0,0,8,4"
                                                  VerticalAlignment="Center"/>
                                     <ToggleButton Content="{DynamicResource LOCItadWhishListOptionsIncludeWithoutData}"
                                                   VerticalAlignment="Center"
-                                                  Name="PART_TbIncludeWithoutData"
-                                                  Click="PART_Tb_Click"
+                                                  IsChecked="{Binding IncludeWithoutData, Mode=TwoWay}"
                                                   Margin="0,0,8,4"/>
                                     <ToggleButton Content="{DynamicResource LOCItadWhishListOptionsAlerts}"
                                                   VerticalAlignment="Center"
-                                                  Name="PART_TbAlerts"
-                                                  Click="PART_Tb_Click"
+                                                  IsChecked="{Binding AlertsOnly, Mode=TwoWay}"
                                                   Margin="0,0,8,4"/>
                                     <Button Content="{DynamicResource LOCItadWhishListOptionsResetFilters}"
                                             VerticalAlignment="Center"
-                                            Name="PART_BtResetFilters"
-                                            Click="PART_BtResetFilters_Click"
+                                            Command="{Binding ResetFiltersCommand}"
                                             Margin="0,0,0,4"/>
                                 </WrapPanel>
                             </StackPanel>
@@ -497,16 +481,14 @@
                                            Style="{DynamicResource BaseTextBlockStyle}"
                                            VerticalAlignment="Center"
                                            Margin="0,0,8,0"/>
-                                <TextBlock Name="PART_DateData"
-                                           Text=""
+                                <TextBlock Text="{Binding LastRefreshLabel}"
                                            Style="{DynamicResource BaseTextBlockStyle}"
                                            VerticalAlignment="Center"/>
                             </StackPanel>
                         </Border>
 
-                        <Grid Name="DataLoaded">
-                            <StackPanel Name="PART_WishlistEmpty"
-                                        Visibility="Collapsed"
+                        <Grid>
+                            <StackPanel Visibility="{Binding IsWishlistEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Margin="20">
@@ -516,8 +498,7 @@
                                            TextWrapping="Wrap"
                                            TextAlignment="Center"/>
                             </StackPanel>
-                            <StackPanel Name="PART_WishlistNoResults"
-                                        Visibility="Collapsed"
+                            <StackPanel Visibility="{Binding IsWishlistNoResults, Converter={StaticResource BooleanToVisibilityConverter}}"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Margin="20">
@@ -527,11 +508,12 @@
                                            TextWrapping="Wrap"
                                            TextAlignment="Center"/>
                                 <Button Content="{DynamicResource LOCItadWhishListOptionsResetFilters}"
-                                        Click="PART_BtResetFilters_Click"
+                                        Command="{Binding ResetFiltersCommand}"
                                         HorizontalAlignment="Center"
                                         Margin="0,12,0,0"/>
                             </StackPanel>
                             <ListBox Name="lbWishlist"
+                                     ItemsSource="{Binding WishlistItems}"
                                      VerticalAlignment="Stretch"
                                      HorizontalAlignment="Stretch"
                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -595,13 +577,13 @@
                                                                 Panel.ZIndex="1"
                                                                 Margin="20,0,8,0"
                                                                 ClipToBounds="False">
-                                                        <Button Tag="{Binding UrlGame}"
+                                                        <Button Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                CommandParameter="{Binding UrlGame}"
                                                                 Content="{DynamicResource LOCWebsiteLabel}"
-                                                                Click="ButtonWeb_Click"
                                                                 Style="{StaticResource ItadCardSecondaryButton}"/>
-                                                        <Button Tag="{Binding ItadBestPrice.UrlBuy}"
-                                                                Content="{DynamicResource LOCItadBuy}"
-                                                                Click="ButtonWeb_Click">
+                                                        <Button Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                CommandParameter="{Binding ItadBestPrice.UrlBuy}"
+                                                                Content="{DynamicResource LOCItadBuy}">
                                                             <Button.Style>
                                                                 <Style TargetType="Button" BasedOn="{StaticResource ItadCardPrimaryButton}">
                                                                     <Setter Property="Visibility" Value="Visible"/>
@@ -710,10 +692,10 @@
                                                                                    VerticalAlignment="Center"
                                                                                    Margin="0,0,10,0"/>
                                                                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                                                                            <Button Tag="{Binding UrlBuy}"
+                                                                            <Button Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                                    CommandParameter="{Binding UrlBuy}"
                                                                                     Content="&#xef71;"
                                                                                     ToolTip="{DynamicResource LOCItadBuyAtStore}"
-                                                                                    Click="ButtonWeb_Click"
                                                                                     Margin="5,0,0,0">
                                                                                 <Button.Style>
                                                                                     <Style TargetType="Button" BasedOn="{StaticResource ListRowHoverRevealIconButton}">
@@ -729,20 +711,19 @@
                                                                                     </Style>
                                                                                 </Button.Style>
                                                                             </Button>
-                                                                            <Button Name="BtHideWishList"
-                                                                                    Style="{DynamicResource ListRowHoverRevealIconButton}"
+                                                                            <Button Style="{DynamicResource ListRowHoverRevealIconButton}"
                                                                                     Content="&#xef22;"
                                                                                     ToolTip="{DynamicResource LOCHideGame}"
-                                                                                    Tag="{Binding}"
-                                                                                    Click="BtHideWishList_Click"
+                                                                                    Command="{Binding DataContext.HideWishlistCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                                    CommandParameter="{Binding}"
                                                                                     Margin="5,0,0,0"/>
                                                                             <Button Style="{DynamicResource ListRowHoverRevealIconButton}"
                                                                                     Content="&#xec53;"
                                                                                     Foreground="OrangeRed"
                                                                                     ToolTip="{DynamicResource LOCRemoveTitle}"
-                                                                                    Tag="{Binding}"
                                                                                     IsEnabled="{Binding CanRemoveFromStore}"
-                                                                                    Click="BtRemoveWishList_Click"
+                                                                                    Command="{Binding DataContext.RemoveWishlistCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                                    CommandParameter="{Binding}"
                                                                                     Margin="6,0,0,0"/>
                                                                         </StackPanel>
                                                                         <TextBlock DockPanel.Dock="Left" Style="{StaticResource HasPriceVisibilityStyle}" VerticalAlignment="Center" Margin="0,0,10,0">
@@ -772,7 +753,8 @@
                         </Grid>
                     </DockPanel>
 
-                    <Grid Name="DataLoadWishlist">
+                    <Grid Visibility="{Binding IsWishlistLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+                          IsHitTestVisible="{Binding IsWishlistInteractionBlocked}">
                         <ProgressBar IsIndeterminate="True" Width="350" Height="40"/>
                         <TextBlock Text="{Binding LoadStatus}"
                                    Style="{DynamicResource BaseTextBlockStyle}"
@@ -790,16 +772,16 @@
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0">
-                        <TextBlock Name="PART_GiveawaysEmpty"
-                                   Text="{DynamicResource LOCItadGiveawaysEmpty}"
+                        <TextBlock Text="{DynamicResource LOCItadGiveawaysEmpty}"
                                    Style="{DynamicResource BaseTextBlockStyle}"
-                                   Visibility="Collapsed"
+                                   Visibility="{Binding IsGiveawaysEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    TextWrapping="Wrap"
                                    TextAlignment="Center"
                                    Margin="20"/>
-                        <ListBox Name="PART_GiveawaysList"
+                        <ListBox ItemsSource="{Binding GiveawaysItems}"
+                             IsEnabled="{Binding IsGiveawaysContentEnabled}"
                              BorderThickness="0"
                              Background="Transparent"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -844,8 +826,8 @@
                                                 Style="{DynamicResource IconButton}"
                                                 Content="&#xef71;"
                                                 ToolTip="{DynamicResource LOCWebsiteLabel}"
-                                                Tag="{Binding Link}"
-                                                Click="WebGiveaway"
+                                                Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding Link}"
                                                 VerticalAlignment="Center"
                                                 Margin="8,0,0,0"/>
 
@@ -951,16 +933,16 @@
                                    Style="{DynamicResource BaseTextBlockStyle}"
                                    VerticalAlignment="Center"
                                    Margin="0,0,8,0"/>
-                        <TextBlock Name="PART_GiveawaysDateData"
+                        <TextBlock Text="{Binding GiveawaysLastRefreshLabel}"
                                    Style="{DynamicResource BaseTextBlockStyle}"
                                    VerticalAlignment="Center"
                                    Margin="0,0,10,0"
                                    MinWidth="120"/>
-                        <Button Name="PART_GiveawaysRefresh"
-                                Style="{DynamicResource IconButton}"
+                        <Button Style="{DynamicResource IconButton}"
                                 Content="&#xefd1;"
                                 ToolTip="{DynamicResource LOCItadRefreshGiveaways}"
-                                Click="PART_GiveawaysRefresh_Click"/>
+                                IsEnabled="{Binding IsGiveawaysContentEnabled}"
+                                Command="{Binding RefreshGiveawaysCommand}"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
