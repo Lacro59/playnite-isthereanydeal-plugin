@@ -73,6 +73,7 @@
     <sys:String x:Key="LOCItadCurrentBest">Current best</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Current store wishlist</sys:String>
     <sys:String x:Key="LOCItadBuy">Buy best</sys:String>
+    <sys:String x:Key="LOCItadBuyAtStore">Buy</sys:String>
     <sys:String x:Key="LOCItadStore">Store</sys:String>
     <sys:String x:Key="LOCItadNoData">No data for selected store in settings</sys:String>
     <sys:String x:Key="LOCItadInLibrary">In library</sys:String>

@@ -36,8 +36,6 @@ namespace IsThereAnyDeal.Views
         private List<string> SearchStores { get; set; } = new List<string>();
 
         private IsThereAnyDealApi IsThereAnyDealApi { get; set; } = new IsThereAnyDealApi();
-        private ItadGameInfo StorePriceSelected { get; set; }
-
         /// <summary>
         /// When true, <see cref="UserFilter"/> additionally requires a notification-criteria match (AND with other filters).
         /// </summary>
@@ -363,66 +361,36 @@ namespace IsThereAnyDeal.Views
 
         private void ButtonWeb_Click(object sender, RoutedEventArgs e)
         {
-            string Tag = (string)((Button)sender).Tag;
-            if (!Tag.IsNullOrEmpty())
+            string link = (string)((Button)sender).Tag;
+            if (link.IsNullOrEmpty())
             {
-                _ = Process.Start(Tag);
-            }
-        }
-
-        // Resolve btStore under PART_Infos and arm it with the selected shop buy URL.
-        private void LbStorePrice_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ListBox listBox = sender as ListBox;
-            if (listBox?.SelectedItem == null)
-            {
+                Logger.Warn("[ITAD][ui] website click ignored link=empty");
                 return;
             }
 
-            StorePriceSelected = listBox.SelectedItem as ItadGameInfo;
-            if (StorePriceSelected == null)
-            {
-                Logger.Debug("[ITAD][ui] LbStorePrice_SelectionChanged: SelectedItem is not ItadGameInfo");
-                return;
-            }
-
-            FrameworkElement current = listBox.Parent as FrameworkElement;
-            while (current != null && current.Name != "PART_Infos")
-            {
-                current = current.Parent as FrameworkElement;
-            }
-
-            if (current == null)
-            {
-                Logger.Warn("[ITAD][ui] LbStorePrice_SelectionChanged: PART_Infos not found");
-                return;
-            }
-
-            Button bt = current.FindName("btStore") as Button;
-            if (bt == null)
-            {
-                Logger.Warn("[ITAD][ui] LbStorePrice_SelectionChanged: btStore not found");
-                return;
-            }
-
-            bt.IsEnabled = true;
-            bt.Tag = StorePriceSelected.UrlBuy;
-            Logger.Debug($"[ITAD][ui] LbStorePrice_SelectionChanged: btStore enabled shop={StorePriceSelected.ShopName} hasUrl={!StorePriceSelected.UrlBuy.IsNullOrEmpty()}");
+            Logger.Debug("[ITAD][ui] openUrl");
+            _ = Process.Start(link);
         }
 
         // Remove game
         private void BtRemoveWishList_Click(object sender, RoutedEventArgs e)
         {
             bool IsDeleted = false;
-            StorePriceSelected = (ItadGameInfo)((Button)sender).Tag;
+            ItadGameInfo storePriceSelected = ((Button)sender).Tag as ItadGameInfo;
+            if (storePriceSelected == null)
+            {
+                Logger.Warn("[ITAD][ui] removeWishlist ignored tag=invalid");
+                return;
+            }
 
             MessageBoxResult RessultDialog = API.Instance.Dialogs.ShowMessage(
-                string.Format(ResourceProvider.GetString("LOCItadDeleteOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
+                string.Format(ResourceProvider.GetString("LOCItadDeleteOnStoreWishList"), storePriceSelected.Name, storePriceSelected.ShopName),
                 "IsThereAnyDeal",
                 MessageBoxButton.YesNo
             );
             if (RessultDialog == MessageBoxResult.Yes)
             {
+                Logger.Info($"[ITAD][ui] removeWishlist start shop={storePriceSelected.ShopName}");
                 DataLoadWishlist.Visibility = Visibility.Visible;
                 dpData.IsEnabled = false;
 
@@ -430,62 +398,68 @@ namespace IsThereAnyDeal.Views
                 {
                     try
                     {
-                        if (!StorePriceSelected.StoreId.IsNullOrEmpty())
+                        if (storePriceSelected.StoreId.IsNullOrEmpty())
                         {
-                            switch (StorePriceSelected.ShopName.ToLower())
-                            {
-                                case "steam":
-                                    SteamWishlist steamWishlist = new SteamWishlist(Plugin);
-                                    IsDeleted = steamWishlist.RemoveWishlist(StorePriceSelected.StoreId);
-                                    if (IsDeleted)
-                                    {
-                                        _ = steamWishlist.GetWishlist(false);
-                                    }
-                                    break;
+                            Logger.Warn($"[ITAD][ui] removeWishlist skipped storeId=empty shop={storePriceSelected.ShopName}");
+                            return;
+                        }
 
-                                case "epic game store":
-                                    EpicWishlist epicWishlist = new EpicWishlist(Plugin);
-                                    IsDeleted = epicWishlist.RemoveWishlist(StorePriceSelected.StoreId);
-                                    if (IsDeleted)
-                                    {
-                                        _ = epicWishlist.GetWishlist(false);
-                                    }
-                                    break;
+                        switch (storePriceSelected.ShopName.ToLower())
+                        {
+                            case "steam":
+                                SteamWishlist steamWishlist = new SteamWishlist(Plugin);
+                                IsDeleted = steamWishlist.RemoveWishlist(storePriceSelected.StoreId);
+                                if (IsDeleted)
+                                {
+                                    _ = steamWishlist.GetWishlist(false);
+                                }
+                                break;
 
-                                case "humble store":
-                                    HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist(Plugin);
-                                    IsDeleted = humbleBundleWishlist.RemoveWishlist(StorePriceSelected.StoreId);
-                                    if (IsDeleted)
-                                    {
-                                        _ = humbleBundleWishlist.GetWishlist(false);
-                                    }
-                                    break;
+                            case "epic game store":
+                                EpicWishlist epicWishlist = new EpicWishlist(Plugin);
+                                IsDeleted = epicWishlist.RemoveWishlist(storePriceSelected.StoreId);
+                                if (IsDeleted)
+                                {
+                                    _ = epicWishlist.GetWishlist(false);
+                                }
+                                break;
 
-                                case "gog":
-                                    GogWishlist gogWishlist = new GogWishlist(Plugin);
-                                    IsDeleted = gogWishlist.RemoveWishlist(StorePriceSelected.StoreId);
-                                    if (IsDeleted)
-                                    {
-                                        _ = gogWishlist.GetWishlist(false);
-                                    }
-                                    break;
+                            case "humble store":
+                                HumbleBundleWishlist humbleBundleWishlist = new HumbleBundleWishlist(Plugin);
+                                IsDeleted = humbleBundleWishlist.RemoveWishlist(storePriceSelected.StoreId);
+                                if (IsDeleted)
+                                {
+                                    _ = humbleBundleWishlist.GetWishlist(false);
+                                }
+                                break;
 
-                                case "microsoft store":
-                                    break;
+                            case "gog":
+                                GogWishlist gogWishlist = new GogWishlist(Plugin);
+                                IsDeleted = gogWishlist.RemoveWishlist(storePriceSelected.StoreId);
+                                if (IsDeleted)
+                                {
+                                    _ = gogWishlist.GetWishlist(false);
+                                }
+                                break;
 
-                                case "origin":
-                                case "ea app":
-                                    EaWishlist originWishlist = new EaWishlist(Plugin);
-                                    IsDeleted = originWishlist.RemoveWishlist(StorePriceSelected.StoreId);
-                                    if (IsDeleted)
-                                    {
-                                        _ = originWishlist.GetWishlist(false);
-                                    }
-                                    break;
+                            case "microsoft store":
+                            case "xbox":
+                                Logger.Warn($"[ITAD][ui] removeWishlist unsupported shop={storePriceSelected.ShopName}");
+                                break;
 
-                                default:
-                                    break;
-                            }
+                            case "origin":
+                            case "ea app":
+                                EaWishlist originWishlist = new EaWishlist(Plugin);
+                                IsDeleted = originWishlist.RemoveWishlist(storePriceSelected.StoreId);
+                                if (IsDeleted)
+                                {
+                                    _ = originWishlist.GetWishlist(false);
+                                }
+                                break;
+
+                            default:
+                                Logger.Warn($"[ITAD][ui] removeWishlist unsupported shop={storePriceSelected.ShopName}");
+                                break;
                         }
                     }
                     catch (Exception ex)
@@ -497,6 +471,7 @@ namespace IsThereAnyDeal.Views
                 {
                     Application.Current.Dispatcher?.Invoke(new Action(() =>
                     {
+                        Logger.Debug($"[ITAD][ui] removeWishlist done deleted={IsDeleted} shop={storePriceSelected.ShopName}");
                         if (IsDeleted)
                         {
                             RefreshData(string.Empty);
@@ -512,10 +487,15 @@ namespace IsThereAnyDeal.Views
         // Hide game
         private void BtHideWishList_Click(object sender, RoutedEventArgs e)
         {
-            StorePriceSelected = (ItadGameInfo)((Button)sender).Tag;
+            ItadGameInfo storePriceSelected = ((Button)sender).Tag as ItadGameInfo;
+            if (storePriceSelected == null)
+            {
+                Logger.Warn("[ITAD][ui] hideWishlist ignored tag=invalid");
+                return;
+            }
 
             MessageBoxResult RessultDialog = API.Instance.Dialogs.ShowMessage(
-                string.Format(ResourceProvider.GetString("LOCItadHideOnStoreWishList"), StorePriceSelected.Name, StorePriceSelected.ShopName),
+                string.Format(ResourceProvider.GetString("LOCItadHideOnStoreWishList"), storePriceSelected.Name, storePriceSelected.ShopName),
                 "IsThereAnyDeal",
                 MessageBoxButton.YesNo
             );
@@ -523,13 +503,14 @@ namespace IsThereAnyDeal.Views
             {
                 try
                 {
+                    Logger.Info($"[ITAD][ui] hideWishlist shop={storePriceSelected.ShopName}");
                     Settings.wishlistIgnores.Add(new WishlistIgnore
                     {
-                        StoreId = StorePriceSelected.StoreId,
-                        StoreName = StorePriceSelected.ShopName,
-                        Name = StorePriceSelected.Name,
-                        Id = StorePriceSelected.Id,
-                        Slug = StorePriceSelected.Slug
+                        StoreId = storePriceSelected.StoreId,
+                        StoreName = storePriceSelected.ShopName,
+                        Name = storePriceSelected.Name,
+                        Id = storePriceSelected.Id,
+                        Slug = storePriceSelected.Slug
                     });
                     Plugin.SavePluginSettings(Settings);
                     GetListGame();

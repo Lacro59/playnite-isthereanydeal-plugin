@@ -53,5 +53,23 @@ namespace IsThereAnyDeal.Models
         /// </summary>
         [DontSerialize]
         public bool ShowPriceCut => TypePrice == TypePrice.Deal;
+
+        /// <summary>
+        /// False for Xbox / Microsoft Store wishlists that cannot be removed via the store API.
+        /// </summary>
+        [DontSerialize]
+        public bool CanRemoveFromStore
+        {
+            get
+            {
+                if (ShopName.IsNullOrEmpty())
+                {
+                    return true;
+                }
+
+                string shop = ShopName.ToLowerInvariant();
+                return shop != "xbox" && shop != "microsoft store";
+            }
+        }
     }
 }

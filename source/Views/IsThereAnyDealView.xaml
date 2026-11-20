@@ -99,47 +99,105 @@
         </Style>
 
         <!-- Tag on the ContentControl = localized row label; Content = ItadGameInfo -->
-        <DataTemplate x:Key="ItadPriceRowTemplate">
-            <Grid>
+        <DataTemplate x:Key="ItadBestPriceTemplate">
+            <StackPanel>
+                <TextBlock Style="{DynamicResource BaseTextBlockStyle}"
+                           Text="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=ContentControl}}"
+                           Foreground="{DynamicResource TextBrushDarker}"
+                           FontSize="{DynamicResource FontSizeSmall}"
+                           Margin="0,0,0,2"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Style="{DynamicResource BaseTextBlockStyle}"
+                               Text="{Binding PriceNew}"
+                               FontSize="{DynamicResource FontSizeLarger}"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               Margin="0,0,4,0"/>
+                    <TextBlock Style="{DynamicResource BaseTextBlockStyle}"
+                               Text="{Binding CurrencySign}"
+                               FontSize="{DynamicResource FontSizeLarger}"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"/>
+                    <Border Margin="10,0,0,0" VerticalAlignment="Center">
+                        <Border.Style>
+                            <Style TargetType="Border" BasedOn="{StaticResource ItadBadgeBorder}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ShowPriceCut}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBlock Style="{DynamicResource BaseTextBlockStyle}"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   FontSize="{DynamicResource FontSizeSmall}"
+                                   FontWeight="Bold">
+                            <Run Text="-"/><Run Text="{Binding PriceCut}"/><Run Text="%"/>
+                        </TextBlock>
+                    </Border>
+                    <TextBlock Style="{DynamicResource BaseTextBlockStyle}"
+                               Text="{Binding ShopName}"
+                               Foreground="{Binding ShopColor}"
+                               VerticalAlignment="Center"
+                               Margin="10,0,0,0"
+                               TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ItadSecondaryPriceTemplate">
+            <Grid Margin="0,2,0,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" SharedSizeGroup="A"/>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="ItadHistLabel"/>
                     <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="auto" SharedSizeGroup="B"/>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="ItadHistPrice"/>
                     <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="auto" SharedSizeGroup="C"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="auto" SharedSizeGroup="D"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
                            Style="{DynamicResource BaseTextBlockStyle}"
-                           Text="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=ContentControl}}"/>
-                <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <TextBlock Style="{DynamicResource BaseTextBlockStyle}" Text="{Binding PriceNew}" Margin="0,0,5,0"/>
-                    <TextBlock Style="{DynamicResource BaseTextBlockStyle}" Text="{Binding CurrencySign}"/>
+                           Text="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=ContentControl}}"
+                           Foreground="{DynamicResource TextBrushDarker}"
+                           FontSize="{DynamicResource FontSizeSmall}"
+                           VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Style="{DynamicResource BaseTextBlockStyle}"
+                               Text="{Binding PriceNew}"
+                               Foreground="{DynamicResource TextBrushDarker}"
+                               FontSize="{DynamicResource FontSizeSmall}"
+                               Margin="0,0,4,0"/>
+                    <TextBlock Style="{DynamicResource BaseTextBlockStyle}"
+                               Text="{Binding CurrencySign}"
+                               Foreground="{DynamicResource TextBrushDarker}"
+                               FontSize="{DynamicResource FontSizeSmall}"/>
                 </StackPanel>
-                <StackPanel Grid.Column="4" Orientation="Horizontal">
-                    <StackPanel.Style>
-                        <Style TargetType="StackPanel">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ShowPriceCut}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Style>
-                    <TextBlock Style="{DynamicResource BaseTextBlockStyle}" Text="{Binding PriceCut}"/>
-                    <TextBlock Style="{DynamicResource BaseTextBlockStyle}" Text="%"/>
-                </StackPanel>
-                <TextBlock Grid.Column="6"
+                <TextBlock Grid.Column="4"
                            Style="{DynamicResource BaseTextBlockStyle}"
                            Text="{Binding ShopName}"
-                           Foreground="{Binding ShopColor}"/>
+                           Foreground="{Binding ShopColor}"
+                           FontSize="{DynamicResource FontSizeSmall}"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"/>
             </Grid>
         </DataTemplate>
 
-        <Style x:Key="ItadPriceRowContentStyle" TargetType="ContentControl">
-            <Setter Property="ContentTemplate" Value="{StaticResource ItadPriceRowTemplate}"/>
+        <Style x:Key="ItadBestPriceContentStyle" TargetType="ContentControl">
+            <Setter Property="ContentTemplate" Value="{StaticResource ItadBestPriceTemplate}"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Content.HasPrice, RelativeSource={RelativeSource Self}}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsActive}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ItadSecondaryPriceContentStyle" TargetType="ContentControl">
+            <Setter Property="ContentTemplate" Value="{StaticResource ItadSecondaryPriceTemplate}"/>
             <Setter Property="Visibility" Value="Visible"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Content.HasPrice, RelativeSource={RelativeSource Self}}" Value="False">
@@ -531,7 +589,7 @@
                                                 </Grid>
 
                                                 <!-- Infos & actions -->
-                                                <DockPanel LastChildFill="True" Margin="10,0,0,0" Name="PART_Infos">
+                                                <DockPanel LastChildFill="True" Margin="10,0,0,0">
                                                     <!-- actions buttons -->
                                                     <StackPanel DockPanel.Dock="Right"
                                                                 Panel.ZIndex="1"
@@ -561,12 +619,6 @@
                                                                 </Style>
                                                             </Button.Style>
                                                         </Button>
-                                                        <Button Name="btStore"
-                                                                Tag="{Binding StoreUrl}"
-                                                                Content="{DynamicResource LOCItadStore}"
-                                                                Click="ButtonWeb_Click"
-                                                                IsEnabled="False"
-                                                                Style="{StaticResource ItadCardPrimaryButton}"/>
                                                     </StackPanel>
 
                                                     <!-- Name & Release date -->
@@ -630,24 +682,22 @@
                                                                 </TextBlock>
                                                             </StackPanel>
 
-                                                            <ContentControl Style="{StaticResource ItadPriceRowContentStyle}"
+                                                            <ContentControl Style="{StaticResource ItadBestPriceContentStyle}"
                                                                             Content="{Binding ItadBestPrice}"
-                                                                            Tag="{DynamicResource LOCItadCurrentBest}"
-                                                                            Margin="0,0,0,10"/>
-                                                            <ContentControl Style="{StaticResource ItadPriceRowContentStyle}"
+                                                                            Tag="{DynamicResource LOCItadCurrentBest}"/>
+                                                            <ContentControl Style="{StaticResource ItadSecondaryPriceContentStyle}"
                                                                             Content="{Binding ItadAllTimeLow}"
                                                                             Tag="{DynamicResource LOCItadAllTimeLow}"/>
-                                                            <ContentControl Style="{StaticResource ItadPriceRowContentStyle}"
+                                                            <ContentControl Style="{StaticResource ItadSecondaryPriceContentStyle}"
                                                                             Content="{Binding ItadY1}"
                                                                             Tag="{DynamicResource LOCItadYearLow}"/>
-                                                            <ContentControl Style="{StaticResource ItadPriceRowContentStyle}"
+                                                            <ContentControl Style="{StaticResource ItadSecondaryPriceContentStyle}"
                                                                             Content="{Binding ItadM3}"
                                                                             Tag="{DynamicResource LOCItadMonthLow}"/>
                                                         </StackPanel>
 
                                                         <!-- Store price -->
                                                         <ListBox Grid.Column="3" ItemsSource="{Binding ListItadPriceForWishlistStore}"
-                                                                 Name="lbStorePrice" SelectionChanged="LbStorePrice_SelectionChanged"
                                                                  BorderThickness="0" Padding="0" Margin="0"
                                                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                                  ScrollViewer.VerticalScrollBarVisibility="Auto">
@@ -660,6 +710,25 @@
                                                                                    VerticalAlignment="Center"
                                                                                    Margin="0,0,10,0"/>
                                                                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                                                                            <Button Tag="{Binding UrlBuy}"
+                                                                                    Content="&#xef71;"
+                                                                                    ToolTip="{DynamicResource LOCItadBuyAtStore}"
+                                                                                    Click="ButtonWeb_Click"
+                                                                                    Margin="5,0,0,0">
+                                                                                <Button.Style>
+                                                                                    <Style TargetType="Button" BasedOn="{StaticResource ListRowHoverRevealIconButton}">
+                                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding UrlBuy}" Value="{x:Null}">
+                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                            </DataTrigger>
+                                                                                            <DataTrigger Binding="{Binding UrlBuy}" Value="">
+                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </Button.Style>
+                                                                            </Button>
                                                                             <Button Name="BtHideWishList"
                                                                                     Style="{DynamicResource ListRowHoverRevealIconButton}"
                                                                                     Content="&#xef22;"
@@ -667,12 +736,12 @@
                                                                                     Tag="{Binding}"
                                                                                     Click="BtHideWishList_Click"
                                                                                     Margin="5,0,0,0"/>
-                                                                            <Button Name="BtRemoveWishList"
-                                                                                    Style="{DynamicResource ListRowHoverRevealIconButton}"
+                                                                            <Button Style="{DynamicResource ListRowHoverRevealIconButton}"
                                                                                     Content="&#xec53;"
                                                                                     Foreground="OrangeRed"
                                                                                     ToolTip="{DynamicResource LOCRemoveTitle}"
                                                                                     Tag="{Binding}"
+                                                                                    IsEnabled="{Binding CanRemoveFromStore}"
                                                                                     Click="BtRemoveWishList_Click"
                                                                                     Margin="6,0,0,0"/>
                                                                         </StackPanel>
@@ -690,14 +759,6 @@
                                                                                    VerticalAlignment="Center"
                                                                                    TextTrimming="CharacterEllipsis"/>
                                                                     </DockPanel>
-                                                                    <DataTemplate.Triggers>
-                                                                        <DataTrigger Binding="{Binding ShopName}" Value="Xbox">
-                                                                            <Setter TargetName="BtRemoveWishList" Property="IsEnabled" Value="False"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding ShopName}" Value="Microsoft Store">
-                                                                            <Setter TargetName="BtRemoveWishList" Property="IsEnabled" Value="False"/>
-                                                                        </DataTrigger>
-                                                                    </DataTemplate.Triggers>
                                                                 </DataTemplate>
                                                             </ListBox.ItemTemplate>
                                                         </ListBox>
