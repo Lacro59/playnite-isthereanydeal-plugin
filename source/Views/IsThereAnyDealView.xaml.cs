@@ -105,7 +105,7 @@ namespace IsThereAnyDeal.Views
             ItadDataContext.MaxPrice = Settings.MaxPrice;
             ItadDataContext.PropertyChanged += ItadDataContext_PropertyChanged;
 
-            PART_DateData.Content = "";
+            PART_DateData.Text = "";
 
             lbWishlist.ItemsSource = new ObservableCollection<Wishlist>();
 
@@ -189,7 +189,7 @@ namespace IsThereAnyDeal.Views
                         }
                     }
 
-                    PART_DateData.Content = new LocalDateTimeConverter().Convert(Settings.LastRefresh, null, null, CultureInfo.CurrentCulture);
+                    PART_DateData.Text = new LocalDateTimeConverter().Convert(Settings.LastRefresh, null, null, CultureInfo.CurrentCulture)?.ToString() ?? string.Empty;
 
                     PART_CbOrder_SelectionChanged(null, null);
                     SetFilterStore();

@@ -159,7 +159,7 @@ namespace IsThereAnyDeal.Models
         public ItadGameInfo ItadPriceForWishlistStore => ItadLastPrice?.FirstOrDefault(item => item.ShopName?.ToLower().Contains(StoreName.ToLower()) == true) ?? new ItadGameInfo();
 
         [DontSerialize]
-        public bool HasItadData => ItadBestPrice.CurrencySign != null && !ItadBestPrice.CurrencySign.IsNullOrEmpty();
+        public bool HasItadData => ItadBestPrice.HasPrice;
 
         [DontSerialize]
         public string UrlGame => Game == null ? string.Empty : string.Format("https://isthereanydeal.com/game/{0}/info/", Game.Slug);

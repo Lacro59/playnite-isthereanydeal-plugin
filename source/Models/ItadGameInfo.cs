@@ -1,4 +1,5 @@
-﻿using IsThereAnyDeal.Services;
+using CommonPluginsShared.Extensions;
+using IsThereAnyDeal.Services;
 using Playnite.SDK.Data;
 using System;
 
@@ -40,5 +41,17 @@ namespace IsThereAnyDeal.Models
         public string UrlGame => string.Format("https://isthereanydeal.com/game/{0}/info/", Slug);
 
         public TypePrice TypePrice { get; set; } = TypePrice.Deal;
+
+        /// <summary>
+        /// True when a currency sign is present so the price row can be shown.
+        /// </summary>
+        [DontSerialize]
+        public bool HasPrice => CurrencySign != null && !CurrencySign.IsNullOrEmpty();
+
+        /// <summary>
+        /// True when the discount percentage column should be shown (current deal only).
+        /// </summary>
+        [DontSerialize]
+        public bool ShowPriceCut => TypePrice == TypePrice.Deal;
     }
 }
