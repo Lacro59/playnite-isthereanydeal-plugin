@@ -46,6 +46,11 @@
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADRefreshPrice">価格を更新</sys:String>
+    <sys:String x:Key="LOCItadRefresh">更新</sys:String>
+    <sys:String x:Key="LOCItadFilters">フィルター</sys:String>
+    <sys:String x:Key="LOCItadGiveawaysEmpty">利用可能な無料配布はありません。</sys:String>
+    <sys:String x:Key="LOCItadWishlistNoResults">現在のフィルターに一致するゲームはありません。</sys:String>
+    <sys:String x:Key="LOCItadWishlistEmpty">ウィッシュリストにゲームがありません。</sys:String>
 
     <sys:String x:Key="LOCITADOn">対象：</sys:String>
     <sys:String x:Key="LOCITADBestPrice">最安値</sys:String>
@@ -58,6 +63,8 @@
     <sys:String x:Key="LOCITADOrderStorePrice">ストア - 価格</sys:String>
 
     <sys:String x:Key="LOCITADFilterSource">ストアでフィルター</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresAll">すべてのストア</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresCount">{0} 件のストア</sys:String>
     <sys:String x:Key="LOCITADPercentage">最小割引率</sys:String>
     <sys:String x:Key="LOCITADPrice">値下げ価格</sys:String>
 
@@ -68,6 +75,7 @@
     <sys:String x:Key="LOCItadCurrentBest">現在の最安値</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">現在のストアのウィッシュリスト</sys:String>
     <sys:String x:Key="LOCItadBuy">最安値で購入</sys:String>
+    <sys:String x:Key="LOCItadBuyAtStore">購入</sys:String>
     <sys:String x:Key="LOCItadStore">ストア</sys:String>
     <sys:String x:Key="LOCItadNoData">設定内で選択したストアにデータがありません</sys:String>
     <sys:String x:Key="LOCItadInLibrary">ライブラリ内</sys:String>
@@ -78,13 +86,14 @@
     <sys:String x:Key="LOCItadHideOnStoreWishList">{0} の {1} を除外しますか？</sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">ウィッシュリストのオプション</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsExcludeInLibrary">ライブラリ内のゲームを除外</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">ライブラリ内のゲームを含める</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">IsThereAnyDeal データのないゲームを含める</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">ライブラリ内のゲームのみ</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsAlerts">アラートのみ</sys:String>
-    <sys:String x:Key="LOCItadWhishListOptionsResetFilters">Reset filters</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsResetFilters">フィルターをリセット</sys:String>
     <sys:String x:Key="LOCItadAlertBadge">アラート</sys:String>
-    <sys:String x:Key="LOCItadLibraryBadge">Library</sys:String>
+    <sys:String x:Key="LOCItadLibraryBadge">ライブラリ</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">Steam ウィッシュリストをインポート</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam ウィッシュリストリンク</sys:String>
@@ -93,6 +102,13 @@
 
     <sys:String x:Key="LOCItadInWaitlist">待機リスト内</sys:String>
     <sys:String x:Key="LOCItadInCollection">コレクション内</sys:String>
+    <sys:String x:Key="LOCItadGiveaways">無料配布</sys:String>
+    <sys:String x:Key="LOCItadMature">成人向け</sys:String>
+    <sys:String x:Key="LOCItadDrmFree">DRMフリー</sys:String>
+    <sys:String x:Key="LOCItadGiveawayStarts">開始</sys:String>
+    <sys:String x:Key="LOCItadGiveawayEnds">終了</sys:String>
+    <sys:String x:Key="LOCItadGiveawayExtraGames">この無料配布に含まれるその他のゲーム</sys:String>
+    <sys:String x:Key="LOCItadRefreshGiveaways">無料配布情報を更新</sys:String>
 
     <!-- IsThereAnyDeal -->
 
