@@ -46,6 +46,11 @@
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADRefreshPrice">Preis aktualisieren</sys:String>
+    <sys:String x:Key="LOCItadRefresh">Refresh</sys:String>
+    <sys:String x:Key="LOCItadFilters">Filters</sys:String>
+    <sys:String x:Key="LOCItadGiveawaysEmpty">No giveaways available.</sys:String>
+    <sys:String x:Key="LOCItadWishlistNoResults">No games match the current filters.</sys:String>
+    <sys:String x:Key="LOCItadWishlistEmpty">No games in your wishlist.</sys:String>
 
     <sys:String x:Key="LOCITADOn">Auf:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Bester Preis</sys:String>
@@ -58,6 +63,8 @@
     <sys:String x:Key="LOCITADOrderStorePrice">Shop - Preis</sys:String>
 
     <sys:String x:Key="LOCITADFilterSource">Nach Shop(s) filtern</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresAll">All stores</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresCount">{0} stores</sys:String>
     <sys:String x:Key="LOCITADPercentage">Mindestrabatt in Prozent</sys:String>
     <sys:String x:Key="LOCITADPrice">Preis kleiner als</sys:String>
 
@@ -68,6 +75,7 @@
     <sys:String x:Key="LOCItadCurrentBest">Aktuell Bester Preis</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Aktuelle Store Wunschliste</sys:String>
     <sys:String x:Key="LOCItadBuy">Am besten kaufen</sys:String>
+    <sys:String x:Key="LOCItadBuyAtStore">Buy</sys:String>
     <sys:String x:Key="LOCItadStore">Shop</sys:String>
     <sys:String x:Key="LOCItadNoData">Keine Daten für den ausgewählten Shop in den Einstellungen</sys:String>
     <sys:String x:Key="LOCItadInLibrary">In Bibliothek</sys:String>
@@ -78,6 +86,7 @@
     <sys:String x:Key="LOCItadHideOnStoreWishList">{0} bei {1} ausblenden?</sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">Wunschlistenoptionen</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsExcludeInLibrary">Exclude games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Spiele in der Bibliothek einbeziehen</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Spiele ohne IsThereAnyDeal Daten einbeziehen</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Nur Spiele in der Bibliothek</sys:String>
@@ -93,6 +102,13 @@
 
     <sys:String x:Key="LOCItadInWaitlist">Auf der Warteliste</sys:String>
     <sys:String x:Key="LOCItadInCollection">In der Sammlung</sys:String>
+    <sys:String x:Key="LOCItadGiveaways">Giveaways</sys:String>
+    <sys:String x:Key="LOCItadMature">Mature</sys:String>
+    <sys:String x:Key="LOCItadDrmFree">DRM-free</sys:String>
+    <sys:String x:Key="LOCItadGiveawayStarts">Starts</sys:String>
+    <sys:String x:Key="LOCItadGiveawayEnds">Ends</sys:String>
+    <sys:String x:Key="LOCItadGiveawayExtraGames">More games in this giveaway</sys:String>
+    <sys:String x:Key="LOCItadRefreshGiveaways">Refresh giveaways</sys:String>
 
     <!-- IsThereAnyDeal -->
 
