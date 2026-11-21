@@ -46,6 +46,11 @@
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADRefreshPrice">刷新价格</sys:String>
+    <sys:String x:Key="LOCItadRefresh">Refresh</sys:String>
+    <sys:String x:Key="LOCItadFilters">Filters</sys:String>
+    <sys:String x:Key="LOCItadGiveawaysEmpty">No giveaways available.</sys:String>
+    <sys:String x:Key="LOCItadWishlistNoResults">No games match the current filters.</sys:String>
+    <sys:String x:Key="LOCItadWishlistEmpty">No games in your wishlist.</sys:String>
 
     <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">最好的价格</sys:String>
@@ -58,6 +63,8 @@
     <sys:String x:Key="LOCITADOrderStorePrice">商店售价：？</sys:String>
 
     <sys:String x:Key="LOCITADFilterSource">按商店筛</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresAll">All stores</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresCount">{0} stores</sys:String>
     <sys:String x:Key="LOCITADPercentage">最低折扣百分比</sys:String>
     <sys:String x:Key="LOCITADPrice">价格降低</sys:String>
 
@@ -68,6 +75,7 @@
     <sys:String x:Key="LOCItadCurrentBest">当前最佳</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">当前商店愿望单</sys:String>
     <sys:String x:Key="LOCItadBuy">购买最佳</sys:String>
+    <sys:String x:Key="LOCItadBuyAtStore">Buy</sys:String>
     <sys:String x:Key="LOCItadStore">商店</sys:String>
     <sys:String x:Key="LOCItadNoData">没有设置中所选商店的数据</sys:String>
     <sys:String x:Key="LOCItadInLibrary">在库中</sys:String>
@@ -78,6 +86,7 @@
     <sys:String x:Key="LOCItadHideOnStoreWishList">排除 {1} 上的 {0} 吗</sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">愿望单选项</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsExcludeInLibrary">Exclude games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">包含库中的游戏</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">包含没有有折扣吗数据的游戏</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">仅库中的游戏</sys:String>
@@ -93,6 +102,13 @@
 
     <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
     <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+    <sys:String x:Key="LOCItadGiveaways">Giveaways</sys:String>
+    <sys:String x:Key="LOCItadMature">Mature</sys:String>
+    <sys:String x:Key="LOCItadDrmFree">DRM-free</sys:String>
+    <sys:String x:Key="LOCItadGiveawayStarts">Starts</sys:String>
+    <sys:String x:Key="LOCItadGiveawayEnds">Ends</sys:String>
+    <sys:String x:Key="LOCItadGiveawayExtraGames">More games in this giveaway</sys:String>
+    <sys:String x:Key="LOCItadRefreshGiveaways">Refresh giveaways</sys:String>
 
     <!-- IsThereAnyDeal -->
 
