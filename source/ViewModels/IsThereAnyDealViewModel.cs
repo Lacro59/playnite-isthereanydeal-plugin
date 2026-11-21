@@ -49,6 +49,7 @@ namespace IsThereAnyDeal.ViewModels
 
         private string _searchText = string.Empty;
         private string _selectedStoresText = string.Empty;
+        private string _selectedStoresToolTip = string.Empty;
         private bool _useBestPrice = true;
         private bool _includeInLibrary = true;
         private bool _onlyInLibrary;
@@ -67,7 +68,6 @@ namespace IsThereAnyDeal.ViewModels
         private bool _isWishlistNoResults;
         private int _filteredCount;
         private string _lastRefreshLabel = string.Empty;
-        private List<CountData> _storeCountDatas = new List<CountData>();
 
         private List<ItadGiveaway> _giveawaysItems = new List<ItadGiveaway>();
         private bool _isGiveawaysBusy;
@@ -125,6 +125,8 @@ namespace IsThereAnyDeal.ViewModels
 
             ResetFiltersCommand = new RelayCommand(ResetFilters);
             ToggleOrderDirectionCommand = new RelayCommand(ToggleOrderDirection);
+            SelectAllStoresCommand = new RelayCommand(SelectAllStores);
+            DeselectAllStoresCommand = new RelayCommand(DeselectAllStores);
             RefreshStoresCommand = new RelayCommand(() => _ = RefreshWishlistAsync(string.Empty, cacheOnly: false));
             RefreshPricesCommand = new RelayCommand(() => _ = RefreshWishlistAsync(string.Empty, cacheOnly: true, forcePrice: true));
             OpenUrlCommand = new RelayCommand<string>(OpenUrl);
@@ -134,6 +136,7 @@ namespace IsThereAnyDeal.ViewModels
 
             _wishlistView = CollectionViewSource.GetDefaultView(_wishlistItems);
             ApplySortAndFilter();
+            UpdateSelectedStoresPresentation();
         }
 
         /// <summary>Raised when the view should select and scroll to a wishlist row (visual-only).</summary>
@@ -153,6 +156,12 @@ namespace IsThereAnyDeal.ViewModels
 
         /// <summary>Toggles ascending / descending sort.</summary>
         public RelayCommand ToggleOrderDirectionCommand { get; }
+
+        /// <summary>Checks every store in the wishlist source filter.</summary>
+        public RelayCommand SelectAllStoresCommand { get; }
+
+        /// <summary>Clears every store check (empty selection = all stores).</summary>
+        public RelayCommand DeselectAllStoresCommand { get; }
 
         /// <summary>Full store-data refresh (blocks interaction).</summary>
         public RelayCommand RefreshStoresCommand { get; }
@@ -296,13 +305,6 @@ namespace IsThereAnyDeal.ViewModels
             private set => SetValue(ref _lastRefreshLabel, value ?? string.Empty);
         }
 
-        /// <summary>Per-store wishlist counts for the toolbar tooltip.</summary>
-        public List<CountData> StoreCountDatas
-        {
-            get => _storeCountDatas;
-            private set => SetValue(ref _storeCountDatas, value ?? new List<CountData>());
-        }
-
         /// <summary>Giveaway rows for the Giveaways tab.</summary>
         public List<ItadGiveaway> GiveawaysItems
         {
@@ -362,11 +364,18 @@ namespace IsThereAnyDeal.ViewModels
             }
         }
 
-        /// <summary>Summary of checked store names shown on the store filter combo.</summary>
+        /// <summary>Button label for the store filter: all / single name / count.</summary>
         public string SelectedStoresText
         {
             get => _selectedStoresText;
             private set => SetValue(ref _selectedStoresText, value ?? string.Empty);
+        }
+
+        /// <summary>Tooltip listing checked store names (or the same text when empty / single).</summary>
+        public string SelectedStoresToolTip
+        {
+            get => _selectedStoresToolTip;
+            private set => SetValue(ref _selectedStoresToolTip, value ?? string.Empty);
         }
 
         /// <summary>When true, discount/price filters use best price.</summary>
@@ -706,7 +715,6 @@ namespace IsThereAnyDeal.ViewModels
                 {
                     Logger.Warn($"[ITAD][ui] refresh empty result cacheOnly={cacheOnly} forcePrice={forcePrice}");
                     SetWishlistItems(new ObservableCollection<Wishlist>());
-                    StoreCountDatas = new List<CountData>();
                     return;
                 }
 
@@ -719,7 +727,6 @@ namespace IsThereAnyDeal.ViewModels
                 }
 
                 SetWishlistItems(result);
-                StoreCountDatas = _api.CountDatas != null ? new List<CountData>(_api.CountDatas) : new List<CountData>();
 
                 Wishlist firstItem = result.FirstOrDefault(x => x.ItadLastPrice?.Any(y => !string.IsNullOrEmpty(y.CurrencySign)) == true);
                 if (firstItem != null)
@@ -770,42 +777,81 @@ namespace IsThereAnyDeal.ViewModels
             List<ListStore> items = new List<ListStore>();
             if (_settings.EnableSteam)
             {
-                items.Add(new ListStore { StoreName = "Steam", StoreNameDisplay = (TransformIcon.Get("Steam") + " Steam").Trim(), IsCheck = false });
+                items.Add(CreateStoreFilterItem("Steam", "Steam"));
             }
 
             if (_settings.EnableGog)
             {
-                items.Add(new ListStore { StoreName = "GOG", StoreNameDisplay = (TransformIcon.Get("GOG") + " GOG").Trim(), IsCheck = false });
+                items.Add(CreateStoreFilterItem("GOG", "GOG"));
             }
 
             if (_settings.EnableHumble)
             {
-                items.Add(new ListStore { StoreName = "Humble", StoreNameDisplay = (TransformIcon.Get("Humble") + " Humble").Trim(), IsCheck = false });
+                items.Add(CreateStoreFilterItem("Humble", "Humble"));
             }
 
             if (_settings.EnableEpic)
             {
-                items.Add(new ListStore { StoreName = "Epic Games Store", StoreNameDisplay = (TransformIcon.Get("Epic Games Store") + " Epic Games Store").Trim(), IsCheck = false });
+                items.Add(CreateStoreFilterItem("Epic Games Store", "Epic Games Store"));
             }
 
             if (_settings.EnableXbox)
             {
-                items.Add(new ListStore { StoreName = "Microsoft Store", StoreNameDisplay = (TransformIcon.Get("Xbox") + " Microsoft Store").Trim(), IsCheck = false });
+                items.Add(CreateStoreFilterItem("Microsoft Store", "Xbox"));
             }
 
             if (_settings.EnableUbisoft)
             {
-                items.Add(new ListStore { StoreName = "Ubisoft Connect", StoreNameDisplay = (TransformIcon.Get("Ubisoft Connect") + " Ubisoft Connect").Trim(), IsCheck = false });
+                items.Add(CreateStoreFilterItem("Ubisoft Connect", "Ubisoft Connect"));
             }
 
             if (_settings.EnableOrigin)
             {
-                items.Add(new ListStore { StoreName = "EA app", StoreNameDisplay = (TransformIcon.Get("EA app") + " EA app").Trim(), IsCheck = false });
+                items.Add(CreateStoreFilterItem("EA app", "EA app"));
             }
 
             items.Sort((x, y) => string.Compare(x.StoreName, y.StoreName, true));
             FilterStoreItems = items;
+            Logger.Debug($"[ITAD][ui] storeFilter rebuilt items={items.Count}");
             ApplyWishlistUiFilters(_settings.WishlistUiFilters, applyStores: true);
+        }
+
+        private ListStore CreateStoreFilterItem(string storeName, string iconKey)
+        {
+            string icon = TransformIcon.Get(iconKey) ?? string.Empty;
+            return new ListStore
+            {
+                StoreName = storeName,
+                StoreIcon = icon,
+                Count = CountWishlistItemsForStore(storeName),
+                IsCheck = false
+            };
+        }
+
+        private int CountWishlistItemsForStore(string storeName)
+        {
+            if (WishlistItems == null || string.IsNullOrEmpty(storeName))
+            {
+                return 0;
+            }
+
+            int count = 0;
+            foreach (Wishlist wishlist in WishlistItems)
+            {
+                if (storeName.IsEqual(wishlist.StoreName))
+                {
+                    count++;
+                    continue;
+                }
+
+                if (wishlist.Duplicates != null
+                    && wishlist.Duplicates.Exists(d => storeName.IsEqual(d.StoreName)))
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         /// <summary>
@@ -1240,6 +1286,42 @@ namespace IsThereAnyDeal.ViewModels
             ScheduleWishlistUiFiltersPersist();
         }
 
+        private void SelectAllStores()
+        {
+            SetAllStoreChecks(true);
+        }
+
+        private void DeselectAllStores()
+        {
+            SetAllStoreChecks(false);
+        }
+
+        private void SetAllStoreChecks(bool isChecked)
+        {
+            if (FilterStoreItems == null || FilterStoreItems.Count == 0)
+            {
+                return;
+            }
+
+            _suppressFilterPersist = true;
+            try
+            {
+                foreach (ListStore store in FilterStoreItems)
+                {
+                    store.IsCheck = isChecked;
+                }
+
+                RebuildSelectedStoresFromChecks();
+            }
+            finally
+            {
+                _suppressFilterPersist = false;
+            }
+
+            Logger.Debug($"[ITAD][ui] storeFilter selectAll={isChecked} count={_searchStores.Count}");
+            OnPersistedFilterChanged();
+        }
+
         private void ApplyLibraryMode(bool includeInLibrary, bool onlyInLibrary, bool raiseFilter = true)
         {
             _includeInLibrary = includeInLibrary;
@@ -1318,7 +1400,7 @@ namespace IsThereAnyDeal.ViewModels
         private void ApplyStoreFilterSelection(List<string> selectedStores)
         {
             _searchStores = new List<string>();
-            SelectedStoresText = string.Empty;
+            UpdateSelectedStoresPresentation();
 
             List<string> selected = selectedStores ?? new List<string>();
             if (FilterStoreItems == null)
@@ -1339,7 +1421,7 @@ namespace IsThereAnyDeal.ViewModels
             if (FilterStoreItems == null)
             {
                 _searchStores = new List<string>();
-                SelectedStoresText = string.Empty;
+                UpdateSelectedStoresPresentation();
                 return;
             }
 
@@ -1347,7 +1429,31 @@ namespace IsThereAnyDeal.ViewModels
                 .Where(x => x.IsCheck)
                 .Select(x => x.StoreName)
                 .ToList();
-            SelectedStoresText = _searchStores.Count == 0 ? string.Empty : string.Join(", ", _searchStores);
+            UpdateSelectedStoresPresentation();
+        }
+
+        private void UpdateSelectedStoresPresentation()
+        {
+            if (_searchStores == null || _searchStores.Count == 0)
+            {
+                string allLabel = ResourceProvider.GetString("LOCItadFilterStoresAll");
+                SelectedStoresText = allLabel;
+                SelectedStoresToolTip = allLabel;
+                return;
+            }
+
+            if (_searchStores.Count == 1)
+            {
+                string single = _searchStores[0];
+                SelectedStoresText = single;
+                SelectedStoresToolTip = single;
+                return;
+            }
+
+            SelectedStoresText = string.Format(
+                ResourceProvider.GetString("LOCItadFilterStoresCount"),
+                _searchStores.Count);
+            SelectedStoresToolTip = string.Join(", ", _searchStores);
         }
 
         private void UpdateOrderDirectionPresentation()
@@ -1454,12 +1560,13 @@ namespace IsThereAnyDeal.ViewModels
     }
 
     /// <summary>
-    /// One store row in the wishlist source filter (checkbox + display label).
+    /// One store row in the wishlist source filter (checkbox, glyph, name, count).
     /// </summary>
     public class ListStore : ObservableObject
     {
         private string _storeName;
-        private string _storeNameDisplay;
+        private string _storeIcon;
+        private int _count;
         private bool _isCheck;
 
         /// <summary>Canonical store name used by filter matching (e.g. Steam).</summary>
@@ -1469,11 +1576,26 @@ namespace IsThereAnyDeal.ViewModels
             set => SetValue(ref _storeName, value);
         }
 
-        /// <summary>Label shown in the store filter dropdown (icon glyph + name).</summary>
-        public string StoreNameDisplay
+        /// <summary>Store glyph for the filter row (<c>CommonFont</c>).</summary>
+        public string StoreIcon
         {
-            get => _storeNameDisplay;
-            set => SetValue(ref _storeNameDisplay, value);
+            get => _storeIcon;
+            set => SetValue(ref _storeIcon, value ?? string.Empty);
+        }
+
+        /// <summary>Wishlist row count for this store (including duplicates).</summary>
+        public int Count
+        {
+            get => _count;
+            set
+            {
+                if (_count == value)
+                {
+                    return;
+                }
+
+                SetValue(ref _count, value);
+            }
         }
 
         /// <summary>Whether this store is included in the active filter.</summary>

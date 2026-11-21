@@ -39,6 +39,57 @@
             </Style.Triggers>
         </Style>
 
+        <!-- Store filter row: theme CheckBox stacks content horizontally; DockPanel lets the row stretch so counts align right. -->
+        <Style x:Key="ItadStoreFilterCheckBox" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Opacity" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Border Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                            <DockPanel LastChildFill="True">
+                                <Border x:Name="BulletBorder"
+                                        DockPanel.Dock="Left"
+                                        CornerRadius="{DynamicResource ControlCornerRadius}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Background="{TemplateBinding Background}"
+                                        Style="{DynamicResource HighlightBorder}">
+                                    <Grid Width="18" Height="18" Background="{DynamicResource NormalBrushDark}">
+                                        <Viewbox x:Name="CheckIcon" Visibility="Collapsed">
+                                            <TextBlock Text="b"
+                                                       FontFamily="Marlett"
+                                                       Foreground="{DynamicResource GlyphBrush}"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Viewbox>
+                                    </Grid>
+                                </Border>
+                                <ContentPresenter RecognizesAccessKey="True"
+                                                  Margin="5,0,0,0"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Stretch"/>
+                            </DockPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BulletBorder" Property="BorderBrush" Value="{DynamicResource GlyphBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Count}" Value="0">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="ItadBadgeBorder" TargetType="Border">
             <Setter Property="Padding" Value="4,1"/>
             <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}"/>
@@ -223,7 +274,7 @@
             <TabItem Header="{DynamicResource LOCItadWishlist}" Name="PART_Tb">
                 <Grid Margin="10">
                     <DockPanel IsEnabled="{Binding IsWishlistContentEnabled}" LastChildFill="True">
-                        <!-- Wishlist toolbar: search, stores, sort, total, store info, refresh menu -->
+                        <!-- Wishlist toolbar: search, stores dropdown, sort, total, refresh menu -->
                         <Border DockPanel.Dock="Top"
                                 BorderThickness="{DynamicResource PopupBorderThickness}"
                                 BorderBrush="{DynamicResource NormalBorderBrush}"
@@ -235,31 +286,127 @@
                                                            Margin="0,0,10,0"
                                                            VerticalAlignment="Center"/>
 
-                                <ComboBox DockPanel.Dock="Left"
-                                          IsEditable="True"
-                                          IsReadOnly="True"
-                                          Width="200"
-                                          Margin="0,0,10,0"
-                                          VerticalAlignment="Center"
-                                          VirtualizingPanel.IsVirtualizing="True"
-                                          ToolTip="{DynamicResource LOCITADFilterSource}"
-                                          ItemsSource="{Binding FilterStoreItems}"
-                                          Text="{Binding SelectedStoresText, Mode=OneWay}">
-                                    <ComboBox.ItemContainerStyle>
-                                        <Style TargetType="ComboBoxItem">
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                            <Setter Property="Padding" Value="4,2"/>
-                                        </Style>
-                                    </ComboBox.ItemContainerStyle>
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <CheckBox Content="{Binding StoreNameDisplay}"
-                                                      IsChecked="{Binding IsCheck, Mode=TwoWay}"
-                                                      FontFamily="{DynamicResource CommonFont}"
-                                                      Focusable="False"/>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
+                                <Border x:Name="PART_StoreFilterRoot"
+                                        DockPanel.Dock="Left"
+                                        Width="200"
+                                        Height="26"
+                                        Margin="0,0,10,0"
+                                        VerticalAlignment="Center"
+                                        BorderThickness="{DynamicResource ControlBorderThickness}"
+                                        CornerRadius="{DynamicResource ControlCornerRadius}"
+                                        Style="{DynamicResource HighlightBorder}"
+                                        ToolTip="{Binding SelectedStoresToolTip}">
+                                    <Grid>
+                                        <ToggleButton x:Name="PART_StoreFilterToggle"
+                                                      BorderThickness="0"
+                                                      Focusable="True"
+                                                      Background="Transparent"
+                                                      HorizontalContentAlignment="Stretch"
+                                                      VerticalContentAlignment="Stretch"
+                                                      AutomationProperties.Name="{DynamicResource LOCITADFilterSource}">
+                                            <ToggleButton.Style>
+                                                <Style TargetType="ToggleButton">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ToggleButton">
+                                                                <Border Background="Transparent">
+                                                                    <ContentPresenter/>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ToggleButton.Style>
+                                            <DockPanel Margin="6,0,4,0" IsHitTestVisible="False">
+                                                <TextBlock DockPanel.Dock="Right"
+                                                           Text="&#xEA69;"
+                                                           FontFamily="{DynamicResource FontIcoFont}"
+                                                           FontSize="10"
+                                                           FontWeight="Light"
+                                                           Foreground="{DynamicResource GlyphBrush}"
+                                                           VerticalAlignment="Center"
+                                                           RenderTransformOrigin="0.5,0.5">
+                                                    <TextBlock.RenderTransform>
+                                                        <RotateTransform Angle="90"/>
+                                                    </TextBlock.RenderTransform>
+                                                </TextBlock>
+                                                <TextBlock Style="{DynamicResource BaseTextBlockStyle}"
+                                                           Text="{Binding SelectedStoresText}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           VerticalAlignment="Center"/>
+                                            </DockPanel>
+                                        </ToggleButton>
+                                        <Popup Placement="Bottom"
+                                               Focusable="False"
+                                               AllowsTransparency="True"
+                                               StaysOpen="False"
+                                               MaxHeight="300"
+                                               MinWidth="{Binding ActualWidth, ElementName=PART_StoreFilterRoot}"
+                                               IsOpen="{Binding IsChecked, ElementName=PART_StoreFilterToggle, Mode=TwoWay, Delay=100}">
+                                            <Border Background="{DynamicResource PopupBackgroundBrush}"
+                                                    BorderThickness="{DynamicResource PopupBorderThickness}"
+                                                    BorderBrush="{DynamicResource PopupBorderBrush}"
+                                                    CornerRadius="{DynamicResource ControlCornerRadius}"
+                                                    Padding="6">
+                                                <DockPanel LastChildFill="True">
+                                                    <StackPanel DockPanel.Dock="Top"
+                                                                Orientation="Horizontal"
+                                                                Margin="0,0,0,6">
+                                                        <Button Content="{DynamicResource LOCSelectAll}"
+                                                                Command="{Binding SelectAllStoresCommand}"
+                                                                Margin="0,0,6,0"
+                                                                Padding="8,2"/>
+                                                        <Button Content="{DynamicResource LOCDeselectAll}"
+                                                                Command="{Binding DeselectAllStoresCommand}"
+                                                                Padding="8,2"/>
+                                                    </StackPanel>
+                                                    <ItemsControl ItemsSource="{Binding FilterStoreItems}"
+                                                                  HorizontalContentAlignment="Stretch">
+                                                        <ItemsControl.ItemContainerStyle>
+                                                            <Style TargetType="ContentPresenter">
+                                                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                                            </Style>
+                                                        </ItemsControl.ItemContainerStyle>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox IsChecked="{Binding IsCheck, Mode=TwoWay}"
+                                                                          Focusable="False"
+                                                                          Margin="0,2"
+                                                                          Style="{StaticResource ItadStoreFilterCheckBox}">
+                                                                    <Grid>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="Auto"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="Auto"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <TextBlock Grid.Column="0"
+                                                                                   Text="{Binding StoreIcon}"
+                                                                                   FontFamily="{DynamicResource CommonFont}"
+                                                                                   Foreground="{DynamicResource TextBrush}"
+                                                                                   VerticalAlignment="Center"
+                                                                                   Margin="0,0,6,0"/>
+                                                                        <TextBlock Grid.Column="1"
+                                                                                   Text="{Binding StoreName}"
+                                                                                   Style="{DynamicResource BaseTextBlockStyle}"
+                                                                                   TextTrimming="CharacterEllipsis"
+                                                                                   VerticalAlignment="Center"
+                                                                                   Margin="0,0,10,0"/>
+                                                                        <TextBlock Grid.Column="2"
+                                                                                   Text="{Binding Count}"
+                                                                                   Style="{DynamicResource BaseTextBlockStyle}"
+                                                                                   MinWidth="28"
+                                                                                   TextAlignment="Right"
+                                                                                   VerticalAlignment="Center"/>
+                                                                    </Grid>
+                                                                </CheckBox>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </DockPanel>
+                                            </Border>
+                                        </Popup>
+                                    </Grid>
+                                </Border>
 
                                 <Button Name="PART_BtRefresh"
                                         DockPanel.Dock="Right"
@@ -309,38 +456,6 @@
                                                VerticalAlignment="Center"
                                                Width="40"
                                                TextAlignment="Right"/>
-                                    <TextBlock Text=""
-                                               FontFamily="{DynamicResource CommonFont}"
-                                               FontSize="{DynamicResource FontSizeLarger}"
-                                               Style="{DynamicResource BaseTextBlockStyle}"
-                                               VerticalAlignment="Center"
-                                               Margin="10,0,0,0">
-                                        <TextBlock.ToolTip>
-                                            <ToolTip DataContext="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                                                <ListBox BorderThickness="0"
-                                                         ItemsSource="{Binding StoreCountDatas}">
-                                                    <ListBox.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <Grid>
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="*"/>
-                                                                    <ColumnDefinition Width="*"/>
-                                                                </Grid.ColumnDefinitions>
-                                                                <TextBlock Grid.Column="0"
-                                                                           Text="{Binding StoreName}"
-                                                                           Style="{DynamicResource BaseTextBlockStyle}"/>
-                                                                <TextBlock Grid.Column="1"
-                                                                           Text="{Binding Count}"
-                                                                           Style="{DynamicResource BaseTextBlockStyle}"
-                                                                           HorizontalAlignment="Right"
-                                                                           Margin="10,0,0,0"/>
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </ListBox.ItemTemplate>
-                                                </ListBox>
-                                            </ToolTip>
-                                        </TextBlock.ToolTip>
-                                    </TextBlock>
                                 </StackPanel>
                             </DockPanel>
                         </Border>
