@@ -46,6 +46,11 @@
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADRefreshPrice">Oppdater pris</sys:String>
+    <sys:String x:Key="LOCItadRefresh">Refresh</sys:String>
+    <sys:String x:Key="LOCItadFilters">Filters</sys:String>
+    <sys:String x:Key="LOCItadGiveawaysEmpty">No giveaways available.</sys:String>
+    <sys:String x:Key="LOCItadWishlistNoResults">No games match the current filters.</sys:String>
+    <sys:String x:Key="LOCItadWishlistEmpty">No games in your wishlist.</sys:String>
 
     <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Best price</sys:String>
@@ -58,6 +63,8 @@
     <sys:String x:Key="LOCITADOrderStorePrice">Store - Price</sys:String>
 
     <sys:String x:Key="LOCITADFilterSource">Filtrer etter butikk(er)</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresAll">All stores</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresCount">{0} stores</sys:String>
     <sys:String x:Key="LOCITADPercentage">Minimum rabattprosent</sys:String>
     <sys:String x:Key="LOCITADPrice">Lavere pris enn</sys:String>
 
@@ -68,6 +75,7 @@
     <sys:String x:Key="LOCItadCurrentBest">Nåværende beste</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Gjeldende butikks ønskeliste</sys:String>
     <sys:String x:Key="LOCItadBuy">Kjøp beste</sys:String>
+    <sys:String x:Key="LOCItadBuyAtStore">Buy</sys:String>
     <sys:String x:Key="LOCItadStore">Butikk</sys:String>
     <sys:String x:Key="LOCItadNoData">Ingen data for valgt butikk i innstillingene</sys:String>
     <sys:String x:Key="LOCItadInLibrary">I biblioteket</sys:String>
@@ -78,6 +86,7 @@
     <sys:String x:Key="LOCItadHideOnStoreWishList">Ekskluder {0} på {1}?</sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">Alternativer for ønskeliste</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsExcludeInLibrary">Exclude games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Inkluder spill i biblioteket</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Inkluder spill uten IsThereAnyDeal-data</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Bare spill i biblioteket</sys:String>
@@ -93,6 +102,13 @@
 
     <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
     <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+    <sys:String x:Key="LOCItadGiveaways">Giveaways</sys:String>
+    <sys:String x:Key="LOCItadMature">Mature</sys:String>
+    <sys:String x:Key="LOCItadDrmFree">DRM-free</sys:String>
+    <sys:String x:Key="LOCItadGiveawayStarts">Starts</sys:String>
+    <sys:String x:Key="LOCItadGiveawayEnds">Ends</sys:String>
+    <sys:String x:Key="LOCItadGiveawayExtraGames">More games in this giveaway</sys:String>
+    <sys:String x:Key="LOCItadRefreshGiveaways">Refresh giveaways</sys:String>
 
     <!-- IsThereAnyDeal -->
 
