@@ -28,8 +28,8 @@ namespace IsThereAnyDeal
         /// <summary>Wishlist panel filter UI state (not exposed in Settings view).</summary>
         public WishlistUiFilters WishlistUiFilters { get; set; } = WishlistUiFilters.CreateDefaults();
 
-        /// <summary>Whether the wishlist filters Expander is expanded (independent of WishlistUiFilters reset).</summary>
-        public bool WishlistFiltersPanelExpanded { get; set; } = true;
+        /// <summary>Whether the wishlist filters Expander is expanded (independent of WishlistUiFilters reset). Default false for new installs; existing saved value is kept.</summary>
+        public bool WishlistFiltersPanelExpanded { get; set; } = false;
 
         [DontSerialize]
         public List<Country> Countries => IsThereAnyDealApi.GetCountries();

@@ -59,7 +59,8 @@ namespace IsThereAnyDeal.ViewModels
         private string _orderDirectionTag = "0";
         private string _orderDirectionGlyph = "\uEA99";
         private string _orderDirectionToolTip;
-        private bool _filtersPanelExpanded = true;
+        private bool _filtersPanelExpanded = false;
+        private ObservableCollection<string> _filtersSummary = new ObservableCollection<string>();
 
         private ObservableCollection<Wishlist> _wishlistItems = new ObservableCollection<Wishlist>();
         private bool _isWishlistLoading;
@@ -209,7 +210,7 @@ namespace IsThereAnyDeal.ViewModels
             set => SetValue(ref _discountPercent, value);
         }
 
-        /// <summary>Maximum price filter value within <see cref="MinPrice"/>–<see cref="MaxPrice"/>.</summary>
+        /// <summary>Maximum price filter within <see cref="MinPrice"/>–<see cref="MaxPrice"/>. A value at or above <see cref="MaxPrice"/> means no upper limit.</summary>
         public double PriceLimit
         {
             get => _priceLimit;
@@ -585,6 +586,15 @@ namespace IsThereAnyDeal.ViewModels
                     Logger.Error(ex, "[ITAD][filters] panel expand persist failed");
                 }
             }
+        }
+
+        /// <summary>
+        /// Read-only recap of the current filter choices (defaults included) shown in the collapsed expander header.
+        /// </summary>
+        public ObservableCollection<string> FiltersSummary
+        {
+            get => _filtersSummary;
+            private set => SetValue(ref _filtersSummary, value ?? new ObservableCollection<string>());
         }
 
         /// <summary>
@@ -1054,6 +1064,8 @@ namespace IsThereAnyDeal.ViewModels
 
         private void UpdateWishlistEmptyState()
         {
+            RebuildFiltersSummary();
+
             int sourceCount = WishlistItems != null ? WishlistItems.Count : 0;
             int filtered = 0;
             if (_wishlistView != null)
@@ -1277,6 +1289,59 @@ namespace IsThereAnyDeal.ViewModels
             RefreshWishlistFilter();
             Logger.Info(
                 $"[ITAD][filters] reset to defaults include={defaults.IncludeInLibrary} only={defaults.OnlyInLibrary}");
+        }
+
+        /// <summary>
+        /// Rebuilds the read-only filter recap (defaults included). Toggle filters appear only when on.
+        /// </summary>
+        private void RebuildFiltersSummary()
+        {
+            List<string> items = new List<string>();
+
+            // Store filter stays in the always-visible toolbar; do not duplicate it here.
+            items.Add(string.Format(
+                CultureInfo.CurrentCulture,
+                "{0} {1}",
+                ResourceProvider.GetString("LOCITADOn"),
+                ResourceProvider.GetString(_useBestPrice ? "LOCITADBestPrice" : "LOCITADStorePrice")));
+
+            items.Add(string.Format(
+                CultureInfo.CurrentCulture,
+                ResourceProvider.GetString("LOCItadActiveFilterDiscount"),
+                DiscountPercent.ToString("0", CultureInfo.CurrentCulture)));
+
+            items.Add(PriceLimit >= MaxPrice
+                ? ResourceProvider.GetString("LOCItadActiveFilterPriceNone")
+                : string.Format(
+                    CultureInfo.CurrentCulture,
+                    ResourceProvider.GetString("LOCItadActiveFilterPrice"),
+                    PriceLimit.ToString("0", CultureInfo.CurrentCulture),
+                    CurrencySign ?? string.Empty));
+
+            if (_onlyInLibrary)
+            {
+                items.Add(ResourceProvider.GetString("LOCItadWhishListOptionsOnlyInLibrary"));
+            }
+            else if (!_includeInLibrary)
+            {
+                items.Add(ResourceProvider.GetString("LOCItadWhishListOptionsExcludeInLibrary"));
+            }
+            else
+            {
+                items.Add(ResourceProvider.GetString("LOCItadWhishListOptionsIncludeInLibrary"));
+            }
+
+            if (IncludeWithoutData)
+            {
+                items.Add(ResourceProvider.GetString("LOCItadWhishListOptionsIncludeWithoutData"));
+            }
+
+            if (AlertsOnly)
+            {
+                items.Add(ResourceProvider.GetString("LOCItadWhishListOptionsAlerts"));
+            }
+
+            FiltersSummary = new ObservableCollection<string>(items);
         }
 
         private void ToggleOrderDirection()
@@ -1527,9 +1592,10 @@ namespace IsThereAnyDeal.ViewModels
             bool matchesDiscount = _useBestPrice
                 ? wishlist.ItadBestPrice.PriceCut >= DiscountPercent
                 : wishlist.ItadPriceForWishlistStore.PriceCut >= DiscountPercent;
-            bool matchesPriceLimit = _useBestPrice
-                ? wishlist.ItadBestPrice.PriceNew <= PriceLimit
-                : wishlist.ItadPriceForWishlistStore.PriceNew <= PriceLimit;
+            bool matchesPriceLimit = PriceLimit >= MaxPrice
+                || (_useBestPrice
+                    ? wishlist.ItadBestPrice.PriceNew <= PriceLimit
+                    : wishlist.ItadPriceForWishlistStore.PriceNew <= PriceLimit);
 
             bool matchesLibraryOptions;
             if (_onlyInLibrary)
