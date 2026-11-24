@@ -14,7 +14,6 @@ using Playnite.SDK.Plugins;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -43,26 +42,6 @@ namespace IsThereAnyDeal
             HttpFileCacheService.CacheDirectory = pluginCachePath;
             FileSystem.CreateDirectory(pluginCachePath);
             Logger.Info($"[Startup] cache ready path={pluginCachePath}");
-
-            // Manual dll load
-            try
-            {
-                string pluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string PathDLL = Path.Combine(pluginPath, "VirtualizingWrapPanel.dll");
-                if (File.Exists(PathDLL))
-                {
-                    Assembly DLL = Assembly.LoadFile(PathDLL);
-                    Logger.Info($"[Startup] dll loaded name=VirtualizingWrapPanel");
-                }
-                else
-                {
-                    Logger.Info("[Startup] dll skipped name=VirtualizingWrapPanel reason=missing");
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, false, true, PluginName);
-            }
 
             // Add Event for WindowBase for get the "WindowSettings".
             EventManager.RegisterClassHandler(typeof(Window), Window.LoadedEvent, new RoutedEventHandler(WindowBase_LoadedEvent));

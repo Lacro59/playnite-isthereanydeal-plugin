@@ -107,9 +107,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="VirtualizingWrapPanel, Version=1.5.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\VirtualizingWrapPanel.1.5.4\lib\net45\VirtualizingWrapPanel.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="YamlDotNet, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\YamlDotNet.5.4.0\lib\net45\YamlDotNet.dll</HintPath>
@@ -134,6 +131,7 @@
     <Compile Include="Models\Shop.cs" />
     <Compile Include="Models\Wishlist.cs" />
     <Compile Include="Models\WishlistIgnore.cs" />
+    <Compile Include="Models\WishlistRow.cs" />
     <Compile Include="Models\WishlistUiFilters.cs" />
     <Compile Include="playnite-plugincommon\CommonPluginsControls\Controls\TextBlockTrimmed.xaml.cs">
       <DependentUpon>TextBlockTrimmed.xaml</DependentUpon>

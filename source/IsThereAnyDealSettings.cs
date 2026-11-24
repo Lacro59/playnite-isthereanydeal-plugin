@@ -31,6 +31,12 @@ namespace IsThereAnyDeal
         /// <summary>Whether the wishlist filters Expander is expanded (independent of WishlistUiFilters reset). Default false for new installs; existing saved value is kept.</summary>
         public bool WishlistFiltersPanelExpanded { get; set; } = false;
 
+        /// <summary>Compact wishlist cards (smaller capsule, history prices in tooltip). Default false; persisted from the view toolbar.</summary>
+        public bool WishlistCompactMode { get; set; } = false;
+
+        /// <summary>Wishlist two-column layout (paired rows). Default false; persisted from the view toolbar.</summary>
+        public bool WishlistMultiColumn { get; set; } = false;
+
         [DontSerialize]
         public List<Country> Countries => IsThereAnyDealApi.GetCountries();
         public Country CountrySelected { get; set; } = new Country { Alpha2 = "US", Alpha3 = "USA", M49 = "003", Name = "United States of America", Currency = "USD", RCurrency = "USD" };

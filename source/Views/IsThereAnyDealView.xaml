@@ -39,6 +39,21 @@
             </Style.Triggers>
         </Style>
 
+        <!-- Wishlist cards only: tighter padding/margin when IsCompactMode is on (must not affect giveaways). -->
+        <Style x:Key="WishlistItemBorderStyle" TargetType="Border" BasedOn="{StaticResource ItemBorderStyle}">
+            <Style.Triggers>
+                <!-- Two-column cards are standalone ListBoxItems (never IsSelected): focus stands for selection. -->
+                <DataTrigger Binding="{Binding IsKeyboardFocusWithin, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}"/>
+                    <Setter Property="Background" Value="{DynamicResource PopupBackgroundBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DataContext.IsCompactMode, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                    <Setter Property="Padding" Value="4"/>
+                    <Setter Property="Margin" Value="4,3,6,4"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <!-- Store filter row: theme CheckBox stacks content horizontally; DockPanel lets the row stretch so counts align right. -->
         <Style x:Key="ItadStoreFilterCheckBox" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -106,21 +121,6 @@
             <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
             <Setter Property="BorderThickness" Value="{DynamicResource ControlBorderThickness}"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-
-        <!-- Card actions: fixed width; GlyphBrush outline so Secondary stays visible on dark cards. -->
-        <Style x:Key="ItadCardSecondaryButton" TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
-            <Setter Property="Margin" Value="0,0,0,10"/>
-            <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="Width" Value="120"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}"/>
-        </Style>
-        <Style x:Key="ItadCardPrimaryButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
-            <Setter Property="Margin" Value="0,0,0,10"/>
-            <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="Width" Value="120"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
         </Style>
 
         <!-- Make listbox items stretch to full width and remove default highlighting -->
@@ -280,17 +280,17 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Margin="10">
+    <Grid Margin="6">
         <TabControl>
             <TabItem Header="{DynamicResource LOCItadWishlist}" Name="PART_Tb">
-                <Grid Margin="10">
+                <Grid Margin="6">
                     <DockPanel IsEnabled="{Binding IsWishlistContentEnabled}" LastChildFill="True">
                         <!-- Wishlist toolbar: search, stores dropdown, sort, total, refresh menu -->
                         <Border DockPanel.Dock="Top"
                                 BorderThickness="{DynamicResource PopupBorderThickness}"
                                 BorderBrush="{DynamicResource NormalBorderBrush}"
-                                Margin="0,0,0,10">
-                            <DockPanel Margin="10" LastChildFill="False">
+                                Margin="0,0,0,6">
+                            <DockPanel Margin="8" LastChildFill="False">
                                 <playnitecontrols:SearchBox DockPanel.Dock="Left"
                                                            Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                            Width="220"
@@ -419,23 +419,32 @@
                                     </Grid>
                                 </Border>
 
-                                <Button Name="PART_BtRefresh"
-                                        DockPanel.Dock="Right"
-                                        Style="{DynamicResource IconButton}"
-                                        Content="&#xefd1;"
-                                        ToolTip="{DynamicResource LOCItadRefresh}"
-                                        Click="PART_BtRefresh_Click"
-                                        VerticalAlignment="Center"
-                                        Margin="10,0,0,0">
-                                    <Button.ContextMenu>
-                                        <ContextMenu DataContext="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                                            <MenuItem Header="{DynamicResource LOCITADRefreshPrice}"
-                                                      Command="{Binding RefreshPricesCommand}"/>
-                                            <MenuItem Header="{DynamicResource LOCCommonRefreshGameData}"
-                                                      Command="{Binding RefreshStoresCommand}"/>
-                                        </ContextMenu>
-                                    </Button.ContextMenu>
-                                </Button>
+                                <StackPanel DockPanel.Dock="Right"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Margin="10,0,0,0">
+                                    <TextBlock Style="{DynamicResource BaseTextBlockStyle}"
+                                               Text="{Binding LastRefreshLabel}"
+                                               ToolTip="{DynamicResource LOCCommonDateData}"
+                                               VerticalAlignment="Center"
+                                               Opacity="0.75"
+                                               Margin="0,0,8,0"/>
+                                    <Button Name="PART_BtRefresh"
+                                            Style="{DynamicResource IconButton}"
+                                            Content="&#xefd1;"
+                                            ToolTip="{DynamicResource LOCItadRefresh}"
+                                            Click="PART_BtRefresh_Click"
+                                            VerticalAlignment="Center">
+                                        <Button.ContextMenu>
+                                            <ContextMenu DataContext="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                                <MenuItem Header="{DynamicResource LOCITADRefreshPrice}"
+                                                          Command="{Binding RefreshPricesCommand}"/>
+                                                <MenuItem Header="{DynamicResource LOCCommonRefreshGameData}"
+                                                          Command="{Binding RefreshStoresCommand}"/>
+                                            </ContextMenu>
+                                        </Button.ContextMenu>
+                                    </Button>
+                                </StackPanel>
 
                                 <StackPanel DockPanel.Dock="Right"
                                             Orientation="Horizontal"
@@ -467,13 +476,21 @@
                                                VerticalAlignment="Center"
                                                Width="40"
                                                TextAlignment="Right"/>
+                                    <CheckBox Content="{DynamicResource LOCItadCompactMode}"
+                                              IsChecked="{Binding IsCompactMode, Mode=TwoWay}"
+                                              VerticalAlignment="Center"
+                                              Margin="12,0,0,0"/>
+                                    <CheckBox Content="{DynamicResource LOCItadMultiColumn}"
+                                              IsChecked="{Binding IsMultiColumn, Mode=TwoWay}"
+                                              VerticalAlignment="Center"
+                                              Margin="12,0,0,0"/>
                                 </StackPanel>
                             </DockPanel>
                         </Border>
 
                         <Expander DockPanel.Dock="Top"
                                   Style="{DynamicResource ModernExpanderStyle}"
-                                  Margin="0,0,0,10"
+                                  Margin="0,0,0,6"
                                   IsExpanded="{Binding FiltersPanelExpanded, Mode=TwoWay}">
                             <Expander.Header>
                                 <DockPanel LastChildFill="True">
@@ -629,18 +646,6 @@
                             </StackPanel>
                         </Expander>
 
-                        <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource NormalBorderBrush}" Margin="0,10,0,0">
-                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Right">
-                                <TextBlock Text="{DynamicResource LOCCommonDateData}"
-                                           Style="{DynamicResource BaseTextBlockStyle}"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,8,0"/>
-                                <TextBlock Text="{Binding LastRefreshLabel}"
-                                           Style="{DynamicResource BaseTextBlockStyle}"
-                                           VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
-
                         <Grid>
                             <StackPanel Visibility="{Binding IsWishlistEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"
                                         HorizontalAlignment="Center"
@@ -667,26 +672,84 @@
                                         Margin="0,12,0,0"/>
                             </StackPanel>
                             <ListBox Name="lbWishlist"
-                                     ItemsSource="{Binding WishlistItems}"
                                      VerticalAlignment="Stretch"
                                      HorizontalAlignment="Stretch"
                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                     ItemContainerStyle="{StaticResource ListBoxItemContainerStyle}">
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <VirtualizingStackPanel VirtualizingPanel.VirtualizationMode="Recycling"/>
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
+                                     VirtualizingPanel.IsVirtualizing="True"
+                                     VirtualizingPanel.VirtualizationMode="Recycling"
+                                     VirtualizingPanel.ScrollUnit="Pixel">
+                                <!-- Same virtualized panel in both layouts: one card per item, or one WishlistRow (two cards) per item when IsMultiColumn. -->
+                                <ListBox.Style>
+                                    <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                                        <Setter Property="ItemsSource" Value="{Binding WishlistItems}"/>
+                                        <Setter Property="ItemTemplate" Value="{DynamicResource WishlistCardTemplate}"/>
+                                        <Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemContainerStyle}"/>
+                                        <Setter Property="ItemsPanel">
+                                            <Setter.Value>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel/>
+                                                </ItemsPanelTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsMultiColumn}" Value="True">
+                                                <Setter Property="ItemsSource" Value="{Binding WishlistRows}"/>
+                                                <Setter Property="ItemTemplate" Value="{DynamicResource WishlistRowTemplate}"/>
+                                                <Setter Property="ItemContainerStyle" Value="{DynamicResource WishlistRowContainerStyle}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ListBox.Style>
 
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Style="{StaticResource ItemBorderStyle}">
-                                            <DockPanel LastChildFill="True" Margin="0,5">
-                                                <!-- Image -->
-                                                <Grid DockPanel.Dock="Left" Height="100" Width="200">
-                                                    <Image x:Name="HltbImage" Source="{Binding CapsuleImagePath, IsAsync=True}" Stretch="UniformToFill" Height="100" Width="200" RenderOptions.BitmapScalingMode="Linear"/>
-                                                    <TextBlock Text="{Binding StoreNameIcon}" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="24" FontFamily="{DynamicResource CommonFont}" Margin="0,0,5,5">
+                                <ListBox.Resources>
+                                    <DataTemplate x:Key="WishlistCardTemplate">
+                                        <Border Style="{StaticResource WishlistItemBorderStyle}">
+                                            <DockPanel LastChildFill="True">
+                                                <DockPanel.Style>
+                                                    <Style TargetType="DockPanel">
+                                                        <Setter Property="Margin" Value="0,5"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding DataContext.IsCompactMode, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                                                <Setter Property="Margin" Value="0"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </DockPanel.Style>
+                                                <!-- Image: 200×100 normal, 120×60 compact -->
+                                                <Grid DockPanel.Dock="Left">
+                                                    <Grid.Style>
+                                                        <Style TargetType="Grid">
+                                                            <Setter Property="Height" Value="100"/>
+                                                            <Setter Property="Width" Value="200"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding DataContext.IsCompactMode, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                                                    <Setter Property="Height" Value="60"/>
+                                                                    <Setter Property="Width" Value="120"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Grid.Style>
+                                                    <Image x:Name="HltbImage"
+                                                           Source="{Binding CapsuleImagePath, IsAsync=True}"
+                                                           Stretch="UniformToFill"
+                                                           RenderOptions.BitmapScalingMode="Linear"/>
+                                                    <TextBlock Text="{Binding StoreNameIcon}"
+                                                               Foreground="White"
+                                                               HorizontalAlignment="Right"
+                                                               VerticalAlignment="Bottom"
+                                                               FontFamily="{DynamicResource CommonFont}"
+                                                               Margin="0,0,5,5">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="FontSize" Value="24"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding DataContext.IsCompactMode, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                                                        <Setter Property="FontSize" Value="16"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
                                                         <TextBlock.Effect>
                                                             <DropShadowEffect Color="Black" Opacity="1" BlurRadius="5" ShadowDepth="0" RenderingBias="Performance"/>
                                                         </TextBlock.Effect>
@@ -725,21 +788,36 @@
                                                 </Grid>
 
                                                 <!-- Infos & actions -->
-                                                <DockPanel LastChildFill="True" Margin="10,0,0,0">
-                                                    <!-- actions buttons -->
+                                                <DockPanel LastChildFill="True">
+                                                    <DockPanel.Style>
+                                                        <Style TargetType="DockPanel">
+                                                            <Setter Property="Margin" Value="10,0,0,0"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding DataContext.IsCompactMode, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                                                    <Setter Property="Margin" Value="6,0,0,0"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </DockPanel.Style>
+                                                    <!-- Card actions: LinksIcon (website) + InstallIcon (buy best). -->
                                                     <StackPanel DockPanel.Dock="Right"
+                                                                Orientation="Horizontal"
                                                                 Panel.ZIndex="1"
-                                                                Margin="20,0,8,0"
+                                                                Margin="8,0,4,0"
+                                                                VerticalAlignment="Top"
                                                                 ClipToBounds="False">
-                                                        <Button Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        <Button Style="{DynamicResource IconButton}"
+                                                                Content="&#xef71;"
+                                                                ToolTip="{DynamicResource LOCWebsiteLabel}"
+                                                                Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                 CommandParameter="{Binding UrlGame}"
-                                                                Content="{DynamicResource LOCWebsiteLabel}"
-                                                                Style="{StaticResource ItadCardSecondaryButton}"/>
-                                                        <Button Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                CommandParameter="{Binding ItadBestPrice.UrlBuy}"
-                                                                Content="{DynamicResource LOCItadBuy}">
+                                                                Margin="0,0,4,0"/>
+                                                        <Button Content="&#xef08;"
+                                                                ToolTip="{DynamicResource LOCItadBuy}"
+                                                                Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                CommandParameter="{Binding ItadBestPrice.UrlBuy}">
                                                             <Button.Style>
-                                                                <Style TargetType="Button" BasedOn="{StaticResource ItadCardPrimaryButton}">
+                                                                <Style TargetType="Button" BasedOn="{StaticResource IconButton}">
                                                                     <Setter Property="Visibility" Value="Visible"/>
                                                                     <Style.Triggers>
                                                                         <DataTrigger Binding="{Binding ItadPriceForWishlistStore.CurrencySign}" Value="">
@@ -818,26 +896,64 @@
                                                                 </TextBlock>
                                                             </StackPanel>
 
-                                                            <ContentControl Style="{StaticResource ItadBestPriceContentStyle}"
-                                                                            Content="{Binding ItadBestPrice}"
-                                                                            Tag="{DynamicResource LOCItadCurrentBest}"/>
-                                                            <ContentControl Style="{StaticResource ItadSecondaryPriceContentStyle}"
-                                                                            Content="{Binding ItadAllTimeLow}"
-                                                                            Tag="{DynamicResource LOCItadAllTimeLow}"/>
-                                                            <ContentControl Style="{StaticResource ItadSecondaryPriceContentStyle}"
-                                                                            Content="{Binding ItadY1}"
-                                                                            Tag="{DynamicResource LOCItadYearLow}"/>
-                                                            <ContentControl Style="{StaticResource ItadSecondaryPriceContentStyle}"
-                                                                            Content="{Binding ItadM3}"
-                                                                            Tag="{DynamicResource LOCItadMonthLow}"/>
+                                                            <ContentControl Content="{Binding ItadBestPrice}"
+                                                                            Tag="{DynamicResource LOCItadCurrentBest}">
+                                                                <ContentControl.Style>
+                                                                    <Style TargetType="ContentControl" BasedOn="{StaticResource ItadBestPriceContentStyle}">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding DataContext.IsCompactMode, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                                                                <Setter Property="Margin" Value="0"/>
+                                                                                <Setter Property="ToolTip">
+                                                                                    <Setter.Value>
+                                                                                        <ToolTip DataContext="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                                                                            <StackPanel Grid.IsSharedSizeScope="True">
+                                                                                                <ContentControl Style="{StaticResource ItadSecondaryPriceContentStyle}"
+                                                                                                                Content="{Binding ItadAllTimeLow}"
+                                                                                                                Tag="{DynamicResource LOCItadAllTimeLow}"/>
+                                                                                                <ContentControl Style="{StaticResource ItadSecondaryPriceContentStyle}"
+                                                                                                                Content="{Binding ItadY1}"
+                                                                                                                Tag="{DynamicResource LOCItadYearLow}"/>
+                                                                                                <ContentControl Style="{StaticResource ItadSecondaryPriceContentStyle}"
+                                                                                                                Content="{Binding ItadM3}"
+                                                                                                                Tag="{DynamicResource LOCItadMonthLow}"/>
+                                                                                            </StackPanel>
+                                                                                        </ToolTip>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </ContentControl.Style>
+                                                            </ContentControl>
+                                                            <StackPanel>
+                                                                <StackPanel.Style>
+                                                                    <Style TargetType="StackPanel">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding DataContext.IsCompactMode, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </StackPanel.Style>
+                                                                <ContentControl Style="{StaticResource ItadSecondaryPriceContentStyle}"
+                                                                                Content="{Binding ItadAllTimeLow}"
+                                                                                Tag="{DynamicResource LOCItadAllTimeLow}"/>
+                                                                <ContentControl Style="{StaticResource ItadSecondaryPriceContentStyle}"
+                                                                                Content="{Binding ItadY1}"
+                                                                                Tag="{DynamicResource LOCItadYearLow}"/>
+                                                                <ContentControl Style="{StaticResource ItadSecondaryPriceContentStyle}"
+                                                                                Content="{Binding ItadM3}"
+                                                                                Tag="{DynamicResource LOCItadMonthLow}"/>
+                                                            </StackPanel>
                                                         </StackPanel>
 
-                                                        <!-- Store price -->
-                                                        <ListBox Grid.Column="3" ItemsSource="{Binding ListItadPriceForWishlistStore}"
-                                                                 BorderThickness="0" Padding="0" Margin="0"
-                                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                                 ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                                            <ListBox.ItemTemplate>
+                                                        <!-- Store prices: ItemsControl (no nested ScrollViewer) so the wishlist ListBox keeps the mouse wheel. -->
+                                                        <ItemsControl Grid.Column="3"
+                                                                      ItemsSource="{Binding ListItadPriceForWishlistStore}"
+                                                                      Focusable="False"
+                                                                      IsTabStop="False"
+                                                                      HorizontalContentAlignment="Stretch">
+                                                            <ItemsControl.ItemTemplate>
                                                                 <DataTemplate>
                                                                     <DockPanel Margin="0,2" LastChildFill="True">
                                                                         <TextBlock DockPanel.Dock="Left"
@@ -895,14 +1011,51 @@
                                                                                    TextTrimming="CharacterEllipsis"/>
                                                                     </DockPanel>
                                                                 </DataTemplate>
-                                                            </ListBox.ItemTemplate>
-                                                        </ListBox>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
                                                     </Grid>
                                                 </DockPanel>
                                             </DockPanel>
                                         </Border>
                                     </DataTemplate>
-                                </ListBox.ItemTemplate>
+
+                                    <!-- Row container: layout only; hover, focus and selection belong to each card's ListBoxItem. -->
+                                    <Style x:Key="WishlistRowContainerStyle" TargetType="ListBoxItem">
+                                        <Setter Property="Focusable" Value="False"/>
+                                        <Setter Property="Padding" Value="0"/>
+                                        <Setter Property="Margin" Value="0"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListBoxItem">
+                                                    <ContentPresenter/>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+
+                                    <!-- Card hosted in a row: a standalone ListBoxItem so card styles keep resolving their ListBoxItem ancestor. -->
+                                    <Style x:Key="WishlistRowCardStyle" TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemContainerStyle}">
+                                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                        <Setter Property="ContentTemplate" Value="{DynamicResource WishlistCardTemplate}"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="Content" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+
+                                    <DataTemplate x:Key="WishlistRowTemplate">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <ListBoxItem Grid.Column="0" Content="{Binding Left}" Style="{StaticResource WishlistRowCardStyle}"/>
+                                            <ListBoxItem Grid.Column="1" Content="{Binding Right}" Style="{StaticResource WishlistRowCardStyle}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.Resources>
                             </ListBox>
                         </Grid>
                     </DockPanel>

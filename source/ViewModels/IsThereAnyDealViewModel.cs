@@ -60,9 +60,12 @@ namespace IsThereAnyDeal.ViewModels
         private string _orderDirectionGlyph = "\uEA99";
         private string _orderDirectionToolTip;
         private bool _filtersPanelExpanded = false;
+        private bool _isCompactMode;
+        private bool _isMultiColumn;
         private ObservableCollection<string> _filtersSummary = new ObservableCollection<string>();
 
         private ObservableCollection<Wishlist> _wishlistItems = new ObservableCollection<Wishlist>();
+        private List<WishlistRow> _wishlistRows = new List<WishlistRow>();
         private bool _isWishlistLoading;
         private bool _isWishlistInteractionBlocked;
         private bool _isWishlistEmpty;
@@ -87,6 +90,8 @@ namespace IsThereAnyDeal.ViewModels
             MinPrice = _settings.MinPrice;
             MaxPrice = _settings.MaxPrice;
             _filtersPanelExpanded = _settings.WishlistFiltersPanelExpanded;
+            _isCompactMode = _settings.WishlistCompactMode;
+            _isMultiColumn = _settings.WishlistMultiColumn;
             _notificationAlertsOverride = filterAlerts;
             _alertsOnly = filterAlerts;
             _orderDirectionToolTip = ResourceProvider.GetString("LOCMenuSortAscending");
@@ -241,6 +246,13 @@ namespace IsThereAnyDeal.ViewModels
         {
             get => _wishlistItems;
             private set => SetValue(ref _wishlistItems, value);
+        }
+
+        /// <summary>Filtered and sorted wishlist paired two by two; filled only in multi-column mode.</summary>
+        public List<WishlistRow> WishlistRows
+        {
+            get => _wishlistRows;
+            private set => SetValue(ref _wishlistRows, value ?? new List<WishlistRow>());
         }
 
         /// <summary>True while a wishlist load overlay is shown.</summary>
@@ -584,6 +596,60 @@ namespace IsThereAnyDeal.ViewModels
                 catch (Exception ex)
                 {
                     Logger.Error(ex, "[ITAD][filters] panel expand persist failed");
+                }
+            }
+        }
+
+        /// <summary>Compact wishlist card layout (persisted; default off).</summary>
+        public bool IsCompactMode
+        {
+            get => _isCompactMode;
+            set
+            {
+                if (_isCompactMode == value)
+                {
+                    return;
+                }
+
+                SetValue(ref _isCompactMode, value);
+
+                try
+                {
+                    _settings.WishlistCompactMode = value;
+                    _plugin.SavePluginSettings(_settings);
+                    Logger.Debug($"[ITAD][ui] compactMode={value}");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, "[ITAD][ui] compact mode persist failed");
+                }
+            }
+        }
+
+        /// <summary>Two-column wishlist layout (persisted; default off).</summary>
+        public bool IsMultiColumn
+        {
+            get => _isMultiColumn;
+            set
+            {
+                if (_isMultiColumn == value)
+                {
+                    return;
+                }
+
+                // Rows must exist before the view switches its ItemsSource on IsMultiColumn.
+                RebuildWishlistRows(value);
+                SetValue(ref _isMultiColumn, value);
+
+                try
+                {
+                    _settings.WishlistMultiColumn = value;
+                    _plugin.SavePluginSettings(_settings);
+                    Logger.Debug($"[ITAD][ui] multiColumn={value}");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, "[ITAD][ui] multi column persist failed");
                 }
             }
         }
@@ -980,7 +1046,46 @@ namespace IsThereAnyDeal.ViewModels
                 }
             }
 
+            RebuildWishlistRows(_isMultiColumn);
             UpdateWishlistEmptyState();
+        }
+
+        /// <summary>
+        /// Pairs the filtered and sorted wishlist into rows of two cards for the multi-column layout.
+        /// Clears the rows when the layout is single-column.
+        /// </summary>
+        /// <param name="multiColumn">Target layout (may differ from the current one during a toggle).</param>
+        private void RebuildWishlistRows(bool multiColumn)
+        {
+            if (!multiColumn || _wishlistView == null)
+            {
+                WishlistRows = new List<WishlistRow>();
+                return;
+            }
+
+            List<WishlistRow> rows = new List<WishlistRow>();
+            WishlistRow current = null;
+            foreach (object entry in _wishlistView)
+            {
+                if (!(entry is Wishlist item))
+                {
+                    continue;
+                }
+
+                if (current == null)
+                {
+                    current = new WishlistRow(item);
+                    rows.Add(current);
+                }
+                else
+                {
+                    current.Right = item;
+                    current = null;
+                }
+            }
+
+            WishlistRows = rows;
+            Logger.Debug($"[ITAD][ui] wishlistRows rebuilt rows={rows.Count}");
         }
 
         /// <summary>Applies sort descriptions and filter to the attached wishlist view.</summary>
@@ -1025,6 +1130,7 @@ namespace IsThereAnyDeal.ViewModels
                 }
             }
 
+            RebuildWishlistRows(_isMultiColumn);
             UpdateWishlistEmptyState();
         }
 

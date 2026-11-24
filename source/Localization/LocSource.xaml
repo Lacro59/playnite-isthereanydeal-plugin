@@ -48,6 +48,8 @@
     <sys:String x:Key="LOCITADRefreshPrice">Refresh price</sys:String>
     <sys:String x:Key="LOCItadRefresh">Refresh</sys:String>
     <sys:String x:Key="LOCItadFilters">Filters</sys:String>
+    <sys:String x:Key="LOCItadCompactMode">Compact cards</sys:String>
+    <sys:String x:Key="LOCItadMultiColumn">Multiple columns</sys:String>
     <sys:String x:Key="LOCItadActiveFilterDiscount">Discount ≥ {0}%</sys:String>
     <sys:String x:Key="LOCItadActiveFilterPrice">Price ≤ {0}{1}</sys:String>
     <sys:String x:Key="LOCItadActiveFilterPriceNone">No price limit</sys:String>
