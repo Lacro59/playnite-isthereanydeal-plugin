@@ -1,7 +1,9 @@
+using CommonPluginsShared;
 using CommonPluginsShared.UI;
 using IsThereAnyDeal.Models;
 using IsThereAnyDeal.ViewModels;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace IsThereAnyDeal.Views
@@ -29,7 +31,29 @@ namespace IsThereAnyDeal.Views
 
             DataContext = ViewModel;
 
-            Loaded += (s, e) => ViewModel.Initialize(id);
+            // Sidebar: leave root background unset (theme shows through), like SSV manager.
+            // Dialog: apply WindowBackgourndBrush when this view is the window content, like SSV gallery.
+            Loaded += (s, e) =>
+            {
+                ApplyHostBackground();
+                ViewModel.Initialize(id);
+            };
+        }
+
+        /// <summary>
+        /// Applies the Playnite window background brush only when hosted as a dialog content root.
+        /// </summary>
+        private void ApplyHostBackground()
+        {
+            Window host = Window.GetWindow(this);
+            if (host == null || !ReferenceEquals(host.Content, this))
+            {
+                Common.LogDebug("[IsThereAnyDealView][background] host=sidebar-or-nested");
+                return;
+            }
+
+            SetResourceReference(BackgroundProperty, "WindowBackgourndBrush");
+            Common.LogDebug("[IsThereAnyDealView][background] host=dialog brush=WindowBackgourndBrush");
         }
 
         /// <summary>

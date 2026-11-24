@@ -10,8 +10,7 @@
              xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls"
              xmlns:controls="clr-namespace:CommonPluginsControls.Controls"
              mc:Ignorable="d" d:DesignHeight="740" d:DesignWidth="1280"
-             d:DataContext="{d:DesignInstance Type=vm:IsThereAnyDealViewModel}"
-             Background="{DynamicResource WindowBackgourndBrush}">
+             d:DataContext="{d:DesignInstance Type=vm:IsThereAnyDealViewModel}">
 
     <UserControl.Resources>
         <converters:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter"/>
