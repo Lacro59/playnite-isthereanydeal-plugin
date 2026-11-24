@@ -48,6 +48,11 @@
     <sys:String x:Key="LOCITADRefreshPrice">価格を更新</sys:String>
     <sys:String x:Key="LOCItadRefresh">更新</sys:String>
     <sys:String x:Key="LOCItadFilters">フィルター</sys:String>
+    <sys:String x:Key="LOCItadCompactMode">Compact cards</sys:String>
+    <sys:String x:Key="LOCItadMultiColumn">Multiple columns</sys:String>
+    <sys:String x:Key="LOCItadActiveFilterDiscount">Discount ≥ {0}%</sys:String>
+    <sys:String x:Key="LOCItadActiveFilterPrice">Price ≤ {0}{1}</sys:String>
+    <sys:String x:Key="LOCItadActiveFilterPriceNone">No price limit</sys:String>
     <sys:String x:Key="LOCItadGiveawaysEmpty">利用可能な無料配布はありません。</sys:String>
     <sys:String x:Key="LOCItadWishlistNoResults">現在のフィルターに一致するゲームはありません。</sys:String>
     <sys:String x:Key="LOCItadWishlistEmpty">ウィッシュリストにゲームがありません。</sys:String>
