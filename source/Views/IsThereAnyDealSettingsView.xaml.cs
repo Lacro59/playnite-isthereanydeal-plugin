@@ -162,7 +162,7 @@ namespace IsThereAnyDeal.Views
                 PART_PriceOnStartIncludedHint.Visibility = wishlistOnStart ? Visibility.Visible : Visibility.Collapsed;
             }
 
-            Logger.Debug($"[Settings][update-on-start] sync wishlistOnStart={wishlistOnStart} priceOnStartEnabled={PART_UpdatePriceOnStart.IsEnabled} priceOnStartChecked={PART_UpdatePriceOnStart.IsChecked}");
+            Common.LogDebug($"[Settings][update-on-start] sync wishlistOnStart={wishlistOnStart} priceOnStartEnabled={PART_UpdatePriceOnStart.IsEnabled} priceOnStartChecked={PART_UpdatePriceOnStart.IsChecked}");
         }
 
         private void AttachWishlistEnableListeners()

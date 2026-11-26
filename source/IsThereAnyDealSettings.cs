@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using IsThereAnyDeal.Services;
 using IsThereAnyDeal.Models.Api;
+using CommonPluginsShared;
 using CommonPluginsShared.Extensions;
 using CommonPluginsShared.Interfaces;
 using IsThereAnyDeal.Models.ApiWebsite;
@@ -142,19 +143,19 @@ namespace IsThereAnyDeal
             if (settings.SteamStoreSettings == null)
             {
                 settings.SteamStoreSettings = new StoreSettings { UseAuth = true, ForceAuth = false };
-                Logger.Debug("[Settings][stores] SteamStoreSettings defaulted after load");
+                Common.LogDebug("[Settings][stores] SteamStoreSettings defaulted after load");
             }
 
             if (settings.EpicStoreSettings == null)
             {
                 settings.EpicStoreSettings = new StoreSettings { UseAuth = true, ForceAuth = true };
-                Logger.Debug("[Settings][stores] EpicStoreSettings defaulted after load");
+                Common.LogDebug("[Settings][stores] EpicStoreSettings defaulted after load");
             }
 
             if (settings.GogStoreSettings == null)
             {
                 settings.GogStoreSettings = new StoreSettings { UseAuth = true, ForceAuth = true };
-                Logger.Debug("[Settings][stores] GogStoreSettings defaulted after load");
+                Common.LogDebug("[Settings][stores] GogStoreSettings defaulted after load");
             }
         }
 
@@ -171,7 +172,7 @@ namespace IsThereAnyDeal
             if (settings.WishlistUiFilters == null)
             {
                 settings.WishlistUiFilters = WishlistUiFilters.CreateDefaults();
-                Logger.Debug("[Settings][filters] WishlistUiFilters defaulted after load");
+                Common.LogDebug("[Settings][filters] WishlistUiFilters defaulted after load");
                 return;
             }
 
@@ -269,7 +270,7 @@ namespace IsThereAnyDeal
             }
             else
             {
-                Logger.Debug("[Settings][stores] SteamApi SaveSettings skipped reason=not_ready");
+                Common.LogDebug("[Settings][stores] SteamApi SaveSettings skipped reason=not_ready");
             }
 
             if (IsThereAnyDeal.EpicApi != null)
@@ -278,7 +279,7 @@ namespace IsThereAnyDeal
             }
             else
             {
-                Logger.Debug("[Settings][stores] EpicApi SaveSettings skipped reason=not_ready");
+                Common.LogDebug("[Settings][stores] EpicApi SaveSettings skipped reason=not_ready");
             }
 
             if (IsThereAnyDeal.GogApi != null)
@@ -287,7 +288,7 @@ namespace IsThereAnyDeal
             }
             else
             {
-                Logger.Debug("[Settings][stores] GogApi SaveSettings skipped reason=not_ready");
+                Common.LogDebug("[Settings][stores] GogApi SaveSettings skipped reason=not_ready");
             }
 
             PersistSettings(Plugin, Settings);

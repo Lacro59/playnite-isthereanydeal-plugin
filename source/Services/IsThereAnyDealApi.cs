@@ -471,7 +471,7 @@ namespace IsThereAnyDeal.Services
 
 			if (missing.Count == 0)
 			{
-				Logger.Debug("[ITAD][lookup] nothingToResolve");
+				Common.LogDebug("[ITAD][lookup] nothingToResolve");
 				return;
 			}
 
@@ -514,7 +514,7 @@ namespace IsThereAnyDeal.Services
 			}
 
 			var unresolvedAfterBatch = wishlists.Count(x => string.IsNullOrEmpty(x?.Game?.Id));
-			Logger.Debug($"[ITAD][lookup] afterBatch unresolved={unresolvedAfterBatch} steamHits={steamMap.Count} titleHits={titleMap.Count}");
+			Common.LogDebug($"[ITAD][lookup] afterBatch unresolved={unresolvedAfterBatch} steamHits={steamMap.Count} titleHits={titleMap.Count}");
 
 			var stillMissing = wishlists
 				.Where(x => string.IsNullOrEmpty(x?.Game?.Id))
@@ -1018,7 +1018,7 @@ namespace IsThereAnyDeal.Services
             // REMARK: Compare web results with cache to preserve the "HasSeen" status of older giveaways.
             if (itadGiveaways.Count != 0)
             {
-                Logger.Debug($"[ITAD][giveaways] compareCache web={itadGiveaways.Count} cache={itadGiveawaysCache.Count}");
+                Common.LogDebug($"[ITAD][giveaways] compareCache web={itadGiveaways.Count} cache={itadGiveawaysCache.Count}");
                 foreach (ItadGiveaway itadGiveaway in itadGiveawaysCache)
                 {
                     if (itadGiveaways.Find(x => x.TitleAll == itadGiveaway.TitleAll) != null)
@@ -1032,7 +1032,7 @@ namespace IsThereAnyDeal.Services
             {
                 if (cacheOnly)
                 {
-                    Logger.Debug($"[ITAD][giveaways] cacheOnly count={itadGiveawaysCache.Count}");
+                    Common.LogDebug($"[ITAD][giveaways] cacheOnly count={itadGiveawaysCache.Count}");
                 }
                 else
                 {
@@ -1074,7 +1074,7 @@ namespace IsThereAnyDeal.Services
                             .Where(x => x.Game != null && x.GetNotification(settings.NotificationCriterias))
                             .ToList();
 
-                        Logger.Debug($"[Notif][aggregate] matching={pendingAlerts.Count}");
+                        Common.LogDebug($"[Notif][aggregate] matching={pendingAlerts.Count}");
 
                         if (pendingAlerts.Count > 0)
                         {
@@ -1125,7 +1125,7 @@ namespace IsThereAnyDeal.Services
                     {
                         List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways();
                         int unseenGiveaways = itadGiveaways.Count(x => !x.HasSeen);
-                        Logger.Debug($"[Notif][giveaways] total={itadGiveaways.Count} unseen={unseenGiveaways}");
+                        Common.LogDebug($"[Notif][giveaways] total={itadGiveaways.Count} unseen={unseenGiveaways}");
                         itadGiveaways.Where(x => !x.HasSeen).ForEach(x =>
                         {
                             API.Instance.Notifications.Add(new NotificationMessage(

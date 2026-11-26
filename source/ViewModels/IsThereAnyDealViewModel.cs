@@ -103,7 +103,7 @@ namespace IsThereAnyDeal.ViewModels
 
             if (filterAlerts)
             {
-                Logger.Debug("[ITAD][ui] open with filterAlerts=true override=transient");
+                Common.LogDebug("[ITAD][ui] open with filterAlerts=true override=transient");
             }
 
             _filterPersistTimer = new DispatcherTimer
@@ -486,7 +486,7 @@ namespace IsThereAnyDeal.ViewModels
                 SetValue(ref _includeWithoutData, value);
                 if (!_suppressFilterPersist)
                 {
-                    Logger.Debug($"[ITAD][ui] includeWithoutData active={value}");
+                    Common.LogDebug($"[ITAD][ui] includeWithoutData active={value}");
                     RefreshWishlistFilter();
                 }
             }
@@ -507,12 +507,12 @@ namespace IsThereAnyDeal.ViewModels
                 if (_notificationAlertsOverride && !value)
                 {
                     _notificationAlertsOverride = false;
-                    Logger.Debug("[ITAD][filters] notification alerts override cleared by user");
+                    Common.LogDebug("[ITAD][filters] notification alerts override cleared by user");
                 }
 
                 if (!_suppressFilterPersist)
                 {
-                    Logger.Debug($"[ITAD][ui] alertsFilter active={value}");
+                    Common.LogDebug($"[ITAD][ui] alertsFilter active={value}");
                     RefreshWishlistFilter();
                 }
             }
@@ -591,7 +591,7 @@ namespace IsThereAnyDeal.ViewModels
                 {
                     _settings.WishlistFiltersPanelExpanded = value;
                     _plugin.SavePluginSettings(_settings);
-                    Logger.Debug($"[ITAD][filters] panelExpanded={value}");
+                    Common.LogDebug($"[ITAD][filters] panelExpanded={value}");
                 }
                 catch (Exception ex)
                 {
@@ -617,7 +617,7 @@ namespace IsThereAnyDeal.ViewModels
                 {
                     _settings.WishlistCompactMode = value;
                     _plugin.SavePluginSettings(_settings);
-                    Logger.Debug($"[ITAD][ui] compactMode={value}");
+                    Common.LogDebug($"[ITAD][ui] compactMode={value}");
                 }
                 catch (Exception ex)
                 {
@@ -645,7 +645,7 @@ namespace IsThereAnyDeal.ViewModels
                 {
                     _settings.WishlistMultiColumn = value;
                     _plugin.SavePluginSettings(_settings);
-                    Logger.Debug($"[ITAD][ui] multiColumn={value}");
+                    Common.LogDebug($"[ITAD][ui] multiColumn={value}");
                 }
                 catch (Exception ex)
                 {
@@ -694,7 +694,7 @@ namespace IsThereAnyDeal.ViewModels
 
                 if (itadGiveaways == null || itadGiveaways.Count == 0)
                 {
-                    Logger.Debug("[ITAD][ui][giveaways] loaded count=0");
+                    Common.LogDebug("[ITAD][ui][giveaways] loaded count=0");
                     GiveawaysItems = new List<ItadGiveaway>();
                     UpdateGiveawaysEmptyState();
                     return;
@@ -888,7 +888,7 @@ namespace IsThereAnyDeal.ViewModels
 
             items.Sort((x, y) => string.Compare(x.StoreName, y.StoreName, true));
             FilterStoreItems = items;
-            Logger.Debug($"[ITAD][ui] storeFilter rebuilt items={items.Count}");
+            Common.LogDebug($"[ITAD][ui] storeFilter rebuilt items={items.Count}");
             ApplyWishlistUiFilters(_settings.WishlistUiFilters, applyStores: true);
         }
 
@@ -984,7 +984,7 @@ namespace IsThereAnyDeal.ViewModels
                 }
                 else
                 {
-                    Logger.Debug($"[ITAD][filters] stores reapplied count={storeCount}");
+                    Common.LogDebug($"[ITAD][filters] stores reapplied count={storeCount}");
                 }
             }
             catch (Exception ex)
@@ -1019,7 +1019,7 @@ namespace IsThereAnyDeal.ViewModels
                 OnPropertyChanged(nameof(AlertsOnly));
                 if (!alreadyActive)
                 {
-                    Logger.Debug("[ITAD][filters] notification alerts override applied persist=false");
+                    Common.LogDebug("[ITAD][filters] notification alerts override applied persist=false");
                 }
             }
             finally
@@ -1085,7 +1085,7 @@ namespace IsThereAnyDeal.ViewModels
             }
 
             WishlistRows = rows;
-            Logger.Debug($"[ITAD][ui] wishlistRows rebuilt rows={rows.Count}");
+            Common.LogDebug($"[ITAD][ui] wishlistRows rebuilt rows={rows.Count}");
         }
 
         /// <summary>Applies sort descriptions and filter to the attached wishlist view.</summary>
@@ -1195,13 +1195,13 @@ namespace IsThereAnyDeal.ViewModels
             {
                 IsWishlistEmpty = true;
                 IsWishlistNoResults = false;
-                Logger.Debug("[ITAD][ui] wishlistEmptyState mode=empty source=0");
+                Common.LogDebug("[ITAD][ui] wishlistEmptyState mode=empty source=0");
             }
             else if (filtered == 0)
             {
                 IsWishlistEmpty = false;
                 IsWishlistNoResults = true;
-                Logger.Debug($"[ITAD][ui] wishlistEmptyState mode=noResults source={sourceCount} filtered=0");
+                Common.LogDebug($"[ITAD][ui] wishlistEmptyState mode=noResults source={sourceCount} filtered=0");
             }
             else
             {
@@ -1218,7 +1218,7 @@ namespace IsThereAnyDeal.ViewModels
                 return;
             }
 
-            Logger.Debug("[ITAD][ui] openUrl");
+            Common.LogDebug("[ITAD][ui] openUrl");
             _ = Process.Start(link);
         }
 
@@ -1359,7 +1359,7 @@ namespace IsThereAnyDeal.ViewModels
             {
                 Application.Current.Dispatcher?.Invoke(new Action(() =>
                 {
-                    Logger.Debug($"[ITAD][ui] removeWishlist done deleted={isDeleted} shop={storePriceSelected.ShopName}");
+                    Common.LogDebug($"[ITAD][ui] removeWishlist done deleted={isDeleted} shop={storePriceSelected.ShopName}");
                     if (isDeleted)
                     {
                         _ = RefreshWishlistAsync(string.Empty);
@@ -1489,7 +1489,7 @@ namespace IsThereAnyDeal.ViewModels
                 _suppressFilterPersist = false;
             }
 
-            Logger.Debug($"[ITAD][ui] storeFilter selectAll={isChecked} count={_searchStores.Count}");
+            Common.LogDebug($"[ITAD][ui] storeFilter selectAll={isChecked} count={_searchStores.Count}");
             OnPersistedFilterChanged();
         }
 
@@ -1503,7 +1503,7 @@ namespace IsThereAnyDeal.ViewModels
 
             if (raiseFilter && !_suppressFilterPersist)
             {
-                Logger.Debug(
+                Common.LogDebug(
                     $"[ITAD][ui] libraryMode only={_onlyInLibrary} include={_includeInLibrary}");
                 OnPersistedFilterChanged();
             }
@@ -1657,7 +1657,7 @@ namespace IsThereAnyDeal.ViewModels
             {
                 _settings.WishlistUiFilters = CaptureWishlistUiFilters();
                 _plugin.SavePluginSettings(_settings);
-                Logger.Debug(
+                Common.LogDebug(
                     $"[ITAD][filters] persisted include={_settings.WishlistUiFilters.IncludeInLibrary} only={_settings.WishlistUiFilters.OnlyInLibrary} stores={_settings.WishlistUiFilters.SelectedStores?.Count ?? 0}");
             }
             catch (Exception ex)
