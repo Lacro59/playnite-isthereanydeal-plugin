@@ -1,4 +1,4 @@
-﻿using CommonPluginsShared;
+using CommonPluginsShared;
 using IsThereAnyDeal.Views;
 using Playnite.SDK;
 using Playnite.SDK.Plugins;
@@ -29,18 +29,21 @@ namespace IsThereAnyDeal.Services
                 WindowOptions windowOptions = new WindowOptions
                 {
                     ShowMinimizeButton = false,
-                    ShowMaximizeButton = false,
+                    ShowMaximizeButton = true,
                     ShowCloseButton = true,
-                    CanBeResizable = false,
+                    CanBeResizable = true,
                     Width = 1180,
-                    Height = 720
+                    Height = 720,
+                    MinWidth = 900,
+                    MinHeight = 500,
+                    WindowPersistenceKey = "IsThereAnyDeal.MainView"
                 };
 
                 IsThereAnyDealView viewExtension = new IsThereAnyDealView(plugin);
                 Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
                 _ = windowExtension.ShowDialog();
             };
-            Visible = plugin.PluginSettings.Settings.EnableIntegrationButtonHeader;
+            Visible = plugin.PluginSettingsViewModel.Settings.EnableIntegrationButtonHeader;
         }
     }
 }

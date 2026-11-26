@@ -1,24 +1,24 @@
-﻿<UserControl x:Class="IsThereAnyDeal.Views.IsThereAnyDealSettingsView" 
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+<UserControl x:Class="IsThereAnyDeal.Views.IsThereAnyDealSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:AttachedProperties="clr-namespace:CommonPluginsShared.Controls"
              xmlns:playnitecontrols="clr-namespace:CommonPluginsControls.PlayniteControls"
-             xmlns:converters="clr-namespace:CommonPluginsShared.Converters" 
-             xmlns:isthereanydeal="clr-namespace:IsThereAnyDeal" 
+             xmlns:converters="clr-namespace:CommonPluginsShared.Converters"
+             xmlns:isthereanydeal="clr-namespace:IsThereAnyDeal"
+             xmlns:stores="clr-namespace:CommonPluginsControls.Stores"
              xmlns:Steam="clr-namespace:CommonPluginsControls.Stores.Steam"
              xmlns:Epic="clr-namespace:CommonPluginsControls.Stores.Epic"
              xmlns:Gog="clr-namespace:CommonPluginsControls.Stores.Gog"
              xmlns:controls="clr-namespace:CommonPluginsControls.Controls"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=isthereanydeal:IsThereAnyDealSettingsViewModel}">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:StringToBooleanConverter x:Key="StringToBooleanConverter" />
             <converters:IndexConverter x:Key="IndexConverter"/>
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -61,9 +61,17 @@
                                         <Label Content="{DynamicResource LOCItadWishlist}" VerticalAlignment="Top" DockPanel.Dock="Left" Width="100" />
 
                                         <StackPanel>
-                                            <CheckBox IsChecked="{Binding Settings.UpdateWishlist.OnStart}">
+                                            <CheckBox Name="PART_UpdateWishlistOnStart"
+                                                      IsChecked="{Binding Settings.UpdateWishlist.OnStart}"
+                                                      Checked="PART_UpdateWishlistOnStart_Changed"
+                                                      Unchecked="PART_UpdateWishlistOnStart_Changed">
                                                 <Label Content="{DynamicResource LOCCommonUpdateOnStart}" />
                                             </CheckBox>
+                                            <TextBlock Margin="24,4,0,0"
+                                                       Style="{DynamicResource BaseTextBlockStyle}"
+                                                       Text="{DynamicResource LOCItadUpdateWishlistOnStartIncludesPrices}"
+                                                       TextWrapping="Wrap"
+                                                       Opacity="0.75" />
 
                                             <CheckBox IsChecked="{Binding Settings.UpdateWishlist.EveryHours}" Margin="0,10,0,0">
                                                 <StackPanel Orientation="Horizontal">
@@ -79,9 +87,17 @@
                                         <Label Content="{DynamicResource LOCItadPrice}" VerticalAlignment="Top" DockPanel.Dock="Left" Width="100" />
 
                                         <StackPanel>
-                                            <CheckBox IsChecked="{Binding Settings.UpdatePrice.OnStart}">
+                                            <CheckBox Name="PART_UpdatePriceOnStart"
+                                                      IsChecked="{Binding Settings.UpdatePrice.OnStart}">
                                                 <Label Content="{DynamicResource LOCCommonUpdateOnStart}" />
                                             </CheckBox>
+                                            <TextBlock Name="PART_PriceOnStartIncludedHint"
+                                                       Margin="24,4,0,0"
+                                                       Style="{DynamicResource BaseTextBlockStyle}"
+                                                       Text="{DynamicResource LOCItadUpdatePriceIncludedWithWishlist}"
+                                                       TextWrapping="Wrap"
+                                                       Opacity="0.75"
+                                                       Visibility="Collapsed" />
 
                                             <CheckBox IsChecked="{Binding Settings.UpdatePrice.EveryHours}" Margin="0,10,0,0">
                                                 <StackPanel Orientation="Horizontal">
@@ -114,7 +130,7 @@
                                     <Label Grid.Column="0" Grid.Row="0" Content="{DynamicResource LOCItadCountry}" />
                                     <DockPanel Grid.Column="2" Grid.Row="0">
                                         <ComboBox Name="PART_SelectCountry"
-                                                  IsReadOnly="True" 
+                                                  IsReadOnly="True"
                                                   ItemsSource="{Binding Settings.Countries}"
                                                   SelectedItem="{Binding Settings.CountrySelected}"
                                                   SelectionChanged="PART_SelectCountry_SelectionChanged">
@@ -131,9 +147,9 @@
                                             </ComboBox.ItemTemplate>
                                         </ComboBox>
                                     </DockPanel>
-                                
+
                                     <Label Grid.Column="0" Grid.Row="2" Content="{DynamicResource LOCItadStores}" IsEnabled="{Binding ElementName=PART_SelectCountry, Path=Text, Converter={StaticResource StringToBooleanConverter}}" />
-                                    <controls:TextBlockTrimmed Grid.Column="2" Grid.Row="2" Margin="5,0,30,0" x:Name="StoresText" 
+                                    <controls:TextBlockTrimmed Grid.Column="2" Grid.Row="2" Margin="5,0,30,0" x:Name="StoresText"
                                                                VerticalAlignment="Center" />
                                     <ComboBox Name="ListStores" Grid.Column="2" Grid.Row="2" IsReadOnly="True"
                                               IsEnabled="{Binding ElementName=PART_SelectCountry, Path=Text, Converter={StaticResource StringToBooleanConverter}}">
@@ -183,7 +199,7 @@
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto" />
                                         </Grid.RowDefinitions>
-                                        
+
                                         <Label Grid.Column="0" Grid.Row="0" Content="{DynamicResource LOCItadMaximum}" />
                                         <playnitecontrols:NumericBox Grid.Column="2" Grid.Row="0" x:Name="PART_MaxPrice"
                                                                  MinLongValue="30" MaxLongValue="10000"
@@ -222,14 +238,14 @@
                         <CheckBox Name="PART_CbPriceCut" Grid.Column="0" VerticalAlignment="Center" />
                         <Label Grid.Column="2" Content="{DynamicResource LOCItadLimitNotification}"
                                IsEnabled="{Binding ElementName=PART_CbPriceCut, Path=IsChecked}" />
-                        <Slider Grid.Column="4" Minimum="0" Maximum="100" ValueChanged="Slider_ValueChanged" 
+                        <Slider Grid.Column="4" Minimum="0" Maximum="100" ValueChanged="Slider_ValueChanged"
                                 Value="50" Name="PART_sPriceCut"
                                 IsEnabled="{Binding ElementName=PART_CbPriceCut, Path=IsChecked}"
                                 IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" />
                         <Label Grid.Column="6" Name="lLimitNotification" Content="50%" HorizontalAlignment="Center"
                                IsEnabled="{Binding ElementName=PART_CbPriceCut, Path=IsChecked}" />
                     </Grid>
-                    
+
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />
@@ -315,15 +331,15 @@
                     <CheckBox Name="chk_Humble" Grid.Column="0" Grid.Row="3" IsChecked="{Binding Settings.EnableHumble}" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableHumble}" />
                     </CheckBox>
-                    <Label Grid.Column="2" Grid.Row="3" Content="{DynamicResource LOCItadHumbleKey}" IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}" 
+                    <Label Grid.Column="2" Grid.Row="3" Content="{DynamicResource LOCItadHumbleKey}" IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}"
                            VerticalAlignment="Center" HorizontalAlignment="Right" />
                     <TextBox Grid.Column="4" Grid.Row="3" Text="{Binding Settings.HumbleKey}"
-                             IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}" 
+                             IsEnabled="{Binding ElementName=chk_Humble, Path=IsChecked}"
                              Width="150" VerticalAlignment="Center" HorizontalAlignment="Left" />
                     <Button Content="&#xefca;" FontFamily="{DynamicResource FontIcoFont}"
                             Click="Hyperlink_Click" HorizontalAlignment="Right"
                             Grid.ColumnSpan="10" Grid.Row="3" VerticalAlignment="Center"
-                            Tag="https://github.com/Lacro59/playnite-isthereanydeal-plugin/wiki/Humble-wishlist" />                    
+                            Tag="https://github.com/Lacro59/playnite-isthereanydeal-plugin/wiki/Humble-wishlist" />
 
                     <CheckBox Name="chk_Xbox" Grid.Column="0" Grid.Row="4" IsChecked="{Binding Settings.EnableXbox}" VerticalAlignment="Center">
                         <Label Content="{DynamicResource LOCItadEnableXbox}" />
@@ -332,7 +348,7 @@
                             Click="Hyperlink_Click" HorizontalAlignment="Right"
                             Grid.ColumnSpan="10" Grid.Row="4" VerticalAlignment="Center"
                             Tag="https://github.com/Lacro59/playnite-isthereanydeal-plugin/wiki/Xbox-wishlist" />
-                    
+
                     <Grid Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="5" Margin="50,0,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />
@@ -343,7 +359,7 @@
                         <Label Grid.Column="0" Content="{DynamicResource LOCItadXboxWishlistLink}" IsEnabled="{Binding ElementName=chk_Xbox, Path=IsChecked}" VerticalAlignment="Center" />
 
                         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Name="scv" Grid.Column="2">
-                            <TextBox Text="{Binding Settings.XboxLink}" IsEnabled="{Binding ElementName=chk_Xbox, Path=IsChecked}" 
+                            <TextBox Text="{Binding Settings.XboxLink}" IsEnabled="{Binding ElementName=chk_Xbox, Path=IsChecked}"
                                              MaxWidth="{Binding ElementName=scv, Path=ActualWidth}" VerticalAlignment="Center" />
                         </ScrollViewer>
                     </Grid>
@@ -365,11 +381,11 @@
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        
+
                         <Label Grid.Column="0" Content="{DynamicResource LOCItadUbisoftWishlistLink}" IsEnabled="{Binding ElementName=chk_Ubisoft, Path=IsChecked}" VerticalAlignment="Center" />
 
                         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Name="scv2" Grid.Column="2">
-                            <TextBox Text="{Binding Settings.UbisoftLink}" IsEnabled="{Binding ElementName=chk_Ubisoft, Path=IsChecked}" 
+                            <TextBox Text="{Binding Settings.UbisoftLink}" IsEnabled="{Binding ElementName=chk_Ubisoft, Path=IsChecked}"
                                      MaxWidth="{Binding ElementName=scv2, Path=ActualWidth}" VerticalAlignment="Center" />
                         </ScrollViewer>
                     </Grid>
@@ -468,23 +484,21 @@
             </TabItem>
 
             <TabItem Header="{DynamicResource LOCLibraries}">
-                <StackPanel Margin="10">
-                    <Steam:PanelView x:Name="SteamPanel" Margin="0,0,0,10"
-                                     Visibility="{Binding ElementName=PART_Steam, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                     ForceAuth="False" 
-                                     UseApi="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Settings.SteamStoreSettings.UseApi, Mode=TwoWay}" 
-                                     UseAuth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Settings.SteamStoreSettings.UseAuth, Mode=TwoWay}" />
-
-                    <Epic:PanelView x:Name="EpicPanel" Margin="0,0,0,10"
-                                    Visibility="{Binding ElementName=PART_Epic, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    ForceAuth="True" UseAuth="True" />
-
-                    <Gog:PanelView x:Name="GogPanel" 
-                                   Visibility="{Binding ElementName=PART_Gog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                   ForceAuth="True" UseAuth="True" />
-                </StackPanel>
+                <stores:StoresSettingsView x:Name="StoresSettings" />
             </TabItem>
         </TabControl>
+
+        <!-- Panels registered into StoresSettingsView at runtime (Steam / Epic / Gog only). -->
+        <StackPanel x:Name="StorePanelsHost" Visibility="Collapsed">
+            <Steam:PanelView x:Name="SteamPanel" ForceAuth="False"
+                             UseApi="{Binding DataContext.Settings.SteamStoreSettings.UseApi, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                             UseAuth="{Binding DataContext.Settings.SteamStoreSettings.UseAuth, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+
+            <Epic:PanelView x:Name="EpicPanel" ForceAuth="True"
+                            UseAuth="{Binding DataContext.Settings.EpicStoreSettings.UseAuth, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+
+            <Gog:PanelView x:Name="GogPanel" ForceAuth="True"
+                           UseAuth="{Binding DataContext.Settings.GogStoreSettings.UseAuth, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+        </StackPanel>
     </Grid>
 </UserControl>
-    

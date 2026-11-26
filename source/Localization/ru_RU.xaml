@@ -10,8 +10,10 @@
     <sys:String x:Key="LOCItadExclusionList">Список исключений</sys:String>
 
     <sys:String x:Key="LOCItadWishlist">Список желаемого</sys:String>
-    <sys:String x:Key="LOCItadPrice">Price</sys:String>
-    
+    <sys:String x:Key="LOCItadPrice">Цена</sys:String>
+    <sys:String x:Key="LOCItadUpdateWishlistOnStartIncludesPrices">Also refreshes prices after store wishlists.</sys:String>
+    <sys:String x:Key="LOCItadUpdatePriceIncludedWithWishlist">Included when wishlist update on start is enabled (prices only when this option is used alone).</sys:String>
+
     <sys:String x:Key="LOCItadEnableSteam">Включить список желаемого в Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Включить список желаемого в GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Включить список желаемого в Epic Game Store</sys:String>
@@ -44,28 +46,41 @@
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADRefreshPrice">Обновить цены</sys:String>
+    <sys:String x:Key="LOCItadRefresh">Refresh</sys:String>
+    <sys:String x:Key="LOCItadFilters">Filters</sys:String>
+    <sys:String x:Key="LOCItadCompactMode">Compact cards</sys:String>
+    <sys:String x:Key="LOCItadMultiColumn">Multiple columns</sys:String>
+    <sys:String x:Key="LOCItadActiveFilterDiscount">Discount ≥ {0}%</sys:String>
+    <sys:String x:Key="LOCItadActiveFilterPrice">Price ≤ {0}{1}</sys:String>
+    <sys:String x:Key="LOCItadActiveFilterPriceNone">No price limit</sys:String>
+    <sys:String x:Key="LOCItadGiveawaysEmpty">No giveaways available.</sys:String>
+    <sys:String x:Key="LOCItadWishlistNoResults">No games match the current filters.</sys:String>
+    <sys:String x:Key="LOCItadWishlistEmpty">No games in your wishlist.</sys:String>
 
-    <sys:String x:Key="LOCITADOn">On:</sys:String>
+    <sys:String x:Key="LOCITADOn">В:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Лучшая цена</sys:String>
-    <sys:String x:Key="LOCITADStorePrice">Store price</sys:String>
-    
-    <sys:String x:Key="LOCITADOrderBestPriceCut">Best - Price cut</sys:String>
-    <sys:String x:Key="LOCITADOrderBestPrice">Best - Price</sys:String>
+    <sys:String x:Key="LOCITADStorePrice">Цена в магазине</sys:String>
 
-    <sys:String x:Key="LOCITADOrderStorePriceCut">Store - Price cut</sys:String>
-    <sys:String x:Key="LOCITADOrderStorePrice">Store - Price</sys:String>
-    
+    <sys:String x:Key="LOCITADOrderBestPriceCut">Лучшее - Снижение цены</sys:String>
+    <sys:String x:Key="LOCITADOrderBestPrice">Лучшая - Цена</sys:String>
+
+    <sys:String x:Key="LOCITADOrderStorePriceCut">Магазин - Снижение цены</sys:String>
+    <sys:String x:Key="LOCITADOrderStorePrice">Магазин - Цена</sys:String>
+
     <sys:String x:Key="LOCITADFilterSource">Фильтр по магазинам</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresAll">All stores</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresCount">{0} stores</sys:String>
     <sys:String x:Key="LOCITADPercentage">Минимальный процент скидки</sys:String>
     <sys:String x:Key="LOCITADPrice">Самая низкая цена</sys:String>
 
-    <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
-    <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
-    <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
-    
+    <sys:String x:Key="LOCItadAllTimeLow">Исторический минимум</sys:String>
+    <sys:String x:Key="LOCItadYearLow">Минимум за 1 год</sys:String>
+    <sys:String x:Key="LOCItadMonthLow">Минимум за 3 месяца</sys:String>
+
     <sys:String x:Key="LOCItadCurrentBest">Лучшая на данный момен</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Текущий список желаемого</sys:String>
     <sys:String x:Key="LOCItadBuy">Купить лучше</sys:String>
+    <sys:String x:Key="LOCItadBuyAtStore">Buy</sys:String>
     <sys:String x:Key="LOCItadStore">Магазин</sys:String>
     <sys:String x:Key="LOCItadNoData">Нет данных для выбранного магазина в настройка</sys:String>
     <sys:String x:Key="LOCItadInLibrary">В библиотеке</sys:String>
@@ -76,17 +91,29 @@
     <sys:String x:Key="LOCItadHideOnStoreWishList">Исключить {0} на {1}?</sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">Параметры списка желаемого</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsExcludeInLibrary">Exclude games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Добавить игры из библиотеки</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Включить игры без данных IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Только игры в библиотеке</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsAlerts">Только оповещения</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsResetFilters">Сбросить фильтры</sys:String>
+    <sys:String x:Key="LOCItadAlertBadge">Оповещение</sys:String>
+    <sys:String x:Key="LOCItadLibraryBadge">Библиотека</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">Импортировать список желаемого Steam</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">Ссылка на список желаемого Steam</sys:String>
     <sys:String x:Key="LOCItadImportSuccessful">Импорт завершён</sys:String>
     <sys:String x:Key="LOCItadImportError">Невозможно импортировать файл списка желаемого</sys:String>
 
-    <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
-    <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+    <sys:String x:Key="LOCItadInWaitlist">В списке ожидания</sys:String>
+    <sys:String x:Key="LOCItadInCollection">В коллекции</sys:String>
+    <sys:String x:Key="LOCItadGiveaways">Giveaways</sys:String>
+    <sys:String x:Key="LOCItadMature">Mature</sys:String>
+    <sys:String x:Key="LOCItadDrmFree">DRM-free</sys:String>
+    <sys:String x:Key="LOCItadGiveawayStarts">Starts</sys:String>
+    <sys:String x:Key="LOCItadGiveawayEnds">Ends</sys:String>
+    <sys:String x:Key="LOCItadGiveawayExtraGames">More games in this giveaway</sys:String>
+    <sys:String x:Key="LOCItadRefreshGiveaways">Refresh giveaways</sys:String>
 
     <!-- IsThereAnyDeal -->
 
@@ -94,9 +121,15 @@
     <sys:String x:Key="LOCItadCheckNotifications">Проверить оповещения</sys:String>
     <sys:String x:Key="LOCItadUpdateDatas">Обновить данные IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCITADDataDownloading">Загрузка данных IsThereAnyDeal...</sys:String>
+    <sys:String x:Key="LOCItadProgressCache">Loading wishlist cache…</sys:String>
+    <sys:String x:Key="LOCItadProgressStores">Refreshing store wishlists…</sys:String>
+    <sys:String x:Key="LOCItadProgressLookup">Resolving games on IsThereAnyDeal…</sys:String>
+    <sys:String x:Key="LOCItadProgressPrice">Обновление цен…</sys:String>
+    <sys:String x:Key="LOCItadProgressSave">Сохранение кэша списка желаемого…</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Уведомляем о раздаче {0} ({1} игр(ы))</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">Уведомление о цене для {0} - {1}{2} ({3}%)</sys:String>
+    <sys:String x:Key="LOCItadNotificationAggregated" xml:space="preserve">{0} wishlist game(s) match your price alerts</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Произошла ошибка при получении списка желаний от {0}.
 Попробуйте войти с вашей учетной записью.</sys:String>
@@ -107,8 +140,8 @@
     <sys:String x:Key="LOCItadNotificationsSteamBadConfig">Steam не был правильно настроен в настройка</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Список желаний Steam является закрытым. Вы должны использовать кнопку аутентификации в плагине библиотеки Steam.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox включен в плагине IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Отстутствует ссылка на список желемого Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Отсутствует ссылка на список желаемого Xbox.</sys:String>
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisoft включен в плагине IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Нет ссылки на список желаний Ubisoft.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">EA включен в плагине IsThereAnyDeal, но расширение библиотеки было отключено в Playnite.</sys:String>
 

@@ -1,16 +1,12 @@
 ﻿using CommonPluginsShared;
-using CommonPluginsStores.Ea;
 using CommonPluginsStores.Models;
 using CommonPluginsStores.Xbox;
 using IsThereAnyDeal.Models;
-using IsThereAnyDeal.Models.Api;
 using IsThereAnyDeal.Services;
 using Playnite.SDK;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 
 namespace IsThereAnyDeal.Clients
 {
@@ -52,7 +48,6 @@ namespace IsThereAnyDeal.Clients
             {
                 try
                 {
-                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
                     wishlists.Add(new Wishlist
                     {
                         StoreId = x.Id,
@@ -64,7 +59,7 @@ namespace IsThereAnyDeal.Clients
                         ReleaseDate = x.Released,
                         Added = x.Added,
                         Capsule = x.Image,
-                        Game = (gamesLookup?.Found ?? false) ? gamesLookup.Game : null,
+                        Game = null,
                         IsActive = true
                     });
                 }
@@ -74,7 +69,7 @@ namespace IsThereAnyDeal.Clients
                 }
             });
 
-            wishlists = SetCurrentPrice(wishlists, false);
+            MergeCachedItadData(wishlists, cachedData);
             SaveWishlist(wishlists);
             return wishlists;
         }

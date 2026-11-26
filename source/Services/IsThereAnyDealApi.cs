@@ -1,5 +1,6 @@
-﻿using CommonPluginsShared;
+using CommonPluginsShared;
 using CommonPluginsShared.Extensions;
+using CommonPluginsShared.IO;
 using IsThereAnyDeal.Clients;
 using IsThereAnyDeal.Models;
 using IsThereAnyDeal.Models.Api;
@@ -41,7 +42,7 @@ namespace IsThereAnyDeal.Services
         #endregion
 
         /// <summary>
-        /// API Key for ITAD services. 
+        /// API Key for ITAD services.
         /// REMARK: Should ideally be moved to a secure configuration or encrypted store instead of being hardcoded.
         /// </summary>
         private static string Key => "fa49308286edcaf76fea58926fd2ea2d216a17ff";
@@ -67,21 +68,25 @@ namespace IsThereAnyDeal.Services
         public List<CountData> CountDatas { get; set; } = new List<CountData>();
 
 		private static string CachePath => Path.Combine(IsThereAnyDeal.PluginUserDataPath, IsThereAnyDeal.PluginName, "ITAD");
-		private static FileDataTools FileDataTools => new FileDataTools(IsThereAnyDeal.PluginName, "ITAD");
+		private static FileDataService FileDataService => new FileDataService(IsThereAnyDeal.PluginName, "ITAD");
 
-		private readonly SemaphoreSlim _rateLimiter = new SemaphoreSlim(1, 1);
-		private DateTime _lastApiCall = DateTime.MinValue;
+		/// <summary>
+		/// Process-wide ITAD API gate: all <see cref="IsThereAnyDealApi"/> instances share one limiter
+		/// so parallel store fetches cannot burst concurrent HTTP calls to ITAD.
+		/// </summary>
+		private static readonly SemaphoreSlim RateLimiter = new SemaphoreSlim(1, 1);
+		private static DateTime _lastApiCall = DateTime.MinValue;
 		private const int MinApiCallIntervalMs = 500;
 
 		private static readonly Dictionary<string, string> CurrencySymbols = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-	        { "eur", "€" },
+	        { "eur", "\u20AC" },
 	        { "usd", "$" },
-	        { "gbp", "£" },
+	        { "gbp", "\u00A3" },
 	        { "aud", "$" },
 	        { "brl", "R$" },
 	        { "cad", "$" },
-	        { "cny", "¥" }
+	        { "cny", "\u00A5" }
         };
 
 
@@ -138,7 +143,7 @@ namespace IsThereAnyDeal.Services
         private async Task<GameLookup> GetGamesLookup(string title, uint appId)
         {
 			string cachePath = Path.Combine(CachePath, $"{(title.IsNullOrEmpty() ? appId.ToString() : title)}.json");
-			var data = await FileDataTools.LoadDataAsync<GameLookup>(cachePath, 4320);
+			var data = await FileDataService.LoadDataAsync<GameLookup>(cachePath, 4320);
 
 			if (data == null)
             {
@@ -161,7 +166,7 @@ namespace IsThereAnyDeal.Services
                                 throw ex;
                             }
 
-                            FileDataTools.SaveData(cachePath, data);
+                            FileDataService.SaveData(cachePath, data);
                             return data;
                         }
                     }
@@ -251,15 +256,23 @@ namespace IsThereAnyDeal.Services
         /// </summary>
         public static List<Country> GetCountries()
         {
-            return FileDataTools.LoadData<List<Country>>(Path.Combine(IsThereAnyDeal.PluginFolder, "Data", "countries.json"), -1);
+            return FileDataService.LoadData<List<Country>>(Path.Combine(IsThereAnyDeal.PluginFolder, "Data", "countries.json"), -1);
         }
 
         #region Plugin
 
-        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, bool cacheOnly = false, bool forcePrice = false)
+        /// <summary>
+        /// Loads wishlists from enabled stores, optionally enriching ITAD ids/prices.
+        /// </summary>
+        /// <param name="progress">Optional phase codes: cache, stores, lookup, price, save.</param>
+        public List<Wishlist> LoadWishlist(IsThereAnyDeal plugin, bool cacheOnly = false, bool forcePrice = false, Action<string> progress = null)
         {
             List<Wishlist> combinedWishlist = new List<Wishlist>();
             CountDatas = new List<CountData>();
+
+            // cache-only open → cache; price-only → lookup; store refresh → stores
+            string initialPhase = cacheOnly && !forcePrice ? "cache" : (cacheOnly && forcePrice ? "lookup" : "stores");
+            ReportWishlistProgress(progress, initialPhase);
 
             // 1. Define the configurations for all supported stores
             var storeConfigs = new List<StoreProviderConfig>
@@ -268,7 +281,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "Steam",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableSteam,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableSteam,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.SteamLibrary },
                     NotificationId = "IsThereAnyDeal-Steam-disabled",
                     LocErrorKey = "LOCItadNotificationErrorSteam",
@@ -279,7 +292,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "GOG",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableGog,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableGog,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.GogLibrary, ExternalPlugin.GogOssLibrary },
                     NotificationId = "IsThereAnyDeal-GOG-disabled",
                     LocErrorKey = "LOCItadNotificationErrorGog",
@@ -290,7 +303,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "Epic Games Store",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableEpic,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableEpic,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.EpicLibrary, ExternalPlugin.LegendaryLibrary },
                     NotificationId = "IsThereAnyDeal-EpicGameStore-disabled",
                     LocErrorKey = "LOCItadNotificationErrorEpic",
@@ -301,7 +314,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "Humble Bundle",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableHumble,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableHumble,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.HumbleLibrary },
                     NotificationId = "IsThereAnyDeal-HumbleBundle-disabled",
                     LocErrorKey = "LOCItadNotificationErrorHumble",
@@ -312,7 +325,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "Xbox",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableXbox,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableXbox,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.XboxLibrary },
                     NotificationId = "IsThereAnyDeal-Xbox-disabled",
                     LocErrorKey = "LOCItadNotificationErrorXbox",
@@ -323,7 +336,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "Ubisoft Connect",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableUbisoft,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableUbisoft,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.UplayLibrary },
                     NotificationId = "IsThereAnyDeal-Ubisoft-disabled",
                     LocErrorKey = "LOCItadNotificationErrorUbisoft",
@@ -334,7 +347,7 @@ namespace IsThereAnyDeal.Services
                 new StoreProviderConfig
                 {
                     StoreName = "EA",
-                    IsEnabled = () => plugin.PluginSettings.Settings.EnableOrigin,
+                    IsEnabled = () => plugin.PluginSettingsViewModel.Settings.EnableOrigin,
                     RequiredPlugins = new List<ExternalPlugin> { ExternalPlugin.OriginLibrary },
                     NotificationId = "IsThereAnyDeal-EA-disabled",
                     LocErrorKey = "LOCItadNotificationErrorEa",
@@ -342,8 +355,9 @@ namespace IsThereAnyDeal.Services
                 }
             };
 
-            // 2. Process each store generically
+            // 2. Process each store generically (fetch only ? ITAD enrichment is centralised below)
             var lockObj = new object();
+            var storeLoads = new ConcurrentBag<(GenericWishlist Provider, List<Wishlist> Items)>();
             var partitioner = Partitioner.Create(storeConfigs, EnumerablePartitionerOptions.NoBuffering);
 
 			Parallel.ForEach(
@@ -366,6 +380,7 @@ namespace IsThereAnyDeal.Services
 							lock (lockObj)
 							{
 								combinedWishlist.AddRange(storeWishlist);
+								storeLoads.Add((provider, storeWishlist));
 								CountDatas.Add(new CountData { StoreName = config.StoreName, Count = storeWishlist.Count });
 							}
 						}
@@ -387,17 +402,240 @@ namespace IsThereAnyDeal.Services
 				}
 			);
 
-			// 3. Deduplication Logic (Normalized by Name)
-			var finalData = DeduplicateWishlist(combinedWishlist);
+			// 3. Central ITAD pipeline: batch game ids, one price pass, then persist store caches
+			if (!cacheOnly || forcePrice)
+			{
+				Logger.Info($"[ITAD][pipeline] start items={combinedWishlist.Count} cacheOnly={cacheOnly} forcePrice={forcePrice}");
+				ReportWishlistProgress(progress, "lookup");
+				EnrichWishlistGameIds(combinedWishlist);
+				Logger.Info($"[ITAD][price] pass force={forcePrice} items={combinedWishlist.Count}");
+				ReportWishlistProgress(progress, "price");
+				_ = GetCurrentPrice(combinedWishlist, plugin.PluginSettingsViewModel.Settings, forcePrice)
+					.GetAwaiter()
+					.GetResult();
 
-            if (!cacheOnly || forcePrice)
-            {
-                plugin.PluginSettings.Settings.LastRefresh = DateTime.Now.ToUniversalTime();
-                plugin.SavePluginSettings(plugin.PluginSettings.Settings);
-            }
+				ReportWishlistProgress(progress, "save");
+				foreach (var load in storeLoads)
+				{
+					try
+					{
+						load.Provider.SaveWishlist(load.Items);
+					}
+					catch (Exception ex)
+					{
+						Common.LogError(ex, false, $"[ITAD][pipeline] saveCache failed client={load.Provider.ClientName}", true, IsThereAnyDeal.PluginName);
+					}
+				}
+
+				plugin.PluginSettingsViewModel.Settings.LastRefresh = DateTime.Now.ToUniversalTime();
+				plugin.SavePluginSettings(plugin.PluginSettingsViewModel.Settings);
+				Logger.Info($"[ITAD][pipeline] done savedStores={storeLoads.Count}");
+			}
+
+			// 4. Deduplication Logic (Normalized by Name)
+			var finalData = DeduplicateWishlist(combinedWishlist);
 
             return finalData.OrderBy(x => x.Name).ToList();
         }
+
+		private static void ReportWishlistProgress(Action<string> progress, string phase)
+		{
+			if (progress == null || string.IsNullOrEmpty(phase))
+			{
+				return;
+			}
+
+			try
+			{
+				progress(phase);
+			}
+			catch (Exception ex)
+			{
+				Common.LogError(ex, false, $"[ITAD][pipeline] progress callback failed phase={phase}", true, IsThereAnyDeal.PluginName);
+			}
+		}
+
+		/// <summary>
+		/// Resolves missing ITAD game ids: batch <see cref="GetGamesId"/> (Steam AppIDs vs titles), then 1x1 <see cref="GetGamesLookup"/> fallback.
+		/// </summary>
+		private void EnrichWishlistGameIds(List<Wishlist> wishlists)
+		{
+			if (wishlists == null || wishlists.Count == 0)
+			{
+				return;
+			}
+
+			var missing = wishlists
+				.Where(x => string.IsNullOrEmpty(x?.Game?.Id))
+				.ToList();
+
+			if (missing.Count == 0)
+			{
+				Common.LogDebug("[ITAD][lookup] nothingToResolve");
+				return;
+			}
+
+			var steamItems = missing
+				.Where(x => x.StoreName.IsEqual("Steam") && uint.TryParse(x.StoreId, out _))
+				.ToList();
+			var titleItems = missing.Except(steamItems).ToList();
+
+			var steamAppIds = steamItems
+				.Select(x => x.StoreId)
+				.Where(id => !string.IsNullOrEmpty(id))
+				.Distinct(StringComparer.OrdinalIgnoreCase)
+				.ToList();
+			var titles = titleItems
+				.Select(x => x.Name)
+				.Where(name => !string.IsNullOrEmpty(name))
+				.Distinct(StringComparer.OrdinalIgnoreCase)
+				.ToList();
+
+			Logger.Info($"[ITAD][lookup] batch missing={missing.Count} steamAppIds={steamAppIds.Count} titles={titles.Count}");
+
+			var steamMap = GetGamesIdBatched(null, steamAppIds);
+			foreach (var item in steamItems)
+			{
+				if (TryGetBatchedId(steamMap, item.StoreId, out var gameId)
+					|| TryGetBatchedId(steamMap, "app/" + item.StoreId, out gameId))
+				{
+					ApplyBatchedGameId(item, gameId);
+				}
+			}
+
+			var titleMap = GetGamesIdBatched(titles, null);
+			foreach (var item in titleItems)
+			{
+				if (TryGetBatchedId(titleMap, item.Name, out var gameId)
+					|| TryGetBatchedId(titleMap, RemoveGameEdition(item.Name), out gameId))
+				{
+					ApplyBatchedGameId(item, gameId);
+				}
+			}
+
+			var unresolvedAfterBatch = wishlists.Count(x => string.IsNullOrEmpty(x?.Game?.Id));
+			Common.LogDebug($"[ITAD][lookup] afterBatch unresolved={unresolvedAfterBatch} steamHits={steamMap.Count} titleHits={titleMap.Count}");
+
+			var stillMissing = wishlists
+				.Where(x => string.IsNullOrEmpty(x?.Game?.Id))
+				.ToList();
+
+			if (stillMissing.Count == 0)
+			{
+				return;
+			}
+
+			Logger.Warn($"[ITAD][lookup] fallback1x1 count={stillMissing.Count}");
+			foreach (var item in stillMissing)
+			{
+				try
+				{
+					GameLookup lookup;
+					if (item.StoreName.IsEqual("Steam") && uint.TryParse(item.StoreId, out uint appId) && appId > 0)
+					{
+						lookup = GetGamesLookup(appId).GetAwaiter().GetResult();
+					}
+					else if (!string.IsNullOrEmpty(item.Name))
+					{
+						lookup = GetGamesLookup(item.Name).GetAwaiter().GetResult();
+					}
+					else
+					{
+						continue;
+					}
+
+					if (lookup?.Found == true && lookup.Game != null)
+					{
+						item.Game = lookup.Game;
+						if (item.StoreName.IsEqual("Steam")
+							&& item.Game.Title != null
+							&& item.Name.IsEqual($"SteamApp? - {item.StoreId}"))
+						{
+							item.Name = item.Game.Title;
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Common.LogError(ex, false, $"[ITAD][lookup] fallback failed store={item.StoreName} storeId={item.StoreId} name={item.Name}", true, IsThereAnyDeal.PluginName);
+				}
+			}
+		}
+
+		private Dictionary<string, string> GetGamesIdBatched(List<string> titles, List<string> appIds)
+		{
+			var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+			const int chunkSize = 200;
+
+			var source = titles?.Count > 0 ? titles : appIds;
+			if (source == null || source.Count == 0)
+			{
+				return result;
+			}
+
+			var useTitles = titles?.Count > 0;
+			var chunks = source
+				.Select((item, index) => new { item, index })
+				.GroupBy(x => x.index / chunkSize)
+				.Select(g => g.Select(x => x.item).ToList())
+				.ToList();
+
+			foreach (var chunk in chunks)
+			{
+				try
+				{
+					var ids = GetGamesId(
+						useTitles ? chunk : null,
+						useTitles ? null : chunk
+					).GetAwaiter().GetResult();
+
+					if (ids == null || ids.Count == 0)
+					{
+						continue;
+					}
+
+					foreach (var kvp in ids)
+					{
+						if (!string.IsNullOrEmpty(kvp.Key) && !string.IsNullOrEmpty(kvp.Value))
+						{
+							result[kvp.Key] = kvp.Value;
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Common.LogError(ex, false, "[ITAD][lookup] GetGamesIdBatched failed", true, IsThereAnyDeal.PluginName);
+				}
+			}
+
+			return result;
+		}
+
+		private static bool TryGetBatchedId(Dictionary<string, string> map, string key, out string gameId)
+		{
+			gameId = null;
+			if (map == null || string.IsNullOrEmpty(key))
+			{
+				return false;
+			}
+
+			return map.TryGetValue(key, out gameId) && !string.IsNullOrEmpty(gameId);
+		}
+
+		private static void ApplyBatchedGameId(Wishlist item, string gameId)
+		{
+			if (item == null || string.IsNullOrEmpty(gameId))
+			{
+				return;
+			}
+
+			item.Game = new Models.Api.Game
+			{
+				Id = gameId,
+				Title = item.Name,
+				Slug = item.Game?.Slug
+			};
+		}
 
         /// <summary>
         /// Groups duplicate games across different storefronts into a single entry with a list of duplicates.
@@ -636,8 +874,30 @@ namespace IsThereAnyDeal.Services
 		/// </summary>
 		public static string GetShopColor(string shopName)
         {
-            var data = FileDataTools.LoadData<List<Shop>>(Path.Combine(IsThereAnyDeal.PluginFolder, "Data", "shops.json"), -1);
+            var data = FileDataService.LoadData<List<Shop>>(Path.Combine(IsThereAnyDeal.PluginFolder, "Data", "shops.json"), -1);
             return data?.FirstOrDefault(x => x.Name.IsEqual(shopName))?.Color ?? ResourceProvider.GetResource("TextBrush").ToString();
+        }
+
+        /// <summary>
+        /// Local cache path for persisted giveaways (<c>giveways.json</c>).
+        /// </summary>
+        public static string GetGiveawaysCachePath()
+        {
+            return Path.Combine(IsThereAnyDeal.PluginUserDataPath, "cache", "giveways.json");
+        }
+
+        /// <summary>
+        /// Last write time of the giveaways cache file, or <c>null</c> if missing.
+        /// </summary>
+        public static DateTime? GetGiveawaysLastRefresh()
+        {
+            string path = GetGiveawaysCachePath();
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+
+            return File.GetLastWriteTime(path);
         }
 
         /// <summary>
@@ -646,14 +906,18 @@ namespace IsThereAnyDeal.Services
         public List<ItadGiveaway> GetGiveaways(bool cacheOnly = false)
         {
             // Load previous
-            string pluginDirectoryCache = IsThereAnyDeal.PluginUserDataPath + "\\cache";
-            string pluginFileCache = pluginDirectoryCache + "\\giveways.json";
+            string pluginFileCache = GetGiveawaysCachePath();
+            string pluginDirectoryCache = Path.GetDirectoryName(pluginFileCache);
+            if (!string.IsNullOrEmpty(pluginDirectoryCache) && !Directory.Exists(pluginDirectoryCache))
+            {
+                _ = Directory.CreateDirectory(pluginDirectoryCache);
+            }
 
-            var itadGiveawaysCache = FileDataTools.LoadData<List<ItadGiveaway>>(pluginFileCache, -1) ?? new List<ItadGiveaway>();
+            var itadGiveawaysCache = FileDataService.LoadData<List<ItadGiveaway>>(pluginFileCache, -1) ?? new List<ItadGiveaway>();
 
             // Load on web
             List<ItadGiveaway> itadGiveaways = new List<ItadGiveaway>();
-            if (!cacheOnly && itadGiveawaysCache != new List<ItadGiveaway>())
+            if (!cacheOnly)
             {
                 try
                 {
@@ -683,17 +947,23 @@ namespace IsThereAnyDeal.Services
                     }
                     catch (Exception e)
                     {
-                        Common.LogError(e, false, "Erreur lors de la requête ITAD");
+                        Common.LogError(e, false, "[ITAD][giveaways] request failed", true, IsThereAnyDeal.PluginName);
                     }
 
                     _ = Serialization.TryFromJson(data, out Giveaways giveaways, out Exception ex);
                     if (ex != null)
                     {
-                        Common.LogError(ex, false, true, "IsThereAnyDeals");
+                        Common.LogError(ex, false, "[ITAD][giveaways] json parse failed", true, IsThereAnyDeal.PluginName);
                     }
 
                     giveaways?.Data?.ForEach(x =>
                     {
+                        DateTime? start = null;
+                        if (x.Start != null)
+                        {
+                            start = DateTimeOffset.FromUnixTimeSeconds(x.Start ?? 0).DateTime;
+                        }
+
                         DateTime? time = null;
                         if (x.Expiry != null)
                         {
@@ -712,32 +982,43 @@ namespace IsThereAnyDeal.Services
                         }
                         catch (Exception ex2)
                         {
-                            Common.LogError(ex2, false, $"Failed to download {GiveawaysUrl}", true, IsThereAnyDeal.PluginName);
+                            Logger.Warn(ex2, $"[ITAD][giveaways] shop parse failed title=\"{x.Title}\"");
                         }
+
+                        Game firstGame = x.Games?.FirstOrDefault();
 
                         itadGiveaways.Add(new ItadGiveaway
                         {
                             TitleAll = x.Title,
-                            Title = x.Games?.FirstOrDefault()?.Title,
+                            Title = firstGame?.Title,
+                            Start = start,
                             Time = time,
                             Link = x.Url,
                             ShopName = shop,
-                            Count = x.Games?.Count() ?? 0,
-                            InWaitlist = x.Counts.Waitlist != 0,
-                            InCollection = x.Counts.Collection != 0,
+                            ShopId = x.Shop,
+                            Count = x.Games?.Count ?? 0,
+                            Banner145 = firstGame?.Assets?.Banner145,
+                            Boxart = firstGame?.Assets?.Boxart,
+                            InWaitlist = (x.Counts?.Waitlist ?? 0) != 0,
+                            InCollection = (x.Counts?.Collection ?? 0) != 0,
+                            IsMature = x.IsMature,
+                            DrmFree = firstGame != null && firstGame.DrmFree,
+                            Comments = x.Counts?.Comments ?? 0,
                         });
                     });
+
+                    Logger.Info($"[ITAD][giveaways] fetched count={itadGiveaways.Count}");
                 }
                 catch (Exception ex)
                 {
-                    Common.LogError(ex, false, "Error fetching web giveaways", true, IsThereAnyDeal.PluginName);
+                    Common.LogError(ex, false, "[ITAD][giveaways] fetch failed", true, IsThereAnyDeal.PluginName);
                 }
             }
 
             // REMARK: Compare web results with cache to preserve the "HasSeen" status of older giveaways.
             if (itadGiveaways.Count != 0)
             {
-                Common.LogDebug(true, $"Compare with cache");
+                Common.LogDebug($"[ITAD][giveaways] compareCache web={itadGiveaways.Count} cache={itadGiveawaysCache.Count}");
                 foreach (ItadGiveaway itadGiveaway in itadGiveawaysCache)
                 {
                     if (itadGiveaways.Find(x => x.TitleAll == itadGiveaway.TitleAll) != null)
@@ -749,12 +1030,20 @@ namespace IsThereAnyDeal.Services
             // No data
             else
             {
-                Logger.Info("No new data for GetGiveaways()");
+                if (cacheOnly)
+                {
+                    Common.LogDebug($"[ITAD][giveaways] cacheOnly count={itadGiveawaysCache.Count}");
+                }
+                else
+                {
+                    Logger.Info($"[ITAD][giveaways] noWebData usingCache count={itadGiveawaysCache.Count}");
+                }
+
                 itadGiveaways = itadGiveawaysCache;
             }
 
 			// Save new
-			FileDataTools.SaveData(pluginFileCache, itadGiveaways);
+			FileDataService.SaveData(pluginFileCache, itadGiveaways);
 
             return itadGiveaways;
         }
@@ -767,58 +1056,90 @@ namespace IsThereAnyDeal.Services
         {
             await Task.Run(() =>
             {
-                IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
-
-                if (plugin.PluginSettings.Settings.EnableNotification)
+                try
                 {
-                    List<Wishlist> ListWishlist = isThereAnyDealApi.LoadWishlist(plugin, true);
-                    ListWishlist.Where(x => x.Game != null && x.GetNotification(plugin.PluginSettings.Settings.NotificationCriterias))
-                      .ForEach(x =>
-                      {
-                          API.Instance.Notifications.Add(new NotificationMessage(
-                                  $"IsThereAnyDeal-{x.Game.Slug}",
-                                  "IsThereAnyDeal\r\n" + string.Format(ResourceProvider.GetString("LOCItadNotification"),
-                                      x.Name, x.ItadBestPrice.PriceNew, x.ItadBestPrice.CurrencySign, x.ItadBestPrice.PriceCut),
-                                  NotificationType.Info,
-                                  () =>
-                                  {
-                                      if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
-                                      {
-                                          WindowOptions windowOptions = new WindowOptions
-                                          {
-                                              ShowMinimizeButton = false,
-                                              ShowMaximizeButton = false,
-                                              ShowCloseButton = true,
-                                              CanBeResizable = false,
-                                              Width = 1180,
-                                              Height = 720
-                                          };
+                    IsThereAnyDealApi isThereAnyDealApi = new IsThereAnyDealApi();
+                    IsThereAnyDealSettings settings = plugin.PluginSettingsViewModel.Settings;
+                    Logger.Info($"[Notif][check] start price={settings.EnableNotification} giveaways={settings.EnableNotificationGiveaways} criteriaCount={settings.NotificationCriterias?.Count ?? 0}");
 
-                                          IsThereAnyDealView viewExtension = new IsThereAnyDealView(plugin, x.Game.Id);
-                                          Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
-                                          _ = windowExtension.ShowDialog();
-                                      }
-                                      else
-                                      {
-                                          _ = Process.Start(x.UrlGame);
-                                      }
-                                  }
-                              ));
-                      });
-                }
-
-                if (plugin.PluginSettings.Settings.EnableNotificationGiveaways)
-                {
-                    List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways();
-                    itadGiveaways.Where(x => !x.HasSeen).ForEach(x =>
+                    if (settings.EnableNotification)
                     {
-                        API.Instance.Notifications.Add(new NotificationMessage(
-                              $"IsThereAnyDeal-{x.Title}",
-                              "IsThereAnyDeal\r\n" + string.Format(ResourceProvider.GetString("LOCItadNotificationGiveaway"), x.TitleAll, x.Count),
-                              NotificationType.Info,
-                              () => Process.Start(x.Link)
-                          ));
-                    });
+                        if (settings.NotificationCriterias == null || settings.NotificationCriterias.Count == 0)
+                        {
+                            Logger.Warn("[Notif][check] price notifications enabled but no criteria configured");
+                        }
+
+                        List<Wishlist> listWishlist = isThereAnyDealApi.LoadWishlist(plugin, true);
+                        List<Wishlist> pendingAlerts = listWishlist
+                            .Where(x => x.Game != null && x.GetNotification(settings.NotificationCriterias))
+                            .ToList();
+
+                        Common.LogDebug($"[Notif][aggregate] matching={pendingAlerts.Count}");
+
+                        if (pendingAlerts.Count > 0)
+                        {
+                            // Fixed id replaces any previous price-alert toast (anti-spam without persistent dismiss).
+                            const string aggregatedNotificationId = "IsThereAnyDeal-PriceAlerts";
+                            API.Instance.Notifications.Add(new NotificationMessage(
+                                aggregatedNotificationId,
+                                "IsThereAnyDeal\r\n" + string.Format(
+                                    ResourceProvider.GetString("LOCItadNotificationAggregated"),
+                                    pendingAlerts.Count),
+                                NotificationType.Info,
+                                () =>
+                                {
+                                    if (API.Instance.ApplicationInfo.Mode == ApplicationMode.Desktop)
+                                    {
+                                        WindowOptions windowOptions = new WindowOptions
+                                        {
+                                            ShowMinimizeButton = false,
+                                            ShowMaximizeButton = true,
+                                            ShowCloseButton = true,
+                                            CanBeResizable = true,
+                                            Width = 1180,
+                                            Height = 720,
+                                            MinWidth = 900,
+                                            MinHeight = 500,
+                                            WindowPersistenceKey = "IsThereAnyDeal.MainView"
+                                        };
+
+                                        IsThereAnyDealView viewExtension = new IsThereAnyDealView(plugin, string.Empty, true);
+                                        Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCItad"), viewExtension, windowOptions);
+                                        _ = windowExtension.ShowDialog();
+                                    }
+                                    else
+                                    {
+                                        Wishlist first = pendingAlerts.FirstOrDefault();
+                                        if (first != null && !first.UrlGame.IsNullOrEmpty())
+                                        {
+                                            _ = Process.Start(first.UrlGame);
+                                        }
+                                    }
+                                }));
+
+                            Logger.Info($"[Notif][aggregate] count={pendingAlerts.Count}");
+                        }
+                    }
+
+                    if (settings.EnableNotificationGiveaways)
+                    {
+                        List<ItadGiveaway> itadGiveaways = isThereAnyDealApi.GetGiveaways();
+                        int unseenGiveaways = itadGiveaways.Count(x => !x.HasSeen);
+                        Common.LogDebug($"[Notif][giveaways] total={itadGiveaways.Count} unseen={unseenGiveaways}");
+                        itadGiveaways.Where(x => !x.HasSeen).ForEach(x =>
+                        {
+                            API.Instance.Notifications.Add(new NotificationMessage(
+                                  $"IsThereAnyDeal-{x.Title}",
+                                  "IsThereAnyDeal\r\n" + string.Format(ResourceProvider.GetString("LOCItadNotificationGiveaway"), x.TitleAll, x.Count),
+                                  NotificationType.Info,
+                                  () => Process.Start(x.Link)
+                              ));
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Common.LogError(ex, false, "[Notif][check] failed", true, IsThereAnyDeal.PluginName);
                 }
             });
         }
@@ -861,22 +1182,22 @@ namespace IsThereAnyDeal.Services
 
 		#endregion
 
-		private async Task<T> WithRateLimitAsync<T>(Func<Task<T>> apiCall)
+		private static async Task<T> WithRateLimitAsync<T>(Func<Task<T>> apiCall)
 		{
-			await _rateLimiter.WaitAsync();
+			await RateLimiter.WaitAsync().ConfigureAwait(false);
 			try
 			{
 				var elapsed = (DateTime.Now - _lastApiCall).TotalMilliseconds;
 				if (elapsed < MinApiCallIntervalMs)
 				{
-					await Task.Delay(MinApiCallIntervalMs - (int)elapsed);
+					await Task.Delay(MinApiCallIntervalMs - (int)elapsed).ConfigureAwait(false);
 				}
 				_lastApiCall = DateTime.Now;
-				return await apiCall();
+				return await apiCall().ConfigureAwait(false);
 			}
 			finally
 			{
-				_rateLimiter.Release();
+				_ = RateLimiter.Release();
 			}
 		}
 

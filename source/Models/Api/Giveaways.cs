@@ -17,6 +17,9 @@ namespace IsThereAnyDeal.Models.Api
 
         [SerializationPropertyName("collection")]
         public int Collection { get; set; }
+
+        [SerializationPropertyName("comments")]
+        public int Comments { get; set; }
     }
 
     public class Datum
@@ -26,6 +29,9 @@ namespace IsThereAnyDeal.Models.Api
 
         [SerializationPropertyName("url")]
         public string Url { get; set; }
+
+        [SerializationPropertyName("start")]
+        public int? Start { get; set; }
 
         [SerializationPropertyName("expiry")]
         public int? Expiry { get; set; }

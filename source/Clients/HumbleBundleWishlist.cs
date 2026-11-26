@@ -3,10 +3,8 @@ using Playnite.SDK.Data;
 using IsThereAnyDeal.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Net;
 using CommonPluginsShared;
-using IsThereAnyDeal.Models.Api;
 
 namespace IsThereAnyDeal.Services
 {
@@ -70,8 +68,6 @@ namespace IsThereAnyDeal.Services
                     name = WebUtility.HtmlDecode((string)gameWish["human_name"]);
                     capsule = (string)gameWish["standard_carousel_image"];
 
-                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(name).GetAwaiter().GetResult();
-
                     wishlists.Add(new Wishlist
                     {
                         StoreId = storeId,
@@ -82,13 +78,13 @@ namespace IsThereAnyDeal.Services
                         SourceId = PlayniteTools.GetPluginId(ExternalPlugin),
                         ReleaseDate = releaseDate.ToUniversalTime(),
                         Capsule = capsule,
-                        Game = (gamesLookup?.Found ?? false) ? gamesLookup.Game : null,
+                        Game = null,
                         IsActive = true
                     });
                 }
             }
 
-            wishlists = SetCurrentPrice(wishlists, false);
+            MergeCachedItadData(wishlists, cachedData);
             SaveWishlist(wishlists);
             return wishlists;
         }

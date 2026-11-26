@@ -1,4 +1,4 @@
-﻿using CommonPlayniteShared.PluginLibrary.HumbleLibrary.Services;
+using CommonPlayniteShared.PluginLibrary.HumbleLibrary.Services;
 using CommonPluginsShared;
 using Playnite.SDK;
 
@@ -12,7 +12,7 @@ namespace IsThereAnyDeal.Services
 
         public bool RemoveWishList(string storeId)
         {
-            Common.LogDebug(true, $"Humble.RemoveWishList({storeId}) - {webView.GetPageSource()}");
+            Common.LogDebug($"Humble.RemoveWishList({storeId})");
             string url = string.Format(@"https://www.humblebundle.com/wishlist/remove/{0}", storeId);
             webView.NavigateAndWait(url);
             return true;

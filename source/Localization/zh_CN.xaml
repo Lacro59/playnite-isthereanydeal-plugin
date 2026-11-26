@@ -11,7 +11,9 @@
 
     <sys:String x:Key="LOCItadWishlist">愿望单</sys:String>
     <sys:String x:Key="LOCItadPrice">Price</sys:String>
-    
+    <sys:String x:Key="LOCItadUpdateWishlistOnStartIncludesPrices">Also refreshes prices after store wishlists.</sys:String>
+    <sys:String x:Key="LOCItadUpdatePriceIncludedWithWishlist">Included when wishlist update on start is enabled (prices only when this option is used alone).</sys:String>
+
     <sys:String x:Key="LOCItadEnableSteam">启用 Steam 愿望单</sys:String>
     <sys:String x:Key="LOCItadEnableGog">启用 GOG 愿望单</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">启用 Epic 游戏商店愿望单</sys:String>
@@ -44,28 +46,41 @@
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADRefreshPrice">刷新价格</sys:String>
+    <sys:String x:Key="LOCItadRefresh">Refresh</sys:String>
+    <sys:String x:Key="LOCItadFilters">Filters</sys:String>
+    <sys:String x:Key="LOCItadCompactMode">Compact cards</sys:String>
+    <sys:String x:Key="LOCItadMultiColumn">Multiple columns</sys:String>
+    <sys:String x:Key="LOCItadActiveFilterDiscount">Discount ≥ {0}%</sys:String>
+    <sys:String x:Key="LOCItadActiveFilterPrice">Price ≤ {0}{1}</sys:String>
+    <sys:String x:Key="LOCItadActiveFilterPriceNone">No price limit</sys:String>
+    <sys:String x:Key="LOCItadGiveawaysEmpty">No giveaways available.</sys:String>
+    <sys:String x:Key="LOCItadWishlistNoResults">No games match the current filters.</sys:String>
+    <sys:String x:Key="LOCItadWishlistEmpty">No games in your wishlist.</sys:String>
 
     <sys:String x:Key="LOCITADOn">On:</sys:String>
     <sys:String x:Key="LOCITADBestPrice">最好的价格</sys:String>
     <sys:String x:Key="LOCITADStorePrice">商店售价：？</sys:String>
-    
+
     <sys:String x:Key="LOCITADOrderBestPriceCut">最佳-降价</sys:String>
     <sys:String x:Key="LOCITADOrderBestPrice">最佳价格</sys:String>
 
     <sys:String x:Key="LOCITADOrderStorePriceCut">最佳-降价</sys:String>
     <sys:String x:Key="LOCITADOrderStorePrice">商店售价：？</sys:String>
-    
+
     <sys:String x:Key="LOCITADFilterSource">按商店筛</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresAll">All stores</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresCount">{0} stores</sys:String>
     <sys:String x:Key="LOCITADPercentage">最低折扣百分比</sys:String>
     <sys:String x:Key="LOCITADPrice">价格降低</sys:String>
 
     <sys:String x:Key="LOCItadAllTimeLow">All time low</sys:String>
     <sys:String x:Key="LOCItadYearLow">1 year low</sys:String>
     <sys:String x:Key="LOCItadMonthLow">3 months low</sys:String>
-    
+
     <sys:String x:Key="LOCItadCurrentBest">当前最佳</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">当前商店愿望单</sys:String>
     <sys:String x:Key="LOCItadBuy">购买最佳</sys:String>
+    <sys:String x:Key="LOCItadBuyAtStore">Buy</sys:String>
     <sys:String x:Key="LOCItadStore">商店</sys:String>
     <sys:String x:Key="LOCItadNoData">没有设置中所选商店的数据</sys:String>
     <sys:String x:Key="LOCItadInLibrary">在库中</sys:String>
@@ -76,9 +91,14 @@
     <sys:String x:Key="LOCItadHideOnStoreWishList">排除 {1} 上的 {0} 吗</sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">愿望单选项</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsExcludeInLibrary">Exclude games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">包含库中的游戏</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">包含没有有折扣吗数据的游戏</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">仅库中的游戏</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsAlerts">Alerts only</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsResetFilters">Reset filters</sys:String>
+    <sys:String x:Key="LOCItadAlertBadge">Alert</sys:String>
+    <sys:String x:Key="LOCItadLibraryBadge">Library</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">导入 Steam 愿望单</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">Steam 愿望单链接</sys:String>
@@ -87,6 +107,13 @@
 
     <sys:String x:Key="LOCItadInWaitlist">In waitlist</sys:String>
     <sys:String x:Key="LOCItadInCollection">In collection</sys:String>
+    <sys:String x:Key="LOCItadGiveaways">Giveaways</sys:String>
+    <sys:String x:Key="LOCItadMature">Mature</sys:String>
+    <sys:String x:Key="LOCItadDrmFree">DRM-free</sys:String>
+    <sys:String x:Key="LOCItadGiveawayStarts">Starts</sys:String>
+    <sys:String x:Key="LOCItadGiveawayEnds">Ends</sys:String>
+    <sys:String x:Key="LOCItadGiveawayExtraGames">More games in this giveaway</sys:String>
+    <sys:String x:Key="LOCItadRefreshGiveaways">Refresh giveaways</sys:String>
 
     <!-- IsThereAnyDeal -->
 
@@ -94,9 +121,15 @@
     <sys:String x:Key="LOCItadCheckNotifications">检查通知</sys:String>
     <sys:String x:Key="LOCItadUpdateDatas">更新有折扣吗数据</sys:String>
     <sys:String x:Key="LOCITADDataDownloading">正在下载有折扣吗数据...</sys:String>
+    <sys:String x:Key="LOCItadProgressCache">Loading wishlist cache…</sys:String>
+    <sys:String x:Key="LOCItadProgressStores">Refreshing store wishlists…</sys:String>
+    <sys:String x:Key="LOCItadProgressLookup">Resolving games on IsThereAnyDeal…</sys:String>
+    <sys:String x:Key="LOCItadProgressPrice">Updating prices…</sys:String>
+    <sys:String x:Key="LOCItadProgressSave">Saving wishlist cache…</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">{0}（{1} 个游戏）的赠送通知</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">{0} - {1}{2} 的价格通知（{3}%</sys:String>
+    <sys:String x:Key="LOCItadNotificationAggregated" xml:space="preserve">{0} wishlist game(s) match your price alerts</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">从 {0} 检索愿望单时发生错误。
 请尝试使用您的帐户登录</sys:String>
@@ -108,7 +141,7 @@
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">Steam 愿望单是私有的。您必须在 Steam 库插件中使用身份验证按钮</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">没有 Xbox 愿望单链接</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisof is enabled in the IsThereAnyDeal plugin but the library extension has been disabled in Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">没有 Xbox 愿望单链接</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">Epic 已在有折扣吗插件中启用，但其库扩展集成未在 Playnite 中</sys:String>
 

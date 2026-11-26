@@ -1,4 +1,4 @@
-﻿using CommonPluginsShared.Controls;
+using CommonPluginsShared.Controls;
 using IsThereAnyDeal.Views;
 using Playnite.SDK;
 using Playnite.SDK.Plugins;
@@ -30,11 +30,14 @@ namespace IsThereAnyDeal.Services
                 {
                     SidebarItemControl = new SidebarItemControl();
                     SidebarItemControl.SetTitle(ResourceProvider.GetString("LOCItad"));
+                    // Wishlist / Giveaways already scroll internally; outer Auto scroll
+                    // would grow the page when the filters Expander opens.
+                    SidebarItemControl.SetContentVerticalScrollBarVisibility(ScrollBarVisibility.Disabled);
                     SidebarItemControl.AddContent(new IsThereAnyDealView(plugin));
                 }
                 return SidebarItemControl;
             };
-            Visible = plugin.PluginSettings.Settings.EnableIntegrationButtonSide;
+            Visible = plugin.PluginSettingsViewModel.Settings.EnableIntegrationButtonSide;
         }
 
         public void ResetView()

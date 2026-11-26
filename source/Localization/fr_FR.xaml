@@ -11,7 +11,9 @@
 
     <sys:String x:Key="LOCItadWishlist">Liste de souhaits</sys:String>
     <sys:String x:Key="LOCItadPrice">Prix</sys:String>
-    
+    <sys:String x:Key="LOCItadUpdateWishlistOnStartIncludesPrices">Also refreshes prices after store wishlists.</sys:String>
+    <sys:String x:Key="LOCItadUpdatePriceIncludedWithWishlist">Included when wishlist update on start is enabled (prices only when this option is used alone).</sys:String>
+
     <sys:String x:Key="LOCItadEnableSteam">Activer la liste de souhaits Steam</sys:String>
     <sys:String x:Key="LOCItadEnableGog">Activer la liste de souhaits GOG</sys:String>
     <sys:String x:Key="LOCItadEnableEpic">Activer la liste de souhaits Epic Games</sys:String>
@@ -44,28 +46,41 @@
     <!-- IsThereAnyDealView -->
 
     <sys:String x:Key="LOCITADRefreshPrice">Actualiser les prix</sys:String>
+    <sys:String x:Key="LOCItadRefresh">Refresh</sys:String>
+    <sys:String x:Key="LOCItadFilters">Filters</sys:String>
+    <sys:String x:Key="LOCItadCompactMode">Compact cards</sys:String>
+    <sys:String x:Key="LOCItadMultiColumn">Multiple columns</sys:String>
+    <sys:String x:Key="LOCItadActiveFilterDiscount">Discount ≥ {0}%</sys:String>
+    <sys:String x:Key="LOCItadActiveFilterPrice">Price ≤ {0}{1}</sys:String>
+    <sys:String x:Key="LOCItadActiveFilterPriceNone">No price limit</sys:String>
+    <sys:String x:Key="LOCItadGiveawaysEmpty">No giveaways available.</sys:String>
+    <sys:String x:Key="LOCItadWishlistNoResults">No games match the current filters.</sys:String>
+    <sys:String x:Key="LOCItadWishlistEmpty">No games in your wishlist.</sys:String>
 
     <sys:String x:Key="LOCITADOn">Sur :</sys:String>
     <sys:String x:Key="LOCITADBestPrice">Meilleur prix</sys:String>
     <sys:String x:Key="LOCITADStorePrice">Prix magasin</sys:String>
-    
+
     <sys:String x:Key="LOCITADOrderBestPriceCut">Meilleur - Réduction de prix</sys:String>
     <sys:String x:Key="LOCITADOrderBestPrice">Meilleur - Prix</sys:String>
 
     <sys:String x:Key="LOCITADOrderStorePriceCut">Magasin - Réduction du prix</sys:String>
     <sys:String x:Key="LOCITADOrderStorePrice">Magasin - Prix</sys:String>
-    
+
     <sys:String x:Key="LOCITADFilterSource">Filtrer par magasin(s)</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresAll">All stores</sys:String>
+    <sys:String x:Key="LOCItadFilterStoresCount">{0} stores</sys:String>
     <sys:String x:Key="LOCITADPercentage">Pourcentage de remise minimum</sys:String>
     <sys:String x:Key="LOCITADPrice">Prix inférieur</sys:String>
 
     <sys:String x:Key="LOCItadAllTimeLow">Plancher historique</sys:String>
     <sys:String x:Key="LOCItadYearLow">Plancher sur 1 an</sys:String>
     <sys:String x:Key="LOCItadMonthLow">Plancher sur 3 mois</sys:String>
-    
+
     <sys:String x:Key="LOCItadCurrentBest">Meilleur actuel</sys:String>
     <sys:String x:Key="LOCItadCurrentStore">Liste de souhaits du magasin actuel</sys:String>
     <sys:String x:Key="LOCItadBuy">Achat meilleur</sys:String>
+    <sys:String x:Key="LOCItadBuyAtStore">Buy</sys:String>
     <sys:String x:Key="LOCItadStore">Magasin</sys:String>
     <sys:String x:Key="LOCItadNoData">Aucune donnée pour le magasin sélectionné dans les paramètres</sys:String>
     <sys:String x:Key="LOCItadInLibrary">Dans la bibliothèque</sys:String>
@@ -76,9 +91,14 @@
     <sys:String x:Key="LOCItadHideOnStoreWishList">Exclure {0} sur {1} ?</sys:String>
 
     <sys:String x:Key="LOCItadWhishListOptions">Options de la liste de souhaits</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsExcludeInLibrary">Exclude games in library</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeInLibrary">Inclure les jeux présents dans la bibliothèque</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsIncludeWithoutData">Inclure les jeux sans données IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCItadWhishListOptionsOnlyInLibrary">Uniquement les jeux dans la bibliothèque</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsAlerts">Alerts only</sys:String>
+    <sys:String x:Key="LOCItadWhishListOptionsResetFilters">Reset filters</sys:String>
+    <sys:String x:Key="LOCItadAlertBadge">Alert</sys:String>
+    <sys:String x:Key="LOCItadLibraryBadge">Library</sys:String>
 
     <sys:String x:Key="LOCItadImportSteamWishlist">Importer la liste de souhaits Steam</sys:String>
     <sys:String x:Key="LOCItadImportSteamWishlistLink">Lien de la liste de souhaits Steam</sys:String>
@@ -87,6 +107,13 @@
 
     <sys:String x:Key="LOCItadInWaitlist">Dans la liste d'attente</sys:String>
     <sys:String x:Key="LOCItadInCollection">Dans la collection</sys:String>
+    <sys:String x:Key="LOCItadGiveaways">Giveaways</sys:String>
+    <sys:String x:Key="LOCItadMature">Mature</sys:String>
+    <sys:String x:Key="LOCItadDrmFree">DRM-free</sys:String>
+    <sys:String x:Key="LOCItadGiveawayStarts">Starts</sys:String>
+    <sys:String x:Key="LOCItadGiveawayEnds">Ends</sys:String>
+    <sys:String x:Key="LOCItadGiveawayExtraGames">More games in this giveaway</sys:String>
+    <sys:String x:Key="LOCItadRefreshGiveaways">Refresh giveaways</sys:String>
 
     <!-- IsThereAnyDeal -->
 
@@ -94,9 +121,15 @@
     <sys:String x:Key="LOCItadCheckNotifications">Vérifier les notifications</sys:String>
     <sys:String x:Key="LOCItadUpdateDatas">Mettre à jour les données IsThereAnyDeal</sys:String>
     <sys:String x:Key="LOCITADDataDownloading">Téléchargement des données IsThereAnyDeal...</sys:String>
+    <sys:String x:Key="LOCItadProgressCache">Loading wishlist cache…</sys:String>
+    <sys:String x:Key="LOCItadProgressStores">Refreshing store wishlists…</sys:String>
+    <sys:String x:Key="LOCItadProgressLookup">Resolving games on IsThereAnyDeal…</sys:String>
+    <sys:String x:Key="LOCItadProgressPrice">Updating prices…</sys:String>
+    <sys:String x:Key="LOCItadProgressSave">Saving wishlist cache…</sys:String>
 
     <sys:String x:Key="LOCItadNotificationGiveaway" xml:space="preserve">Notification de cadeau pour {0} ({1} jeu(x))</sys:String>
     <sys:String x:Key="LOCItadNotification" xml:space="preserve">Notification de prix pour {0} - {1}{2} ({3}%)</sys:String>
+    <sys:String x:Key="LOCItadNotificationAggregated" xml:space="preserve">{0} wishlist game(s) match your price alerts</sys:String>
 
     <sys:String x:Key="LOCItadNotificationError" xml:space="preserve">Une erreur s'est produite lors de la récupération de la liste de souhaits de {0}.
 Essayez de vous identifier à votre compte.</sys:String>
@@ -108,7 +141,7 @@ Essayez de vous identifier à votre compte.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorSteamPrivate" xml:space="preserve">La liste de souhaits Steam est privée. Vous devez utiliser un bouton d'authentification dans le plugin de la bibliothèque Steam</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXbox" xml:space="preserve">Xbox est activé dans le plugin IsThereAnyDeal mais l'extension de la bibliothèque a été désactivée dans Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorXboxNoLink" xml:space="preserve">Il n'y a pas de lien de liste de souhaits Xbox.</sys:String>
-    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisoft est activé dans l'extension IsThereAnyDeal mais son intégration n'est pas activée dans Playnite.</sys:String>    
+    <sys:String x:Key="LOCItadNotificationErrorUbisoft" xml:space="preserve">Ubisoft est activé dans l'extension IsThereAnyDeal mais son intégration n'est pas activée dans Playnite.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorUbisoftNoLink" xml:space="preserve">Il n'y a aucun lien vers la liste de souhaits Ubisoft.</sys:String>
     <sys:String x:Key="LOCItadNotificationErrorEa" xml:space="preserve">L'application EA est activée dans l'extension IsThereAnyDeal mais son intégration n'est pas activée dans Playnite.</sys:String>
 

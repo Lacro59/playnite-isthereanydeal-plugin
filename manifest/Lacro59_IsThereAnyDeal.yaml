@@ -93,3 +93,19 @@ Packages:
       - 'Improved: Reliability of wishlist synchronization (Steam/Xbox)'
       - 'Updated: Translations'
       - 'Added: Wishlist entries show richer price history (all-time, 1y, 3m)'
+  - Version: 3.5
+    RequiredApiVersion: 6.14.0
+    ReleaseDate: 2026-11-26
+    PackageUrl: https://github.com/Lacro59/playnite-isthereanydeal-plugin/releases/download/v3.5/playnite-isthereanydeal-plugin_3_5.pext
+    Changelog:
+      - 'Added: Compact and two-column wishlist layouts'
+      - 'Added: Buy action on wishlist store rows'
+      - 'Added: Store filter dropdown and collapsed filter recap'
+      - 'Added: Progressive wishlist loading with richer owned-game pricing'
+      - 'Added: Persisted wishlist panel filters across sessions'
+      - 'Improved: Giveaways cards with metadata and assets'
+      - 'Improved: Wishlist UI theming and toolbar layout'
+      - 'Fixed: Price-alert notifications open a single aggregated wishlist view'
+      - 'Fixed: Wishlist filter counts, sliders, and refresh flags'
+      - 'Fixed: Theme background and store action button reliability'
+      - 'Updated: Localizations'

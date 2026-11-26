@@ -3,7 +3,6 @@ using Playnite.SDK;
 using CommonPluginsShared;
 using System;
 using System.Collections.Generic;
-using IsThereAnyDeal.Models.Api;
 using CommonPluginsStores.Gog;
 using CommonPluginsStores.Models;
 using System.Collections.ObjectModel;
@@ -45,7 +44,6 @@ namespace IsThereAnyDeal.Services
             {
                 try
                 {
-                    GameLookup gamesLookup = IsThereAnyDealApi.GetGamesLookup(x.Name).GetAwaiter().GetResult();
                     wishlists.Add(new Wishlist
                     {
                         StoreId = x.Id,
@@ -57,7 +55,7 @@ namespace IsThereAnyDeal.Services
                         ReleaseDate = x.Released,
                         Added = x.Added,
                         Capsule = x.Image,
-                        Game = (gamesLookup?.Found ?? false) ? gamesLookup.Game : null,
+                        Game = null,
                         IsActive = true
                     });
                 }
@@ -67,7 +65,7 @@ namespace IsThereAnyDeal.Services
                 }
             });
 
-            wishlists = SetCurrentPrice(wishlists, false);
+            MergeCachedItadData(wishlists, cachedData);
             SaveWishlist(wishlists);
             return wishlists;
         }
